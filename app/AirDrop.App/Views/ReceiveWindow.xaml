@@ -1,0 +1,80 @@
+<Window x:Class="AirDrop.App.Views.ReceiveWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="NitroDrop" Width="390" SizeToContent="Height" ResizeMode="NoResize" Topmost="True"
+        ShowInTaskbar="True" FontFamily="{StaticResource UiFont}" Foreground="{DynamicResource TextPrimary}"
+        UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" GlassFrameThickness="-1" ResizeBorderThickness="0" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+
+    <StackPanel Margin="28,28,28,24">
+        <Grid Width="80" Height="80" HorizontalAlignment="Center">
+            <Ellipse Fill="{DynamicResource Avatar}"/>
+            <TextBlock x:Name="Initials" Foreground="White" FontSize="28" FontWeight="SemiBold"
+                       FontFamily="{StaticResource DisplayFont}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Ellipse x:Name="Photo" Visibility="Collapsed">
+                <Ellipse.Fill>
+                    <ImageBrush x:Name="PhotoBrush" Stretch="UniformToFill"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Border Width="28" Height="28" CornerRadius="14" Background="{DynamicResource Badge}"
+                    HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                <TextBlock x:Name="Glyph" FontFamily="{StaticResource IconFont}" FontSize="13"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+        </Grid>
+
+        <TextBlock x:Name="Who" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,14,0,0"
+                   TextTrimming="CharacterEllipsis"/>
+        <TextBlock x:Name="Device" FontSize="12" HorizontalAlignment="Center" Foreground="{DynamicResource TextSecondary}"/>
+        <TextBlock x:Name="Message" FontSize="13" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10,0,0"/>
+
+        <Border x:Name="Preview" CornerRadius="12" Margin="0,14,0,0" Height="150" Visibility="Collapsed"
+                BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+            <Border.Background>
+                <ImageBrush x:Name="PreviewBrush" Stretch="UniformToFill"/>
+            </Border.Background>
+        </Border>
+
+        <Border CornerRadius="10" Background="{DynamicResource Card}" BorderBrush="{DynamicResource CardBorder}"
+                BorderThickness="1" Margin="0,14,0,0" Padding="12,8">
+            <ScrollViewer MaxHeight="150" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="Items">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Glyph}" FontFamily="{StaticResource IconFont}" FontSize="14"
+                                           Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Name}" Margin="10,0" FontSize="12.5"
+                                           TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="{Binding SizeText}" FontSize="12"
+                                           Foreground="{DynamicResource TextSecondary}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+
+        <Grid Margin="0,22,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Reddet" Style="{StaticResource PillButton}" IsCancel="True" Click="Decline_Click"/>
+            <!-- Not IsDefault on purpose: accepting must be a deliberate click. -->
+            <Button x:Name="AcceptButton" Grid.Column="2" Content="Kabul Et" Style="{StaticResource AccentPill}"
+                    Click="Accept_Click"/>
+        </Grid>
+        <TextBlock x:Name="TimeoutText" FontSize="11" HorizontalAlignment="Center" Margin="0,10,0,0"
+                   Foreground="{DynamicResource TextSecondary}"/>
+    </StackPanel>
+</Window>

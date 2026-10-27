@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="AirDrop.App/AirDrop.App.csproj" />
+  <Project Path="AirDrop.Cli/AirDrop.Cli.csproj" />
+  <Project Path="AirDrop.Core/AirDrop.Core.csproj" />
+  <Project Path="AirDrop.Tests/AirDrop.Tests.csproj" />
+</Solution>

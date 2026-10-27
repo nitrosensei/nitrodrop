@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Color x:Key="AccentColor">#0A84FF</Color>
+    <SolidColorBrush x:Key="Accent" Color="#0A84FF"/>
+    <SolidColorBrush x:Key="AccentPressed" Color="#0068D6"/>
+    <SolidColorBrush x:Key="WindowFallback" Color="#1C1C1E"/>
+    <SolidColorBrush x:Key="Card" Color="#B32C2C2E"/>
+    <SolidColorBrush x:Key="CardBorder" Color="#1FFFFFFF"/>
+    <SolidColorBrush x:Key="TextPrimary" Color="#F2F2F7"/>
+    <SolidColorBrush x:Key="TextSecondary" Color="#98989F"/>
+    <SolidColorBrush x:Key="Ring" Color="#260A84FF"/>
+    <SolidColorBrush x:Key="Pulse" Color="#400A84FF"/>
+    <SolidColorBrush x:Key="Badge" Color="#3A3A3C"/>
+    <SolidColorBrush x:Key="ButtonNeutral" Color="#3A3A3C"/>
+    <SolidColorBrush x:Key="ButtonNeutralHover" Color="#48484A"/>
+    <SolidColorBrush x:Key="Track" Color="#33FFFFFF"/>
+    <SolidColorBrush x:Key="SegmentOn" Color="#636366"/>
+    <SolidColorBrush x:Key="SegmentTrack" Color="#33767680"/>
+    <SolidColorBrush x:Key="Trusted" Color="#30D158"/>
+    <LinearGradientBrush x:Key="Avatar" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#7C808A" Offset="0"/>
+        <GradientStop Color="#5B5E66" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="SelfAvatar" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#64D2FF" Offset="0"/>
+        <GradientStop Color="#0A84FF" Offset="1"/>
+    </LinearGradientBrush>
+</ResourceDictionary>

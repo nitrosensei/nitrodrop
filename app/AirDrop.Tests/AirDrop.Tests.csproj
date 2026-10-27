@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AirDrop.Core\AirDrop.Core.csproj" />
+  </ItemGroup>
+
+  <!-- The UI adapter is plain .NET (no WPF types); compile it here so it is tested on net10.0 without the WPF app. -->
+  <ItemGroup>
+    <Compile Include="..\AirDrop.App\Services\IAirDropService.cs" Link="App\IAirDropService.cs" />
+    <Compile Include="..\AirDrop.App\Services\IContactResolver.cs" Link="App\IContactResolver.cs" />
+    <Compile Include="..\AirDrop.App\Services\CoreAirDropService.cs" Link="App\CoreAirDropService.cs" />
+    <Compile Include="..\AirDrop.App\Services\ContactBookResolver.cs" Link="App\ContactBookResolver.cs" />
+  </ItemGroup>
+
+</Project>
