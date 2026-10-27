@@ -34,7 +34,10 @@ app/
     Contacts/ContactBook.cs  içe aktarılan kişiler, hash eşleme, %LOCALAPPDATA%\airdrop-win\contacts\ (index.json + photos\)
     Plist/XmlPlist.cs      XML plist okuyucu (kayıt XML gelirse)
   AirDrop.App/             WPF arayüz (lead). Services/CoreAirDropService.cs = IAirDropService'in Core üstündeki gerçek uygulaması,
-                           Services/ContactBookResolver.cs = IContactResolver → ContactBook
+                           Services/ContactBookResolver.cs = IContactResolver → ContactBook,
+                           Services/SyncSource.cs + DemoSyncSource.cs = Nitro.Sync bağlantısı, ViewModels/DevicesViewModel.cs,
+                           Views/ConfirmSheet = eşleştirme kodu / uygulama açma onayı
+  Nitro.Sync/ (+ .Host)    PC'ler arası sekme/uygulama eşitleme, uzantı köprüsü, iOS Kestirme alıcısı (docs/sync-plan.md)
   AirDrop.Cli/             komut satırı
   AirDrop.Tests/           xUnit testleri
 ```
@@ -68,6 +71,47 @@ birbirini görür, dosya ve bağlantı gönderir (UI'yi uçtan uca denemek için
 `DeviceKind.Windows` gösteriyoruz; model adımız varsayılan `MacBookPro18,3` (`CoreAirDropServiceSettings.ModelName`).
 Testler adaptörü WPF olmadan derlemek için `IAirDropService.cs`, `IContactResolver.cs`, `CoreAirDropService.cs`,
 `ContactBookResolver.cs` dosyalarını AirDrop.Tests'e link'ler — bu dosyalara WPF tipi girmemeli.
+
+## Süreklilik: "Cihazlar" sekmesi ve Ayarlar → Senkron (Nitro.Sync)
+
+`Nitro.Sync` (bkz. `docs/sync-plan.md`) WPF uygulamasına `Services/SyncSource.cs` üzerinden bağlı: `ISyncSource` arayüzü,
+gerçek uygulama `NitroSyncSource` (bir `NitroSyncService` sarmalar; Ayarlar değişince servisi kapatıp yeniden kurar),
+`--demo`/`--snapshot` için `DemoSyncSource` (ağa hiç çıkmaz; "Emre-Masaüstü" + sekmeler/uygulamalar, çevrim dışı
+"Ofis-Laptop", eşleşmemiş "Ayşe-PC", iPhone'da "Instagram"). `App.xaml.cs` AirDrop servisinin yanında kurar, çıkışta kapatır.
+Ad = Ayarlar → Görünen ad, TLS kimliği AirDrop'unkiyle aynı (varsayılan pfx). Olaylar arka plandan gelir;
+`ViewModels/DevicesViewModel.cs` hepsini `Dispatcher` ile UI'ya taşır.
+
+- **Cihazlar sekmesi** (Yakındakiler · Cihazlar · Geçmiş): eşleşmiş PC'ler (çevrim içi önce, yeşil nokta), kartı açınca
+  sekmeleri (favicon ya da harf karosu, başlık, alan adı; tıkla → bu PC'nin varsayılan tarayıcısında açılır, yalnızca http/https;
+  sağ tık: aç / bağlantıyı kopyala; ilk 6, "Tümünü göster") ve uygulamaları (simge, ad, pencere başlığı). "Bu bilgisayarda aç"
+  yalnızca aynı exe burada bulunursa görünür (`LocalApps`: App Paths → System32/Windows → çalışan süreç; ağdan yalnız dosya adı gelir,
+  yol asla). Favicon yalnızca `https:` ya da `data:image` ise yüklenir.
+- **iPhone'da şu an** kartı (`IphoneActivityChanged`): "iPhone'da Instagram açık → PC'de devam et" (`ContinueOnPcAsync`),
+  kapatılabilir, 5 dk sonra kendiliğinden gizlenir. Uygulama açılışları için balon gösterilmez (otomasyon her açılışta tetiklenir).
+- **Bilgisayar ekle**: ağdaki eşleşmemiş NitroDrop PC'leri → `PairAsync`. `ConfirmPairing` → `Views/ConfirmSheet` 6 haneli kodu
+  ("482 913") gösterir: "Diğer bilgisayarda da aynı kodu görüyor musunuz?" İptal/Onayla. `ConfirmLaunch` aynı pencereyle
+  ("X, “Spotify” uygulamasını bu bilgisayarda açmak istiyor" Reddet/Aç). İkisi de ReceiveWindow gibi odak çalmaz
+  (`ShowActivated=false`, onay düğmesi `IsDefault` değil); karşı taraf vazgeçerse (CancellationToken) pencere kapanır.
+- **Gelen bağlantılar** (`LinkReceived`): eşleşmiş PC'den gelen doğrudan açılır (`ConfirmOpen = null`), Geçmiş'e yazılır +
+  tepsi balonu. iPhone Kestirmesi'nden gelen otomatik açılmaz (`AutoOpenIosLinks = false`): Geçmiş + balon (tıkla → aç) + kart.
+- **Telefona gönder** (uzantı): `ExternalLinkTargets` = yakındaki AirDrop eşleri (`airdrop:<id>`, iPhone/iPad → `phone`,
+  Mac/PC → `pc`), `SendLinkToExternal` → `MainViewModel.SendLinkAsync` (cihaz durumu + Geçmiş kaydıyla).
+- **Ayarlar → Senkron**: "Sekmelerimi paylaş" (kapalıyken uzantı köprüsü — named pipe — hiç açılmaz; facade'da ayrı bir sekme
+  anahtarı yok), "Açık uygulamalarımı paylaş" + hariç tutulan exe listesi (`AppsProviderOptions.ExcludedExecutables`'a eklenir),
+  **Tarayıcı eklentisi** durumu (sekme geliyorsa "Bağlı", HKCU kaydı varsa "sekme gelmedi", yoksa "Kurulu değil") ve "Eklentiyi kur"
+  yardımı (Geliştirici modu → Paketlenmemiş öğe yükle → `<çıktı>\extension`; "Tarayıcıya bağla" =
+  `NitroDrop.SyncHost.exe register --extension-id kbdhonkcoaopcnmbnphldonokaooaibp`, yalnızca HKCU yazar),
+  **Eşleştirilmiş bilgisayarlar** (Kaldır = `UnpairAsync`), **iPhone (Kestirme)**: "iPhone ekle" → ad sorulur → `AddIosDevice` →
+  `IosSetup.Url` QR olarak (QRCoder 1.6.0, MIT; modüller WPF'te vektör olarak çizilir) + adres + "Kestirme talimatları"
+  (`<çıktı>\docs\ios-shortcut.md`). Ayarlar `settings.json`'da: `SyncShareTabs`, `SyncShareApps`, `SyncExcludedApps`.
+- **Derleme çıktısı**: `Nitro.Sync.Host` `ReferenceOutputAssembly=false` ile önce derlenir, `NitroDrop.SyncHost.exe/.dll/
+  .runtimeconfig.json/.deps.json` NitroDrop.exe'nin yanına, `extension\` ve `docs\ios-shortcut.md` çıktıya kopyalanır.
+- **Ekran görüntüsü** (Debug): `--snapshot <klasör>` ayrıca `devices-*`, `devices-add-*`, `devices-bottom-*`, `devices-empty-light`,
+  `settings-sync-*`, `settings-extension-*`, `settings-iphone-*`, `sheet-pair-*`, `sheet-launch-*` (açık/koyu) çizer.
+
+Doğrulanmamış: iki gerçek PC arasında eşleştirme/sekme akışı arayüzden denenmedi (yalnızca demo verisiyle ekran görüntüsü;
+protokol Nitro.Sync testlerinde), `register` bu makinede çalıştırılmadı, QR bir telefonla okutulmadı, uzaktan favicon indirme ve
+"Bu bilgisayarda aç" gerçek bir eş durumuyla denenmedi.
 
 ## Gelişmiş Kurulum sihirbazı (`AirDrop.App/Setup`, `Views/SetupWizard.xaml`)
 

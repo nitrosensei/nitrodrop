@@ -17,8 +17,13 @@ using Windows.Security.Authorization.AppCapabilityAccess;
 //   --log <path>                          log file (default: phoneline-probe.log next to the exe)
 //
 // Every line goes to the console and to the log file (the exe may be launched via its AUMID with no console).
+// AUMID activation (shell:AppsFolder\...!Probe) cannot pass arguments, so extra args are also read from
+// probe-args.txt next to the exe (whitespace-separated), e.g. "--register".
 
 Console.OutputEncoding = Encoding.UTF8;
+var argFile = Path.Combine(AppContext.BaseDirectory, "probe-args.txt");
+if (File.Exists(argFile))
+    args = [.. args, .. File.ReadAllText(argFile).Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries)];
 var log = new Log(ArgValue(args, "--log") ?? Path.Combine(AppContext.BaseDirectory, "phoneline-probe.log"));
 bool requestAccess = !args.Contains("--no-request-access");
 bool register = args.Contains("--register");

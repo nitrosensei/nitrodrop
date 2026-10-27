@@ -19,16 +19,38 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AirDrop.Core\AirDrop.Core.csproj" />
+    <ProjectReference Include="..\Nitro.Sync\Nitro.Sync.csproj" />
+    <!-- Native messaging host (NitroDrop.SyncHost.exe): built first, copied next to NitroDrop.exe below. -->
+    <ProjectReference Include="..\Nitro.Sync.Host\Nitro.Sync.Host.csproj" ReferenceOutputAssembly="false" Private="false" />
+  </ItemGroup>
+
+  <!-- Browser extension (load unpacked from <output>\extension) and the iPhone Shortcut guide. -->
+  <ItemGroup>
+    <None Include="..\..\extension\**\*" Link="extension\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\docs\ios-shortcut.md" Link="docs\ios-shortcut.md" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <!-- NitroDrop.SyncHost.exe + its dll/runtimeconfig/deps go next to NitroDrop.exe (the extension registers that path).
+       Explicit paths (no wildcard) so they are included before the host is built; the ProjectReference builds it first. -->
+  <PropertyGroup>
+    <SyncHostDir>..\Nitro.Sync.Host\bin\$(Configuration)\net10.0-windows\</SyncHostDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(SyncHostDir)NitroDrop.SyncHost.exe" Link="NitroDrop.SyncHost.exe" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(SyncHostDir)NitroDrop.SyncHost.dll" Link="NitroDrop.SyncHost.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(SyncHostDir)NitroDrop.SyncHost.runtimeconfig.json" Link="NitroDrop.SyncHost.runtimeconfig.json" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(SyncHostDir)NitroDrop.SyncHost.deps.json" Link="NitroDrop.SyncHost.deps.json" CopyToOutputDirectory="PreserveNewest" Visible="false" />
   </ItemGroup>
 
   <!-- Wi-Fi driver package for the setup wizard (Setup/): INF, built .sys and the UNSIGNED catalog from
        driver\package.ps1. The wizard signs the .sys/.cat per install; the firmware is downloaded. -->
   <ItemGroup>
     <None Include="..\..\driver\airdropwifi.inf" Link="driver\airdropwifi.inf" CopyToOutputDirectory="PreserveNewest" />
-    <None Include="..\..\driver\out\airdropwifi.sys" Link="driver\airdropwifi.sys" CopyToOutputDirectory="PreserveNewest"
-          Condition="Exists('..\..\driver\out\airdropwifi.sys')" />
-    <None Include="..\..\driver\out\airdropwifi.cat" Link="driver\airdropwifi.cat" CopyToOutputDirectory="PreserveNewest"
-          Condition="Exists('..\..\driver\out\airdropwifi.cat')" />
+    <None Include="..\..\driver\out\airdropwifi.sys" Link="driver\airdropwifi.sys" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\driver\out\airdropwifi.sys')" />
+    <None Include="..\..\driver\out\airdropwifi.cat" Link="driver\airdropwifi.cat" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\driver\out\airdropwifi.cat')" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="QRCoder" Version="1.6.0" />
   </ItemGroup>
 
 </Project>

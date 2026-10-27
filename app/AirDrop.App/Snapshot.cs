@@ -1,6 +1,7 @@
 #if DEBUG
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -43,6 +44,7 @@ internal static class Snapshot
             Save(w, Path.Combine(dir, "settings-bottom.png"));
             sv.ScrollToHome();
         }
+        await SyncAsync(w, vm, dir);
         vm.Tab = MainTab.Nearby;
         await SetupWizardAsync(dir);
         if (ElevatedHelper.DryRun) await SetupDryRunAsync(dir);
@@ -94,6 +96,83 @@ internal static class Snapshot
             ResumeRegistration.Register();   // dry-run: logged only
         }
         finally { SetupLog.FilePath = savedLog; }
+    }
+
+    /// <summary>"Cihazlar" tab, Ayarlar → Senkron and the pairing / launch sheets, light and dark (demo sync data).</summary>
+    private static async Task SyncAsync(MainWindow w, MainViewModel vm, string dir)
+    {
+        var app = (App)Application.Current;
+        bool wasDark = App.IsDark;
+        var d = vm.Devices;
+        foreach (bool dark in new[] { false, true })
+        {
+            string t = dark ? "dark" : "light";
+            app.ApplyTheme(dark);
+            vm.Tab = MainTab.Devices;
+            await Task.Delay(500);
+            Save(w, Path.Combine(dir, $"devices-{t}.png"));
+            w.DevicesScroll.ScrollToEnd();
+            await Task.Delay(300);
+            Save(w, Path.Combine(dir, $"devices-bottom-{t}.png"));
+            w.DevicesScroll.ScrollToHome();
+            d.IsAddingPc = true;
+            await Task.Delay(300);
+            Save(w, Path.Combine(dir, $"devices-add-{t}.png"));
+            d.IsAddingPc = false;
+
+            vm.Tab = MainTab.Settings;
+            await Task.Delay(300);
+            await ScrollToAsync(w, w.SyncSettings);
+            Save(w, Path.Combine(dir, $"settings-sync-{t}.png"));
+            d.ShowExtensionHelp = true;
+            await Task.Delay(300);
+            await ScrollToAsync(w, w.SyncSettings, 300);
+            Save(w, Path.Combine(dir, $"settings-extension-{t}.png"));
+            d.ShowExtensionHelp = false;
+            if (!d.HasIosSetup) d.ShowIosSetup("İş iPhone'u");
+            await Task.Delay(300);
+            await ScrollToAsync(w, w.SyncSettings, 820);
+            Save(w, Path.Combine(dir, $"settings-iphone-{t}.png"));
+
+            foreach (var (name, sheet) in new[]
+            {
+                ("pair", ConfirmSheet.ForPairing(new Nitro.Sync.Security.PairingPrompt("77aa88bb99cc", "Ayşe-PC", "482913", true))),
+                ("launch", ConfirmSheet.ForLaunch(Services.DemoSyncSource.SampleLaunch)),
+            })
+            {
+                sheet.ShowActivated = false;
+                sheet.ShowInTaskbar = false;
+                sheet.Topmost = false;
+                sheet.WindowStartupLocation = WindowStartupLocation.Manual;
+                sheet.Left = -20000;
+                sheet.Top = -20000;
+                sheet.Show();
+                await Task.Delay(300);
+                Save(sheet, Path.Combine(dir, $"sheet-{name}-{t}.png"));
+                sheet.Close();
+            }
+        }
+        d.IosSetup = null;
+
+        // Empty state: forget the demo PCs (demo data only) and dismiss the iPhone card.
+        app.ApplyTheme(false);
+        foreach (var pc in d.Paired.ToList()) pc.Unpair.Execute(null);
+        d.DismissIphone.Execute(null);
+        vm.Tab = MainTab.Devices;
+        await Task.Delay(500);
+        Save(w, Path.Combine(dir, "devices-empty-light.png"));
+        app.ApplyTheme(wasDark);
+    }
+
+    /// <summary>Scrolls the settings page so <paramref name="target"/> (plus an offset) is at the top.</summary>
+    private static async Task ScrollToAsync(MainWindow w, FrameworkElement target, double extra = 0)
+    {
+        if (FindChild<System.Windows.Controls.ScrollViewer>(w.SettingsPage) is not { } sv) return;
+        sv.ScrollToHome();
+        await Task.Delay(100);
+        var y = target.TransformToAncestor(sv).Transform(new Point(0, 0)).Y;
+        sv.ScrollToVerticalOffset(Math.Max(0, y - 8 + extra));
+        await Task.Delay(300);
     }
 
     private static T? FindChild<T>(DependencyObject root) where T : DependencyObject

@@ -1,0 +1,106 @@
+using System;
+using System.Media;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
+using AirDrop.App.Interop;
+using Nitro.Sync;
+using Nitro.Sync.Security;
+
+namespace AirDrop.App.Views;
+
+/// <summary>
+/// Pairing code ("Diğer bilgisayarda da aynı kodu görüyor musunuz?") and "X wants to open Y here" confirmations.
+/// Like ReceiveWindow: never steals focus and the accept button is not the default button.
+/// </summary>
+public partial class ConfirmSheet : Window
+{
+    private readonly TaskCompletionSource<bool> _result = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private CancellationTokenRegistration _ctReg;
+
+    private ConfirmSheet()
+    {
+        InitializeComponent();
+        SourceInitialized += (_, _) =>
+        {
+            if (WindowEffects.Apply(this, App.IsDark, transient: true)) Background = Brushes.Transparent;
+            else SetResourceReference(BackgroundProperty, "WindowFallback");
+        };
+        Closed += (_, _) =>
+        {
+            _ctReg.Dispose();
+            _result.TrySetResult(false);
+        };
+    }
+
+    /// <summary>"482 913" — both PCs show the same code; a man in the middle would change it.</summary>
+    internal static string FormatCode(string code) => code.Length == 6 ? code[..3] + " " + code[3..] : code;
+
+    internal static ConfirmSheet ForPairing(PairingPrompt p)
+    {
+        var w = new ConfirmSheet();
+        w.Who.Text = p.PeerName;
+        w.Badge.Text = "";   // link
+        w.Message.Text = p.IsInitiator
+            ? "ile eşleştiriliyor. Eşleşen bilgisayarlar açık sekmelerini ve uygulamalarını birbirine gösterir."
+            : "bu bilgisayarla eşleşmek istiyor. Eşleşen bilgisayarlar açık sekmelerini ve uygulamalarını birbirine gösterir.";
+        w.Code.Text = FormatCode(p.Code);
+        w.CodeBox.Visibility = Visibility.Visible;
+        w.Question.Text = "Diğer bilgisayarda da aynı kodu görüyor musunuz?";
+        w.Question.Visibility = Visibility.Visible;
+        w.AcceptButton.Content = "Onayla";
+        w.CancelButton.Content = "İptal";
+        w.Footnote.Text = "Kodlar farklıysa İptal'e basın.";
+        return w;
+    }
+
+    internal static ConfirmSheet ForLaunch(AppLaunchRequest r)
+    {
+        var w = new ConfirmSheet();
+        w.Who.Text = r.FromName;
+        w.Badge.Text = "";   // open in new window
+        w.Message.Text = $"“{r.AppName}” uygulamasını bu bilgisayarda açmak istiyor.";
+        w.AcceptButton.Content = "Aç";
+        w.CancelButton.Content = "Reddet";
+        w.Footnote.Text = "Yalnızca bu bilgisayarda zaten paylaşılan uygulamalar açılabilir.";
+        return w;
+    }
+
+    public static Task<bool> PairAsync(Window? owner, PairingPrompt p, CancellationToken ct) => ShowAsync(ForPairing(p), owner, ct);
+
+    public static Task<bool> LaunchAsync(Window? owner, AppLaunchRequest r, CancellationToken ct) => ShowAsync(ForLaunch(r), owner, ct);
+
+    private static Task<bool> ShowAsync(ConfirmSheet w, Window? owner, CancellationToken ct)
+    {
+        if (ct.IsCancellationRequested) return Task.FromResult(false);
+        if (owner is { IsVisible: true, WindowState: not WindowState.Minimized })
+        {
+            w.Owner = owner;
+            w.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+        }
+        else
+        {
+            var wa = SystemParameters.WorkArea;
+            w.WindowStartupLocation = WindowStartupLocation.Manual;
+            w.Left = wa.Right - w.Width - 16;
+            w.Top = wa.Bottom - 520;
+        }
+        // Never steal keyboard focus: a stray Enter/Space while typing elsewhere must not confirm.
+        w.ShowActivated = false;
+        // The other side gave up (90 s pairing window) → close the sheet.
+        w._ctReg = ct.Register(() => w.Dispatcher.BeginInvoke(() => w.Finish(false)));
+        SystemSounds.Asterisk.Play();
+        w.Show();
+        return w._result.Task;
+    }
+
+    private void Finish(bool ok)
+    {
+        _result.TrySetResult(ok);
+        if (IsLoaded) Close();
+    }
+
+    private void Accept_Click(object sender, RoutedEventArgs e) => Finish(true);
+    private void Cancel_Click(object sender, RoutedEventArgs e) => Finish(false);
+}

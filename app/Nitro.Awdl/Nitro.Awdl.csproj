@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- AWDL link layer: a C# port of owly-awdl (t4t5/owly, MIT; see LICENSE-OWLY.txt), plus the Windows pieces
+       around it (radio over our KMDF driver's IOCTL ABI, Wintun IP bridge, BLE wake-up advert).
+       net10.0 = everything testable on plain .NET (state machine, simulated air, user-mode packet sink, P/Invoke
+       radio + Wintun which only load when used). net10.0-windows adds the WinRT BLE advertiser. -->
+  <PropertyGroup>
+    <TargetFrameworks>net10.0;net10.0-windows10.0.22621.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>Nitro.Awdl</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-windows10.0.22621.0'">
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <DefineConstants>$(DefineConstants);NITRO_WINRT</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="LICENSE-OWLY.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Remove="Ble\BleAirDropAdvertiser.cs" Condition="'$(TargetFramework)' == 'net10.0'" />
+  </ItemGroup>
+
+  <!-- wintun.dll is not in the repo: tools/fetch-wintun.ps1 puts the SHA-256-pinned build in vendor/wintun
+       (gitignored). Copied next to the assembly when present; WintunAdapter fails with a clear message otherwise. -->
+  <ItemGroup>
+    <None Include="..\..\vendor\wintun\bin\amd64\wintun.dll" Link="wintun\amd64\wintun.dll" CopyToOutputDirectory="PreserveNewest" Visible="false"
+          Condition="Exists('..\..\vendor\wintun\bin\amd64\wintun.dll')" />
+    <None Include="..\..\vendor\wintun\bin\arm64\wintun.dll" Link="wintun\arm64\wintun.dll" CopyToOutputDirectory="PreserveNewest" Visible="false"
+          Condition="Exists('..\..\vendor\wintun\bin\arm64\wintun.dll')" />
+  </ItemGroup>
+
+</Project>

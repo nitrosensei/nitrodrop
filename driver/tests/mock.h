@@ -57,14 +57,14 @@ extern int g_checks;
 } while (0)
 
 /* ---- recorded host commands -------------------------------------------- */
-#define SIM_MAX_CMDS	128
+#define SIM_MAX_CMDS	256
 struct sim_cmd {
 	uint8_t group;
 	uint8_t opcode;
 	uint8_t version;
 	uint8_t idx;
 	uint16_t paylen;
-	uint8_t payload[64];	/* first bytes */
+	uint8_t payload[512];	/* first bytes */
 };
 
 /* ---- device model state ------------------------------------------------- */
@@ -128,6 +128,45 @@ struct sim {
 	size_t fw_len;
 	int fw_loads;
 
+	/* data queues (M2/M3), programmed through SCD_QUEUE_CONFIG */
+	struct sim_txq {
+		int enabled;
+		uint32_t sta_mask;
+		uint8_t tid;
+		uint32_t cb_size;
+		uint64_t tfdq, bc;
+		uint32_t fetched;	/* hw index of next TFD to fetch */
+		uint32_t answered;	/* hw index up to which TX_CMD replied */
+		int adds, removes;
+	} txq[8];
+	uint32_t add_sta_status;	/* ADD_STA response status (1 = ok) */
+	uint32_t binding_status;
+	int scd_wrong_qid;		/* answer SCD ADD with qid + 1 */
+	int flush_wrong_sta;
+	/* injected frames as fetched by the "device" */
+	int tx_hold;			/* fetch TFDs but do not answer */
+	uint16_t tx_status;		/* TX_CMD status (1 = success) */
+	uint8_t tx_failure_frame, tx_failure_rts;
+	int ntx;
+	struct sim_tx {
+		uint8_t qid, idx;
+		uint16_t num_tbs;
+		uint16_t tb_len[3];
+		uint64_t tb_addr[3];
+		uint16_t bc_ent;
+		struct iwx_cmd_header hdr;
+		uint8_t cmd[28];	/* struct iwx_tx_cmd_gen3 w/o hdr */
+		uint32_t frame_len;	/* reassembled 802.11 frame */
+		uint8_t frame[2400];
+		int bad;		/* layout check failed */
+	} tx[96];
+	int tx_errors;
+	/* statuses delivered by osdep_tx_status() */
+	int ntxst;
+	struct iwx_tx_status txst[1024];
+	int txst_unlocked;		/* called without osdep_lock held */
+	int gone;			/* surprise removal: reads 0xffffffff */
+
 	/* frames delivered by osdep_rx_frame() */
 	int rx_frames;
 	struct iwx_rx_meta last_meta;
@@ -146,6 +185,10 @@ void sim_service_interrupts(void);
 void sim_rx_packet(uint8_t group, uint8_t code, uint8_t qid, uint8_t idx,
     const void *payload, uint32_t paylen);
 int sim_find_cmd(uint8_t group, uint8_t opcode);
+int sim_find_cmd_from(int start, uint8_t group, uint8_t opcode);
+/* one RX MPDU (AX210 v3 descriptor) carrying 'frame' (+ 4-byte FCS) */
+void sim_rx_mpdu(const struct iwx_rx_mpdu_desc *desc, const uint8_t *frame,
+    uint32_t len);
 
 /* synthetic firmware image builder (test_fw.c) */
 uint8_t *fwgen_build(size_t *len, int with_iml);

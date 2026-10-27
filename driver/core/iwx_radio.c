@@ -1014,6 +1014,15 @@ iwx_radio_enable_txq(struct iwx_softc *sc, int sta_id, int qid, int tid,
 	fwqid = le16toh(resp->queue_number);
 	wr_idx = le16toh(resp->write_pointer);
 
+	/*
+	 * airdrop: the firmware owns a queue for (sta, tid) from here on,
+	 * even if it is not the one we asked for; mark it enabled so the
+	 * error path removes it again (SCD_QUEUE_REMOVE is keyed by
+	 * sta_mask/tid). iwx would leak it.
+	 */
+	sc->qenablemsk |= (1 << qid);
+	ring->tid = tid;
+
 	/* Unlike iwlwifi, we do not support dynamic queue ID assignment. */
 	if (fwqid != qid) {
 		err = EIO;
@@ -1023,9 +1032,6 @@ iwx_radio_enable_txq(struct iwx_softc *sc, int sta_id, int qid, int tid,
 		err = EIO;
 		goto out;
 	}
-
-	sc->qenablemsk |= (1 << qid);
-	ring->tid = tid;
 out:
 	iwx_free_resp(sc, &hcmd);
 	return err;
@@ -1654,8 +1660,6 @@ iwx_radio_stop(struct iwx_softc *sc)
 }
 
 /* ---- M3: injection ------------------------------------------------------ */
-
-#define IWX_TXDATA_FLAG_TX_QUEUED	0x04	/* data queue slot in use */
 
 /* iwx_tx_update_byte_tbl() */
 static void

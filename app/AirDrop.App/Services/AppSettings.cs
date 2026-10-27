@@ -36,6 +36,14 @@ public sealed class AppSettings
     /// <summary>Device that Ctrl+Alt+A sends the clipboard to (last used).</summary>
     public string? ClipboardTargetKey { get; set; }
     public string DefaultRegion { get; set; } = "TR";
+
+    /// <summary>Senkron: show my open browser tabs to paired PCs (via the Chrome/Edge extension).</summary>
+    public bool SyncShareTabs { get; set; } = true;
+    /// <summary>Senkron: show my running apps to paired PCs.</summary>
+    public bool SyncShareApps { get; set; } = true;
+    /// <summary>Executable file names never shared (in addition to the built-in list).</summary>
+    public List<string> SyncExcludedApps { get; set; } = new();
+
     public Dictionary<string, DevicePrefs> Devices { get; set; } = new();
 
     public DevicePrefs For(string stableKey)

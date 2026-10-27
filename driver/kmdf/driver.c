@@ -26,7 +26,8 @@
  *   D0Entry               nothing (device is reset by iwx itself).
  *   D0EntryPostIntEnabled MSI-X detection, iwx_preinit(): first firmware
  *                         boot, NVM read (MAC, channels), device stopped.
- *   D0ExitPreIntDisabled  radio off, iwx_stop(), pending reads failed.
+ *   D0ExitPreIntDisabled  radio off, iwx_stop(), pending reads failed,
+ *                         pending injects completed (AIRDROP_TXST_FLUSHED).
  *   ReleaseHardware       iwx_detach() (all common buffers), unmap BAR0.
  * Nothing survives ReleaseHardware, so a PnP remove / driver update leaves
  * the hardware in the state iwx_stop_device() leaves it in (APM stopped,
@@ -68,6 +69,7 @@ AirdropErrnoToStatus(int err)
 	case EPERM:	return STATUS_POWER_STATE_INVALID; /* rfkill switch */
 	case ENOENT:	return STATUS_OBJECT_NAME_NOT_FOUND;
 	case ENOSPC:	return STATUS_DEVICE_BUSY;
+	case ENOBUFS:	return STATUS_DEVICE_BUSY;	/* 64 frames in flight */
 	case EIO:	return STATUS_DEVICE_HARDWARE_ERROR;
 	default:	return STATUS_UNSUCCESSFUL;
 	}
@@ -146,6 +148,9 @@ AirdropEvtDeviceAdd(_In_ WDFDRIVER Driver, _Inout_ PWDFDEVICE_INIT DeviceInit)
 	if (!NT_SUCCESS(status))
 		return status;
 	status = WdfSpinLockCreate(&attr, &ctx->RxLock);
+	if (!NT_SUCCESS(status))
+		return status;
+	status = WdfSpinLockCreate(&attr, &ctx->TxLock);
 	if (!NT_SUCCESS(status))
 		return status;
 
@@ -262,7 +267,7 @@ AirdropEvtPrepareHardware(_In_ WDFDEVICE Device,
 	    sizeof(AIRDROP_RX_SLOT) * AIRDROP_RX_RING_SLOTS, AIRDROP_POOL_TAG);
 	if (ctx->RxRing == NULL)
 		return STATUS_INSUFFICIENT_RESOURCES;
-	ctx->RxHead = ctx->RxCount = 0;
+	AqRxReset(&ctx->Rx);
 
 	WdfWaitLockAcquire(ctx->CoreLock, NULL);
 	err = iwx_attach(ctx->Sc, ctx, ctx->PciDevice, ctx->PciSubdevice);
@@ -289,10 +294,15 @@ AirdropEvtReleaseHardware(_In_ WDFDEVICE Device,
 
 	WdfWaitLockAcquire(ctx->CoreLock, NULL);
 	if (ctx->Attached) {
+		AirdropRadioDownLocked(ctx);	/* no-op unless still up */
 		iwx_detach(ctx->Sc);
 		ctx->Attached = FALSE;
 	}
 	WdfWaitLockRelease(ctx->CoreLock);
+
+	/* every injected frame got a status from the stop; complete them */
+	AirdropTxCompleteDone(ctx);
+	AirdropTxCancelAll(ctx, NULL, STATUS_DEVICE_REMOVED);
 
 	if (ctx->Sc != NULL) {
 		ExFreePoolWithTag(ctx->Sc, AIRDROP_POOL_TAG);
@@ -387,6 +397,7 @@ AirdropEvtD0ExitPreInterruptsDisabled(_In_ WDFDEVICE Device,
 	ctx->InD0 = FALSE;
 	WdfWaitLockRelease(ctx->CoreLock);
 
+	AirdropTxCompleteDone(ctx);	/* flushed frames */
 	AirdropRxFlush(ctx, STATUS_DEVICE_POWERED_OFF);
 	return STATUS_SUCCESS;
 }
@@ -440,6 +451,7 @@ AirdropEvtDpc(_In_ WDFINTERRUPT Interrupt, _In_ WDFOBJECT AssociatedObject)
 	}
 
 	AirdropRxDeliverPending(ctx);
+	AirdropTxCompleteDone(ctx);	/* TX_CMD responses */
 }
 
 /* PASSIVE: firmware assert, hardware error, rfkill change, CT kill. */
@@ -473,6 +485,7 @@ AirdropEvtFatalWork(_In_ WDFWORKITEM WorkItem)
 	}
 	WdfWaitLockRelease(ctx->CoreLock);
 
+	AirdropTxCompleteDone(ctx);
 	AirdropRxFlush(ctx, STATUS_DEVICE_HARDWARE_ERROR);
 }
 

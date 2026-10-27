@@ -215,6 +215,216 @@
                 </DataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
+
+
+        <!-- Slim overlay-style scroll bar (macOS-like): no arrows, no track, rounded thumb -->
+        <Style x:Key="SlimScrollBar" TargetType="ScrollBar">
+            <Setter Property="Width" Value="10"/>
+            <Setter Property="MinWidth" Value="10"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Track x:Name="PART_Track" IsDirectionReversed="True" Margin="0,4">
+                            <Track.Thumb>
+                                <Thumb>
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Border x:Name="t" CornerRadius="3" Width="6" Margin="2,0" Background="{DynamicResource TextSecondary}" Opacity="0.45"/>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="t" Property="Opacity" Value="0.7"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- ===== Cihazlar (Nitro.Sync) ===== -->
+        <Style x:Key="SmallAccentPill" TargetType="Button" BasedOn="{StaticResource AccentPill}">
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="FontSize" Value="12.5"/>
+        </Style>
+        <Style x:Key="SmallPill" TargetType="Button" BasedOn="{StaticResource PillButton}">
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="MinWidth" Value="0"/>
+            <Setter Property="FontSize" Value="12.5"/>
+        </Style>
+        <Style x:Key="SubHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10.5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+            <Setter Property="Margin" Value="20,12,14,4"/>
+        </Style>
+
+        <DataTemplate x:Key="SyncTabTemplate">
+            <Border x:Name="row" Padding="8,6" Margin="6,0" CornerRadius="8" Background="Transparent" Cursor="Hand"
+                    ToolTip="{Binding Url}">
+                <Border.InputBindings>
+                    <MouseBinding Gesture="LeftClick" Command="{Binding Open}"/>
+                </Border.InputBindings>
+                <Border.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Bu bilgisayarda aç" Command="{Binding Open}"/>
+                        <MenuItem Header="Bağlantıyı kopyala" Command="{Binding CopyLink}"/>
+                    </ContextMenu>
+                </Border.ContextMenu>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="28"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Width="24" Height="24" HorizontalAlignment="Left">
+                        <Border CornerRadius="6" Background="{Binding Tile}">
+                            <TextBlock Text="{Binding Initial}" Foreground="White" FontSize="11.5" FontWeight="SemiBold"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <Border CornerRadius="6" Background="{DynamicResource Badge}"
+                                Visibility="{Binding HasFavicon, Converter={StaticResource BoolVis}}">
+                            <Image Source="{Binding Favicon}" Width="16" Height="16" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Border>
+                    </Grid>
+                    <StackPanel Grid.Column="1" Margin="10,0,8,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Title}" FontSize="12.5" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding Subtitle}" FontSize="11" Foreground="{DynamicResource TextSecondary}"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                    <TextBlock x:Name="go" Grid.Column="2" Text="&#xE8A7;" FontFamily="{StaticResource IconFont}" FontSize="12"
+                               Foreground="{DynamicResource Accent}" VerticalAlignment="Center" Margin="0,0,4,0" Opacity="0"/>
+                </Grid>
+            </Border>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="row" Property="IsMouseOver" Value="True">
+                    <Setter TargetName="row" Property="Background" Value="{DynamicResource Track}"/>
+                    <Setter TargetName="go" Property="Opacity" Value="1"/>
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="SyncAppTemplate">
+            <Border x:Name="row" Padding="8,6" Margin="6,0" CornerRadius="8" Background="Transparent">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="28"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Width="24" Height="24" HorizontalAlignment="Left">
+                        <Border CornerRadius="6" Background="{Binding Tile}">
+                            <TextBlock Text="{Binding Initial}" Foreground="White" FontSize="11.5" FontWeight="SemiBold"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <Border CornerRadius="6" Background="{DynamicResource Track}"
+                                Visibility="{Binding HasIcon, Converter={StaticResource BoolVis}}">
+                            <Image Source="{Binding Icon}" Width="16" Height="16" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        </Border>
+                    </Grid>
+                    <StackPanel Grid.Column="1" Margin="10,0,8,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Name}" FontSize="12.5" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding Detail}" FontSize="11" Foreground="{DynamicResource TextSecondary}"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                    <Button Grid.Column="2" Style="{StaticResource LinkButton}" Content="Bu bilgisayarda aç" VerticalAlignment="Center"
+                            Margin="0,0,4,0" Command="{Binding OpenHere}"
+                            Visibility="{Binding CanOpenHere, Converter={StaticResource BoolVis}}"/>
+                </Grid>
+            </Border>
+            <DataTemplate.Triggers>
+                <Trigger SourceName="row" Property="IsMouseOver" Value="True">
+                    <Setter TargetName="row" Property="Background" Value="{DynamicResource Track}"/>
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <!-- PC glyph in a circle; green dot when online -->
+        <DataTemplate x:Key="PcAvatar">
+            <Grid Width="40" Height="40">
+                <Ellipse x:Name="circle" Fill="{DynamicResource SelfAvatar}"/>
+                <TextBlock Text="&#xE7F8;" FontFamily="{StaticResource IconFont}" FontSize="17" Foreground="White"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Ellipse x:Name="dot" Width="12" Height="12" Fill="{DynamicResource Trusted}" Stroke="{DynamicResource Badge}"
+                         StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-1,-1"/>
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsOnline}" Value="False">
+                    <Setter TargetName="circle" Property="Fill" Value="{DynamicResource Avatar}"/>
+                    <Setter TargetName="dot" Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="PcTemplate">
+            <Border Style="{StaticResource Section}" Margin="0,0,0,12">
+                <StackPanel>
+                    <Grid x:Name="head" Margin="14,12" Background="Transparent" Cursor="Hand">
+                        <Grid.InputBindings>
+                            <MouseBinding Gesture="LeftClick" Command="{Binding ToggleExpanded}"/>
+                        </Grid.InputBindings>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource PcAvatar}"/>
+                        <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Name}" FontSize="13.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Text="{Binding StatusText}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"
+                                       TextTrimming="CharacterEllipsis" Margin="0,1,0,0"/>
+                        </StackPanel>
+                        <TextBlock x:Name="chevron" Grid.Column="2" Text="&#xE70D;" FontFamily="{StaticResource IconFont}" FontSize="11"
+                                   Foreground="{DynamicResource TextSecondary}" VerticalAlignment="Center" Margin="0,0,4,0"
+                                   Visibility="{Binding CanExpand, Converter={StaticResource BoolVis}}"/>
+                    </Grid>
+                    <StackPanel Visibility="{Binding ShowContent, Converter={StaticResource BoolVis}}" Margin="0,0,0,8">
+                        <Border Height="1" Background="{DynamicResource CardBorder}" Margin="14,0"/>
+                        <StackPanel Visibility="{Binding HasTabs, Converter={StaticResource BoolVis}}">
+                            <TextBlock Text="{Binding TabsHeader}" Style="{StaticResource SubHeader}"/>
+                            <ItemsControl ItemsSource="{Binding Tabs}" ItemTemplate="{StaticResource SyncTabTemplate}"/>
+                            <Button Style="{StaticResource LinkButton}" Content="{Binding MoreTabsText}" Command="{Binding ToggleAllTabs}"
+                                    Margin="52,4,0,2" HorizontalAlignment="Left"
+                                    Visibility="{Binding HasMoreTabs, Converter={StaticResource BoolVis}}"/>
+                        </StackPanel>
+                        <StackPanel Visibility="{Binding HasApps, Converter={StaticResource BoolVis}}">
+                            <TextBlock Text="{Binding AppsHeader}" Style="{StaticResource SubHeader}"/>
+                            <ItemsControl ItemsSource="{Binding Apps}" ItemTemplate="{StaticResource SyncAppTemplate}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsExpanded}" Value="True">
+                    <Setter TargetName="chevron" Property="Text" Value="&#xE70E;"/>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="DiscoveredPcTemplate">
+            <StackPanel Margin="14,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ContentPresenter Content="{Binding}" ContentTemplate="{StaticResource PcAvatar}"/>
+                    <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding StatusText}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"/>
+                    </StackPanel>
+                    <Button Grid.Column="2" Style="{StaticResource SmallAccentPill}" Content="{Binding PairButtonText}"
+                            Command="{Binding Pair}" VerticalAlignment="Center"/>
+                </Grid>
+                <TextBlock Text="{Binding PairError}" FontSize="11.5" Foreground="#FF453A" TextWrapping="Wrap" Margin="52,4,0,0"
+                           Visibility="{Binding HasPairError, Converter={StaticResource BoolVis}}"/>
+            </StackPanel>
+        </DataTemplate>
     </Window.Resources>
 
     <Grid>
@@ -236,6 +446,8 @@
                     <StackPanel Orientation="Horizontal">
                         <RadioButton Style="{StaticResource Segment}" Content="Yakındakiler" GroupName="tabs"
                                      IsChecked="{Binding IsNearby, Mode=TwoWay}"/>
+                        <RadioButton Style="{StaticResource Segment}" Content="Cihazlar" GroupName="tabs"
+                                     IsChecked="{Binding IsDevices, Mode=TwoWay}"/>
                         <RadioButton Style="{StaticResource Segment}" Content="Geçmiş" GroupName="tabs"
                                      IsChecked="{Binding IsHistory, Mode=TwoWay}"/>
                     </StackPanel>
@@ -393,6 +605,149 @@
             </StackPanel>
         </Grid>
 
+        <!-- ============ DEVICES (Nitro.Sync) ============ -->
+        <Grid Grid.Row="1" Margin="20,8,20,0" DataContext="{Binding Devices}" x:Name="DevicesPage"
+              Visibility="{Binding DataContext.IsDevices, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BoolVis}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Margin="10,0,6,10">
+                <TextBlock Text="Cihazlarım" FontSize="20" FontWeight="SemiBold" FontFamily="{StaticResource DisplayFont}"/>
+                <Button Style="{StaticResource LinkButton}" FontSize="12.5" HorizontalAlignment="Right" VerticalAlignment="Center"
+                        Command="{Binding ToggleAddPc}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE710;" FontFamily="{StaticResource IconFont}" FontSize="11"
+                                   VerticalAlignment="Center" Margin="0,1,6,0">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsAddingPc}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <TextBlock Text="{Binding AddPcButtonText}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" x:Name="DevicesScroll">
+                <ScrollViewer.Resources>
+                    <Style TargetType="ScrollBar" BasedOn="{StaticResource SlimScrollBar}"/>
+                </ScrollViewer.Resources>
+                <StackPanel Margin="0,0,0,20">
+                    <!-- iPhone'da şu an -->
+                    <Border Style="{StaticResource Section}" Margin="0,0,0,14" Padding="14,12"
+                            Visibility="{Binding HasIphoneActivity, Converter={StaticResource BoolVis}}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Width="44" Height="44">
+                                <Border CornerRadius="11" Background="{Binding IphoneAppTile}">
+                                    <TextBlock Text="{Binding IphoneAppInitial}" Foreground="White" FontSize="19" FontWeight="SemiBold"
+                                               FontFamily="{StaticResource DisplayFont}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <Border Width="22" Height="22" CornerRadius="11" Background="{DynamicResource Badge}"
+                                        HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-5,-5">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="5" ShadowDepth="1" Opacity="0.2"/>
+                                    </Border.Effect>
+                                    <TextBlock Text="&#xE8EA;" FontFamily="{StaticResource IconFont}" FontSize="11"
+                                               Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </Grid>
+                            <StackPanel Grid.Column="1" Margin="14,0,10,0" VerticalAlignment="Center">
+                                <TextBlock Text="IPHONE'DA ŞU AN" FontSize="10.5" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondary}"/>
+                                <TextBlock Text="{Binding IphoneHeadline}" FontSize="13.5" FontWeight="SemiBold" Margin="0,1,0,0"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding IphoneDetail}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                            <Button Grid.Column="2" Style="{StaticResource SmallAccentPill}" Content="PC'de devam et"
+                                    VerticalAlignment="Center" Command="{Binding ContinueOnPc}"
+                                    Visibility="{Binding CanContinue, Converter={StaticResource BoolVis}}"/>
+                            <Button Grid.Column="3" Style="{StaticResource IconButton}" Content="&#xE711;" FontSize="10" Width="26" Height="26"
+                                    Margin="6,0,-4,0" VerticalAlignment="Center" ToolTip="Kapat" Command="{Binding DismissIphone}"
+                                    Foreground="{DynamicResource TextSecondary}"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Bilgisayar ekle: unpaired NitroDrop PCs on the LAN -->
+                    <StackPanel Visibility="{Binding IsAddingPc, Converter={StaticResource BoolVis}}">
+                        <TextBlock Text="AĞDAKİ NITRODROP BİLGİSAYARLARI" Style="{StaticResource SectionTitle}"/>
+                        <Border Style="{StaticResource Section}" Margin="0,0,0,14">
+                            <StackPanel Margin="0,2">
+                                <ItemsControl ItemsSource="{Binding Discovered}" ItemTemplate="{StaticResource DiscoveredPcTemplate}"/>
+                                <StackPanel Margin="14,12" Orientation="Horizontal">
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HasDiscovered}" Value="False">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+                                    <TextBlock Text="&#xE721;" FontFamily="{StaticResource IconFont}" FontSize="14"
+                                               Foreground="{DynamicResource TextSecondary}" VerticalAlignment="Top" Margin="0,2,10,0"/>
+                                    <StackPanel>
+                                        <TextBlock Text="Aranıyor…" FontSize="13"/>
+                                        <TextBlock Text="Diğer bilgisayarda NitroDrop açık olmalı ve aynı ağa bağlı olmalı."
+                                                   FontSize="11.5" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="EŞLEŞTİRİLMİŞ" Style="{StaticResource SectionTitle}"
+                                   Visibility="{Binding HasPaired, Converter={StaticResource BoolVis}}"/>
+                    </StackPanel>
+
+                    <ItemsControl ItemsSource="{Binding Paired}" ItemTemplate="{StaticResource PcTemplate}"/>
+
+                    <!-- Empty state -->
+                    <StackPanel HorizontalAlignment="Center" Margin="40,56,40,0">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding HasPaired}" Value="False"/>
+                                            <Condition Binding="{Binding IsAddingPc}" Value="False"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <Grid Width="72" Height="72" HorizontalAlignment="Center">
+                            <Ellipse Fill="{DynamicResource Track}"/>
+                            <TextBlock Text="&#xE7F8;" FontFamily="{StaticResource IconFont}" FontSize="30"
+                                       Foreground="{DynamicResource TextSecondary}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <TextBlock Text="Bilgisayarlarınızı eşleştirin" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center"
+                                   Margin="0,16,0,0"/>
+                        <TextBlock Text="Eşleşen bilgisayarlar birbirinin açık sekmelerini ve uygulamalarını görür; tek tıkla burada açarsınız."
+                                   FontSize="12.5" TextWrapping="Wrap" TextAlignment="Center" Margin="0,6,0,0" MaxWidth="340"
+                                   Foreground="{DynamicResource TextSecondary}"/>
+                        <Button Style="{StaticResource AccentPill}" Content="Bilgisayar ekle" HorizontalAlignment="Center" Margin="0,18,0,0"
+                                Command="{Binding ToggleAddPc}"/>
+                    </StackPanel>
+
+                    <TextBlock Text="{Binding SyncError}" FontSize="11.5" Foreground="#FF453A" TextWrapping="Wrap" Margin="14,4"
+                               Visibility="{Binding HasSyncError, Converter={StaticResource BoolVis}}"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+
         <!-- ============ HISTORY ============ -->
         <Grid Grid.Row="1" Margin="20,8,20,20" Visibility="{Binding IsHistory, Converter={StaticResource BoolVis}}">
             <Grid.RowDefinitions>
@@ -409,6 +764,9 @@
             <Border Grid.Row="1" Style="{StaticResource Section}" Margin="0" Padding="6">
                 <Grid>
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer.Resources>
+                            <Style TargetType="ScrollBar" BasedOn="{StaticResource SlimScrollBar}"/>
+                        </ScrollViewer.Resources>
                         <ItemsControl ItemsSource="{Binding History}" ItemTemplate="{StaticResource HistoryTemplate}"/>
                     </ScrollViewer>
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -444,6 +802,9 @@
                            Margin="8,0,0,0" VerticalAlignment="Center"/>
             </StackPanel>
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="24,0,24,20">
+                <ScrollViewer.Resources>
+                    <Style TargetType="ScrollBar" BasedOn="{StaticResource SlimScrollBar}"/>
+                </ScrollViewer.Resources>
                 <StackPanel>
                     <TextBlock Text="BU BİLGİSAYAR" Style="{StaticResource SectionTitle}"/>
                     <Border Style="{StaticResource Section}">
@@ -566,6 +927,274 @@
                             </TextBlock>
                         </StackPanel>
                     </Border>
+
+                    <!-- ===== Senkron (Nitro.Sync) ===== -->
+                    <StackPanel x:Name="SyncSettings"
+                                DataContext="{Binding DataContext.Devices, RelativeSource={RelativeSource AncestorType=Window}}">
+                        <TextBlock Text="SENKRON" Style="{StaticResource SectionTitle}"/>
+                        <Border Style="{StaticResource Section}">
+                            <StackPanel>
+                                <Grid Style="{StaticResource Row}">
+                                    <StackPanel Margin="0,0,60,0">
+                                        <TextBlock Text="Sekmelerimi paylaş" FontSize="13"/>
+                                        <TextBlock Text="Chrome ve Edge'deki açık sekmeleriniz eşleşen bilgisayarlarda görünür. Gizli sekmeler hiç paylaşılmaz."
+                                                   FontSize="11.5" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}"/>
+                                    </StackPanel>
+                                    <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              IsChecked="{Binding ShareTabs}"/>
+                                </Grid>
+                                <Border Height="1" Background="{DynamicResource CardBorder}" Margin="14,0"/>
+                                <Grid Style="{StaticResource Row}">
+                                    <StackPanel Margin="0,0,60,0">
+                                        <TextBlock Text="Açık uygulamalarımı paylaş" FontSize="13"/>
+                                        <TextBlock Text="Yalnızca uygulama adı, simgesi ve pencere başlığı gider; dosya yolları bu bilgisayarda kalır."
+                                                   FontSize="11.5" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}"/>
+                                    </StackPanel>
+                                    <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              IsChecked="{Binding ShareApps}"/>
+                                </Grid>
+                                <StackPanel Visibility="{Binding ShareApps, Converter={StaticResource BoolVis}}">
+                                    <Border Height="1" Background="{DynamicResource CardBorder}" Margin="14,0"/>
+                                    <StackPanel Margin="14,11,14,12">
+                                        <TextBlock Text="Paylaşılmayacak uygulamalar" FontSize="13"/>
+                                        <TextBlock Text="Parola yöneticileri ve sistem süreçleri zaten hariç."
+                                                   FontSize="11.5" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}"/>
+                                        <ItemsControl ItemsSource="{Binding ExcludedApps}" Margin="0,8,0,0"
+                                                      Visibility="{Binding HasExcludedApps, Converter={StaticResource BoolVis}}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border CornerRadius="8" Background="{DynamicResource Track}" Padding="10,4,4,4" Margin="0,0,6,6">
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="{Binding}" FontSize="12" VerticalAlignment="Center"/>
+                                                            <Button Style="{StaticResource IconButton}" Content="&#xE711;" FontSize="8" Width="20" Height="20"
+                                                                    Margin="4,0,0,0" ToolTip="Kaldır"
+                                                                    Command="{Binding DataContext.RemoveExcluded, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                    CommandParameter="{Binding}"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <Grid Margin="0,8,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border CornerRadius="8" Background="{DynamicResource Track}" Padding="10,5">
+                                                <Grid>
+                                                    <TextBox x:Name="ExcludeBox" Style="{StaticResource FlatText}" HorizontalContentAlignment="Left"
+                                                             Text="{Binding NewExcludedApp, UpdateSourceTrigger=PropertyChanged}">
+                                                        <TextBox.InputBindings>
+                                                            <KeyBinding Key="Enter" Command="{Binding AddExcluded}"/>
+                                                        </TextBox.InputBindings>
+                                                    </TextBox>
+                                                    <TextBlock Text="Uygulama dosyası, ör. Telegram.exe" FontSize="13" IsHitTestVisible="False"
+                                                               Foreground="{DynamicResource TextSecondary}" Margin="2,0,0,0">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Text, ElementName=ExcludeBox}" Value="">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Grid>
+                                            </Border>
+                                            <Button Grid.Column="1" Style="{StaticResource SmallPill}" Content="Ekle" Margin="8,0,0,0"
+                                                    Command="{Binding AddExcluded}"/>
+                                        </Grid>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="TARAYICI EKLENTİSİ" Style="{StaticResource SectionTitle}"/>
+                        <Border Style="{StaticResource Section}">
+                            <StackPanel>
+                                <Grid Style="{StaticResource Row}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse x:Name="ExtDot" Width="9" Height="9" VerticalAlignment="Top" Margin="0,5,10,0">
+                                        <Ellipse.Style>
+                                            <Style TargetType="Ellipse">
+                                                <Setter Property="Fill" Value="{DynamicResource TextSecondary}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ExtensionConnected}" Value="True">
+                                                        <Setter Property="Fill" Value="{DynamicResource Trusted}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
+                                    <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                                        <TextBlock Text="{Binding ExtensionStatus}" FontSize="13"/>
+                                        <TextBlock Text="{Binding ExtensionDetail}" FontSize="11.5" TextWrapping="Wrap"
+                                                   Foreground="{DynamicResource TextSecondary}"/>
+                                    </StackPanel>
+                                    <Button Grid.Column="2" Style="{StaticResource SmallPill}" Content="Eklentiyi kur" VerticalAlignment="Center"
+                                            Command="{Binding ToggleExtensionHelp}"/>
+                                </Grid>
+                                <!-- short help: load unpacked + register the native host -->
+                                <StackPanel Visibility="{Binding ShowExtensionHelp, Converter={StaticResource BoolVis}}">
+                                    <Border Height="1" Background="{DynamicResource CardBorder}" Margin="14,0"/>
+                                    <StackPanel Margin="14,12,14,14">
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="20" Height="20" CornerRadius="10" Background="{DynamicResource Accent}" VerticalAlignment="Top">
+                                                <TextBlock Text="1" Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <TextBlock Grid.Column="1" FontSize="12.5" TextWrapping="Wrap" Margin="0,1,0,0">
+                                                Chrome'da <Run FontWeight="SemiBold">chrome://extensions</Run>, Edge'de <Run FontWeight="SemiBold">edge://extensions</Run>
+                                                adresini açın ve <Run FontWeight="SemiBold">Geliştirici modu</Run>'nu açın.
+                                            </TextBlock>
+                                        </Grid>
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="20" Height="20" CornerRadius="10" Background="{DynamicResource Accent}" VerticalAlignment="Top">
+                                                <TextBlock Text="2" Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock FontSize="12.5" TextWrapping="Wrap" Margin="0,1,0,0">
+                                                    <Run FontWeight="SemiBold">Paketlenmemiş öğe yükle</Run>'ye basıp bu klasörü seçin:
+                                                </TextBlock>
+                                                <Border CornerRadius="8" Background="{DynamicResource Track}" Padding="10,6" Margin="0,6,0,0">
+                                                    <TextBlock Text="{Binding ExtensionFolder}" FontSize="11.5" FontFamily="Consolas"
+                                                               TextTrimming="CharacterEllipsis" ToolTip="{Binding ExtensionFolder}"/>
+                                                </Border>
+                                                <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                                                    <Button Style="{StaticResource LinkButton}" Content="Klasörü aç" Command="{Binding OpenExtensionFolder}"/>
+                                                    <Button Style="{StaticResource LinkButton}" Content="Yolu kopyala" Margin="16,0,0,0"
+                                                            Command="{Binding CopyExtensionFolder}"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="20" Height="20" CornerRadius="10" Background="{DynamicResource Accent}" VerticalAlignment="Top">
+                                                <TextBlock Text="3" Foreground="White" FontSize="11" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock FontSize="12.5" TextWrapping="Wrap" Margin="0,1,0,0"
+                                                           Text="Eklentinin NitroDrop ile konuşabilmesi için tarayıcıya bağlayın (yalnızca bu kullanıcı için, yönetici izni gerekmez)."/>
+                                                <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                    <Button Style="{StaticResource SmallAccentPill}" Content="Tarayıcıya bağla" Command="{Binding RegisterExtension}"/>
+                                                    <TextBlock Text="{Binding RegisterStatus}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"
+                                                               VerticalAlignment="Center" Margin="10,0,0,0" TextWrapping="Wrap" MaxWidth="250"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="EŞLEŞTİRİLMİŞ BİLGİSAYARLAR" Style="{StaticResource SectionTitle}"/>
+                        <Border Style="{StaticResource Section}">
+                            <StackPanel>
+                                <ItemsControl ItemsSource="{Binding Paired}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="14,9">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Name}" FontSize="13"/>
+                                                    <TextBlock Text="{Binding StatusText}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"
+                                                               TextTrimming="CharacterEllipsis" Margin="0,0,60,0"/>
+                                                </StackPanel>
+                                                <Button Style="{StaticResource LinkButton}" Content="Kaldır" HorizontalAlignment="Right"
+                                                        VerticalAlignment="Center" Command="{Binding Unpair}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <TextBlock Margin="14,11" FontSize="12" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}"
+                                           Text="Henüz eşleştirilmiş bilgisayar yok. Cihazlar sekmesinden “Bilgisayar ekle”yi kullanın.">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HasPaired}" Value="False">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="IPHONE (KESTİRME)" Style="{StaticResource SectionTitle}"/>
+                        <Border Style="{StaticResource Section}">
+                            <StackPanel>
+                                <ItemsControl ItemsSource="{Binding IosDevices}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="14,9">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Name}" FontSize="13"/>
+                                                    <TextBlock Text="{Binding Detail}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"/>
+                                                </StackPanel>
+                                                <Button Style="{StaticResource LinkButton}" Content="Kaldır" HorizontalAlignment="Right"
+                                                        VerticalAlignment="Center" Command="{Binding Remove}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                                <Border Height="1" Background="{DynamicResource CardBorder}" Margin="14,0"
+                                        Visibility="{Binding HasIosDevices, Converter={StaticResource BoolVis}}"/>
+
+                                <!-- one-time setup QR -->
+                                <StackPanel Visibility="{Binding HasIosSetup, Converter={StaticResource BoolVis}}" Margin="14,14,14,4">
+                                    <TextBlock Text="{Binding IosSetupTitle}" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                    <Border Width="196" Height="196" CornerRadius="12" Background="White" Margin="0,10,0,0" Padding="2"
+                                            BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                                        <Image Source="{Binding IosQr}" RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+                                    </Border>
+                                    <TextBlock Text="iPhone'da Kamera ile okutun ve adresi kestirmedeki “URL'nin İçeriğini Al” eylemine yapıştırın."
+                                               FontSize="11.5" TextWrapping="Wrap" TextAlignment="Center" Margin="10,10,10,0"
+                                               Foreground="{DynamicResource TextSecondary}"/>
+                                    <Border CornerRadius="8" Background="{DynamicResource Track}" Padding="10,6" Margin="0,10,0,0">
+                                        <TextBox Text="{Binding IosUrl, Mode=OneWay}" IsReadOnly="True" FontSize="11" FontFamily="Consolas"
+                                                 Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimary}"
+                                                 TextWrapping="Wrap"/>
+                                    </Border>
+                                    <TextBlock Text="Bu adres bir kez gösterilir ve iPhone'a özel bir anahtar içerir; yalnızca kendi telefonunuza aktarın."
+                                               FontSize="11" TextWrapping="Wrap" Margin="0,8,0,0" Foreground="{DynamicResource TextSecondary}"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,10">
+                                        <Button Style="{StaticResource LinkButton}" Content="Adresi kopyala" Command="{Binding CopyIosUrl}"/>
+                                        <Button Style="{StaticResource LinkButton}" Content="Kestirme talimatları" Margin="18,0,0,0"
+                                                Command="{Binding OpenShortcutHelp}"/>
+                                        <Button Style="{StaticResource LinkButton}" Content="Bitti" Margin="18,0,0,0" FontWeight="SemiBold"
+                                                Command="{Binding CloseIosSetup}"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <Grid Style="{StaticResource Row}">
+                                    <TextBlock FontSize="12" TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}" Margin="0,0,150,0"
+                                               Text="iPhone'da açılan uygulama ve paylaştığınız bağlantılar Kestirmeler ile bu bilgisayara gelir."/>
+                                    <Button Style="{StaticResource SmallAccentPill}" Content="iPhone ekle" HorizontalAlignment="Right"
+                                            VerticalAlignment="Center" Command="{Binding AddIphone}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
 
                     <TextBlock Text="WI-FI SÜRÜCÜSÜ" Style="{StaticResource SectionTitle}"/>
                     <Border Style="{StaticResource Section}"

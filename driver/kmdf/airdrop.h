@@ -24,6 +24,10 @@
  *             iwx_send_cmd() and the DPC.
  *   RxLock    (WDFSPINLOCK): RX frame ring + READ_FRAME queue. Taken while
  *             CoreSpin is held (DPC -> osdep_rx_frame), never the reverse.
+ *   TxLock    (WDFSPINLOCK): TX result slots (pending INJECT_FRAME
+ *             requests). Taken while CoreSpin is held (osdep_tx_status),
+ *             never the reverse. Requests are only completed with no
+ *             spinlock held (AirdropTxCompleteDone).
  */
 #ifndef AIRDROP_KMDF_H
 #define AIRDROP_KMDF_H
@@ -34,6 +38,7 @@
 
 #include "../include/airdrop_ioctl.h"
 #include "../core/iwx_core.h"
+#include "airdrop_queues.h"	/* RX ring / TX slot bookkeeping */
 
 #ifndef PCI_WHICH_SPACE_CONFIG
 #define PCI_WHICH_SPACE_CONFIG		0x0	/* BUS_INTERFACE_STANDARD */
@@ -41,7 +46,7 @@
 
 #define AIRDROP_POOL_TAG		'wxdA'	/* "Adxw" in pool dumps */
 #define AIRDROP_FW_MAX_SIZE		(8u * 1024 * 1024)
-#define AIRDROP_RX_RING_SLOTS		64
+#define AIRDROP_RX_RING_SLOTS		AQ_RX_SLOTS	/* 128 */
 #define AIRDROP_RX_SLOT_DATA		4096
 
 typedef struct _AIRDROP_RX_SLOT {
@@ -85,10 +90,11 @@ typedef struct _DEVICE_CONTEXT {
 	WDFQUEUE		ReadQueue;	/* manual: pending READ_FRAME */
 	WDFSPINLOCK		RxLock;
 	AIRDROP_RX_SLOT		*RxRing;	/* AIRDROP_RX_RING_SLOTS entries */
-	ULONG			RxHead;		/* next slot to fill */
-	ULONG			RxCount;	/* filled slots */
-	ULONG			RxDroppedPending;
-	volatile LONG		RxDroppedTotal;
+	AQ_RX_RING		Rx;		/* indices + drop counters */
+
+	/* TX results (INJECT_FRAME with an AIRDROP_TX_RESULT buffer) */
+	WDFSPINLOCK		TxLock;
+	AQ_TX_TABLE		Tx;
 } DEVICE_CONTEXT, *PDEVICE_CONTEXT;
 
 WDF_DECLARE_CONTEXT_TYPE_WITH_NAME(DEVICE_CONTEXT, AirdropGetContext)
@@ -104,5 +110,8 @@ EVT_WDF_FILE_CLEANUP			AirdropEvtFileCleanup;
 VOID AirdropRxDeliverPending(_In_ PDEVICE_CONTEXT Ctx);
 VOID AirdropRxFlush(_In_ PDEVICE_CONTEXT Ctx, _In_ NTSTATUS Status);
 VOID AirdropRadioDownLocked(_In_ PDEVICE_CONTEXT Ctx);
+VOID AirdropTxCompleteDone(_In_ PDEVICE_CONTEXT Ctx);
+VOID AirdropTxCancelAll(_In_ PDEVICE_CONTEXT Ctx,
+    _In_opt_ WDFFILEOBJECT FileObject, _In_ NTSTATUS Status);
 
 #endif /* AIRDROP_KMDF_H */

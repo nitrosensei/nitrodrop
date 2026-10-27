@@ -22,6 +22,7 @@ public partial class App : Application
     private Forms.NotifyIcon? _tray;
     private Action? _balloonClick;
     private IAirDropService? _svc;
+    private ISyncSource? _sync;
     private MainWindow? _main;
     private MainViewModel? _vm;
     private SetupWizard? _wizard;
@@ -64,18 +65,25 @@ public partial class App : Application
         if (demo)
         {
             _svc = new DemoAirDropService();
+            _sync = new DemoSyncSource();
             contacts = new DemoContactResolver();
         }
         else
         {
             _svc = new CoreAirDropService();
+            // Nitro.Sync: tabs/apps between paired NitroDrop PCs, browser extension bridge, iOS Shortcut receiver.
+            // Same TLS identity as AirDrop (default pfx); name follows Ayarlar → Görünen ad.
+            _sync = new NitroSyncSource();
             contacts = ContactBookResolver.OpenDefault();
         }
 
-        _vm = new MainViewModel(_svc, settings, history, contacts, Dispatcher);
+        _vm = new MainViewModel(_svc, _sync, settings, history, contacts, Dispatcher);
         _main = new MainWindow(_vm);
         _vm.ShowAskSheet = (req, contact, photo) => ReceiveWindow.AskAsync(_main, req, contact, photo);
         _vm.Notify = ShowBalloon;
+        _vm.Devices.ShowPairSheet = (prompt, ct) => ConfirmSheet.PairAsync(_main, prompt, ct);
+        _vm.Devices.ShowLaunchSheet = (req, ct) => ConfirmSheet.LaunchAsync(_main, req, ct);
+        _vm.Devices.AskIphoneName = () => TextPrompt.Show(_main, "iPhone ekle", "Bu iPhone'a bir ad verin:", "iPhone'um");
         _vm.DriverSetup.OpenWizard = ShowSetupWizard;
 
 #if DEBUG
@@ -83,6 +91,7 @@ public partial class App : Application
         if (snap >= 0 && snap + 1 < e.Args.Length)
         {
             await Snapshot.RunAsync(_main, _vm, e.Args[snap + 1]);
+            await _sync.DisposeAsync();
             Shutdown();
             return;
         }
@@ -134,6 +143,7 @@ public partial class App : Application
     {
         var menu = new Forms.ContextMenuStrip();
         menu.Items.Add("NitroDrop'u Aç", null, (_, _) => ShowMain());
+        menu.Items.Add("Cihazlar", null, (_, _) => { ShowMain(); if (_vm is not null) _vm.Tab = MainTab.Devices; });
         menu.Items.Add("Geçmiş", null, (_, _) => { ShowMain(); if (_vm is not null) _vm.Tab = MainTab.History; });
         menu.Items.Add(new Forms.ToolStripSeparator());
         menu.Items.Add("Çıkış", null, (_, _) => Quit());
@@ -168,6 +178,7 @@ public partial class App : Application
     private async void Quit()
     {
         if (_tray is not null) { _tray.Visible = false; _tray.Dispose(); }
+        if (_sync is not null) await _sync.DisposeAsync();
         if (_svc is not null) await _svc.DisposeAsync();
         _single?.Dispose();
         Shutdown();

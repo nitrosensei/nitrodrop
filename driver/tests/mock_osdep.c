@@ -95,6 +95,8 @@ sim_reset(void)
 	g_sim.mcc_v4 = 1;
 	g_sim.lar_enabled = 1;
 	g_sim.fail_cmd_group = g_sim.fail_cmd_opcode = -1;
+	g_sim.add_sta_status = IWX_ADD_STA_SUCCESS;
+	g_sim.tx_status = IWX_TX_STATUS_SUCCESS;
 	g_sim.mac[0] = 0x8c; g_sim.mac[1] = 0x1d; g_sim.mac[2] = 0x96;
 	g_sim.mac[3] = 0x12; g_sim.mac[4] = 0x34; g_sim.mac[5] = 0x56;
 	g_sim.quiet = 1;
@@ -168,7 +170,7 @@ sim_rx_packet(uint8_t group, uint8_t code, uint8_t qid, uint8_t idx,
 	uint8_t *buf;
 	int i;
 
-	if (sc == NULL || sc->rxq.free_desc_dma.vaddr == NULL)
+	if (sc == NULL || sc->rxq.free_desc_dma.vaddr == NULL || g_sim.gone)
 		return;
 	/* the free RBD table the device was told about at boot */
 	fd = (struct iwx_rx_transfer_desc *)(uintptr_t)
@@ -203,6 +205,21 @@ sim_rx_packet(uint8_t group, uint8_t code, uint8_t qid, uint8_t idx,
 	status = sc->rxq.stat_dma.vaddr;
 	*status = htole16((uint16_t)(g_sim.rx_write & 0xfff));
 	sim_raise(IWX_MSIX_FH_INT_CAUSES_Q0, 0);
+}
+
+void
+sim_rx_mpdu(const struct iwx_rx_mpdu_desc *desc, const uint8_t *frame,
+    uint32_t len)
+{
+	static uint8_t buf[sizeof(struct iwx_rx_mpdu_desc) + 3000];
+
+	if (len + sizeof(*desc) > sizeof(buf))
+		return;
+	memcpy(buf, desc, sizeof(*desc));
+	memcpy(buf + sizeof(*desc), frame, len);
+	/* RX notifications are not command replies: qid bit 7 set */
+	sim_rx_packet(IWX_LEGACY_GROUP, IWX_REPLY_RX_MPDU_CMD, 0x80, 0, buf,
+	    (uint32_t)(sizeof(*desc) + len));
 }
 
 static void
@@ -423,6 +440,94 @@ sim_handle_cmd(int idx, const struct iwx_cmd_header_wide *hdr,
 		return;
 	}
 
+	if (hdr->group_id == IWX_LONG_GROUP && hdr->opcode == IWX_ADD_STA) {
+		generic.status = g_sim.add_sta_status;
+		sim_reply(idx, hdr->group_id, hdr->opcode, failed,
+		    &generic, sizeof(generic));
+		return;
+	}
+	if (hdr->group_id == IWX_LONG_GROUP &&
+	    hdr->opcode == IWX_BINDING_CONTEXT_CMD) {
+		generic.status = g_sim.binding_status;
+		sim_reply(idx, hdr->group_id, hdr->opcode, failed,
+		    &generic, sizeof(generic));
+		return;
+	}
+	if (hdr->group_id == IWX_DATA_PATH_GROUP &&
+	    hdr->opcode == IWX_SCD_QUEUE_CONFIG_CMD) {
+		const struct iwx_scd_queue_cfg_cmd *c = (const void *)payload;
+		struct iwx_tx_queue_cfg_rsp *r = (void *)rsp;
+		struct iwx_softc *sc = g_sim.sc;
+		int q;
+
+		if (c->operation == IWX_SCD_QUEUE_ADD) {
+			for (q = 1; q < (int)nitems(g_sim.txq); q++)
+				if (sc->txq[q].desc_dma.paddr ==
+				    c->u.add.tfdq_dram_addr)
+					break;
+			if (q == (int)nitems(g_sim.txq) || g_sim.txq[q].enabled ||
+			    c->u.add.bc_dram_addr != sc->txq[q].bc_tbl.paddr) {
+				g_sim.tx_errors++;
+				failed = 1;
+				q = 0;
+			} else {
+				memset(&g_sim.txq[q], 0, offsetof(struct sim_txq,
+				    adds));
+				g_sim.txq[q].enabled = 1;
+				g_sim.txq[q].sta_mask = c->u.add.sta_mask;
+				g_sim.txq[q].tid = c->u.add.tid;
+				g_sim.txq[q].cb_size = c->u.add.cb_size;
+				g_sim.txq[q].tfdq = c->u.add.tfdq_dram_addr;
+				g_sim.txq[q].bc = c->u.add.bc_dram_addr;
+				g_sim.txq[q].adds++;
+			}
+			r->queue_number = (uint16_t)(q + g_sim.scd_wrong_qid);
+			r->write_pointer = 0;
+		} else if (c->operation == IWX_SCD_QUEUE_REMOVE) {
+			for (q = 1; q < (int)nitems(g_sim.txq); q++)
+				if (g_sim.txq[q].enabled &&
+				    g_sim.txq[q].sta_mask == c->u.remove.sta_mask &&
+				    g_sim.txq[q].tid == c->u.remove.tid)
+					break;
+			if (q == (int)nitems(g_sim.txq)) {
+				g_sim.tx_errors++;
+				failed = 1;
+			} else {
+				g_sim.txq[q].enabled = 0;
+				g_sim.txq[q].removes++;
+			}
+		} else
+			failed = 1;
+		sim_reply(idx, hdr->group_id, hdr->opcode, failed, r,
+		    sizeof(*r));
+		return;
+	}
+	if (hdr->group_id == IWX_LONG_GROUP &&
+	    hdr->opcode == IWX_TXPATH_FLUSH) {
+		const struct iwx_tx_path_flush_cmd *c = (const void *)payload;
+		struct iwx_tx_path_flush_cmd_rsp *r = (void *)rsp;
+		int q, n = 0;
+
+		r->sta_id = (uint16_t)(c->sta_id + g_sim.flush_wrong_sta);
+		for (q = 1; q < (int)nitems(g_sim.txq); q++) {
+			struct sim_txq *t = &g_sim.txq[q];
+
+			if (!t->enabled || !(t->sta_mask & (1u << c->sta_id)) ||
+			    !(c->tid_mask & (1u << t->tid)))
+				continue;
+			r->queues[n].tid = t->tid;
+			r->queues[n].queue_num = (uint16_t)q;
+			r->queues[n].read_before_flush = (uint16_t)t->answered;
+			r->queues[n].read_after_flush = (uint16_t)t->fetched;
+			t->answered = t->fetched;	/* dropped, no TX_CMD */
+			n++;
+		}
+		r->num_flushed_queues = (uint16_t)n;
+		sim_reply(idx, hdr->group_id, hdr->opcode, failed, r,
+		    sizeof(*r));
+		return;
+	}
+
 	sim_reply(idx, hdr->group_id, hdr->opcode, failed,
 	    &generic, sizeof(generic));
 
@@ -430,7 +535,117 @@ sim_handle_cmd(int idx, const struct iwx_cmd_header_wide *hdr,
 	    hdr->opcode == IWX_NVM_ACCESS_COMPLETE)
 		sim_rx_packet(IWX_LEGACY_GROUP, IWX_INIT_COMPLETE_NOTIF, 0x80,
 		    0, &generic, sizeof(generic));
-	(void)payload;
+}
+
+/* answer one fetched TFD of a data queue */
+static void
+sim_tx_reply(int qid, int slot, const struct sim_tx *t)
+{
+	struct {
+		struct iwx_tx_resp r;
+		uint32_t ssn;
+	} __packed rsp;
+	struct sim_txq *q = &g_sim.txq[qid];
+	uint32_t rate;
+
+	memset(&rsp, 0, sizeof(rsp));
+	memcpy(&rate, &t->cmd[16], sizeof(rate));
+	rsp.r.frame_count = 1;
+	rsp.r.failure_frame = g_sim.tx_failure_frame;
+	rsp.r.failure_rts = g_sim.tx_failure_rts;
+	rsp.r.initial_rate = rate;
+	rsp.r.seq_ctl = (uint16_t)(t->frame[22] | (t->frame[23] << 8));
+	rsp.r.byte_cnt = (uint16_t)t->frame_len;
+	rsp.r.tx_queue = (uint16_t)qid;
+	rsp.r.status.status = g_sim.tx_status;
+	rsp.ssn = q->fetched;		/* frames before this are done */
+	q->answered = q->fetched;
+	sim_rx_packet(IWX_LEGACY_GROUP, IWX_TX_CMD, (uint8_t)qid,
+	    (uint8_t)slot, &rsp, sizeof(rsp));
+}
+
+/* Doorbell on a data queue: fetch TFDs, check layout, answer TX_CMD. */
+static void
+sim_process_txq(int qid, uint32_t wrptr)
+{
+	struct sim_txq *q;
+
+	if (qid <= 0 || qid >= (int)nitems(g_sim.txq) ||
+	    !g_sim.txq[qid].enabled || g_sim.txq[qid].cb_size == 0) {
+		g_sim.tx_errors++;
+		return;
+	}
+	q = &g_sim.txq[qid];
+	while (q->fetched != (wrptr & 0xffff)) {
+		int slot = (int)(q->fetched & (IWX_TX_RING_COUNT - 1));
+		const struct iwx_tfh_tfd *d =
+		    &((const struct iwx_tfh_tfd *)(uintptr_t)q->tfdq)[slot];
+		const struct iwx_gen3_bc_tbl_entry *bc = (const void *)
+		    (uintptr_t)q->bc;
+		static struct sim_tx tmp;
+		struct sim_tx *t;
+		uint8_t buf[256];
+		uint32_t total, oa, hdrlen, pad, flen;
+		uint16_t chunks;
+		int i;
+
+		t = g_sim.ntx < (int)nitems(g_sim.tx) ?
+		    &g_sim.tx[g_sim.ntx] : &tmp;
+		g_sim.ntx++;
+		memset(t, 0, sizeof(*t));
+		t->qid = (uint8_t)qid;
+		t->idx = (uint8_t)slot;
+		t->num_tbs = d->num_tbs;
+		for (i = 0; i < 3; i++) {
+			t->tb_len[i] = d->tbs[i].tb_len;
+			memcpy(&t->tb_addr[i], &d->tbs[i].addr, 8);
+		}
+		t->bc_ent = bc[slot].tfd_offset;
+		if (t->num_tbs < 2 || t->num_tbs > 3 ||
+		    t->tb_len[0] != IWX_FIRST_TB_SIZE ||
+		    t->tb_addr[1] != t->tb_addr[0] + IWX_FIRST_TB_SIZE ||
+		    (uint32_t)t->tb_len[0] + t->tb_len[1] > sizeof(buf)) {
+			t->bad = 1;
+			goto next;
+		}
+		total = (uint32_t)t->tb_len[0] + t->tb_len[1];
+		memcpy(buf, (const void *)(uintptr_t)t->tb_addr[0], total);
+		memcpy(&t->hdr, buf, sizeof(t->hdr));
+		memcpy(t->cmd, buf + 4, sizeof(t->cmd));
+		memcpy(&oa, &t->cmd[4], sizeof(oa));
+		hdrlen = ((oa >> 8) & 0x1f) * 2;
+		pad = (oa & (1u << 13)) ? (4 - (hdrlen & 3)) & 3 : 0;
+		if (t->hdr.code != IWX_TX_CMD || t->hdr.qid != qid ||
+		    t->hdr.idx != slot || total != 4 + 28 + hdrlen + pad ||
+		    (pad == 0 && (hdrlen & 3) != 0)) {
+			t->bad = 2;
+			goto next;
+		}
+		memcpy(t->frame, buf + 32, hdrlen);
+		flen = hdrlen;
+		if (t->num_tbs == 3) {
+			if (hdrlen + t->tb_len[2] > sizeof(t->frame)) {
+				t->bad = 3;
+				goto next;
+			}
+			memcpy(t->frame + hdrlen,
+			    (const void *)(uintptr_t)t->tb_addr[2],
+			    t->tb_len[2]);
+			flen += t->tb_len[2];
+		}
+		t->frame_len = flen;
+		chunks = (uint16_t)((offsetof(struct iwx_tfh_tfd, tbs) +
+		    t->num_tbs * sizeof(struct iwx_tfh_tb) + 63) / 64 - 1);
+		if (flen != (uint32_t)(t->cmd[0] | (t->cmd[1] << 8)) ||
+		    t->bc_ent != (uint16_t)(flen | (chunks << 14)))
+			t->bad = 4;
+next:
+		if (t->bad)
+			g_sim.tx_errors++;
+		q->fetched = (q->fetched + 1) & 0xffff;
+		if (!g_sim.tx_hold)
+			sim_tx_reply(qid, slot, t);
+	}
 }
 
 /* Doorbell on the command queue: consume TFDs up to the write pointer. */
@@ -499,9 +714,15 @@ sim_process_cmds(uint32_t wrptr)
 int
 sim_find_cmd(uint8_t group, uint8_t opcode)
 {
+	return sim_find_cmd_from(0, group, opcode);
+}
+
+int
+sim_find_cmd_from(int start, uint8_t group, uint8_t opcode)
+{
 	int i;
 
-	for (i = 0; i < g_sim.ncmds; i++)
+	for (i = start; i < g_sim.ncmds; i++)
 		if (g_sim.cmds[i].group == group &&
 		    g_sim.cmds[i].opcode == opcode)
 			return i;
@@ -516,6 +737,8 @@ osdep_read32(void *os, uint32_t off)
 	uint32_t v = reg_get(off);
 
 	(void)os;
+	if (g_sim.gone)
+		return 0xffffffff;	/* device fell off the bus */
 	switch (off) {
 	case IWX_CSR_GP_CNTRL:
 		v |= IWX_CSR_GP_CNTRL_REG_FLAG_HW_RF_KILL_SW;	/* radio on */
@@ -562,8 +785,12 @@ osdep_write32(void *os, uint32_t off, uint32_t val)
 		return;
 	case IWX_HBUS_TARG_WRPTR:
 		reg_set(off, val);
+		if (g_sim.gone)
+			return;
 		if ((val >> 16) == IWX_DQA_CMD_QUEUE)
 			sim_process_cmds(val);
+		else
+			sim_process_txq((int)(val >> 16), val);
 		return;
 	case IWX_CSR_MSIX_FH_INT_CAUSES_AD:
 		g_sim.fh_cause &= ~val;		/* W1C */
@@ -750,6 +977,17 @@ osdep_rx_frame(void *os, const struct iwx_rx_meta *meta,
 	g_sim.last_meta = *meta;
 	g_sim.last_frame_len = len;
 	memcpy(g_sim.last_frame, frame, MIN(len, sizeof(g_sim.last_frame)));
+}
+
+void
+osdep_tx_status(void *os, const struct iwx_tx_status *st)
+{
+	(void)os;
+	if (g_sim.lock_depth != 1)
+		g_sim.txst_unlocked++;
+	if (g_sim.ntxst < (int)nitems(g_sim.txst))
+		g_sim.txst[g_sim.ntxst] = *st;
+	g_sim.ntxst++;
 }
 
 void

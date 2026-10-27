@@ -206,6 +206,7 @@ struct iwx_tx_data {
 	int		flags;
 #define IWX_TXDATA_FLAG_CMD_IS_NARROW	0x01
 #define IWX_TXDATA_FLAG_BIG_CMD		0x02	/* airdrop: uses sc->cmd_big_dma */
+#define IWX_TXDATA_FLAG_TX_QUEUED	0x04	/* airdrop: data queue slot in use */
 	volatile int	done;		/* airdrop: completion flag for waiter */
 	/* airdrop (M3): injected frame bookkeeping, data queues only */
 	int		inflight;	/* waiting for TX_CMD response */

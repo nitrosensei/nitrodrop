@@ -36,34 +36,50 @@ def rrect(x, y, w, h, r):
     return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{r}"/>'
 
 # ---- A: Pas
-def A_mark(c):  # c: dict(arc, bars)
-    return (f'<path fill="{c["arc"]}" d="{arc_band(24,18,22.5,12.5,21)}"/>'
-            f'<g fill="{c["bars"]}">{rrect(6,25,10,19,2)}{rrect(32,25,10,19,2)}</g>')
+def n_shape(c, L, R, cx, cy, ro, ci, ri, yi_join, gap_lines, uid):
+    """Küçük harf n: sol gövde + omuz (incelen birleşim) + sağ ayak; sağ ayak eğik kesikle ayrılır.
+    L=(x0,x1) sol gövde, R=(x0,x1) sağ ayak, alt=bottom. gap_lines = (y1@xa, y1@xb, y2@xa, y2@xb, xa, xb)"""
+    (l0, l1), (r0, r1), bot = L, R, c["_bot"]
+    outer = f"M{l0} {bot} L{l0} {cy} A{ro} {ro} 0 0 1 {r1} {cy} L{r1} {bot} Z"
+    counter = f"M{l1} {bot} L{l1} {yi_join} A{ri} {ri} 0 0 1 {r0} {ci[1]} L{r0} {bot} Z"
+    d = outer + " " + counter
+    ya1, yb1, ya2, yb2, xa, xb = gap_lines
+    k1 = (yb1 - ya1) / (xb - xa); k2 = (yb2 - ya2) / (xb - xa)
+    mid = (l1 + r0) / 2; W = r1 + 10
+    def y1(x): return ya1 + k1 * (x - xa)
+    def y2(x): return ya2 + k2 * (x - xa)
+    p1 = f"-10 -10 {W} -10 {W} {y1(W):.3f} {mid} {y1(mid):.3f} {mid} {bot+10} -10 {bot+10}"
+    p2 = f"{mid} {y2(mid):.3f} {W} {y2(W):.3f} {W} {bot+10} {mid} {bot+10}"
+    return (f'<defs><clipPath id="na{uid}"><polygon points="{p1}"/></clipPath><clipPath id="nb{uid}"><polygon points="{p2}"/></clipPath></defs>'
+            f'<path fill="{c["arc"]}" fill-rule="evenodd" clip-path="url(#na{uid})" d="{d}"/>'
+            f'<path fill="{c["bars"]}" fill-rule="evenodd" clip-path="url(#nb{uid})" d="{d}"/>')
+def A_mark(c):
+    c = dict(c, _bot=44)
+    return n_shape(c, (6, 16), (32, 42), 24, 21, 18, (21, 19), 11, 9.2, (26, 22, 29.5, 25.5, 32, 42), _n())
 def A_16(c):
-    return (f'<path fill="{c["arc"]}" d="{arc_band(8,5,7.5,3.5,7)}"/>'
-            f'<g fill="{c["bars"]}"><rect x="3" y="8" width="3" height="6" rx=".6"/><rect x="10" y="8" width="3" height="6" rx=".6"/></g>')
+    c = dict(c, _bot=14)
+    return n_shape(c, (3, 6), (10, 13), 8, 7, 5, (7.5, 6.5), 2.5, 4.5, (8, 8, 9, 9, 10, 13), _n())
 def A_32(c):
-    return (f'<path fill="{c["arc"]}" d="{arc_band(16,10,15,7,14)}"/>'
-            f'<g fill="{c["bars"]}"><rect x="6" y="16" width="6" height="12" rx="1.2"/><rect x="20" y="16" width="6" height="12" rx="1.2"/></g>')
+    c = dict(c, _bot=28)
+    return n_shape(c, (6, 12), (20, 26), 16, 14, 10, (15, 13), 5, 9, (18, 16, 20, 18, 20, 26), _n())
 
 # ---- B: Dosya Damlası
-def drop_path(s, side, fold):
-    """Kare (s,s)-(s+side) ; üç köşe tam yuvarlak (r=side/2), sağ üst köşe katlanmış."""
-    r = side / 2; e = s + side; m = s + r
-    body = (f"M{m} {s} L{e-fold} {s} L{e} {s+fold} L{e} {m} "
+def drop_path(s, side, fold, gap, tip_r):
+    """Kare (s..s+side); üç köşe tam yuvarlak (r=side/2) → 45° eğik damla. Sağ üst uç sivri kalır;
+    bir kıvrım çizgisi (gap) ucu ayırır: ayrılan üçgen = sayfanın kıvrık köşesi."""
+    r = side / 2; e = s + side; m = s + r; g = gap * 2 ** .5
+    body = (f"M{m} {s} L{e-fold-g:.3f} {s} L{e} {s+fold+g:.3f} L{e} {m} "
             f"A{r} {r} 0 0 1 {m} {e} A{r} {r} 0 0 1 {s} {m} A{r} {r} 0 0 1 {m} {s} Z")
-    k = fold * 0.16  # kulak iç köşesine küçük yumuşatma
-    flap = (f"M{e-fold} {s} L{e} {s+fold} L{e-fold+k} {s+fold} "
-            f"Q{e-fold} {s+fold} {e-fold} {s+fold-k} Z")
-    return body, flap
+    corner = (f"M{e-fold} {s} L{e-tip_r} {s} Q{e} {s} {e} {s+tip_r} L{e} {s+fold} Z")
+    return body, corner
 def B_mark(c):
-    b, f = drop_path(8, 32, 10)
+    b, f = drop_path(8, 32, 10.5, 1.7, 1.6)
     return f'<path fill="{c["body"]}" d="{b}"/><path fill="{c["flap"]}" d="{f}"/>'
 def B_16(c):
-    b, f = drop_path(3, 10, 3)
+    b, f = drop_path(3, 10, 4.2, .9, .5)
     return f'<path fill="{c["body"]}" d="{b}"/><path fill="{c["flap"]}" d="{f}"/>'
 def B_32(c):
-    b, f = drop_path(6, 20, 6)
+    b, f = drop_path(6, 20, 6.8, 1.2, 1)
     return f'<path fill="{c["body"]}" d="{b}"/><path fill="{c["flap"]}" d="{f}"/>'
 
 # ---- C: Kesişim
@@ -77,19 +93,19 @@ def C_generic(c, ph, sc, uid):
 _uid = [0]
 def _n():
     _uid[0] += 1; return _uid[0]
-def C_mark(c): return C_generic(c, (7, 6, 18, 36, 5), (15, 14, 28, 20, 4), _n())
-def C_16(c):   return C_generic(c, (3, 2, 6, 12, 1.6), (6, 5, 8, 6, 1.4), _n())
-def C_32(c):   return C_generic(c, (6, 4, 11, 24, 3.2), (11, 10, 16, 12, 2.6), _n())
+def C_mark(c): return C_generic(c, (6, 4, 18, 32, 5), (14, 20, 30, 22, 4.5), _n())
+def C_16(c):   return C_generic(c, (2, 2, 6, 10, 1.8), (5, 7, 9, 7, 1.5), _n())
+def C_32(c):   return C_generic(c, (5, 4, 11, 20, 3.4), (10, 13, 19, 15, 3), _n())
 
 CONCEPTS = {
  "a": dict(
     name="Pas", tag="Konsept A",
-    idea="Küçük harf “n”nin kemeri iki cihaz arasında atılan pas: sol ayaktan ince çıkıp sağ ayağa kalınlaşarak iner — dosyanın uçuş yönü harfin içinde.",
+    idea="Küçük harf “n”: omuz sol gövdeden incecik çıkar, kemer karşıya uzanır; sağ ayak eğik bir hız kesiğiyle ayrılıp altına döner — dosya karşı cihaza pas edildi.",
     font=("Archivo-VF.ttf", {"wght": 700, "wdth": 112}), font_label="Archivo SemiExpanded Bold (OFL) — Nitrobyte'ın ana yazı ailesi",
     track=-6, mark=A_mark, i16=A_16, i32=A_32,
-    light=dict(arc="#8F5D00", bars="#17130E", word="#17130E", sub="#6E665B", bg="#FBF8F3"),
-    dark=dict(arc="#E8A93A", bars="#F5EEE2", word="#F5EEE2", sub="#A79E91", bg="#0F0D0A"),
-    tile=dict(bg="#17130E", hi="#2A241B", mark=dict(arc="#E8A93A", bars="#F5EEE2")),
+    light=dict(arc="#17130E", bars="#8F5D00", word="#17130E", sub="#6E665B", bg="#FBF8F3"),
+    dark=dict(arc="#F5EEE2", bars="#E8A93A", word="#F5EEE2", sub="#A79E91", bg="#0F0D0A"),
+    tile=dict(bg="#17130E", hi="#2A241B", mark=dict(arc="#F5EEE2", bars="#E8A93A")),
     palette=[("Gece", "#17130E"), ("Altın", "#E8A93A"), ("Koyu Altın", "#8F5D00"), ("Krem", "#F5EEE2"),
              ("Taş", "#6E665B"), ("Kum", "#A79E91")],
     checks=[("Gece metin / Krem zemin", "#17130E", "#FBF8F3"), ("Koyu Altın metin / açık zemin", "#8F5D00", "#FBF8F3"),
@@ -98,7 +114,7 @@ CONCEPTS = {
  ),
  "b": dict(
     name="Dosya Damlası", tag="Konsept B",
-    idea="Ucu sağ üste dönük bir damla; o uç bir sayfa köşesi gibi kıvrılmış — aynı anda hem damla (drop) hem dosya.",
+    idea="Ucu sağ üste dönük bir damla; sivri ucu bir kıvrım çizgisiyle ayrılıp altın renge döner — sayfanın kıvrık köşesi. Aynı anda hem damla (drop) hem dosya.",
     font=("InstrumentSans-VF.ttf", {"wght": 600, "wdth": 100}), font_label="Instrument Sans SemiBold (OFL)",
     track=-12, mark=B_mark, i16=B_16, i32=B_32,
     light=dict(body="#0E6B52", flap="#C99A2E", word="#0F1A16", sub="#5E6B66", bg="#F8F5EE"),
@@ -112,10 +128,10 @@ CONCEPTS = {
  ),
  "c": dict(
     name="Kesişim", tag="Konsept C",
-    idea="Dikey telefon ile yatay ekran üst üste biner; kesiştikleri alan ortak alan — dosya, pano, bildirim, sekme hepsi orada buluşur.",
+    idea="Dikey telefon ile yatay ekran köşeden üst üste biner; kesiştikleri alan ortak alan — dosya, pano, bildirim ve sekmeler orada buluşur.",
     font=("SchibstedGrotesk-VF.ttf", {"wght": 700}), font_label="Schibsted Grotesk Bold (OFL)",
     track=-14, mark=C_mark, i16=C_16, i32=C_32,
-    light=dict(phone="#1D1F24", screen="#B9BDC4", share="#F0532A", word="#1D1F24", sub="#5B606A", bg="#F4F4F5"),
+    light=dict(phone="#1D1F24", screen="#9EA3AC", share="#F0532A", word="#1D1F24", sub="#5B606A", bg="#F4F4F5"),
     dark=dict(phone="#EEEFF1", screen="#4A4E57", share="#FF6A3D", word="#EEEFF1", sub="#A0A5AE", bg="#111216"),
     tile=dict(bg="#1D1F24", hi="#2B2E35", mark=dict(phone="#EEEFF1", screen="#5A5F69", share="#FF6A3D")),
     palette=[("Grafit", "#1D1F24"), ("Sinyal", "#FF6A3D"), ("Koyu Sinyal", "#C2410C"), ("Çelik", "#B9BDC4"),
@@ -140,15 +156,17 @@ def tile(cfg, size_vb, r, inner_mark, pad_hi=True):
             f'<rect x=".5" y=".5" width="{size_vb-1}" height="{size_vb-1}" rx="{r-.5}" fill="none" stroke="#fff" stroke-opacity=".10"/>'
             + inner_mark)
 
-def icon_master(cfg):   # 48 ızgara → 256 / 48 için
+def icon_master(cfg, key):   # 48 ızgara → 256 / 48 için; optik boy: işaretin uzun kenarı ≈ 24 birim
     m = cfg["mark"](cfg["tile"]["mark"])
-    return svg(48, 48, tile(cfg, 48, 10.5, f'<g transform="translate(24 24) scale(.6) translate(-24 -23.5)">{m}</g>'))
+    x0, y0, x1, y1 = MARK_BOX[key]; k = {"a": 24.5, "b": 25, "c": 25}[key] / max(x1 - x0, y1 - y0)
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    return svg(48, 48, tile(cfg, 48, 10.5, f'<g transform="translate(24 24) scale({k:.4f}) translate({-cx} {-cy})">{m}</g>'))
 def icon_32(cfg):
     return svg(32, 32, tile(cfg, 32, 7, cfg["i32"](cfg["tile"]["mark"])))
 def icon_16(cfg):
     return svg(16, 16, tile(cfg, 16, 3.5, cfg["i16"](cfg["tile"]["mark"])))
 
-MARK_BOX = {"a": (6, 3, 42, 44), "b": (8, 8, 40, 40), "c": (7, 6, 43, 42)}
+MARK_BOX = {"a": (6, 3, 42, 44), "b": (8, 8, 40, 40), "c": (6, 4, 44, 42)}
 
 def lockup_h(key, cfg, mode, endorse=True):
     """Yatay: işaret + kelime işareti (+ by Nitrobyte · Made in Türkiye)."""
@@ -165,9 +183,9 @@ def lockup_h(key, cfg, mode, endorse=True):
     d, w = text_path("NitroDrop", fname, var, size, tx, base, tracking=cfg["track"])
     inner = (f'<g transform="translate({20 - x0*k:.2f} {mark_top - y0*k:.2f}) scale({k:.4f})">{cfg["mark"](col)}</g>'
              f'<path fill="{col["word"]}" d="{d}"/>')
-    W = tx + w + 20; H = base + (cap * 0.62 + 50 if endorse else 40)
+    W = tx + w + 20; H = base + (78 if endorse else 40)
     if endorse:
-        inner += endorsement(tx, base + 48, col, size=17)
+        inner += endorsement(tx, base + 54, col, size=24)
     return svg(round(W), round(H), inner)
 
 def endorsement(x, y, col, size=17, center=False, total_w=None):
@@ -197,7 +215,7 @@ def lockup_v(key, cfg, mode):
     base = top + mark_h + cap * 0.75 + cap
     d, _ = text_path("NitroDrop", fname, var, size, W/2 - w/2, base, tracking=cfg["track"])
     inner += f'<path fill="{col["word"]}" d="{d}"/>'
-    inner += endorsement(W/2, base + 52, col, size=15, center=True)
+    inner += endorsement(W/2, base + 62, col, size=21, center=True)
     return svg(round(W), round(base + 80), inner)
 
 def mark_only(key, cfg, mode, pad=4):
@@ -212,15 +230,16 @@ def construction(key, cfg):
     col = dict(cfg["light"]); guides = ""
     S = 'fill="none" stroke="#E30A17" stroke-width=".18"'
     if key == "a":
-        guides = (f'<circle cx="24" cy="21" r="18" {S}/><circle cx="22.5" cy="21" r="12.5" {S} stroke-dasharray=".6 .5"/>'
-                  f'<line x1="0" y1="21" x2="48" y2="21" {S}/><line x1="0" y1="25" x2="48" y2="25" {S}/>'
-                  f'<circle cx="24" cy="21" r=".5" fill="#E30A17"/><circle cx="22.5" cy="21" r=".5" fill="#E30A17"/>')
+        guides = (f'<circle cx="24" cy="21" r="18" {S}/><circle cx="21" cy="19" r="11" {S} stroke-dasharray=".6 .5"/>'
+                  f'<line x1="22" y1="30.8" x2="48" y2="20.4" {S}/><line x1="22" y1="34.3" x2="48" y2="23.9" {S}/>'
+                  f'<circle cx="24" cy="21" r=".5" fill="#E30A17"/><circle cx="21" cy="19" r=".5" fill="#E30A17"/>')
     elif key == "b":
         guides = (f'<circle cx="24" cy="24" r="16" {S}/><rect x="8" y="8" width="32" height="32" {S}/>'
-                  f'<line x1="30" y1="2" x2="46" y2="18" {S} stroke-dasharray=".6 .5"/><line x1="8" y1="8" x2="40" y2="40" {S} stroke-dasharray=".6 .5"/>')
+                  f'<line x1="26.5" y1="2" x2="46" y2="21.5" {S} stroke-dasharray=".6 .5"/><line x1="4" y1="44" x2="44" y2="4" {S} stroke-dasharray=".6 .5"/>')
     else:
-        guides = (f'<rect x="7" y="6" width="18" height="36" rx="5" {S}/><rect x="15" y="14" width="28" height="20" rx="4" {S}/>'
-                  f'<line x1="0" y1="24" x2="48" y2="24" {S} stroke-dasharray=".6 .5"/>')
+        guides = (f'<rect x="6" y="4" width="18" height="32" rx="5" {S}/><rect x="14" y="20" width="30" height="22" rx="4.5" {S}/>'
+                  f'<line x1="14" y1="0" x2="14" y2="48" {S} stroke-dasharray=".6 .5"/><line x1="24" y1="0" x2="24" y2="48" {S} stroke-dasharray=".6 .5"/>'
+                  f'<line x1="0" y1="20" x2="48" y2="20" {S} stroke-dasharray=".6 .5"/><line x1="0" y1="36" x2="48" y2="36" {S} stroke-dasharray=".6 .5"/>')
     inner = (f'<rect width="48" height="48" fill="#fff"/>'
              f'<g stroke="#000" stroke-opacity=".06" stroke-width=".1">{g}</g>'
              f'<g stroke="#000" stroke-opacity=".14" stroke-width=".14">{g4}</g>'
@@ -261,7 +280,7 @@ def board_html(key, cfg, files):
                 f'<span class="tray"><img src="{i16}" width="16" height="16"/><small style="color:{"#ddd" if dark else "#333"}">01:35</small></span></div>')
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>{FONTFACE}
 *{{box-sizing:border-box;margin:0}}
-body{{width:1800px;height:1240px;background:#ECEAE6;font-family:{fam};color:#1a1a1a;padding:44px 52px}}
+body{{width:1800px;height:1270px;background:#ECEAE6;font-family:{fam};color:#1a1a1a;padding:44px 52px}}
 .mono{{font-family:Mono;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#77736c}}
 header{{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid #00000018;padding-bottom:18px}}
 h1{{font-size:44px;font-weight:700;letter-spacing:-.02em}}
@@ -270,11 +289,11 @@ h1 small{{font-family:Mono;font-size:13px;font-weight:500;letter-spacing:.1em;co
 .grid{{display:grid;grid-template-columns:420px 1fr 1fr;grid-template-rows:auto auto;gap:22px;margin-top:24px}}
 .card{{background:#fff;border-radius:14px;padding:20px;position:relative}}
 .card.dark{{background:{D["bg"]}}}
-.card .mono{{position:absolute;top:14px;left:18px}}
-.card.dark .mono{{color:#ffffff70}}
-.cons img{{width:100%;display:block;border-radius:6px}}
+.card>.mono:first-child{{position:absolute;top:14px;left:18px}}
+.card.dark>.mono{{color:#ffffff70}}
+.cons img{{width:300px;display:block;margin:0 auto;border-radius:6px}}
 .lk{{display:flex;align-items:center;justify-content:center;height:190px}}
-.lk img{{max-width:92%;max-height:120px}}
+.lk img{{max-width:88%;max-height:150px}}
 .lkv{{display:flex;align-items:center;justify-content:center;height:330px}} .lkv img{{max-height:270px}}
 .icons{{display:flex;align-items:flex-end;gap:28px;padding-top:30px}}
 .icons figure{{text-align:center}} figcaption{{font-family:Mono;font-size:11px;color:#77736c;margin-top:8px}}
@@ -290,7 +309,7 @@ td i{{font-style:normal;font-weight:700;display:inline-block;width:38px;text-ali
 .tb-a{{position:relative;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:#ffffff14}}
 .tb-a em{{position:absolute;bottom:2px;width:16px;height:3px;border-radius:2px}}
 .tray{{position:absolute;right:14px;display:flex;align-items:center;gap:10px;font-family:Segoe UI, sans-serif}}
-.about{{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-radius:10px;margin-top:12px;font-family:Mono;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}}
+.about{{white-space:nowrap;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-radius:10px;margin-top:12px;font-family:Mono;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase}}
 .about .red{{display:inline-block;width:4px;height:11px;background:{TR_RED};border-radius:1px;margin-right:8px;vertical-align:-1px}}
 </style></head><body>
 <header><div><h1><small>{cfg["tag"]} · NitroDrop marka konsepti</small>{cfg["name"]}</h1></div>
@@ -302,7 +321,7 @@ td i{{font-style:normal;font-weight:700;display:inline-block;width:38px;text-ali
     <p style="font-size:14px;margin-top:4px">{cfg["font_label"]}<br><span class="mono" style="font-size:10.5px">Kelime işareti yola çevrildi · imza satırı JetBrains Mono</span></p>
     <div style="font-size:64px;font-weight:{cfg["font"][1]["wght"]};font-stretch:{cfg["font"][1].get("wdth",100)}%;letter-spacing:-.02em;margin-top:6px;line-height:1">Aa Ğğ Şş İı</div>
     <div class="mono" style="position:static;margin-top:22px">Uygulama hakkında alt bilgisi</div>
-    <div class="about" style="background:{L["bg"]};color:{L["sub"]};box-shadow:inset 0 0 0 1px #0000000f"><span>NitroDrop 1.0 · by Nitrobyte</span><span><i class="red"></i>Türkiye'de yapıldı</span></div>
+    <div class="about" style="background:{L["bg"]};color:{L["sub"]};box-shadow:inset 0 0 0 1px #0000000f"><span>NitroDrop 1.0 · Nitrobyte</span><span><i class="red"></i>Türkiye'de yapıldı</span></div>
     <div class="about" style="background:{D["bg"]};color:{D["sub"]}"><span>nitrobyte.com.tr</span><span><i class="red"></i>Made in Türkiye · İstanbul</span></div>
   </div>
   <div class="card"><div class="mono">Yatay · açık</div><div class="lk"><img src="{data_uri(files["h_light"])}"/></div></div>
@@ -340,7 +359,7 @@ def overview_html(all_files):
  <div class="lk" style="background:{cfg["dark"]["bg"]}"><img src="{data_uri(f["h_dark"])}"/></div>
  <div class="chips">{chips}</div></section>"""
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>{FONTFACE}
-*{{box-sizing:border-box;margin:0}} body{{width:1800px;height:1240px;background:#ECEAE6;font-family:Archivo;padding:44px 52px;color:#1a1a1a}}
+*{{box-sizing:border-box;margin:0}} body{{width:1800px;height:1080px;background:#ECEAE6;font-family:Archivo;padding:44px 52px;color:#1a1a1a}}
 .mono{{font-family:Mono;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#77736c}}
 header{{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:16px;border-bottom:1px solid #00000018}}
 header h1{{font-size:40px;letter-spacing:-.02em;font-stretch:110%}}
@@ -371,7 +390,7 @@ def main():
             "mark_light": mark_only(key, cfg, "light"), "mark_dark": mark_only(key, cfg, "dark"),
             "h_light": lockup_h(key, cfg, "light"), "h_dark": lockup_h(key, cfg, "dark"),
             "v_light": lockup_v(key, cfg, "light"), "v_dark": lockup_v(key, cfg, "dark"),
-            "icon": icon_master(cfg), "icon32": icon_32(cfg), "icon16": icon_16(cfg),
+            "icon": icon_master(cfg, key), "icon32": icon_32(cfg), "icon16": icon_16(cfg),
             "construction": construction(key, cfg),
         }
         names = {"mark_light": "isaret-acik", "mark_dark": "isaret-koyu", "h_light": "yatay-acik", "h_dark": "yatay-koyu",
@@ -381,12 +400,12 @@ def main():
             with open(os.path.join(out, names[k] + ".svg"), "w", encoding="utf-8") as fh: fh.write(s)
         html = os.path.join(HERE, f"board-{key}.html")
         with open(html, "w", encoding="utf-8") as fh: fh.write(board_html(key, cfg, files))
-        render(html, os.path.join(out, "board.png"))
+        render(html, os.path.join(out, "board.png"), 1800, 1270)
         all_files[key] = files
         print("ok", key)
     html = os.path.join(HERE, "overview.html")
     with open(html, "w", encoding="utf-8") as fh: fh.write(overview_html(all_files))
-    render(html, os.path.join(ROOT, "overview.png"))
+    render(html, os.path.join(ROOT, "overview.png"), 1800, 1080)
     print("ok overview")
     for key, cfg in CONCEPTS.items():
         for lbl, fg, bg in cfg["checks"]:

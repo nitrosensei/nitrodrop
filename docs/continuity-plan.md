@@ -356,3 +356,135 @@ Sonuç: eşleşmiş iPhone yok (yalnızca bir kulaklık). Çıkarımlar: adaptö
 destekliyor (§1.6-C ve AirDrop reklamı aynı anda mümkün); Windows HFP UUID'li RFCOMM hizmetlerini paketsiz uygulamaya
 listeliyor. **Sıradaki adım:** iPhone'u prosedür A ile eşleştirip `nitro-continuity-probe <iPhone>` çalıştırmak — ANCS'in
 listelenip listelenmediği ve MAP/PBAP/HFP AG RFCOMM hizmetlerinin görünürlüğü bütün planın ilk doğrulama noktası.
+
+---
+
+## 9. PhoneLine / Phone Link yolu (arama sesi PC'de, inbox HFP ile)
+
+Tarih: 2026-10-28. Soru: SCO'yu kendimiz açamıyoruz (§3), ama Phone Link sesi PC'ye alıyor. Phone Link'in kullandığı
+`Windows.ApplicationModel.Calls` API'lerini kendi (Store'suz, sideload) paketimizden kullanırsak Windows'un inbox
+Hands-Free (HF) yığını bizim için de çalma/cevaplama/kapatma **ve SCO sesini** yapar mı?
+
+### 9.1 Kısa cevap
+
+**Muhtemelen evet — "Microsoft'a özel" bir kapı bulunamadı; gereken paket kimliği + kısıtlı capability, bunlar da sideload'da
+onaysız çalışıyor.** Ama bu makinede henüz denenemedi: (a) kurulum yönetici onayı istiyor (§9.5), (b) eşleşmiş iPhone yok —
+`PhoneLineTransportDevice` yalnızca HFP **AG** (`0x111F`, yani telefon) için oluşuyor, kulaklık (HF) için değil.
+Hüküm: **untested-needs-approval** (+ iPhone eşleştirmesi).
+
+### 9.2 API'ler ve capability'ler [DOĞRULANDI, birincil kaynak]
+
+| API | Ne işe yarar | Capability |
+|---|---|---|
+| `PhoneLineTransportDevice.GetDeviceSelector()` + `DeviceInformation.FindAllAsync` + `FromId` | Eşleşmiş telefonun HFP transport cihazı (AQS: InterfaceClassGuid `{BD41DF2D-ADDD-4FC9-A194-B9881D2A2EFA}` + `0000111f`) | — |
+| `RequestAccessAsync()` → `RegisterApp()` / `IsRegistered()` → `ConnectAsync()` | Uygulamayı o telefonun HFP "sahibi" yapar, SLC'yi Windows kurar | `rescap:phoneLineTransportManagement` (kısıtlı) |
+| `PhoneCallManager.RequestStoreAsync()` → `RequestLineWatcher()` → `PhoneLine.FromIdAsync` | Hatları listeler (BT hattı `Transport=Bluetooth`) | `uap:phoneCall` (genel kullanım) |
+| `PhoneLine.Dial/DialWithResultAsync`, `PhoneLine.GetAllActivePhoneCallsAsync`, `PhoneCall.AcceptIncomingAsync/RejectIncomingAsync/EndAsync/MuteAsync/ChangeAudioDeviceAsync(LocalDevice)` | Ara / cevapla / reddet / kapat / sesi PC'ye al (CallsPhoneContract v6, Win11) | `uap:phoneCall` |
+| `uap13:Extension Category="windows.phoneCallActivation"` | Sistem çağrı tostundan uygulamanın aktive edilmesi (`PhoneCallActivatedEventArgs`) | manifest uzantısı |
+
+- `phoneLineTransportManagement`: "allows apps to manage system devices responsible for phone line connectivity. This
+  capability is required to use PhoneLineTransportDevice APIs" — kısıtlı listede, "won't be approved" notu **yok**
+  (phoneCallHistory / backgroundVoIP'de var). <https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/app-capability-declarations>
+- Aynı sayfa: "you can sideload apps that declare restricted capabilities without needing to receive any approval.
+  Approval is only required when submitting these apps to the Store."
+- `RegisterApp` remarks: kayıt PhoneLine'ı görmek için şart, kullanıcı başına, kayıt silinene ya da cihaz kaldırılana kadar
+  kalıcı. <https://learn.microsoft.com/en-us/uwp/api/windows.applicationmodel.calls.phonelinetransportdevice.registerapp>
+- `FindAllAsync` / `RequestCreateAsync` adlı üyeler **yok**; doğrusu `GetDeviceSelector` + `FromId` + `RequestAccessAsync`.
+  <https://learn.microsoft.com/en-us/uwp/api/windows.applicationmodel.calls.phonelinetransportdevice>
+- `phoneCallHistory*`, `lpacCom`, `voipCall`, `Calls.Background` tetikleyicileri bu senaryo için **gerekmiyor** (aşağıdaki
+  çalışan uygulamalar bildirmiyor). Arka plan tetikleyicileri yalnızca uygulama kapalıyken uyanmak için — NitroDrop tepside.
+
+### 9.3 Phone Link ve üçüncü taraflar ne yapıyor
+
+- **Bu makinedeki Phone Link manifestinde bu capability'ler yok** — `Microsoft.YourPhone 0.26082.121.0` bir stub
+  (`runFullTrust`, `unvirtualizedResources`, `Microsoft.coreAppActivation_8wekyb3d8bbwe`); arama kodu
+  (`YourPhone.Calling.Managed.dll`) sonradan inen bileşende [ölçüldü: `C:\Program Files\WindowsApps\Microsoft.YourPhone_…\AppxManifest.xml`].
+  Phone Link'e özel SCCD/CustomCapability kanıtı bulunmadı.
+- Phone Link'te `TryUnlockPhoneLineTransportDeviceAPIs()` ve `ShouldSkipLAFCheck()` var: build **≥ 22000'de LAF kontrolü
+  atlanıyor**; eski Windows'ta LAF `com.microsoft.windows.applicationmodel.phonelinetransportdevice_v1` açılıyor. Microsoft
+  destek (2024-10): "PhoneLineTransportDevice API was removed from the LAF list and does not require a token".
+  <https://github.com/BestOwl/MyPhone/issues/26> (yorumlar 2023-03-17, 2024-10-11, 2026-04-26). UNVERIFIED (topluluk
+  tersine mühendisliği). Bu makine 28000 → LAF gerekmez.
+- **Sefirah** (shrimqy, açık kaynak, Store'da): paketli WinUI, `runFullTrust` + `rescap:phoneLineTransportManagement` +
+  `uap:phoneCall` + `windows.phoneCallActivation`; akış `RequestAccessAsync → RegisterApp → IsRegistered → ConnectAsync →
+  PhoneLineWatcher → DialWithResultAsync → ChangeAudioDeviceAsync(LocalDevice)`. README: "View and answer phone calls …
+  Remove your Bluetooth device if you have already registered with another app". Yazar (2026-04): "somewhat implement what
+  Phone Link does, albeit a bit buggy". <https://github.com/shrimqy/Sefirah> (`src/Sefirah/Package.appxmanifest`,
+  `Platforms/Windows/Calling/PhoneLineService.cs`, `Platforms/Windows/Utilities/CallingFeatureUtils.cs`). Android ile;
+  iPhone UNVERIFIED.
+- **MyPhone** (BestOwl): aynı akış, manifest yalnızca `runFullTrust` + `phoneLineTransportManagement`. Win10 21H2'de çalıştı;
+  22H2'de `RequestAccessAsync=DeniedBySystem` / `RegisterApp` → `UnauthorizedAccessException` (LAF dönemi). O dönem çalışan
+  diğerleri: Thy Phone (Store), Intel Unison, CallCenter, Grid 3. <https://github.com/BestOwl/MyPhone/issues/26>
+- **Olumsuz rapor (2026-10, build 26300):** sparse package + `mediumIL` + `win32App`, Developer Mode ile `-ExternalLocation`;
+  `RequestAccessAsync=Allowed` ama `RegisterApp()` sessiz, `IsRegistered()=false`, `RegisterAppForUser` → E_ACCESSDENIED,
+  `ConnectAsync=false`; kimliksiz `DeniedBySystem`. Çözümsüz (moderatör: "Microsoft'a özel olduğu gösterilmedi").
+  <https://learn.microsoft.com/en-us/answers/questions/6041632/phonelinetransportdevice-registerapp-has-no-effect>
+  → **En büyük risk:** sparse/`win32App` kimliği yetmeyebilir; çalışan Sefirah/MyPhone tam MSIX. Telefon başka uygulamaya
+  (Phone Link) kayıtlıysa `DeniedBySystem` — cihazı kaldırıp yeniden eşleştirmek gerekiyor (Sefirah README, MyPhone #26).
+- Ses: MyPhone kendi RFCOMM SLC'siyle SCO açamadı (#27); inbox yolda sesi Windows'un HF ses sürücüsü taşıyor,
+  `ChangeAudioDeviceAsync(LocalDevice)` ile PC'ye çekiliyor (Sefirah kodu). iPhone + Phone Link'te "ses PC'ye geçmiyor, HFP
+  endpoint'leri aktif olmuyor" şikayeti de var: <https://learn.microsoft.com/en-ca/answers/questions/5956795/phone-link-initiates-iphone-calls-but-transfer-to>.
+- Başka yol (bilgi): IBRHUB/BluetoothHFP USB dongle'ı WinUSB'ye alıp kendi yığınını çalıştırıyor, CVSD/mSBC ses doğrulanmış —
+  ama sürücü değişimi + ayrı dongle; NitroDrop hedefi dışı. <https://github.com/IBRHUB/BluetoothHFP>
+
+### 9.4 Bu makinede ölçülenler (2026-10-28) [DOĞRULANDI]
+
+- `PhoneLineTransportDevice`, `PhoneLine`, `PhoneCallManager`, `PhoneCall` → `C:\Windows\System32\PhoneOm.dll` (in-proc,
+  TrustLevel=0, her süreç aktive edebilir); yetki kontrolü PhoneSvc'de (`PhoneService.dll`: `phoneCall`,
+  `PhoneCallCapabilityAccessCheck`). `PhoneProviders.dll` içinde `BluetoothHandsFreeLine` — BT hattını inbox HF sağlıyor.
+- Inbox HF açık: `HKLM\SYSTEM\CurrentControlSet\Control\Bluetooth\Audio\Hfp\HandsFree` Enabled=1, ProfileVersion=0x107
+  (HFP 1.7), BRSF=0xB7 (codec negotiation → mSBC). Topluluğun bulduğu `BypassRegistration` değeri yok (dokunulmadı).
+- Developer Mode **kapalı** (`HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock` var, değeri yok).
+- Probe, paketsiz:
+  ```
+  [Package identity]  NO package identity — running unpackaged
+  [Capability access] phoneLineTransportManagement/phoneCall/phoneCallHistory/... Allowed  (paketsizde kontrol yok, anlamsız)
+  [Paired classic]    联想thinkplus-LP1S  rfcomm=[111e]  (kulaklık = HF, telefon değil)
+  [PhoneLineTransportDevice enumeration]  0 transport device(s)
+  [PhoneCallStore]    RequestStoreAsync OK; GetDefaultLineAsync 0x8007139F; watcher: 1 hat — 'WhatsApp' Transport=VoipApp
+  ```
+  Hat listesi paketsiz de okunuyor; transport yok çünkü eşleşmiş telefon yok.
+- Kurulum denemeleri (yönetici değil, ayar değiştirmeden):
+  - `Add-AppxPackage -Path NitroPhoneLineProbe.msix -ExternalLocation … -AllowUnsigned` → **0x80073D2B** "an unsigned package
+    cannot include Executable activations" (exe payload'da olmasa da Application girdisi sayılıyor; imzasız+exe = tüm
+    kullanıcılar = yönetici).
+  - `Add-AppxPackage -Register layout\AppxManifest.xml -ExternalLocation …` → **0x80073D2D** (Developer Mode kapalı).
+  - Hiçbir şey kurulu kalmadı (`Get-AppxPackage Nitrobyte.NitroDrop.PhoneLineProbe` boş).
+  - Exe'ye `<msix>` app.manifest öğesi konunca SxS "msix yayımcı geçerli olmalı" diye exe'yi hiç başlatmıyor (imzasız OID'li
+    publisher kabul edilmiyor) → kaldırıldı; paketli çalıştırma AUMID üzerinden.
+
+### 9.5 Probe: `app/Nitro.PhoneLineProbe`
+
+- `nitro-phoneline-probe.exe` (net10.0-windows10.0.22621.0, `AirDrop.slnx`'te, uyarısız). Salt okunur: paket kimliği,
+  `AppCapability.CheckAccess`, eşleşmiş klasik cihazlar (+ önbellek RFCOMM UUID'leri), transport cihazları (`FromId`,
+  `Transport`, `IsRegistered`, `AudioRoutingStatus`, `InBandRingingEnabled`), `RequestAccessAsync`, `PhoneCallStore` +
+  `PhoneLineWatcher` + hat özellikleri. Arama yapmaz. `RegisterApp`+`ConnectAsync` yalnızca `--register` ile (Phone Link'in
+  kaydını alabilir). AUMID argüman geçemediği için exe yanındaki `probe-args.txt` de okunur. Log: exe yanında
+  `phoneline-probe.log` (ya da `--log <yol>`).
+- `pack.ps1`: Release build + `Package/AppxManifest.xml`'den **imzasız sparse paket** (`bin\pkg\NitroPhoneLineProbe.msix`;
+  publisher `CN=Nitrobyte Dev, OID.2.25.311729368913984317654407730594956997722=1`, `mediumIL`/`win32App`; capability:
+  `runFullTrust`, `phoneLineTransportManagement`, `phoneCall`, `bluetooth`). PFN `Nitrobyte.NitroDrop.PhoneLineProbe_pwgv8gmbnhssc`.
+
+**Kurmak için gereken tek onay** (biri yeter; ikisi de yönetici ister):
+
+- **A (önerilen — kalıcı ayar yok, sertifika yok):** yönetici PowerShell:
+  `Add-AppxPackage -Path "C:\Users\Emre Can Temur\airdrop-win\app\Nitro.PhoneLineProbe\bin\pkg\NitroPhoneLineProbe.msix" -ExternalLocation "C:\Users\Emre Can Temur\airdrop-win\app\Nitro.PhoneLineProbe\bin\Release\net10.0-windows10.0.22621.0\win-x64" -AllowUnsigned`
+  (imzasız + çalıştırılabilir → tüm kullanıcılara kurulur, o yüzden yönetici: <https://learn.microsoft.com/en-us/windows/msix/package/unsigned-package>;
+  sparse pakette kabul edileceği UNVERIFIED). Kaldırma (yönetici): `Get-AppxPackage -AllUsers Nitrobyte.NitroDrop.PhoneLineProbe | Remove-AppxPackage -AllUsers`.
+- **B:** Developer Mode'u aç (Ayarlar → Sistem → Geliştiriciler için; kalıcı ayar), sonra yöneticisiz
+  `Add-AppxPackage -Register "…\bin\pkg\layout\AppxManifest.xml" -ExternalLocation "…\win-x64"`.
+- (C: kendinden imzalı sertifikayı `LocalMachine\TrustedPeople`'a almak — en kalıcı değişiklik, gerek yok.)
+
+Çalıştırma: `explorer.exe shell:AppsFolder\Nitrobyte.NitroDrop.PhoneLineProbe_pwgv8gmbnhssc!Probe` → `…\win-x64\phoneline-probe.log`.
+
+### 9.6 Sıradaki adım (sırayla)
+
+1. iPhone'u Windows Ayarlar'dan eşleştir (Phone Link'e **kayıtlı değilken**; kayıtlıysa önce cihazı kaldır). Paketsiz
+   `nitro-phoneline-probe` → transport görünmeli (`0000111f`) ve `RequestAccessAsync=DeniedBySystem` beklenir (taban çizgisi).
+2. Seçenek A ile kur, AUMID ile çalıştır → `RequestAccessAsync=Allowed` mı? Sonra bilerek `probe-args.txt` = `--register` →
+   `IsRegistered()` true, `ConnectAsync()` true mu; Windows Ses ayarlarında iPhone "Hands-Free" uç noktası beliriyor mu.
+3. `IsRegistered=false` (26300 raporu gibi) çıkarsa: sparse/`win32App` yerine **tam MSIX** (exe paketin içinde,
+   `packagedClassicApp`, Sefirah gibi) — imzasız+exe yine yönetici; imzalı için B ya da C.
+4. Çalışırsa: NitroDrop'a `CallService` (Sefirah akışı) + `windows.phoneCallActivation`; ses `ChangeAudioDeviceAsync(LocalDevice)`.
+   ANCS çalma/aksiyon yolu (§3) yedek kalır. Dağıtım: Store (kısıtlı capability gerekçesi "Bluetooth HFP telefon aramaları";
+   emsal Sefirah, Thy Phone) ya da imzalı MSIX.

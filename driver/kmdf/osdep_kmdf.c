@@ -344,16 +344,20 @@ osdep_rx_frame(void *os, const struct iwx_rx_meta *meta,
 {
 	PDEVICE_CONTEXT ctx = CTX(os);
 	AIRDROP_RX_SLOT *slot;
+	unsigned int idx, dropped;
 	ULONG copy;
 
 	WdfSpinLockAcquire(ctx->RxLock);
-	if (ctx->RxRing == NULL || ctx->RxCount >= AIRDROP_RX_RING_SLOTS) {
-		ctx->RxDroppedPending++;
-		InterlockedIncrement(&ctx->RxDroppedTotal);
+	if (ctx->RxRing == NULL) {
+		AqRxDrop(&ctx->Rx);
 		WdfSpinLockRelease(ctx->RxLock);
 		return;
 	}
-	slot = &ctx->RxRing[ctx->RxHead];
+	if (!AqRxReserve(&ctx->Rx, &idx, &dropped)) {	/* ring full */
+		WdfSpinLockRelease(ctx->RxLock);
+		return;
+	}
+	slot = &ctx->RxRing[idx];
 	copy = len > AIRDROP_RX_SLOT_DATA ? AIRDROP_RX_SLOT_DATA : len;
 
 	RtlZeroMemory(&slot->Hdr, sizeof(slot->Hdr));
@@ -366,19 +370,63 @@ osdep_rx_frame(void *os, const struct iwx_rx_meta *meta,
 	slot->Hdr.RateNFlags = meta->rate_n_flags;
 	slot->Hdr.RssiDbm = meta->rssi_dbm;
 	slot->Hdr.Channel = meta->channel;
+	slot->Hdr.PhyInfo = meta->phy_info;
+	slot->Hdr.AmpduRef = meta->ampdu_ref;
+	slot->Hdr.LegacyRate = meta->legacy_rate;
+	slot->Hdr.Mcs = meta->mcs;
+	slot->Hdr.Nss = meta->nss;
+	slot->Hdr.Bandwidth = meta->bw;
+	slot->Hdr.Encoding = meta->encoding;
+	slot->Hdr.MacContext = meta->mac_context;
+	slot->Hdr.MpduStatus = meta->status;
 	if (meta->flags & IWX_RXMETA_F_SHORTPRE)
 		slot->Hdr.Flags |= AIRDROP_RX_F_SHORT_PREAMBLE;
 	if (meta->flags & IWX_RXMETA_F_TSF_VALID)
 		slot->Hdr.Flags |= AIRDROP_RX_F_TSF_VALID;
+	if (meta->flags & IWX_RXMETA_F_FCS_STRIPPED)
+		slot->Hdr.Flags |= AIRDROP_RX_F_FCS_STRIPPED;
+	if (meta->flags & IWX_RXMETA_F_BAD_FCS)
+		slot->Hdr.Flags |= AIRDROP_RX_F_BAD_FCS;
+	if (meta->flags & IWX_RXMETA_F_AMPDU)
+		slot->Hdr.Flags |= AIRDROP_RX_F_AMPDU;
+	if (meta->flags & IWX_RXMETA_F_SGI)
+		slot->Hdr.Flags |= AIRDROP_RX_F_SGI;
+	if (meta->flags & IWX_RXMETA_F_LDPC)
+		slot->Hdr.Flags |= AIRDROP_RX_F_LDPC;
+	if (meta->flags & IWX_RXMETA_F_STBC)
+		slot->Hdr.Flags |= AIRDROP_RX_F_STBC;
+	if (meta->flags & IWX_RXMETA_F_AMSDU)
+		slot->Hdr.Flags |= AIRDROP_RX_F_AMSDU;
 	if (copy < len)
 		slot->Hdr.Flags |= AIRDROP_RX_F_TRUNCATED;
-	slot->Hdr.DroppedSinceLast = ctx->RxDroppedPending;
-	ctx->RxDroppedPending = 0;
+	slot->Hdr.DroppedSinceLast = dropped;
 	RtlCopyMemory(slot->Data, frame, copy);
-
-	ctx->RxHead = (ctx->RxHead + 1) % AIRDROP_RX_RING_SLOTS;
-	ctx->RxCount++;
 	WdfSpinLockRelease(ctx->RxLock);
+}
+
+/*
+ * DISPATCH_LEVEL (or PASSIVE caller holding CoreSpin): firmware result of
+ * an injected frame. Only marks the slot; the request is completed by
+ * AirdropTxCompleteDone() once CoreSpin is released.
+ */
+void
+osdep_tx_status(void *os, const struct iwx_tx_status *st)
+{
+	PDEVICE_CONTEXT ctx = CTX(os);
+	AQ_TX_RESULT r;
+
+	if (st->cookie == IWX_TX_COOKIE_NONE)
+		return;
+	r.Status = st->result;
+	r.FwStatus = st->fw_status;
+	r.Retries = st->retries;
+	r.RtsRetries = st->rts_retries;
+	r.Sequence = st->seq_ctl;
+	r.Rate = st->rate_n_flags;
+	r.Flags = st->flags;
+	WdfSpinLockAcquire(ctx->TxLock);
+	(void)AqTxComplete(&ctx->Tx, st->cookie, &r);
+	WdfSpinLockRelease(ctx->TxLock);
 }
 
 void

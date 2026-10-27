@@ -4,13 +4,15 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using AirDrop.App.Services;
+using Nitro.Sync;
 
 namespace AirDrop.App.ViewModels;
 
-public enum MainTab { Nearby, History, Settings }
+public enum MainTab { Nearby, Devices, History, Settings }
 
 public sealed class MainViewModel : Observable
 {
@@ -33,7 +35,12 @@ public sealed class MainViewModel : Observable
     private string _receiveTitle = "", _receiveDetail = "";
     private IReadOnlyList<string> _pendingFiles = Array.Empty<string>();
 
-    public MainViewModel(IAirDropService svc, AppSettings settings, HistoryStore history,
+    /// <summary>Prefix of AirDrop peers offered to the browser extension ("Telefona gönder").</summary>
+    public const string AirDropTargetPrefix = "airdrop:";
+
+    private volatile IReadOnlyList<LinkTarget> _linkTargets = Array.Empty<LinkTarget>();
+
+    public MainViewModel(IAirDropService svc, ISyncSource sync, AppSettings settings, HistoryStore history,
         IContactResolver contacts, Dispatcher ui)
     {
         _svc = svc;
@@ -51,6 +58,10 @@ public sealed class MainViewModel : Observable
         _svc.AskHandler = req => _ui.InvokeAsync(() => OnAsk(req)).Task.Unwrap();
 
         Settings = new SettingsViewModel(settings, contacts, ApplySettingsAsync);
+        Devices = new DevicesViewModel(sync, settings, ui) { AddHistory = AddHistory };
+        // The extension's "Telefona gönder" can deliver through AirDrop (iPhones, iPads, Macs nearby).
+        sync.ExternalLinkTargets = () => _linkTargets;
+        sync.SendLinkToExternal = SendExternalLinkAsync;
         foreach (var e in history.Entries) History.Add(new HistoryItemViewModel(e));
 
         OpenReceiveFolder = new RelayCommand(_ => Shell(_settings.ReceiveFolder));
@@ -65,6 +76,8 @@ public sealed class MainViewModel : Observable
     public ObservableCollection<PeerViewModel> Peers { get; } = new();
     public ObservableCollection<HistoryItemViewModel> History { get; } = new();
     public SettingsViewModel Settings { get; }
+    /// <summary>Nitro.Sync: paired PCs, their tabs/apps, iPhone activity ("Cihazlar" + Ayarlar → Senkron).</summary>
+    public DevicesViewModel Devices { get; }
     /// <summary>Wi-Fi driver state: "kurulum gerekli" banner + Settings → Wi-Fi Sürücüsü.</summary>
     public Setup.DriverSetupStatus DriverSetup { get; } = new(new Setup.SystemProbe());
 
@@ -80,11 +93,12 @@ public sealed class MainViewModel : Observable
         set
         {
             if (!Set(ref _tab, value)) return;
-            Raise(nameof(IsNearby)); Raise(nameof(IsHistory)); Raise(nameof(IsSettings));
-            if (value == MainTab.Settings) Settings.RefreshTrusted();
+            Raise(nameof(IsNearby)); Raise(nameof(IsDevices)); Raise(nameof(IsHistory)); Raise(nameof(IsSettings));
+            if (value == MainTab.Settings) { Settings.RefreshTrusted(); Devices.RefreshExtensionStatus(); }
         }
     }
     public bool IsNearby { get => Tab == MainTab.Nearby; set { if (value) Tab = MainTab.Nearby; } }
+    public bool IsDevices { get => Tab == MainTab.Devices; set { if (value) Tab = MainTab.Devices; } }
     public bool IsHistory { get => Tab == MainTab.History; set { if (value) Tab = MainTab.History; } }
     public bool IsSettings => Tab == MainTab.Settings;
 
@@ -145,14 +159,21 @@ public sealed class MainViewModel : Observable
 
     /// <summary>View hooks.</summary>
     public Func<IncomingRequest, ContactMatch?, System.Windows.Media.ImageSource?, Task<bool>>? ShowAskSheet { get; set; }
-    public Action<string, string, Action?>? Notify { get; set; }
+    public Action<string, string, Action?>? Notify
+    {
+        get => _notify;
+        set { _notify = value; Devices.Notify = value; }
+    }
+    private Action<string, string, Action?>? _notify;
 
     // ---- lifecycle ----
 
     public async Task StartAsync()
     {
         ArmEveryone();
+        var sync = Devices.StartAsync();
         await _svc.StartAsync(_settings.ToServiceOptions(), _mode);
+        await sync;
     }
 
     private async Task ApplySettingsAsync()
@@ -160,6 +181,7 @@ public sealed class MainViewModel : Observable
         Raise(nameof(ComputerName));
         foreach (var p in Peers) RefreshIdentity(p);
         await _svc.UpdateOptionsAsync(_settings.ToServiceOptions());
+        await Devices.ApplyConfigAsync();   // no-op unless the device name changed
     }
 
     // ---- sending ----
@@ -189,6 +211,26 @@ public sealed class MainViewModel : Observable
         catch (Exception) { result = SendOutcome.Failed; }
         FinishSend(peer, result, Array.Empty<string>(), link);
     }
+
+    /// <summary>Extension → "Telefona gönder" → an AirDrop peer (called on a background thread).</summary>
+    private Task<bool> SendExternalLinkAsync(string targetId, string url, string? title, CancellationToken ct)
+    {
+        if (!targetId.StartsWith(AirDropTargetPrefix, StringComparison.Ordinal) ||
+            !Uri.TryCreate(url, UriKind.Absolute, out var uri) || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+            return Task.FromResult(false);
+        var peerId = targetId[AirDropTargetPrefix.Length..];
+        return _ui.InvokeAsync(async () =>
+        {
+            var peer = Peers.FirstOrDefault(p => p.Id == peerId);
+            if (peer is null || peer.IsBusy) return false;
+            await SendLinkAsync(peer, uri);
+            return peer.State == PeerState.Sent;
+        }).Task.Unwrap();
+    }
+
+    private void UpdateLinkTargets() =>
+        _linkTargets = Peers.Select(p => new LinkTarget(AirDropTargetPrefix + p.Id, p.Name,
+            p.Kind is DeviceKind.iPhone or DeviceKind.iPad ? "phone" : "pc")).ToList();
 
     /// <summary>Sends whatever is on the Windows clipboard (text, link, image or copied files).</summary>
     public async Task SendClipboardAsync(PeerViewModel peer)
@@ -421,6 +463,7 @@ public sealed class MainViewModel : Observable
             Peers[i].Y = c + RingRadius * Math.Sin(a) - PeerViewModel.Size / 2;
         }
         Raise(nameof(HasPeers));
+        UpdateLinkTargets();
     }
 
     // ---- helpers ----
