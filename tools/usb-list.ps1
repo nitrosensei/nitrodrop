@@ -28,9 +28,9 @@ $ErrorActionPreference = 'Stop'
 
 # --- Bilinen yongalar -------------------------------------------------------------------------
 # Tier: Primary = birincil hedef, Backup = yedek, Candidate = degerlendirildi/onerilmiyor.
-# VID:PID listeleri Linux surucu ID tablolarindan (mt76x2u usb.c, mt76x0u usb.c, mt7921u usb.c,
-# rtw88 / rtl8812au). Liste tam degil; marka-ozel PID'ler eksik olabilir. UNVERIFIED satirlari
-# kaynakta dogrulanmadi.
+# MT7612U listesi Linux mt76/mt76x2/usb.c ID tablosunun tamamidir (2026-10-28 master).
+# Digerleri bellekten/ikincil kaynaklardan; UNVERIFIED satirlari kaynakta dogrulanmadi.
+# Ayni VID altinda hem MediaTek hem Realtek urun olabilir: her zaman tam VID:PID ile eslenir.
 $Chips = @(
     @{ Chip = 'MT7612U';  Linux = 'mt76x2u'; Tier = 'Primary';   Ids = @(
         '0E8D:7612', # MediaTek referans (Alfa AWUS036ACM, Comfast CF-WU782AC v2, cogu jenerik)
@@ -44,6 +44,10 @@ $Chips = @(
         '057C:8503', # AVM FRITZ!WLAN AC860
         '7392:B711', # Edimax EW-7722UAC
         '2C4E:0103', # Mercury UD13
+        '056E:400A', # ELECOM WDC-867SU3S
+        '0846:9014', # Netgear WNDA3100v3
+        '0471:2126', # LiteOn WN4516R
+        '0471:7600', # LiteOn WN4519R
         '2357:0137'  # TP-Link TL-WDN6200
     ) }
     @{ Chip = 'MT7610U';  Linux = 'mt76x0u'; Tier = 'Backup';    Ids = @(

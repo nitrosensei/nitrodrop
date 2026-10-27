@@ -1,29 +1,32 @@
-# airdrop-win
+# NitroDrop (airdrop-win)
 
-Windows için sıfırdan AirDrop (iPhone ↔ PC), dahili Intel Wi-Fi 6 AX203 (PCI 8086:51F1, subsys 0274) üzerinde.
+Windows için ücretsiz, açık kaynak, AirDrop uyumlu dosya paylaşımı (iPhone / iPad / Mac ↔ PC). Nitrobyte.
+Nitro: NB-0011.
 
 ## Katmanlar
 
 | Katman | Ne | Durum |
 |---|---|---|
-| BLE | Apple 0x004C / tip 0x05 AirDrop duyurusu + Apple duyurularını tarama | **DOĞRULANDI** (2026-10-28, `tools/ble_test.py`): yayın `Started`, 9 Apple cihaz görüldü |
-| Sürücü | Intel kart için kendi KMDF sürücümüz (OpenBSD if_iwx.c portu, ISC), IOCTL ile IBSS + monitor RX + inject, sabit kanal 6 | Araştırma bitti (`docs/driver-research.md`); M1 (firmware ALIVE) yazılıyor. Donanım testi EV sertifika + attestation imzası bekliyor |
-| AWDL | Owly (t4t5/owly, Rust, MIT) Windows portu, sürücünün IOCTL'ı üzerine | Bekliyor |
-| AirDrop | mDNS/DNS-SD (`_airdrop._tcp`) + HTTPS (/Discover, /Ask, /Upload) | Bekliyor |
-| Arayüz | Sağ tık "AirDrop ile gönder", tepsi simgesi, alma bildirimi | Bekliyor |
+| Arayüz | WPF, Apple tarzı radar, geçmiş, ayarlar, ortak pano (Ctrl+Alt+A), rehber fotoğrafları, güvenilir cihaz (`app/AirDrop.App`, ad: NitroDrop) | Çalışıyor (LAN modu; `--demo` ile sahte veri) |
+| AirDrop protokolü | mDNS `_airdrop._tcp` + HTTPS /Discover /Ask /Upload, link paylaşımı, medya yetenekleri, rehber hash eşleştirme (`app/AirDrop.Core`) | Bitti, 54/54 test; LAN'da PC↔PC uçtan uca çalıştı |
+| BLE | Apple 0x004C / tip 0x05 duyuru + tarama (`tools/ble_test.py`) | Windows'ta doğrulandı (2026-10-28) |
+| Wi-Fi sürücüsü (ana yol) | Dahili Intel AX203 (PCI 8086:51F1) için kendi KMDF sürücümüz — OpenBSD `if_iwx.c` portu, IBSS + monitor + inject, sabit kanal 6 (`driver/`, `docs/driver-research.md`) | M1 (firmware ALIVE) yazılıyor |
+| AWDL | Owly (t4t5/owly, Rust, MIT) portu | Bekliyor |
 
-## Kararlar
-- Normal internet AirDrop açıkken Tenda USB (AIC8800DC) üzerinden; Intel kart AWDL'e ayrılır (exclusive mode).
-- "Herkes (10 dk)" modu hedef; "Yalnızca Kişiler" Apple imzalı kayıt ister, kapsam dışı.
+## Sürücü imzası ve dağıtım
+- **Faz 1 (ücretsiz):** uygulama içi "Gelişmiş Kurulum" sihirbazı — BitLocker kurtarma anahtarı yedeği, üreticiye göre Secure Boot kapatma talimatı, "BIOS'a yeniden başlat", testsigning, sürücü kurulumu, tek tıkla geri alma. Bedeli kullanıcıya açıkça gösterilir (Test Modu filigranı, anti-cheat oyunlar çalışmaz). Dağıtım: GitHub + nitrobyte.com.tr.
+- **Faz 2:** bağış/sponsorla EV sertifika → Microsoft attestation imzası; sihirbaz kalkar, Microsoft Store'a girilir. (Azure Trusted Signing sürücü imzalamayı desteklemiyor — Nisan 2026.)
+- **Yedek yol:** USB Wi-Fi adaptör (MT7612U) + Microsoft'un inbox WinUSB'si + user-mode sürücü; kernel kodu/sertifika gerekmez (`docs/usb-plan.md`). Intel kartı olmayan kullanıcılar için.
+- Asla: imzalı-zafiyetli sürücü istismarı (BYOVD).
 
-- Secure Boot asla kapatılmaz, test modu yok: sürücü her yerde Microsoft attestation imzalı yüklenir, HVCI uyumlu yazılır.
-- Lisans hedefi izin verici (MIT/BSD): iwx ISC, Linux iwlwifi BSD-3 seçeneği, Owly MIT. itlwm (GPL) ve OWL (GPL-3) kod kopyalanmaz.
-
-## Bekleyenler
-- Nitrobyte adına EV kod imzalama sertifikası + Microsoft Partner Center hesabı (Emre).
+## Lisans hedefi
+İzin verici (MIT/BSD): iwx ISC, Linux iwlwifi BSD-3 seçeneği, Owly MIT, mt76 BSD-3-Clause-Clear. itlwm (GPL) ve OWL (GPL-3) kodu kopyalanmaz.
 
 ## Derleme
-- Sürücü: `driver\build.ps1 -Name <ad> -Sources <dosyalar>` (VS 2022 Build Tools MSVC 14.44 + WDK 10.0.26100, KMDF 1.33).
+- Uygulama: `cd app; dotnet build AirDrop.slnx; dotnet test AirDrop.slnx` (.NET 10)
+- Sürücü: `driver\build.ps1 -Name <ad> -Sources <dosyalar>` (VS 2022 Build Tools MSVC 14.44 + WDK 10.0.26100, KMDF 1.33)
+- UI görüntüsü (Debug, odak çalmaz): `NitroDrop.exe --snapshot <klasör>`
 
 ## Araçlar
-- `.venv` (Python 3.14 + winrt-*): `.\.venv\Scripts\python.exe -I tools\ble_test.py`
+- `.venv` (Python + winrt): `.\.venv\Scripts\python.exe -I tools\ble_test.py`
+- `tools\usb-list.ps1`: USB Wi-Fi yongası / Secure Boot / Memory Integrity durumu (salt okunur)

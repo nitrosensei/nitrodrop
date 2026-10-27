@@ -6,3 +6,5 @@ driver/out/
 *.user
 .vs/
 TestResults/
+driver/firmware/
+driver/tests/out/
