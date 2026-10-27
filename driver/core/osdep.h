@@ -153,13 +153,57 @@ struct iwx_rx_meta {
 	uint64_t	tsf;		/* TSF on air rise, 0 if not valid */
 	int8_t		rssi_dbm;	/* max(energy_a, energy_b) in dBm */
 	uint8_t		channel;	/* firmware channel number */
-	uint16_t	phy_info;
+	uint16_t	phy_info;	/* IWX_RX_MPDU_PHY_* */
 	uint32_t	status;		/* IWX_RX_MPDU_RES_STATUS_* */
 	uint8_t		mac_context;
-	uint8_t		flags;		/* IWX_RXMETA_F_* */
+	uint8_t		encoding;	/* IWX_RXMETA_ENC_* (decoded rate) */
+	uint16_t	flags;		/* IWX_RXMETA_F_* */
+	uint16_t	legacy_rate;	/* CCK/OFDM rate in 500 kb/s, else 0 */
+	uint8_t		mcs;		/* HT/VHT/HE MCS, 0xff for legacy */
+	uint8_t		nss;		/* spatial streams (1..), 1 for legacy */
+	uint8_t		bw;		/* 0=20 1=40 2=80 3=160 4=320 MHz */
+	uint8_t		reserved[3];
+	uint32_t	ampdu_ref;	/* A-MPDU reference (AMPDU flag), never 0 */
+	uint32_t	orig_len;	/* MPDU length from firmware (pad/FCS incl.) */
 };
-#define IWX_RXMETA_F_SHORTPRE	0x01
-#define IWX_RXMETA_F_TSF_VALID	0x02
+#define IWX_RXMETA_F_SHORTPRE		0x0001
+#define IWX_RXMETA_F_TSF_VALID		0x0002
+#define IWX_RXMETA_F_FCS_STRIPPED	0x0004	/* FCS/MIC bytes removed */
+#define IWX_RXMETA_F_BAD_FCS		0x0008	/* CRC or overrun failure */
+#define IWX_RXMETA_F_AMPDU		0x0010
+#define IWX_RXMETA_F_SGI		0x0020
+#define IWX_RXMETA_F_LDPC		0x0040
+#define IWX_RXMETA_F_STBC		0x0080
+#define IWX_RXMETA_F_AMSDU		0x0100
+
+#define IWX_RXMETA_ENC_CCK		0
+#define IWX_RXMETA_ENC_OFDM		1
+#define IWX_RXMETA_ENC_HT		2
+#define IWX_RXMETA_ENC_VHT		3
+#define IWX_RXMETA_ENC_HE		4
+#define IWX_RXMETA_ENC_EHT		5
+
+/* Completion of one injected frame (iwx_tx_inject()), see osdep_tx_status. */
+struct iwx_tx_status {
+	uint32_t	cookie;		/* value passed to iwx_tx_inject() */
+	uint32_t	result;		/* IWX_TXST_* */
+	uint16_t	fw_status;	/* tx_resp status.status (raw) */
+	uint8_t		retries;	/* tx_resp failure_frame */
+	uint8_t		rts_retries;	/* tx_resp failure_rts */
+	uint16_t	seq_ctl;	/* sequence control of the frame sent */
+	uint16_t	reserved;
+	uint32_t	rate_n_flags;	/* initial_rate reported by firmware */
+	uint32_t	flags;		/* IWX_TXR_F_* */
+};
+#define IWX_TXST_SUCCESS	0	/* ACKed, or no ACK expected */
+#define IWX_TXST_FAILED		1	/* retry limit, lifetime, ... */
+#define IWX_TXST_FLUSHED	2	/* queue flushed / radio stopped */
+#define IWX_TXST_NO_STATUS	3	/* freed by a later SSN, no own status */
+
+#define IWX_TXR_F_NOACK_NOT_HONORED	0x01	/* unicast, firmware may retry */
+#define IWX_TXR_F_ACK_POLICY_SET	0x02	/* QoS Ack Policy = No Ack */
+#define IWX_TXR_F_SEQ_ASSIGNED		0x04	/* driver wrote seq number */
+#define IWX_TX_COOKIE_NONE		0xffffffffu
 
 #ifdef __cplusplus
 extern "C" {
@@ -217,6 +261,12 @@ void	 osdep_rx_frame(void *os, const struct iwx_rx_meta *meta,
 	    const uint8_t *frame, uint32_t len);
 /* Fatal device condition; backend schedules stop/dump at PASSIVE_LEVEL. */
 void	 osdep_fatal(void *os, enum osdep_fatal_reason reason);
+/*
+ * Status of one injected frame. Called with osdep_lock held, from the DPC
+ * (TX_CMD response) or from the PASSIVE path when a queue is flushed or
+ * reset (result IWX_TXST_FLUSHED). Exactly one call per accepted frame.
+ */
+void	 osdep_tx_status(void *os, const struct iwx_tx_status *st);
 
 #ifdef __cplusplus
 }

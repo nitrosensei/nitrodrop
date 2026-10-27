@@ -1160,7 +1160,7 @@ iwx_config_umac_scan_reduced(struct iwx_softc *sc)
 	return iwx_send_cmd(sc, &hcmd);
 }
 
-static int
+int
 iwx_disable_beacon_filter(struct iwx_softc *sc)
 {
 	struct iwx_beacon_filter_cmd cmd;
@@ -1362,6 +1362,13 @@ iwx_stop(struct iwx_softc *sc)
 	sc->sc_flags &= ~IWX_FLAG_SHUTDOWN;
 	sc->sc_flags &= ~IWX_FLAG_PHY_ACTIVE;
 
+	/* airdrop (M2/M3): radio soft state, queues were reset above */
+	sc->sc_radio_mode = IWX_RADIO_MODE_OFF;
+	sc->sc_tx_qid = 0;
+	sc->sc_mcast_sta_active = 0;
+	sc->sc_bcast_sta_active = 0;
+	sc->sc_rx_fcs_included = 0;
+
 	sc->sc_state = IWX_STATE_DOWN;
 }
 
@@ -1382,6 +1389,17 @@ iwx_get_info(struct iwx_softc *sc, struct iwx_info *info)
 	info->last_fw_error = sc->sc_last_fw_error;
 	info->rx_frames = sc->sc_stat_rx_frames;
 	info->rx_dropped = sc->sc_stat_rx_dropped;
+	info->rx_bad_fcs = sc->sc_stat_rx_bad_fcs;
+	info->tx_submitted = sc->sc_stat_tx_submitted;
+	info->tx_success = sc->sc_stat_tx_success;
+	info->tx_failed = sc->sc_stat_tx_failed;
+	info->tx_flushed = sc->sc_stat_tx_flushed;
+	if (sc->sc_tx_qid > 0 && sc->txq[sc->sc_tx_qid].allocated)
+		info->tx_pending = (uint32_t)sc->txq[sc->sc_tx_qid].queued;
+	if (sc->sc_radio_mode != IWX_RADIO_MODE_OFF) {
+		info->radio_channel = sc->sc_phyctxt[0].channel;
+		info->radio_mode = (uint8_t)sc->sc_radio_mode;
+	}
 	for (i = 0; i < sc->sc_nvm.nchan && i < (int)nitems(info->chan); i++) {
 		info->chan[i] = sc->sc_nvm.channels[i].ieee;
 		info->chan_flags[i] = sc->sc_nvm.channels[i].nvm_flags;

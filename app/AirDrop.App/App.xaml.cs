@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using Microsoft.Win32;
 using AirDrop.App.Services;
+using AirDrop.App.Setup;
 using AirDrop.App.ViewModels;
 using AirDrop.App.Views;
 using Forms = System.Windows.Forms;
@@ -11,7 +12,9 @@ using Forms = System.Windows.Forms;
 namespace AirDrop.App;
 
 /// <remarks>
-/// Command line: <c>--send &lt;files…&gt;</c> (Explorer "NitroDrop ile gönder"), <c>--background</c> (autostart, tray only).
+/// Command line: <c>--send &lt;files…&gt;</c> (Explorer "NitroDrop ile gönder"), <c>--background</c> (autostart, tray only),
+/// <c>--setup</c> / <c>--setup-resume</c> (open the "Gelişmiş Kurulum" wizard), <c>--setup-dry-run</c> (the wizard logs
+/// commands instead of running them), <c>--setup-helper …</c> (the elevated helper, see Setup/ElevatedHelper.cs).
 /// </remarks>
 public partial class App : Application
 {
@@ -21,6 +24,7 @@ public partial class App : Application
     private IAirDropService? _svc;
     private MainWindow? _main;
     private MainViewModel? _vm;
+    private SetupWizard? _wizard;
 
     public static bool IsDark { get; private set; }
     public static event EventHandler? ThemeChanged;
@@ -28,6 +32,14 @@ public partial class App : Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+
+        // Elevated setup helper: one action, then exit (never joins the single-instance group, never shows UI).
+        if (HelperProtocol.IsHelperInvocation(e.Args))
+        {
+            Shutdown(ElevatedHelper.HostMain(e.Args));
+            return;
+        }
+        ElevatedHelper.DryRun = e.Args.Contains(ElevatedHelper.DryRunFlag);
 
         _single = new SingleInstance();
         if (!_single.IsFirst)
@@ -64,6 +76,7 @@ public partial class App : Application
         _main = new MainWindow(_vm);
         _vm.ShowAskSheet = (req, contact, photo) => ReceiveWindow.AskAsync(_main, req, contact, photo);
         _vm.Notify = ShowBalloon;
+        _vm.DriverSetup.OpenWizard = ShowSetupWizard;
 
 #if DEBUG
         int snap = Array.IndexOf(e.Args, "--snapshot");
@@ -94,6 +107,27 @@ public partial class App : Application
             }
         }
         if (i >= 0 || args.Contains("--show")) ShowMain();
+        if (args.Contains(ResumeRegistration.ResumeFlag) || args.Contains("--setup")) ShowSetupWizard(false);
+    }
+
+    private void ShowSetupWizard(bool rollback)
+    {
+        if (_wizard is not null)
+        {
+            _wizard.Activate();
+            return;
+        }
+        // Dry-run keeps its own progress file so a test run never looks like a real install.
+        var statePath = ElevatedHelper.DryRun ? Path.ChangeExtension(SetupPaths.StateFile, ".dry-run.json") : SetupPaths.StateFile;
+        _wizard = new SetupWizard(new SetupWizardViewModel(new SystemProbe(), statePath, rollback));
+        if (_main is { IsVisible: true }) _wizard.Owner = _main;
+        else _wizard.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        _wizard.Closed += (_, _) =>
+        {
+            _wizard = null;
+            _ = _vm?.DriverSetup.RefreshAsync();
+        };
+        _wizard.Show();
     }
 
     private void CreateTray()
@@ -139,9 +173,12 @@ public partial class App : Application
         Shutdown();
     }
 
-    private void ApplyTheme()
+    private void ApplyTheme() => ApplyTheme(ReadSystemDark());
+
+    /// <summary>Also used by the Debug snapshot to render both themes.</summary>
+    internal void ApplyTheme(bool dark)
     {
-        IsDark = ReadSystemDark();
+        IsDark = dark;
         Resources.MergedDictionaries[0] = new ResourceDictionary
         {
             Source = new Uri(IsDark ? "Themes/Dark.xaml" : "Themes/Light.xaml", UriKind.Relative),

@@ -10,7 +10,10 @@ Nitro: NB-0011.
 | Arayüz | WPF, Apple tarzı radar, geçmiş, ayarlar, ortak pano (Ctrl+Alt+A), rehber fotoğrafları, güvenilir cihaz (`app/AirDrop.App`, ad: NitroDrop) | Çalışıyor (LAN modu; `--demo` ile sahte veri) |
 | AirDrop protokolü | mDNS `_airdrop._tcp` + HTTPS /Discover /Ask /Upload, link paylaşımı, medya yetenekleri, rehber hash eşleştirme (`app/AirDrop.Core`) | Bitti, 54/54 test; LAN'da PC↔PC uçtan uca çalıştı |
 | BLE | Apple 0x004C / tip 0x05 duyuru + tarama (`tools/ble_test.py`) | Windows'ta doğrulandı (2026-10-28) |
-| Wi-Fi sürücüsü (ana yol) | Dahili Intel AX203 (PCI 8086:51F1) için kendi KMDF sürücümüz — OpenBSD `if_iwx.c` portu, IBSS + monitor + inject, sabit kanal 6 (`driver/`, `docs/driver-research.md`) | M1 (firmware ALIVE) yazılıyor |
+| Wi-Fi sürücüsü (ana yol) | Dahili Intel AX203 (PCI 8086:51F1) için kendi KMDF sürücümüz — OpenBSD `if_iwx.c` portu, IBSS + monitor + inject, sabit kanal 6 (`driver/`, `docs/driver-research.md`) | M1 bitti (1766 host testi, donanımda denenmedi); M2 monitor RX + M3 IBSS/inject yazılıyor |
+| Kurulum sihirbazı | Secure Boot/testsigning/BitLocker rehberi, sürücü kurma/geri alma (`app/AirDrop.App/Setup`, `--setup-dry-run`) | Yazıldı: dry-run + testler tamam, gerçek kurulum denenmedi |
+| Sekme/uygulama senkronu | PC↔PC açık sekmeler + uygulamalar (6 haneli eşleştirme, pinli TLS + HMAC), Chrome/Edge MV3 eklentisi (`extension/`), native host (`app/Nitro.Sync.Host`), iPhone "PC'de Aç" Kestirmesi + uygulama→PC eşleme (`app/Nitro.Sync`, `docs/sync-plan.md`, `docs/ios-shortcut.md`) | Kütüphane + eklenti bitti (157/157 test); UI'ya bağlanacak |
+| Süreklilik (Bluetooth) | iPhone bildirimleri (ANCS), mesajlar (MAP), aramalar (HFP) (`app/Nitro.Continuity`, `docs/continuity-plan.md`) | Araştırma + iskelet |
 | AWDL | Owly (t4t5/owly, Rust, MIT) portu | Bekliyor |
 
 ## Sürücü imzası ve dağıtım

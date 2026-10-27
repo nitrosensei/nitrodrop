@@ -183,10 +183,22 @@ test_bringup(const uint8_t *fw, size_t fwlen, const char *label)
 	CHECK(info.nchan > 0 && info.chan[0] == 1);
 	CHECK_EQ(info.msix, 1);
 
-	/* M1 radio stubs */
-	CHECK_EQ(iwx_radio_start(sc, 6, NULL, 0), ENOTSUP);
-	CHECK_EQ(iwx_radio_start(sc, 0, NULL, 0), EINVAL);
-	CHECK_EQ(iwx_radio_start(sc, 200, NULL, 0), EINVAL);
+	/* radio parameter validation (full M2/M3 coverage in test_radio.c) */
+	{
+		struct iwx_radio_params rp;
+
+		memset(&rp, 0, sizeof(rp));
+		CHECK_EQ(iwx_radio_start(sc, NULL), EINVAL);
+		rp.flags = IWX_RADIO_F_LISTENER_ONLY;
+		CHECK_EQ(iwx_radio_start(sc, &rp), EINVAL);	/* channel 0 */
+		rp.channel = 200;
+		CHECK_EQ(iwx_radio_start(sc, &rp), EINVAL);
+		rp.channel = 6;
+		rp.flags = 0x80;
+		CHECK_EQ(iwx_radio_start(sc, &rp), EINVAL);	/* unknown flag */
+		rp.flags = 0;					/* IBSS, no BSSID */
+		CHECK_EQ(iwx_radio_start(sc, &rp), EINVAL);
+	}
 
 	iwx_stop(sc);
 	iwx_get_info(sc, &info);

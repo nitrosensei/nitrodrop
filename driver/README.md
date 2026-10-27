@@ -174,6 +174,11 @@ powershell -ExecutionPolicy Bypass -File driver\tests\build-tests.ps1
 
 Paket için `airdropwifi.inf`, `airdropwifi.sys` ve `iwlwifi-so-a0-hr-b0-77.ucode` aynı klasöre konur. `Inf2Cat` ile `.cat` üretilir, ardından Microsoft **attestation signing** (Partner Center, EV sertifikası) yapılır. Secure Boot ve HVCI açık kalır, test-signing **kullanılmaz**.
 
+**Faz 1 (EV sertifika yokken):** `driver\package.ps1` kataloğu Inf2Cat ile **imzasız** üretir (`driver\out\airdropwifi.cat`); uygulama
+inf + sys + cat'ı yanında taşır, kullanıcının makinesinde Gelişmiş Kurulum sihirbazı firmware'i indirir ve `.sys` + `.cat`'i kuruluma
+özel sertifikayla imzalar (bkz. `app/README.md`). INF'i değiştirdikten sonra `package.ps1` yeniden çalıştırılmalı (katalog INF hash'ini
+içerir); `DriverVer` UTC'ye göre bugünden ileri olmamalı.
+
 ### Testler (`driver/tests`)
 
 `mock_osdep.c` hem osdep'i taklit ediyor hem de küçük bir AX210 ailesi **cihaz modeli** içeriyor:

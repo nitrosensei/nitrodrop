@@ -65,6 +65,8 @@ public sealed class MainViewModel : Observable
     public ObservableCollection<PeerViewModel> Peers { get; } = new();
     public ObservableCollection<HistoryItemViewModel> History { get; } = new();
     public SettingsViewModel Settings { get; }
+    /// <summary>Wi-Fi driver state: "kurulum gerekli" banner + Settings → Wi-Fi Sürücüsü.</summary>
+    public Setup.DriverSetupStatus DriverSetup { get; } = new(new Setup.SystemProbe());
 
     public bool HasPeers => Peers.Count > 0;
     public bool HasHistory => History.Count > 0;

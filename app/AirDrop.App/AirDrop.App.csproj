@@ -21,4 +21,14 @@
     <ProjectReference Include="..\AirDrop.Core\AirDrop.Core.csproj" />
   </ItemGroup>
 
+  <!-- Wi-Fi driver package for the setup wizard (Setup/): INF, built .sys and the UNSIGNED catalog from
+       driver\package.ps1. The wizard signs the .sys/.cat per install; the firmware is downloaded. -->
+  <ItemGroup>
+    <None Include="..\..\driver\airdropwifi.inf" Link="driver\airdropwifi.inf" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\driver\out\airdropwifi.sys" Link="driver\airdropwifi.sys" CopyToOutputDirectory="PreserveNewest"
+          Condition="Exists('..\..\driver\out\airdropwifi.sys')" />
+    <None Include="..\..\driver\out\airdropwifi.cat" Link="driver\airdropwifi.cat" CopyToOutputDirectory="PreserveNewest"
+          Condition="Exists('..\..\driver\out\airdropwifi.cat')" />
+  </ItemGroup>
+
 </Project>

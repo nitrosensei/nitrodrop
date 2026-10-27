@@ -69,6 +69,57 @@ birbirini görür, dosya ve bağlantı gönderir (UI'yi uçtan uca denemek için
 Testler adaptörü WPF olmadan derlemek için `IAirDropService.cs`, `IContactResolver.cs`, `CoreAirDropService.cs`,
 `ContactBookResolver.cs` dosyalarını AirDrop.Tests'e link'ler — bu dosyalara WPF tipi girmemeli.
 
+## Gelişmiş Kurulum sihirbazı (`AirDrop.App/Setup`, `Views/SetupWizard.xaml`)
+
+Faz 1'de sürücümüz Microsoft imzalı olmadığı için kullanıcının Secure Boot'u kapatıp test modunu açması gerekiyor.
+Sihirbaz bunu teknik olmayan kullanıcı için adım adım yaptırır. Ana pencerede kart destekliyse ve sürücü kurulu değilse
+"iPhone'larla doğrudan bağlantı için kurulum gerekli → Kur" bandı çıkar; Ayarlar → **Wi-Fi Sürücüsü** bölümünde durum +
+"Kur…" / "Kaldır ve eski haline getir…" var.
+
+Adımlar (her biri açılışta durumu algılar, tamamlanmışsa atlanır; ilerleme `%LOCALAPPDATA%\airdrop-win\setup.json`):
+
+1. **Uyumluluk** — `HKLM\SYSTEM\CurrentControlSet\Enum\PCI` + `CM_Locate_DevNode` (yalnızca takılı kart).
+   Tablo: `SupportedDevices.cs` (şimdilik `PCI\VEN_8086&DEV_51F1&SUBSYS_02748086`). Kart yoksa nazikçe durur, USB adaptör yolunu anar.
+2. **Onay** — Secure Boot kapanır, "Test Modu" filigranı, Valorant/Vanguard ve FACEIT gibi oyunlar açılmaz, koruma azalır,
+   Intel Wi-Fi NitroDrop'a geçer. Anahtar açılmadan ilerlenmez.
+3. **BitLocker** — hızlı durum yönetici izni olmadan (Shell `System.Volume.BitLockerProtection`); "Anahtarı göster…" yönetici
+   yardımcısıyla WMI `Win32_EncryptableVolume`'dan anahtar kimliğini ve 48 haneli parolayı okur (parola günlüğe yazılmaz),
+   dosyaya kaydet / yazdır, aka.ms/myrecoverykey bağlantısı. "Kaydettim" onayı zorunlu. "Yeniden başlatırken bir kez askıya al"
+   (varsayılan açık) → BIOS ve test modu yeniden başlatmalarından önce `manage-bde -protectors -disable C: -RebootCount 1`.
+4. **Secure Boot** — `...\SecureBoot\State\UEFISecureBootEnabled`. Açıksa SMBIOS'tan (`HKLM\HARDWARE\DESCRIPTION\System\BIOS`)
+   üretici/model okunur, `VendorGuides.cs` tablosundan talimat gösterilir: Lenovo (ThinkPad ayrı), HP, Dell/Alienware, ASUS, Acer,
+   MSI, Gigabyte, Samsung, Huawei/Honor, Casper, Monster, Clevo/Tongfang, Surface, ASRock + genel. "BIOS'a yeniden başlat" =
+   onay → RunOnce kaydı → yönetici yardımcısında `shutdown /r /fw /t 5`.
+5. **Test modu** — etkinlik `NtQuerySystemInformation(SystemCodeIntegrityInformation)` `TESTSIGN` bitinden (yönetici gerekmez).
+   Yardımcıda `bcdedit /set {current} testsigning on`; Secure Boot açıkken bcdedit'in reddi (İngilizce/Türkçe mesaj ya da algılanan
+   durum) anlaşılır bir mesaja çevrilir. Sonra onaylı `shutdown /r /t 5` (yönetici gerekmez).
+6. **Kurulum** — firmware C#'ta indirilir (`FirmwareFetcher.cs`, `tools/fetch-firmware.ps1` ile aynı tag/SHA-256, git.kernel.org →
+   GitLab aynası), lisans gösterilip kabul ettirilir. Yardımcı: paketi yalnızca Yöneticiler/SYSTEM'in yazabildiği
+   `%ProgramData%\NitroDrop\driver`'a kopyalar, firmware hash'ini ve **kataloğu** doğrular, bu kuruluma özel RSA-3072 kod imzalama
+   sertifikası üretir, `.sys` ve `.cat`'i imzalar, açık sertifikayı `LocalMachine\Root` + `TrustedPublisher`'a ekler (özel anahtar
+   yalnızca bellekte, hiç diske yazılmaz), `pnputil /add-driver … /install`, ardından Intel'in WHQL sürücüsü daha iyi eşleştiği için
+   `UpdateDriverForPlugAndPlayDevices(hwid, inf, INSTALLFLAG_FORCE)` ve kartın `airdropwifi` servisine bağlandığını doğrular.
+7. **Kaldır ve eski haline getir** — `%windir%\INF\oem*.inf` içinden bizim INF'ler (Provider + CatalogFile, dilden bağımsız) →
+   `pnputil /delete-driver oemNN.inf /uninstall /force`, `pnputil /scan-devices` (Intel sürücüsü geri bağlanır), sertifikaları
+   parmak izi + konuyla siler, `testsigning off`, gerekirse `manage-bde -protectors -enable`, sonra Secure Boot'u açma talimatı.
+
+**Katalog (WDK olmadan):** son kullanıcıda Inf2Cat/MakeCat yok. Katalog bizim derlememizde `driver\package.ps1` ile **imzasız**
+üretilip uygulamayla gelir (`driver\out\airdropwifi.cat` → çıktıda `driver\`). Katalog yalnızca dosya hash'lerini tutar, imzalayandan
+bağımsızdır; kullanıcının makinesinde `SignerSignEx` (mssign32, signtool'un da kullandığı API; PE ve katalog SIP'leri var) ile kuruluma
+özel sertifikayla imzalanır. `.sys`'e gömülü imza eklemek kataloğu bozmaz çünkü katalogdaki hash Authenticode PE hash'idir
+(sertifika tablosu hariç) — testte doğrulanıyor. INF'in `DriverVer`'i UTC'ye göre gelecekte olursa Inf2Cat reddeder.
+
+**Yükseltme:** arayüz hiçbir zaman yönetici olarak çalışmaz. Her adım butonu aynı exe'yi `--setup-helper --pipe <ad> --request
+<base64url JSON>` ile `runas` başlatır (tek UAC), yardımcı tek bir `HelperAction` yapar ve sonucu yalnızca mevcut kullanıcı +
+Yöneticilere açık named pipe'tan döndürür (`ElevatedHelper.cs`, `HelperActions.cs`). Bütün sistem değişiklikleri `HelperActions`'tadır.
+Yeniden başlatmadan önce `HKCU\…\RunOnce` → `NitroDrop.exe --setup-resume` yazılır, sihirbaz açılışta kaldığı yerden sürer.
+Her adım ve komut `%LOCALAPPDATA%\airdrop-win\setup.log`'a yazılır (sihirbazdaki "Kurulum günlüğü").
+
+**Komut satırı:** `--setup` (sihirbazı aç), `--setup-resume`, `--setup-dry-run` (hiçbir komut çalışmaz, yükseltme istenmez, komutlar
+günlüğe yazılır; ilerleme ayrı `setup.dry-run.json`'da). Debug: `NitroDrop.exe --snapshot <klasör>` sihirbazın tüm sayfalarını açık/koyu
+tema `setup-*.png` olarak da çizer; `--snapshot <klasör> --setup-dry-run` ayrıca bütün yardımcı eylemlerini dry-run çalıştırıp
+`<klasör>\setup-dry-run.log` yazar.
+
 ## Testler
 
 - bplist: tüm tipler gidiş-dönüş, CPython `plistlib` çıktısını okuma, bizim çıktımızı CPython'a okutma (`.venv` varsa)
@@ -77,6 +128,11 @@ Testler adaptörü WPF olmadan derlemek için `IAirDropService.cs`, `IContactRes
 - adaptör (iki CoreAirDropService, loopback mDNS 536xx): keşif, ilerlemeli gönderim, ret, bağlantı paylaşımı,
   Off modunda geri çekilme + Ask reddi + geri gelme, medya yetenekleri/isim güncelleme, model→cihaz türü, hız ölçer
 - kişiler: iCloud/Google/v4/v2.1 vCard, telefon normalizasyonu, bplist/XML/CMS (RSA+ECDSA, bozuk imza) kayıt, eşleme + kalıcılık
+- kurulum sihirbazı (`SetupTests.cs`, `Setup/` içindeki WPF'siz dosyalar link'li): PCI kimliği ayrıştırma/eşleme, adım akışı ve
+  atlama, CI/SystemStartOptions/Shell BitLocker ayrıştırma, üretici tablosu (26 SMBIOS örneği), komut kurucular ve tırnaklama
+  (`CommandLineToArgvW` ile gidiş-dönüş), bcdedit/pnputil sonuç sınıflandırma (EN/TR), BitLocker JSON, yardımcı protokolü, setup.json,
+  INF tanıma, firmware doğrulama (ağsız), sertifika özellikleri, **geçici kopyalarda gerçek `SignerSignEx` imzası** (bellekteki anahtar,
+  hiçbir depo değişmez) ve imzadan sonra hazır kataloğun geçerli kalması (sürücü + firmware derlenmişse)
 - uçtan uca (loopback, süreç içi): Türkçe karakterli ad (ğüşİöç) dahil 2 dosya + klasör gönderimi, bayt bayt kontrol;
   ret durumunda Upload'un 403 alması; mDNS yayın + tarama (loopback, port 53530)
 
@@ -98,3 +154,13 @@ Kodda `// UNVERIFIED:` ile işaretli:
 Yapılacak: gönderirken JPEG2000 `FileIcon` küçük resmi, "Yalnızca Kişiler" (kendi Apple imzalı kaydımız — kapsam dışı),
 Apple kök CA'sını PIN'leyip kayıt zincirini doğrulamak, alırken toplam boyut (Ask'ta boyut yok → ilerleme yüzdesi yok), mDNS probing/çakışma çözümü, pipelining (flag 0x04).
 Gerçek iPhone ile test AWDL katmanı hazır olunca yapılacak.
+
+Kurulum sihirbazında doğrulanmamış olanlar (bu makinede hiçbir gerçek sistem komutu çalıştırılmadı; yalnızca derleme, testler,
+dry-run ve ekran görüntüsü):
+- Uçtan uca gerçek kurulum: UAC → bcdedit/shutdown/manage-bde/pnputil, sertifikanın depolara eklenmesi, test modunda PnP'nin bizim
+  imzaladığımız kataloğu kabul etmesi ve `UpdateDriverForPlugAndPlayDevices(FORCE)`'un Intel sürücüsünün yerine geçmesi.
+- Shell `System.Volume.BitLockerProtection` değer eşlemesi (1 açık, 2 kapalı, 3/4 sürüyor, 5 askıda, 6 kilitli) gözleme dayalı.
+- Üretici talimatları genel menü yollarıdır; BIOS sürümüne göre adlar değişebilir (her sayfada "BIOS açılmazsa" tuşu ve genel ipucu var).
+- HVCI/Bellek Bütünlüğü açıkken test imzalı sürücünün yüklenmesi; bu sihirbaz şimdilik Bellek Bütünlüğü'ne dokunmuyor.
+- BitLocker'ın `-RebootCount 1` ile iki ayrı yeniden başlatmada (BIOS + test modu) ayrı ayrı askıya alınması — her yeniden başlatmadan
+  önce tekrar çalıştırılıyor, ama gerçek TPM/PCR davranışı denenmedi.

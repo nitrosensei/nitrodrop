@@ -128,6 +128,10 @@
  *          copies the frame to the OS backend (no mbuf swap, D-TR1).
  *   D-CMD7 locking: ring state shared with the DPC is protected with
  *          osdep_lock() (iwx: splnet()).
+ *   D-CMD8 (M2/M3) responses are copied to a waiting command only when
+ *          they arrive for the command queue. TX_CMD responses (data
+ *          queue qid, slot idx) go to iwx_rx_tx_cmd() (iwx: same handler)
+ *          and never touch the command response slots.
  */
 
 #include "iwx_var.h"
@@ -476,6 +480,15 @@ iwx_cmd_store_resp(struct iwx_softc *sc, const struct iwx_rx_packet *pkt,
 {
 	size_t pkt_len;
 
+	/*
+	 * D-CMD8: only command queue replies belong to a waiting command.
+	 * TX_CMD responses carry the data queue's qid and slot index; iwx
+	 * never stores responses for them either (iwx_rx_pkt() checks
+	 * "qid == IWX_DQA_CMD_QUEUE" through iwx_cmd_done()), but the store
+	 * here ran first and could clobber an unrelated waiter's buffer.
+	 */
+	if ((pkt->hdr.qid & ~0x80) != IWX_DQA_CMD_QUEUE)
+		return;
 	if (idx < 0 || idx >= IWX_TX_RING_COUNT ||
 	    sc->sc_cmd_resp_pkt[idx] == NULL)
 		return;
@@ -636,6 +649,14 @@ iwx_rx_pkt(struct iwx_softc *sc, struct iwx_rx_data *data)
 			break;
 		}
 
+		/* airdrop (M3): status of an injected frame */
+		case IWX_TX_CMD:
+		case IWX_WIDE_ID(IWX_LONG_GROUP, IWX_TX_CMD):
+			if (qid & 0x80)
+				break;	/* not a TX queue response */
+			iwx_rx_tx_cmd(sc, pkt);
+			break;
+
 		case IWX_REPLY_ERROR: {
 			const struct iwx_error_resp *resp =
 			    (const void *)pkt->data;
@@ -647,8 +668,8 @@ iwx_rx_pkt(struct iwx_softc *sc, struct iwx_rx_data *data)
 		/* notifications we know and deliberately ignore (D-CMD6) */
 		case IWX_REPLY_RX_PHY_CMD:
 		case IWX_BAR_FRAME_RELEASE:
-		case IWX_TX_CMD:
 		case IWX_BA_NOTIF:
+		case IWX_BEACON_NOTIFICATION:	/* M3: IBSS beacon sent */
 		case IWX_MISSED_BEACONS_NOTIFICATION:
 		case IWX_WIDE_ID(IWX_MAC_CONF_GROUP, IWX_MISSED_BEACONS_NOTIF):
 		case IWX_MFUART_LOAD_NOTIFICATION:

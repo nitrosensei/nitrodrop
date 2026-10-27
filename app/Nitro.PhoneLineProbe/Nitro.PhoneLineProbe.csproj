@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Read-only probe for Windows.ApplicationModel.Calls (PhoneLineTransportDevice / PhoneLineWatcher).
+       Those APIs need package identity + the restricted capability phoneLineTransportManagement, so this exe is
+       meant to run inside a *sparse* package (Package/AppxManifest.xml, built by pack.ps1, payload = manifest + logos
+       only, exe stays here in bin/ as the external location). It also runs unpackaged, to show the contrast. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows10.0.22621.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>nitro-phoneline-probe</AssemblyName>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <!-- No <msix> element in an app.manifest: the SxS loader rejects the unsigned-package OID publisher
+         ("msix publisher must be valid"), so the exe refuses to start. Packaged runs are launched through the
+         AUMID instead (shell:AppsFolder\<PFN>!Probe), which grants the sparse package identity. -->
+  </PropertyGroup>
+
+</Project>

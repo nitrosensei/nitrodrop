@@ -591,6 +591,10 @@ iwx_reset_tx_ring(struct iwx_softc *sc, struct iwx_tx_ring *ring)
 	if (!ring->allocated)
 		return;
 
+	/* airdrop (M3): every injected frame still in flight gets a status */
+	if (ring->qid != IWX_DQA_CMD_QUEUE)
+		iwx_txq_flush_report(sc, ring);
+
 	/* Clear byte count table. */
 	memset(ring->bc_tbl.vaddr, 0, ring->bc_tbl.size);
 
@@ -600,6 +604,7 @@ iwx_reset_tx_ring(struct iwx_softc *sc, struct iwx_tx_ring *ring)
 	for (i = 0; i < IWX_TX_RING_COUNT; i++) {
 		ring->data[i].flags = 0;
 		ring->data[i].done = 0;
+		ring->data[i].inflight = 0;
 	}
 	sc->qfullmsk &= ~(1 << ring->qid);
 	sc->qenablemsk &= ~(1 << ring->qid);
@@ -617,6 +622,7 @@ iwx_free_tx_ring(struct iwx_softc *sc, struct iwx_tx_ring *ring)
 	iwx_dma_contig_free(sc, &ring->desc_dma);
 	iwx_dma_contig_free(sc, &ring->cmd_dma);
 	iwx_dma_contig_free(sc, &ring->bc_tbl);
+	iwx_dma_contig_free(sc, &ring->pay_dma);
 	ring->desc = NULL;
 	ring->cmd = NULL;
 	ring->allocated = 0;

@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Pure protocol code (ANCS/AMS, OBEX/MAP, HFP AT). No WinRT here so it stays testable on plain net10.0;
+       the Bluetooth transport (GATT / RFCOMM) lives in the Windows-targeted projects. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AirDrop.Core\AirDrop.Core.csproj" />
+    <ProjectReference Include="..\Nitro.Continuity\Nitro.Continuity.csproj" />
+    <ProjectReference Include="..\Nitro.Sync\Nitro.Sync.csproj" />
   </ItemGroup>
 
   <!-- The UI adapter is plain .NET (no WPF types); compile it here so it is tested on net10.0 without the WPF app. -->
@@ -28,6 +30,22 @@
     <Compile Include="..\AirDrop.App\Services\IContactResolver.cs" Link="App\IContactResolver.cs" />
     <Compile Include="..\AirDrop.App\Services\CoreAirDropService.cs" Link="App\CoreAirDropService.cs" />
     <Compile Include="..\AirDrop.App\Services\ContactBookResolver.cs" Link="App\ContactBookResolver.cs" />
+  </ItemGroup>
+
+  <!-- Setup wizard logic (no WPF, no registry): detection parsing, flow, vendor table, command builders, signing. -->
+  <ItemGroup>
+    <Compile Include="..\AirDrop.App\Setup\SetupPaths.cs" Link="App\Setup\SetupPaths.cs" />
+    <Compile Include="..\AirDrop.App\Setup\SetupLog.cs" Link="App\Setup\SetupLog.cs" />
+    <Compile Include="..\AirDrop.App\Setup\SetupState.cs" Link="App\Setup\SetupState.cs" />
+    <Compile Include="..\AirDrop.App\Setup\SetupFlow.cs" Link="App\Setup\SetupFlow.cs" />
+    <Compile Include="..\AirDrop.App\Setup\SupportedDevices.cs" Link="App\Setup\SupportedDevices.cs" />
+    <Compile Include="..\AirDrop.App\Setup\VendorGuides.cs" Link="App\Setup\VendorGuides.cs" />
+    <Compile Include="..\AirDrop.App\Setup\SetupCommands.cs" Link="App\Setup\SetupCommands.cs" />
+    <Compile Include="..\AirDrop.App\Setup\CommandRunner.cs" Link="App\Setup\CommandRunner.cs" />
+    <Compile Include="..\AirDrop.App\Setup\HelperProtocol.cs" Link="App\Setup\HelperProtocol.cs" />
+    <Compile Include="..\AirDrop.App\Setup\FirmwareFetcher.cs" Link="App\Setup\FirmwareFetcher.cs" />
+    <Compile Include="..\AirDrop.App\Setup\DriverPackage.cs" Link="App\Setup\DriverPackage.cs" />
+    <Compile Include="..\AirDrop.App\Setup\CodeSigner.cs" Link="App\Setup\CodeSigner.cs" />
   </ItemGroup>
 
 </Project>

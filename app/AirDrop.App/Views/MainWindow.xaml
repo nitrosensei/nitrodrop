@@ -263,6 +263,19 @@
                                    Foreground="{DynamicResource TextSecondary}"/>
                     </StackPanel>
                 </Border>
+                <!-- Wi-Fi driver not installed on a supported card → "Gelişmiş Kurulum" -->
+                <Border Padding="12,6" CornerRadius="12" Background="{DynamicResource Card}" BorderBrush="{DynamicResource CardBorder}"
+                        BorderThickness="1" Margin="0,8,0,0" HorizontalAlignment="Center"
+                        Visibility="{Binding DriverSetup.NeedsSetup, Converter={StaticResource BoolVis}}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE701;" FontFamily="{StaticResource IconFont}" FontSize="12"
+                                   Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                        <TextBlock Text="iPhone'larla doğrudan bağlantı için kurulum gerekli" FontSize="11.5" Margin="7,0,10,0"
+                                   VerticalAlignment="Center"/>
+                        <Button Style="{StaticResource LinkButton}" Content="Kur" FontWeight="SemiBold" FontSize="12"
+                                VerticalAlignment="Center" Command="{Binding DriverSetup.OpenSetup}"/>
+                    </StackPanel>
+                </Border>
                 <Border Padding="14,8" CornerRadius="12" Background="{DynamicResource Accent}" Margin="0,8,0,0"
                         Visibility="{Binding HasPending, Converter={StaticResource BoolVis}}">
                     <StackPanel Orientation="Horizontal">
@@ -551,6 +564,26 @@
                                     </Style>
                                 </TextBlock.Style>
                             </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="WI-FI SÜRÜCÜSÜ" Style="{StaticResource SectionTitle}"/>
+                    <Border Style="{StaticResource Section}"
+                            DataContext="{Binding DataContext.DriverSetup, RelativeSource={RelativeSource AncestorType=Window}}">
+                        <StackPanel>
+                            <Grid Style="{StaticResource Row}">
+                                <StackPanel Margin="0,0,10,0">
+                                    <TextBlock Text="{Binding StateText}" FontSize="13"/>
+                                    <TextBlock Text="{Binding DetailText}" FontSize="11.5" TextWrapping="Wrap"
+                                               Foreground="{DynamicResource TextSecondary}"/>
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Margin="14,0,14,12">
+                                <Button Style="{StaticResource AccentPill}" Content="Kur…" Command="{Binding OpenSetup}"
+                                        Visibility="{Binding CanInstall, Converter={StaticResource BoolVis}}" Margin="0,0,10,0"/>
+                                <Button Style="{StaticResource PillButton}" Content="Kaldır ve eski haline getir…" Command="{Binding OpenRollback}"
+                                        Visibility="{Binding CanRollback, Converter={StaticResource BoolVis}}"/>
+                            </StackPanel>
                         </StackPanel>
                     </Border>
 

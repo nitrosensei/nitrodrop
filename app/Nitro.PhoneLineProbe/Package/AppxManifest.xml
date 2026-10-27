@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sparse package (identity only). Unsigned: the OID in Publisher is Windows 11's marker for unsigned packages
+     (Add-AppxPackage -AllowUnsigned). Payload contains no executable; the exe lives in the external location. -->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap10 rescap">
+
+  <Identity Name="Nitrobyte.NitroDrop.PhoneLineProbe"
+            Publisher="CN=Nitrobyte Dev, OID.2.25.311729368913984317654407730594956997722=1"
+            Version="0.1.0.0"
+            ProcessorArchitecture="x64"/>
+
+  <Properties>
+    <DisplayName>NitroDrop PhoneLine Probe</DisplayName>
+    <PublisherDisplayName>Nitrobyte</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
+  </Properties>
+
+  <Resources>
+    <Resource Language="en-us"/>
+  </Resources>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0"/>
+  </Dependencies>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust"/>
+    <!-- PhoneLineTransportDevice.* (RequestAccessAsync/RegisterApp/ConnectAsync) — restricted, sideload needs no approval. -->
+    <rescap:Capability Name="phoneLineTransportManagement"/>
+    <!-- PhoneCallManager.RequestStoreAsync / PhoneLineWatcher / PhoneLine — general-use. -->
+    <uap:Capability Name="phoneCall"/>
+    <DeviceCapability Name="bluetooth"/>
+  </Capabilities>
+
+  <Applications>
+    <Application Id="Probe"
+                 Executable="nitro-phoneline-probe.exe"
+                 uap10:TrustLevel="mediumIL"
+                 uap10:RuntimeBehavior="win32App">
+      <uap:VisualElements DisplayName="NitroDrop PhoneLine Probe"
+                          Description="Read-only PhoneLineTransportDevice probe"
+                          BackgroundColor="transparent"
+                          Square150x150Logo="Assets\Square150x150Logo.png"
+                          Square44x44Logo="Assets\Square44x44Logo.png"
+                          AppListEntry="none"/>
+    </Application>
+  </Applications>
+</Package>

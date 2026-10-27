@@ -207,6 +207,11 @@ struct iwx_tx_data {
 #define IWX_TXDATA_FLAG_CMD_IS_NARROW	0x01
 #define IWX_TXDATA_FLAG_BIG_CMD		0x02	/* airdrop: uses sc->cmd_big_dma */
 	volatile int	done;		/* airdrop: completion flag for waiter */
+	/* airdrop (M3): injected frame bookkeeping, data queues only */
+	int		inflight;	/* waiting for TX_CMD response */
+	uint32_t	cookie;		/* iwx_tx_params.cookie */
+	uint32_t	txr_flags;	/* IWX_TXR_F_* decided at submit */
+	uint16_t	seq_ctl;	/* sequence control as sent */
 };
 
 struct iwx_tx_ring {
@@ -224,6 +229,8 @@ struct iwx_tx_ring {
 	int			tail_hw;
 	int			tid;
 	int			allocated;	/* airdrop: lazily allocated */
+	/* airdrop (M3): payload buffers, IWX_TX_MAX_INFLIGHT slots */
+	struct iwx_dma_info	pay_dma;
 };
 
 #define IWX_RX_MQ_RING_COUNT	512
@@ -484,6 +491,25 @@ struct iwx_softc {
 	uint32_t sc_stat_rx_frames;
 	uint32_t sc_stat_rx_dropped;
 	uint32_t sc_stat_unhandled_notif;
+	/* airdrop: radio (M2/M3), iwx_radio.c */
+	int sc_radio_mode;			/* IWX_RADIO_MODE_* */
+	uint32_t sc_radio_flags;		/* IWX_RADIO_F_* in use */
+	uint8_t sc_bssid[ETHER_ADDR_LEN];
+	uint16_t sc_beacon_int;
+	int sc_tx_qid;				/* inject queue, 0 = none */
+	int sc_tx_sta_id;			/* station owning sc_tx_qid */
+	int sc_mcast_sta_active;		/* M3 multicast station added */
+	int sc_bcast_sta_active;		/* M3 broadcast station added */
+	int sc_rx_fcs_included;			/* IN_CRC32 filter set */
+	int sc_rx_keep_bad_fcs;
+	int sc_ampdu_toggle;
+	uint32_t sc_ampdu_ref;
+	uint16_t sc_tx_seq;			/* IWX_TX_F_ASSIGN_SEQ counter */
+	uint32_t sc_stat_rx_bad_fcs;
+	uint32_t sc_stat_tx_submitted;
+	uint32_t sc_stat_tx_success;
+	uint32_t sc_stat_tx_failed;
+	uint32_t sc_stat_tx_flushed;
 };
 
 /* Register access through the OS abstraction (replaces bus_space). */
@@ -603,9 +629,33 @@ void	iwx_nic_error(struct iwx_softc *);
 void	iwx_nic_umac_error(struct iwx_softc *);
 const char *iwx_desc_lookup(uint32_t);
 int	iwx_send_update_mcc_cmd(struct iwx_softc *, const char *);
+int	iwx_disable_beacon_filter(struct iwx_softc *);
 
 /* ---- iwx_radio.c ------------------------------------------------------------ */
+#define IWX_RADIO_MODE_OFF	0
+#define IWX_RADIO_MODE_LISTENER	1	/* M2 */
+#define IWX_RADIO_MODE_IBSS	2	/* M3 */
+
+/* M3 station / queue layout (fixed, see iwx_radio.c D-RA notes) */
+#define IWX_IBSS_BCAST_STA_ID	IWX_MONITOR_STA_ID	/* 2 */
+#define IWX_IBSS_MCAST_STA_ID	3
+#define IWX_IBSS_TX_QUEUE	IWX_DQA_INJECT_MONITOR_QUEUE	/* 1 */
+#define IWX_IBSS_CAB_QUEUE	2
+#define IWX_TX_PAYLOAD_SLOT	2368	/* >= IWX_TX_MAX_FRAME, 64-aligned */
+
 void	iwx_rx_mpdu_mq(struct iwx_softc *, const void *, size_t);
+void	iwx_rx_tx_cmd(struct iwx_softc *, const struct iwx_rx_packet *);
+void	iwx_txq_flush_report(struct iwx_softc *, struct iwx_tx_ring *);
+struct iwx_tx_params;
+/* builders exported for the host tests (byte-exact payload checks) */
+void	iwx_radio_fill_mac_cmd(struct iwx_softc *, struct iwx_mac_ctx_cmd *,
+	    uint32_t, int);
+void	iwx_radio_fill_add_sta(struct iwx_softc *, struct iwx_add_sta_cmd *,
+	    int, int, const uint8_t *, int);
+void	iwx_radio_fill_sf(struct iwx_sf_cfg_cmd *, uint32_t, int);
+uint32_t iwx_radio_build_beacon(struct iwx_softc *, uint8_t *, size_t);
+int	iwx_tx_rate_n_flags(struct iwx_softc *, const struct iwx_tx_params *,
+	    uint32_t *);
 
 /* ---- public API used by the OS backend (iwx_core.h) ------------------------- */
 #include "iwx_core.h"

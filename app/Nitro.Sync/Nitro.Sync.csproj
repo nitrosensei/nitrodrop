@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Continuity sync between NitroDrop PCs (browser tabs + running apps), the browser-extension bridge
+       (named pipe) and the iOS Shortcut receiver. Plain net10.0 (no WPF/WinRT) so the tests can run it;
+       Win32 calls are P/Invoke and guarded with OperatingSystem.IsWindows(). -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AirDrop.Core\AirDrop.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="AirDrop.Tests" />
+  </ItemGroup>
+
+</Project>
