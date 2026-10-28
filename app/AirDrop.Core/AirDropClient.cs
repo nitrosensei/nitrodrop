@@ -118,8 +118,8 @@ public sealed class AirDropClient : IDisposable
             [AirDropConstants.SenderID] = _identity.ServiceId,
             [AirDropConstants.ConvertMediaFormats] = false,
             [AirDropConstants.Items] = links.Select(l => (object)l.AbsoluteUri).ToList(),
-            [AirDropConstants.AirDropWinVersion] = AirDropConstants.AirDropWinVersionValue,
         };
+        _identity.AddMarkers(ask);
         if (SenderRecordData != null) ask[AirDropConstants.SenderRecordData] = SenderRecordData;
         if (fileIcon != null) ask[AirDropConstants.FileIcon] = fileIcon;
         return ask;
@@ -155,8 +155,8 @@ public sealed class AirDropClient : IDisposable
             [AirDropConstants.SenderID] = _identity.ServiceId,
             [AirDropConstants.ConvertMediaFormats] = ConvertMediaFormats,
             [AirDropConstants.Files] = files,
-            [AirDropConstants.AirDropWinVersion] = AirDropConstants.AirDropWinVersionValue,
         };
+        _identity.AddMarkers(ask);
         if (SenderRecordData != null) ask[AirDropConstants.SenderRecordData] = SenderRecordData;
         // TODO: generate a JPEG2000 thumbnail like OpenDrop does for images (needs an encoder).
         if (fileIcon != null) ask[AirDropConstants.FileIcon] = fileIcon;

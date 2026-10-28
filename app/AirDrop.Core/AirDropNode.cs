@@ -37,6 +37,7 @@ public sealed record NodePeer(string Id, AirDropPeer Endpoint, DiscoverResult Di
     public string Name => Discover.ReceiverComputerName ?? Id;
     public string? ModelName => Discover.ReceiverModelName;
     public bool IsAirDropWin => Discover.IsAirDropWin;
+    public Devices.HostDevice? Host => Discover.Host;
 }
 
 public sealed record NodeIncoming(AskRequest Ask, ValidationRecord? SenderRecord);
@@ -152,6 +153,7 @@ public sealed class AirDropNode : IAsyncDisposable
             {
                 ComputerName = computerName,
                 ModelName = _identity.ModelName,
+                Host = _identity.Host,
                 ServiceId = _identity.ServiceId,
                 HostName = _identity.HostName,
             };

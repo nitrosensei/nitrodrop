@@ -16,8 +16,9 @@ public enum SendOutcome { Delivered, Declined, Failed, Cancelled }
 /// <param name="ModelName">Raw model string from /Discover (e.g. "MacBookAir10,1"), if known.</param>
 /// <param name="ContactHashes">Validated email/phone hashes from the peer's Apple-signed record
 /// (ReceiverRecordData), lowercase hex; empty if none. Matched only against the user's own contacts.</param>
+/// <param name="Host">Real hardware of a NitroDrop peer (its NitroDropDevice marker); null for Apple devices.</param>
 public sealed record PeerInfo(string Id, string Name, DeviceKind Kind, string? ModelName = null,
-    IReadOnlyList<string>? ContactHashes = null)
+    IReadOnlyList<string>? ContactHashes = null, AirDrop.Core.Devices.HostDevice? Host = null)
 {
     public string StableKey => $"{Name}|{ModelName ?? Kind.ToString()}";
 }
@@ -33,7 +34,8 @@ public sealed record IncomingRequest(
     IReadOnlyList<IncomingFile> Files,
     IReadOnlyList<Uri> Links,
     byte[]? Thumbnail,
-    IReadOnlyList<string>? SenderContactHashes = null)
+    IReadOnlyList<string>? SenderContactHashes = null,
+    AirDrop.Core.Devices.HostDevice? SenderHost = null)
 {
     public string SenderKey => $"{SenderName}|{SenderModelName ?? SenderKind.ToString()}";
 }
@@ -65,6 +67,8 @@ public interface IAirDropService : IAsyncDisposable
     /// <summary>False until the Wi-Fi driver and AWDL link are up.</summary>
     bool IsHardwareReady { get; }
     string HardwareStatus { get; }
+    /// <summary>IsHardwareReady / HardwareStatus changed (radio host came up, failed, peer count…). Pool thread.</summary>
+    event EventHandler? HardwareStatusChanged;
 
     event EventHandler<PeerInfo>? PeerFound;
     event EventHandler<string>? PeerLost;

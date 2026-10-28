@@ -30,6 +30,9 @@ public sealed class AppSettings
     public bool OpenLinksAutomatically { get; set; } = true;
     public bool StartWithWindows { get; set; }
 
+    /// <summary>Ayarlar → Wi-Fi Sürücüsü: start the elevated radio host for iPhones when the driver is installed.</summary>
+    public bool DirectIphoneConnection { get; set; } = true;
+
     /// <summary>First-run intro ("İlk kullanım") was finished or skipped.</summary>
     public bool OnboardingCompleted { get; set; }
 

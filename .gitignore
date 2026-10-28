@@ -8,6 +8,7 @@ driver/out/
 TestResults/
 driver/firmware/
 driver/tests/out/
+packaging/out/
 
 # Third-party binaries fetched by tools/fetch-wintun.ps1 (not committed)
 /vendor/

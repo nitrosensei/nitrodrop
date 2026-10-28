@@ -42,7 +42,7 @@
                 <StackPanel.ToolTip>
                     <StackPanel>
                         <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding DeviceLabel}" Opacity="0.75"/>
+                        <TextBlock Text="{Binding DeviceFullName}" Opacity="0.75"/>
                         <TextBlock Text="Tıklayın ya da dosyayı üzerine bırakın · sağ tık: seçenekler" Opacity="0.75" Margin="0,4,0,0"/>
                     </StackPanel>
                 </StackPanel.ToolTip>
@@ -80,9 +80,8 @@
                     <Border Width="28" Height="28" CornerRadius="14" Background="{DynamicResource Badge}"
                             BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
                             HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,5,5">
-                        <TextBlock Text="{Binding Glyph}" FontFamily="{StaticResource IconFont}" FontSize="13"
-                                   Foreground="{DynamicResource TextSecondary}"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ctl:DeviceArtIcon Width="17" Height="17" ArtKey="{Binding ArtKey}" Stroke="{DynamicResource TextSecondary}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
 
                     <!-- trusted badge -->
@@ -175,8 +174,13 @@
                     </Grid>
                     <StackPanel Grid.Column="1" Margin="14,0,8,0" VerticalAlignment="Center">
                         <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="Medium" TextTrimming="CharacterEllipsis"/>
-                        <TextBlock x:Name="sub" Text="{Binding Subtitle}" FontSize="11.5" Margin="0,2,0,0"
-                                   Foreground="{DynamicResource TextSecondary}" TextTrimming="CharacterEllipsis"/>
+                        <DockPanel Margin="0,2,0,0">
+                            <ctl:DeviceArtIcon DockPanel.Dock="Left" Width="13" Height="13" Margin="0,0,5,0" StrokeWeight="1.8"
+                                               ArtKey="{Binding ArtKey}" Stroke="{DynamicResource TextSecondary}"
+                                               ToolTip="{Binding DeviceLabel}" VerticalAlignment="Center"/>
+                            <TextBlock x:Name="sub" Text="{Binding Subtitle}" FontSize="11.5"
+                                       Foreground="{DynamicResource TextSecondary}" TextTrimming="CharacterEllipsis"/>
+                        </DockPanel>
                     </StackPanel>
                     <TextBlock Grid.Column="2" Text="{Binding TimeText}" Style="{StaticResource MonoLabel}" VerticalAlignment="Top"
                                Margin="0,3,2,0"/>
@@ -278,14 +282,14 @@
         <DataTemplate x:Key="PcAvatar">
             <Grid Width="40" Height="40">
                 <Border x:Name="tile" CornerRadius="11" Background="{DynamicResource Avatar}" BorderBrush="{DynamicResource AvatarBorder}" BorderThickness="1"/>
-                <TextBlock x:Name="glyph" Text="&#xE7F8;" FontFamily="{StaticResource IconFont}" FontSize="17" Foreground="{DynamicResource AvatarText}"
-                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <ctl:DeviceArtIcon x:Name="glyph" Width="24" Height="24" ArtKey="{Binding ArtKey}" Stroke="{DynamicResource AvatarText}"
+                                   ToolTip="{Binding ModelText}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <Ellipse x:Name="dot" Width="12" Height="12" Fill="{DynamicResource Success}" Stroke="{DynamicResource Card}"
                          StrokeThickness="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-3,-3"/>
             </Grid>
             <DataTemplate.Triggers>
                 <DataTrigger Binding="{Binding IsOnline}" Value="False">
-                    <Setter TargetName="glyph" Property="Foreground" Value="{DynamicResource TextTertiary}"/>
+                    <Setter TargetName="glyph" Property="Stroke" Value="{DynamicResource TextTertiary}"/>
                     <Setter TargetName="dot" Property="Visibility" Value="Collapsed"/>
                 </DataTrigger>
             </DataTemplate.Triggers>
@@ -1183,6 +1187,19 @@
                             <StackPanel Margin="16,14,16,0">
                                 <TextBlock Text="{Binding StateText}" FontSize="13"/>
                                 <TextBlock Text="{Binding DetailText}" Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <!-- iPhone link over the driver (elevated radio host); only once the driver is installed -->
+                            <StackPanel Visibility="{Binding IsInstalled, Converter={StaticResource BoolVis}}" Margin="0,14,0,0">
+                                <Border Style="{StaticResource Divider}"/>
+                                <Grid Style="{StaticResource Row}">
+                                    <StackPanel Margin="0,0,64,0">
+                                        <TextBlock Text="iPhone'lara doğrudan bağlan (Wi-Fi sürücüsü)" FontSize="13"/>
+                                        <TextBlock Text="{Binding DataContext.HardwareStatus, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                   Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                    <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                              IsChecked="{Binding DataContext.Settings.DirectIphoneConnection, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                                </Grid>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="16,12,16,16">
                                 <Button Style="{StaticResource SmallAccentPill}" Content="Kur…" Command="{Binding OpenSetup}" MinWidth="72"

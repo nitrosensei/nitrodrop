@@ -56,6 +56,7 @@ public sealed class MainViewModel : Observable
         _svc.ReceiveProgress += (_, p) => _ui.Invoke(() => OnReceiveProgress(p));
         _svc.Received += (_, b) => _ui.Invoke(() => OnReceived(b));
         _svc.AskHandler = req => _ui.InvokeAsync(() => OnAsk(req)).Task.Unwrap();
+        _svc.HardwareStatusChanged += (_, _) => _ui.InvokeAsync(() => { Raise(nameof(IsDemo)); Raise(nameof(HardwareStatus)); });
 
         Settings = new SettingsViewModel(settings, contacts, ApplySettingsAsync);
         Devices = new DevicesViewModel(sync, settings, ui) { AddHistory = AddHistory };
@@ -185,6 +186,7 @@ public sealed class MainViewModel : Observable
         Raise(nameof(ComputerName));
         foreach (var p in Peers) RefreshIdentity(p);
         await _svc.UpdateOptionsAsync(_settings.ToServiceOptions());
+        if (_svc is CoreAirDropService core) await core.SetRadioEnabledAsync(_settings.DirectIphoneConnection);
         await Devices.ApplyConfigAsync();   // no-op unless the device name changed
     }
 
@@ -296,6 +298,8 @@ public sealed class MainViewModel : Observable
                 DeviceName = peer.DisplayName,
                 DeviceKey = peer.StableKey,
                 DeviceKind = peer.Kind,
+                ModelName = peer.Info.ModelName,
+                Host = peer.Info.Host,
                 Paths = files.ToList(),
                 Links = link is null ? new() : new() { link.ToString() },
                 TotalBytes = files.Sum(SafeSize),
@@ -369,11 +373,16 @@ public sealed class MainViewModel : Observable
         if (b.Links.Count > 0 && _settings.OpenLinksAutomatically && _svc is not DemoAirDropService)
             foreach (var l in b.Links) Shell(l.ToString());
 
+        var sender = Peers.FirstOrDefault(p => p.StableKey == b.SenderKey);
+        string? senderModel = sender?.Info.ModelName ?? b.SenderKey.Split('|').ElementAtOrDefault(1);
         AddHistory(new HistoryEntry
         {
             Direction = TransferDirection.Received,
             DeviceName = who,
             DeviceKey = b.SenderKey,
+            DeviceKind = sender?.Kind ?? prefs?.Kind ?? CoreAirDropService.KindOf(senderModel),
+            ModelName = senderModel,
+            Host = sender?.Info.Host,
             Paths = b.Paths.ToList(),
             Links = b.Links.Select(l => l.ToString()).ToList(),
             TotalBytes = b.TotalBytes,

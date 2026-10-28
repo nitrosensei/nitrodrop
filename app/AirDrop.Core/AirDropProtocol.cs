@@ -69,6 +69,13 @@ public static class AirDropConstants
     /// </summary>
     public const string AirDropWinVersion = nameof(AirDropWinVersion);
     public const string AirDropWinVersionValue = "1";
+
+    /// <summary>
+    /// NitroDrop's second marker, next to <see cref="AirDropWinVersion"/>: the real hardware of a NitroDrop peer as a dict
+    /// {Manufacturer, Model, Chassis, Platform} (<see cref="Devices.HostDevice"/>), because ReceiverModelName/SenderModelName
+    /// must stay an Apple identifier for iOS. Sent only by NitroDrop; Apple peers ignore it (same assumption as above).
+    /// </summary>
+    public const string NitroDropDevice = nameof(NitroDropDevice);
 }
 
 /// <summary>Who we are on the wire.</summary>
@@ -83,6 +90,27 @@ public sealed class AirDropIdentity
     /// </summary>
     public string ModelName { get; init; } = DefaultModelName;
     public const string DefaultModelName = "MacBookPro18,3";
+    /// <summary>Our real hardware, advertised to NitroDrop peers under <see cref="AirDropConstants.NitroDropDevice"/>; null = not sent.</summary>
+    public Devices.HostDevice? Host { get; init; }
+
+    /// <summary>
+    /// Apple identifier to claim for a chassis so iOS picks a fitting glyph: laptop → MacBook Pro, desktop → Mac mini,
+    /// all-in-one → iMac. UNVERIFIED: which glyph iOS draws per identifier (no capture yet); the default stays
+    /// <see cref="DefaultModelName"/> and callers opt in.
+    /// </summary>
+    public static string ModelNameForChassis(string? chassis) => Devices.HostChassis.Normalize(chassis) switch
+    {
+        Devices.HostChassis.Desktop => "Macmini9,1",
+        Devices.HostChassis.AllInOne => "iMac21,1",
+        _ => DefaultModelName,
+    };
+
+    /// <summary>Adds our markers (<see cref="AirDropConstants.AirDropWinVersion"/> + <see cref="AirDropConstants.NitroDropDevice"/>) to a plist.</summary>
+    public void AddMarkers(Dictionary<string, object> d)
+    {
+        d[AirDropConstants.AirDropWinVersion] = AirDropConstants.AirDropWinVersionValue;
+        if (Host is { } h) d[AirDropConstants.NitroDropDevice] = h.ToPlist();
+    }
     /// <summary>12 hex chars; used as DNS-SD instance name and SenderID.</summary>
     public string ServiceId { get; init; } = NewServiceId();
     /// <summary>mDNS host name, e.g. "MYPC.local.".</summary>
@@ -121,6 +149,9 @@ public sealed class AskRequest
 
     /// <summary>Sent by another airdrop-win instance (our marker key is present).</summary>
     public bool IsAirDropWin => Raw.ContainsKey(AirDropConstants.AirDropWinVersion);
+
+    /// <summary>Sender's real hardware when it is a NitroDrop peer that advertises it.</summary>
+    public Devices.HostDevice? Host => Devices.HostDevice.FromPlist(Raw.GetValueOrDefault(AirDropConstants.NitroDropDevice));
 
     public static AskRequest FromPlist(Dictionary<string, object> d, IPEndPoint remote)
     {
@@ -166,6 +197,9 @@ public sealed record DiscoverResult(string? ReceiverComputerName, string? Receiv
 
     /// <summary>True if the receiver is another airdrop-win instance.</summary>
     public bool IsAirDropWin => Raw.ContainsKey(AirDropConstants.AirDropWinVersion);
+
+    /// <summary>Receiver's real hardware when it is a NitroDrop peer that advertises it.</summary>
+    public Devices.HostDevice? Host => Devices.HostDevice.FromPlist(Raw.GetValueOrDefault(AirDropConstants.NitroDropDevice));
 
     /// <summary>OpenDrop: receiver is discoverable iff it returned a computer name.</summary>
     public bool IsDiscoverable => !string.IsNullOrEmpty(ReceiverComputerName);

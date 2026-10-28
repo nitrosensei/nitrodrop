@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- NitroDrop.Radio.exe: the only elevated process at run time. Owns the Intel card (AdWifiRadio over our driver's
+       admin-only device), the "NitroDrop AWDL" Wintun adapter and the AWDL host; the unelevated app talks to it over
+       the "NitroDrop.Radio.<user SID>" pipe (Nitro.Awdl/Ipc). Exits when the app disconnects.
+       Same TFM as the app so the Nitro.Awdl.dll copied next to NitroDrop.exe is the same build for both. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.22621.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>NitroDrop.Radio</AssemblyName>
+    <RootNamespace>Nitro.Radio.Host</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Product>NitroDrop</Product>
+    <Company>Nitrobyte</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nitro.Awdl\Nitro.Awdl.csproj" />
+  </ItemGroup>
+
+  <!-- wintun.dll next to the exe for the target architecture (Nitro.Awdl also copies wintun\{amd64,arm64}\ subfolders,
+       which WintunNative's resolver tries first). Only when tools/fetch-wintun.ps1 has been run. -->
+  <PropertyGroup>
+    <WintunArch Condition="'$(RuntimeIdentifier)' == 'win-arm64' Or ('$(RuntimeIdentifier)' == '' And '$(Platform)' == 'ARM64')">arm64</WintunArch>
+    <WintunArch Condition="'$(WintunArch)' == ''">amd64</WintunArch>
+    <WintunDll>..\..\vendor\wintun\bin\$(WintunArch)\wintun.dll</WintunDll>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(WintunDll)" Link="wintun.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" Condition="Exists('$(WintunDll)')" />
+    <None Include="..\..\vendor\wintun\LICENSE.txt" Link="licenses\wintun-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" Visible="false"
+          Condition="Exists('..\..\vendor\wintun\LICENSE.txt')" />
+  </ItemGroup>
+
+</Project>

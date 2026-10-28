@@ -8,6 +8,7 @@
   <Project Path="Nitro.Continuity/Nitro.Continuity.csproj" />
   <Project Path="Nitro.Continuity.Windows/Nitro.Continuity.Windows.csproj" />
   <Project Path="Nitro.PhoneLineProbe/Nitro.PhoneLineProbe.csproj" />
+  <Project Path="Nitro.Radio.Host/Nitro.Radio.Host.csproj" />
   <Project Path="Nitro.Sync.Host/Nitro.Sync.Host.csproj" />
   <Project Path="Nitro.Sync/Nitro.Sync.csproj" />
 </Solution>

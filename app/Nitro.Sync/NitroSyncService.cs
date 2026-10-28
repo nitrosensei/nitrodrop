@@ -16,6 +16,8 @@ namespace Nitro.Sync;
 public sealed class NitroSyncOptions
 {
     public string DeviceName { get; set; } = Environment.MachineName;
+    /// <summary>Hardware shared with paired peers (DeviceState.Hardware); default = this PC, null = don't share.</summary>
+    public AirDrop.Core.Devices.HostDevice? Hardware { get; set; } = AirDrop.Core.Devices.HostDevice.Local;
     /// <summary>HTTPS port for peer sync (0 = random, advertised via mDNS).</summary>
     public int Port { get; set; } = SyncProtocol.DefaultPort;
     public int MdnsPort { get; set; } = AirDrop.Core.Mdns.MdnsService.DefaultPort;
@@ -349,6 +351,7 @@ public sealed class NitroSyncService : IAsyncDisposable, ISyncHost
             var next = _state with
             {
                 DeviceName = _o.DeviceName,
+                Hardware = _o.Hardware,
                 Tabs = _tabsByBrowser.Values.SelectMany(t => t).Take(StateLimits.MaxTabs).ToList(),
                 Apps = _localApps.Select(a => a.Info).ToList(),
             };

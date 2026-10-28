@@ -1,41 +1,148 @@
 using System.Collections.Generic;
+using AirDrop.Core.Devices;
 
 namespace AirDrop.App.Services;
 
-/// <summary>Apple model identifiers → marketing names (subset; unknown ids fall back to the family).</summary>
-internal static class DeviceModels
+// No WPF types in this file: it is linked into AirDrop.Tests (and used by PhoneViewModel, which is linked too).
+
+/// <summary>User-facing device strings in one place (for the localisation pass).</summary>
+public static class DeviceStrings
 {
-    private static readonly Dictionary<string, string> Names = new()
+    public static string iPhone => "iPhone";
+    public static string iPad => "iPad";
+    public static string Mac => "Mac";
+    public static string WindowsPc => "Windows PC";
+    public static string WindowsLaptop => "Windows dizüstü";
+    public static string WindowsDesktop => "Windows masaüstü";
+    public static string WindowsTablet => "Windows tablet";
+    public static string AndroidPhone => "Android telefon";
+    public static string Generic => "Cihaz";
+}
+
+/// <summary>Keys of the vector art in Themes/DeviceArt.xaml (resource key = "DeviceArt." + key).</summary>
+public static class DeviceArtKeys
+{
+    public const string IphoneIsland = "iPhoneIsland";
+    public const string IphoneNotch = "iPhoneNotch";
+    public const string IphoneHome = "iPhoneHome";
+    public const string IpadFull = "iPadFull";
+    public const string IpadHome = "iPadHome";
+    public const string MacBook = "MacBook";
+    public const string IMac = "iMac";
+    public const string MacMini = "MacMini";
+    public const string MacStudio = "MacStudio";
+    public const string MacPro = "MacPro";
+    public const string Watch = "Watch";
+    public const string VisionPro = "VisionPro";
+    public const string WindowsLaptop = "WinLaptop";
+    public const string WindowsDesktop = "WinDesktop";
+    public const string Tablet = "Tablet";
+    public const string AndroidPhone = "AndroidPhone";
+    public const string Generic = "Generic";
+
+    public static readonly IReadOnlyList<string> All =
+    [
+        IphoneIsland, IphoneNotch, IphoneHome, IpadFull, IpadHome, MacBook, IMac, MacMini, MacStudio, MacPro, Watch, VisionPro,
+        WindowsLaptop, WindowsDesktop, Tablet, AndroidPhone, Generic,
+    ];
+}
+
+/// <summary>
+/// Friendly names and device art for every place a device appears (radar, receive sheet, Devices, Phone, history).
+/// Sources, in order: a NitroDrop peer's own <see cref="HostDevice"/> (real PC model), the Apple model identifier
+/// (<see cref="AppleModels"/>), then the coarse <see cref="DeviceKind"/>. Our Windows peers claim a Mac identifier on the
+/// wire for iOS, so a Windows peer never borrows the Mac's name or art.
+/// </summary>
+public static class DeviceModels
+{
+    /// <summary>Full friendly name: "iPhone 15 Pro", "MacBook Pro (14-inch, M1 Pro, 2021)", "Acer Nitro V 15".</summary>
+    public static string Describe(DeviceKind kind, string? model, HostDevice? host = null)
     {
-        ["iPhone13,1"] = "iPhone 12 mini", ["iPhone13,2"] = "iPhone 12",
-        ["iPhone13,3"] = "iPhone 12 Pro", ["iPhone13,4"] = "iPhone 12 Pro Max",
-        ["iPhone14,4"] = "iPhone 13 mini", ["iPhone14,5"] = "iPhone 13",
-        ["iPhone14,2"] = "iPhone 13 Pro", ["iPhone14,3"] = "iPhone 13 Pro Max",
-        ["iPhone14,6"] = "iPhone SE (3. nesil)",
-        ["iPhone14,7"] = "iPhone 14", ["iPhone14,8"] = "iPhone 14 Plus",
-        ["iPhone15,2"] = "iPhone 14 Pro", ["iPhone15,3"] = "iPhone 14 Pro Max",
-        ["iPhone15,4"] = "iPhone 15", ["iPhone15,5"] = "iPhone 15 Plus",
-        ["iPhone16,1"] = "iPhone 15 Pro", ["iPhone16,2"] = "iPhone 15 Pro Max",
-        ["iPhone17,3"] = "iPhone 16", ["iPhone17,4"] = "iPhone 16 Plus",
-        ["iPhone17,1"] = "iPhone 16 Pro", ["iPhone17,2"] = "iPhone 16 Pro Max",
-        ["iPhone17,5"] = "iPhone 16e",
-        ["iPad13,18"] = "iPad (10. nesil)", ["iPad13,19"] = "iPad (10. nesil)",
-        ["MacBookAir10,1"] = "MacBook Air (M1)",
-        ["Mac14,2"] = "MacBook Air (M2)", ["Mac14,15"] = "MacBook Air 15\" (M2)",
-        ["Mac15,12"] = "MacBook Air 13\" (M3)", ["Mac15,13"] = "MacBook Air 15\" (M3)",
-        ["MacBookPro17,1"] = "MacBook Pro 13\" (M1)", ["Mac14,7"] = "MacBook Pro 13\" (M2)",
+        if (host?.DisplayName is { } pc) return pc;
+        if (kind != DeviceKind.Windows && AppleModels.Resolve(model) is { } m) return m.Name;
+        return KindName(kind, host);
+    }
+
+    /// <summary>One-line name for subtitles: "MacBook Pro 14″ (M1 Pro)", "iPad Pro 11″ (M4)", "Acer Nitro V 15".</summary>
+    public static string ShortDescribe(DeviceKind kind, string? model, HostDevice? host = null)
+    {
+        if (host?.DisplayName is { } pc) return pc;
+        if (kind != DeviceKind.Windows && AppleModels.Resolve(model) is { } m) return m.ShortName;
+        return KindName(kind, host);
+    }
+
+    /// <summary>Name for a phone/iPhone known only by its Bluetooth model number ("iPhone15,2"); null if unknown.</summary>
+    public static string? DescribeIdentifier(string? identifier) =>
+        AppleModels.Resolve(identifier) is { } m ? m.ShortName : null;
+
+    public static string KindName(DeviceKind kind, HostDevice? host = null) => kind switch
+    {
+        DeviceKind.iPhone => DeviceStrings.iPhone,
+        DeviceKind.iPad => DeviceStrings.iPad,
+        DeviceKind.Mac => DeviceStrings.Mac,
+        DeviceKind.Windows => HostChassis.Normalize(host?.Chassis) switch
+        {
+            HostChassis.Laptop => DeviceStrings.WindowsLaptop,
+            HostChassis.Desktop or HostChassis.AllInOne => DeviceStrings.WindowsDesktop,
+            HostChassis.Tablet => DeviceStrings.WindowsTablet,
+            _ => DeviceStrings.WindowsPc,
+        },
+        _ when host?.Platform == "android" => DeviceStrings.AndroidPhone,
+        _ => DeviceStrings.Generic,
     };
 
-    public static string Describe(DeviceKind kind, string? model)
+    /// <summary>Art key (<see cref="DeviceArtKeys"/>) for a device.</summary>
+    public static string ArtKey(DeviceKind kind, string? model, HostDevice? host = null)
     {
-        if (model is not null && Names.TryGetValue(model, out var n)) return n;
+        if (host is not null && (kind == DeviceKind.Windows || host.Platform is not null)) return ArtForHost(host, kind);
+        if (kind == DeviceKind.Windows) return DeviceArtKeys.WindowsLaptop;   // older NitroDrop peer without the marker
+        if (AppleModels.Resolve(model) is { } m) return ArtForApple(m);
         return kind switch
         {
-            DeviceKind.iPhone => "iPhone",
-            DeviceKind.iPad => "iPad",
-            DeviceKind.Mac => "Mac",
-            DeviceKind.Windows => "Windows PC",
-            _ => "Cihaz",
+            DeviceKind.iPhone => DeviceArtKeys.IphoneIsland,
+            DeviceKind.iPad => DeviceArtKeys.IpadFull,
+            DeviceKind.Mac => DeviceArtKeys.MacBook,
+            _ => DeviceArtKeys.Generic,
+        };
+    }
+
+    /// <summary>Art for an Apple model identifier alone (e.g. the Bluetooth iPhone); <paramref name="fallback"/> if unknown.</summary>
+    public static string ArtKeyForIdentifier(string? identifier, string fallback = DeviceArtKeys.IphoneIsland) =>
+        AppleModels.Resolve(identifier) is { } m ? ArtForApple(m) : fallback;
+
+    public static string ArtForApple(AppleModel m) => m.Form switch
+    {
+        AppleForm.DynamicIsland => DeviceArtKeys.IphoneIsland,
+        AppleForm.Notch => DeviceArtKeys.IphoneNotch,
+        AppleForm.HomeButton => m.Family == AppleFamily.iPad ? DeviceArtKeys.IpadHome : DeviceArtKeys.IphoneHome,
+        AppleForm.NoHomeButton => DeviceArtKeys.IpadFull,
+        AppleForm.Laptop => DeviceArtKeys.MacBook,
+        AppleForm.AllInOne => DeviceArtKeys.IMac,
+        AppleForm.MacMini => DeviceArtKeys.MacMini,
+        AppleForm.MacStudio => DeviceArtKeys.MacStudio,
+        AppleForm.Tower => DeviceArtKeys.MacPro,
+        AppleForm.Watch => DeviceArtKeys.Watch,
+        AppleForm.Headset => DeviceArtKeys.VisionPro,
+        _ => m.Family switch
+        {
+            AppleFamily.iPhone => DeviceArtKeys.IphoneIsland,
+            AppleFamily.iPad => DeviceArtKeys.IpadFull,
+            AppleFamily.Mac => DeviceArtKeys.MacBook,
+            _ => DeviceArtKeys.Generic,
+        },
+    };
+
+    public static string ArtForHost(HostDevice host, DeviceKind kind = DeviceKind.Windows)
+    {
+        if (host.Manufacturer == "Apple" && kind == DeviceKind.Windows)   // Boot Camp Mac running NitroDrop: still a Windows peer
+            return HostChassis.Normalize(host.Chassis) == HostChassis.Laptop ? DeviceArtKeys.MacBook : DeviceArtKeys.IMac;
+        return HostChassis.Normalize(host.Chassis) switch
+        {
+            HostChassis.Laptop => DeviceArtKeys.WindowsLaptop,
+            HostChassis.Desktop or HostChassis.AllInOne => DeviceArtKeys.WindowsDesktop,
+            HostChassis.Tablet => DeviceArtKeys.Tablet,
+            HostChassis.Phone => host.Platform == "android" ? DeviceArtKeys.AndroidPhone : DeviceArtKeys.Generic,
+            _ => host.Platform == "android" ? DeviceArtKeys.AndroidPhone : DeviceArtKeys.WindowsLaptop,
         };
     }
 }

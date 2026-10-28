@@ -92,7 +92,7 @@ public sealed class WintunAdapter : IDisposable
     public const string PinnedVersion = "0.14.1";
     public const string PinnedZipSha256 = "07c256185d6ee3652e09fa55c0b673e2624b565e02c4b9091c79ca7d2f24ef51";
     /// <summary>Default adapter name: shows up as the interface name AirDrop.Core binds to.</summary>
-    public const string DefaultName = "NitroDrop AWDL";
+    public const string DefaultName = Ipc.RadioPipe.InterfaceName;
     public const string TunnelType = "NitroDrop";
     /// <summary>Stable adapter GUID so Windows keeps the same interface (and its settings) across sessions.</summary>
     public static readonly Guid DefaultGuid = new("5f0c3a1e-6b7d-4e2a-9c41-0a3d2b1c4e7f");

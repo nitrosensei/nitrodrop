@@ -23,6 +23,10 @@ public sealed class HistoryItemViewModel
     public bool IsReceived => _e.Direction == TransferDirection.Received;
     public string DirectionGlyph => IsReceived ? "" : "";   // download / upload
     public string DeviceName => _e.DeviceName;
+    /// <summary>Device art of the other side (Themes/DeviceArt.xaml key).</summary>
+    public string ArtKey => DeviceModels.ArtKey(_e.DeviceKind, _e.ModelName, _e.Host);
+    /// <summary>"iPhone 15 Pro", "Acer Nitro V 15" (tooltip of the art).</summary>
+    public string DeviceLabel => DeviceModels.Describe(_e.DeviceKind, _e.ModelName, _e.Host);
 
     public string Title
     {

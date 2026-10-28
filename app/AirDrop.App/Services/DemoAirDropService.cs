@@ -16,6 +16,7 @@ public sealed class DemoAirDropService : IAirDropService
 
     public bool IsHardwareReady => false;
     public string HardwareStatus => "Wi-Fi sürücüsü henüz kurulu değil · demo modu";
+    public event EventHandler? HardwareStatusChanged { add { } remove { } }
 
     public event EventHandler<PeerInfo>? PeerFound;
     public event EventHandler<string>? PeerLost;

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  NitroDrop full-trust MSIX (packaged classic app / Desktop Bridge). build-release.ps1 copies this into the layout and
+  replaces __VERSION__ and __PUBLISHER__. Identity Name + Publisher must match the signing certificate subject.
+
+  Why each capability:
+    runFullTrust                    WPF desktop app (Windows.FullTrustApplication).
+    phoneLineTransportManagement    PhoneLineTransportDevice RequestAccess/RegisterApp/Connect: Windows' inbox HFP
+                                    rings/answers and carries call audio on the PC (docs/continuity-plan.md section 9).
+                                    Restricted: sideload needs no approval, the Store needs a justification (Sefirah,
+                                    Thy Phone ship it).
+    phoneCall                       PhoneCallManager / PhoneLineWatcher / PhoneLine (general use).
+    unvirtualizedResources          With desktop6 *WriteVirtualization=disabled: %LOCALAPPDATA%\airdrop-win and HKCU
+                                    (browser native-messaging keys, RunOnce resume) are the real ones, shared with the
+                                    elevated setup helper, Chrome/Edge and the portable build.
+    allowElevation                  The "Gelismis Kurulum" wizard starts NitroDrop.exe -setup-helper with runas.
+    internetClientServer,
+    privateNetworkClientServer      AirDrop HTTPS server + mDNS (5353), Nitro.Sync peers, iOS Shortcut receiver.
+    bluetooth                       iPhone continuity (ANCS/AMS GATT, MAP/PBAP RFCOMM, pairing).
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap uap3 desktop desktop6 rescap">
+
+  <Identity Name="Nitrobyte.NitroDrop"
+            Publisher="__PUBLISHER__"
+            Version="__VERSION__"
+            ProcessorArchitecture="x64"/>
+
+  <Properties>
+    <DisplayName>NitroDrop</DisplayName>
+    <PublisherDisplayName>Nitrobyte</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>iPhone, iPad ve Mac ile AirDrop uyumlu dosya paylasimi; bildirimler, mesajlar ve aramalar.</Description>
+    <desktop6:FileSystemWriteVirtualization>disabled</desktop6:FileSystemWriteVirtualization>
+    <desktop6:RegistryWriteVirtualization>disabled</desktop6:RegistryWriteVirtualization>
+  </Properties>
+
+  <Dependencies>
+    <!-- 19041 = Windows 10 2004: desktop6 virtualization switches; the app itself targets 10.0.19041+. -->
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0"/>
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="tr-TR"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="NitroDrop" Executable="NitroDrop.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="NitroDrop"
+                          Description="AirDrop uyumlu dosya paylasimi ve iPhone surekliligi"
+                          BackgroundColor="transparent"
+                          Square150x150Logo="Assets\Square150x150Logo.png"
+                          Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"
+                         Square310x310Logo="Assets\Square310x310Logo.png"
+                         ShortName="NitroDrop"/>
+        <uap:SplashScreen Image="Assets\SplashScreen.png"/>
+      </uap:VisualElements>
+
+      <Extensions>
+        <!-- Ayarlar > "Windows ile baslat" (Services/StartupRegistration.cs). Off until the user turns it on. -->
+        <desktop:Extension Category="windows.startupTask" Executable="NitroDrop.exe" EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="NitroDropStartup" Enabled="false" DisplayName="NitroDrop"/>
+        </desktop:Extension>
+
+        <!-- %LOCALAPPDATA%\Microsoft\WindowsApps\NitroDrop.exe: stable path with package identity + arguments
+             (RunOnce "-setup-resume", "-send <files>", scripts). -->
+        <uap3:Extension Category="windows.appExecutionAlias" Executable="NitroDrop.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap3:AppExecutionAlias>
+            <desktop:ExecutionAlias Alias="NitroDrop.exe"/>
+          </uap3:AppExecutionAlias>
+        </uap3:Extension>
+
+      </Extensions>
+    </Application>
+
+    <!-- Helper executables. One appExecutionAlias per Application, so each gets its own hidden Application
+         (AppListEntry="none"): %LOCALAPPDATA%\Microsoft\WindowsApps\<alias> starts them with package identity. -->
+
+    <!-- Chrome/Edge native messaging host: a path that survives updates (Services/SyncHelpers.cs registers it). -->
+    <Application Id="SyncHost" Executable="NitroDrop.SyncHost.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="NitroDrop SyncHost" Description="NitroDrop browser bridge"
+                          BackgroundColor="transparent" AppListEntry="none"
+                          Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png"/>
+      <Extensions>
+        <uap3:Extension Category="windows.appExecutionAlias" Executable="NitroDrop.SyncHost.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap3:AppExecutionAlias>
+            <desktop:ExecutionAlias Alias="NitroDrop.SyncHost.exe"/>
+          </uap3:AppExecutionAlias>
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+
+    <!-- Read-only PhoneLine diagnostics with this package's identity (docs/continuity-plan.md 9.5):
+         nitro-phoneline-probe.exe -log %LOCALAPPDATA%\airdrop-win\logs\phoneline-probe.log -->
+    <Application Id="Probe" Executable="nitro-phoneline-probe.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="NitroDrop PhoneLine Probe" Description="Read-only PhoneLine probe"
+                          BackgroundColor="transparent" AppListEntry="none"
+                          Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png"/>
+      <Extensions>
+        <uap3:Extension Category="windows.appExecutionAlias" Executable="nitro-phoneline-probe.exe" EntryPoint="Windows.FullTrustApplication">
+          <uap3:AppExecutionAlias>
+            <desktop:ExecutionAlias Alias="nitro-phoneline-probe.exe"/>
+          </uap3:AppExecutionAlias>
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClientServer"/>
+    <Capability Name="privateNetworkClientServer"/>
+    <uap:Capability Name="phoneCall"/>
+    <rescap:Capability Name="runFullTrust"/>
+    <rescap:Capability Name="phoneLineTransportManagement"/>
+    <rescap:Capability Name="unvirtualizedResources"/>
+    <rescap:Capability Name="allowElevation"/>
+    <DeviceCapability Name="bluetooth"/>
+  </Capabilities>
+</Package>

@@ -264,6 +264,7 @@ public sealed class DevicesViewModel : Observable
             DeviceName = l.FromName,
             DeviceKey = "sync:" + l.FromDeviceId,
             DeviceKind = l.Source == LinkSource.Ios ? DeviceKind.iPhone : DeviceKind.Windows,
+            Host = l.Source == LinkSource.Peer ? Paired.FirstOrDefault(p => p.Id == l.FromDeviceId)?.Hardware : null,
             Links = new() { l.Url },
         });
         string what = l.Title is { Length: > 0 } t ? t : Host(l.Url);
@@ -513,6 +514,12 @@ public sealed class SyncPcViewModel : Observable
     public bool IsPaired => _info?.IsPaired ?? false;
     public string StatusText { get => _status; private set => Set(ref _status, value); }
 
+    /// <summary>Last hardware the peer shared (kept while it is offline).</summary>
+    public AirDrop.Core.Devices.HostDevice? Hardware { get; private set; }
+    /// <summary>"Acer Nitro V 15" / "Windows dizüstü"; null before the peer shared anything.</summary>
+    public string? ModelText => Hardware is null ? null : DeviceModels.Describe(DeviceKind.Windows, null, Hardware);
+    public string ArtKey => Hardware is null ? DeviceArtKeys.WindowsLaptop : DeviceModels.ArtForHost(Hardware);
+
     public bool IsExpanded
     {
         get => _isExpanded;
@@ -550,6 +557,11 @@ public sealed class SyncPcViewModel : Observable
         bool stateChanged = !ReferenceEquals(p.State, _state) &&
                             (p.State?.UpdatedAt != _state?.UpdatedAt || p.State?.ComputeETag() != _state?.ComputeETag());
         _info = p;
+        if (p.State?.Hardware is { } hw && hw != Hardware)
+        {
+            Hardware = hw;
+            Raise(nameof(Hardware)); Raise(nameof(ModelText)); Raise(nameof(ArtKey));
+        }
         if (stateChanged)
         {
             _state = p.State;
@@ -589,6 +601,7 @@ public sealed class SyncPcViewModel : Observable
         if (_state.Tabs.Count > 0) parts.Add($"{_state.Tabs.Count} sekme");
         if (_state.Apps.Count > 0) parts.Add($"{_state.Apps.Count} uygulama");
         if (parts.Count == 1) parts.Add("paylaşılan bir şey yok");
+        if (Hardware?.DisplayName is { } model) parts.Insert(1, model);
         StatusText = string.Join(" · ", parts);
     }
 }

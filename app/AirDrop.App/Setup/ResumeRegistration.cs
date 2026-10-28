@@ -1,4 +1,5 @@
 using System;
+using AirDrop.App.Services;
 using Microsoft.Win32;
 
 namespace AirDrop.App.Setup;
@@ -13,7 +14,8 @@ public static class ResumeRegistration
     private const string RunOnceKey = @"Software\Microsoft\Windows\CurrentVersion\RunOnce";
     private const string ValueName = "Nitrobyte.NitroDrop.Setup";
 
-    public static string CommandLine => $"\"{Environment.ProcessPath}\" {ResumeFlag}";
+    /// <summary>MSIX: the app execution alias (stable across updates, keeps package identity); portable: this exe.</summary>
+    public static string CommandLine => $"\"{PackagedApp.LauncherPath}\" {ResumeFlag}";
 
     public static void Register()
     {

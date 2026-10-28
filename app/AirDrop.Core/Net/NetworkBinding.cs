@@ -15,9 +15,13 @@ public sealed class NetworkBinding
     public int? IPv6Index { get; }
     public int? IPv4Index { get; }
 
-    private NetworkBinding(NetworkInterface? nic)
+    /// <summary>Interface names an "any" binding leaves out (e.g. the AWDL adapter served by its own binding).</summary>
+    private readonly IReadOnlyList<string> _excluded = [];
+
+    private NetworkBinding(NetworkInterface? nic, IReadOnlyList<string>? excluded = null)
     {
         Interface = nic;
+        _excluded = excluded ?? [];
         if (nic == null) return;
         IPv6Index = IndexOf(nic, AddressFamily.InterNetworkV6);
         IPv4Index = IndexOf(nic, AddressFamily.InterNetwork);
@@ -37,6 +41,14 @@ public sealed class NetworkBinding
     }
 
     public static NetworkBinding Any { get; } = new(null);
+
+    /// <summary>
+    /// "All interfaces" except the named ones: mDNS never joins or advertises them (HTTPS still listens on [::]). Used for
+    /// the LAN node while a second node owns the AWDL interface, so each network sees exactly one of them.
+    /// </summary>
+    public static NetworkBinding AnyExcept(params string[] interfaceNames) => new(null, interfaceNames);
+
+    public IReadOnlyList<string> ExcludedInterfaces => _excluded;
 
     public static NetworkBinding Loopback =>
         new(NetworkInterface.GetAllNetworkInterfaces().First(n => n.NetworkInterfaceType == NetworkInterfaceType.Loopback));
@@ -63,7 +75,7 @@ public sealed class NetworkBinding
 
     public bool IsAny => Interface == null;
 
-    public string DisplayName => Interface == null ? "any" : $"{Interface.Name} (#{IPv6Index ?? IPv4Index})";
+    public string DisplayName => Interface == null ? (_excluded.Count > 0 ? $"any except {string.Join(", ", _excluded)}" : "any") : $"{Interface.Name} (#{IPv6Index ?? IPv4Index})";
 
     /// <summary>Interfaces mDNS should use: the bound one, or all up multicast-capable adapters.</summary>
     public IReadOnlyList<NetworkInterface> MulticastInterfaces()
@@ -71,6 +83,7 @@ public sealed class NetworkBinding
         if (Interface != null) return [Interface];
         return NetworkInterface.GetAllNetworkInterfaces()
             .Where(n => n.OperationalStatus == OperationalStatus.Up && n.SupportsMulticast)
+            .Where(n => !_excluded.Any(x => x.Equals(n.Name, StringComparison.OrdinalIgnoreCase)))
             .ToList();
     }
 

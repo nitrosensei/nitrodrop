@@ -17,7 +17,10 @@ internal static class ExtensionHost
     public const string ExtensionId = "kbdhonkcoaopcnmbnphldonokaooaibp";
 
     public static string HostExe => Path.Combine(AppContext.BaseDirectory, "NitroDrop.SyncHost.exe");
-    public static string ExtensionDir => Path.Combine(AppContext.BaseDirectory, "extension");
+    /// <summary>Folder for "Load unpacked". MSIX: a copy in %LOCALAPPDATA%\airdrop-win\extension (the WindowsApps
+    /// folder is versioned and hidden from the folder picker); portable: next to the exe.</summary>
+    public static string ExtensionDir => PackagedApp.IsPackaged ? PackagedApp.StableCopy("extension")
+                                                                : Path.Combine(AppContext.BaseDirectory, "extension");
 
     private static readonly string[] Keys =
     {
@@ -55,6 +58,12 @@ internal static class ExtensionHost
             psi.ArgumentList.Add("register");
             psi.ArgumentList.Add("--extension-id");
             psi.ArgumentList.Add(ExtensionId);
+            // MSIX: register the alias (stable across updates) instead of the versioned WindowsApps path.
+            if (PackagedApp.Alias("NitroDrop.SyncHost.exe") is { } alias)
+            {
+                psi.ArgumentList.Add("--host-path");
+                psi.ArgumentList.Add(alias);
+            }
             using var p = Process.Start(psi)!;
             var err = p.StandardError.ReadToEndAsync();
             var outp = p.StandardOutput.ReadToEndAsync();

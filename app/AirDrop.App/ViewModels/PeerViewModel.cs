@@ -50,7 +50,12 @@ public sealed class PeerViewModel : Observable
     public bool IsTrusted { get => _isTrusted; private set => Set(ref _isTrusted, value); }
     public bool IsContact { get => _isContact; private set => Set(ref _isContact, value); }
 
-    public string DeviceLabel => DeviceModels.Describe(Kind, Info.ModelName);
+    /// <summary>One-line model: "iPhone 15 Pro", "MacBook Pro 14″ (M1 Pro)", "Acer Nitro V 15".</summary>
+    public string DeviceLabel => DeviceModels.ShortDescribe(Kind, Info.ModelName, Info.Host);
+    /// <summary>Full model name for tooltips ("MacBook Pro (14-inch, M1 Pro, 2021)").</summary>
+    public string DeviceFullName => DeviceModels.Describe(Kind, Info.ModelName, Info.Host);
+    /// <summary>Themes/DeviceArt.xaml key for the badge.</summary>
+    public string ArtKey => DeviceModels.ArtKey(Kind, Info.ModelName, Info.Host);
 
     public string Glyph => Kind switch
     {
@@ -111,6 +116,8 @@ public sealed class PeerViewModel : Observable
     {
         Info = info;
         Raise(nameof(DeviceLabel));
+        Raise(nameof(DeviceFullName));
+        Raise(nameof(ArtKey));
         Raise(nameof(StatusText));
     }
 

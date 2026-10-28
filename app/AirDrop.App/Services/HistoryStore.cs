@@ -15,6 +15,10 @@ public sealed class HistoryEntry
     public string DeviceName { get; set; } = "";
     public string DeviceKey { get; set; } = "";
     public DeviceKind DeviceKind { get; set; }
+    /// <summary>Apple model identifier of the other device, if known ("iPhone16,1").</summary>
+    public string? ModelName { get; set; }
+    /// <summary>Real hardware of a NitroDrop PC, if known.</summary>
+    public AirDrop.Core.Devices.HostDevice? Host { get; set; }
     public List<string> Paths { get; set; } = new();
     public List<string> Links { get; set; } = new();
     public long TotalBytes { get; set; }

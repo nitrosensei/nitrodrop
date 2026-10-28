@@ -25,6 +25,23 @@
     <ProjectReference Include="..\Nitro.Continuity.Windows\Nitro.Continuity.Windows.csproj" />
     <!-- Native messaging host (NitroDrop.SyncHost.exe): built first, copied next to NitroDrop.exe below. -->
     <ProjectReference Include="..\Nitro.Sync.Host\Nitro.Sync.Host.csproj" ReferenceOutputAssembly="false" Private="false" />
+    <!-- iPhone link: pipe client + BLE advert (Nitro.Awdl), and the elevated radio host NitroDrop.Radio.exe (copied below). -->
+    <ProjectReference Include="..\Nitro.Awdl\Nitro.Awdl.csproj" />
+    <ProjectReference Include="..\Nitro.Radio.Host\Nitro.Radio.Host.csproj" ReferenceOutputAssembly="false" Private="false" />
+  </ItemGroup>
+
+  <!-- NitroDrop.Radio.exe (requireAdministrator) + dll/runtimeconfig/deps next to NitroDrop.exe; CoreAirDropService starts
+       it with "runas". Same TFM as the app, so Nitro.Awdl.dll / wintun\{arch}\wintun.dll already in the output serve both. -->
+  <PropertyGroup>
+    <RadioHostDir>..\Nitro.Radio.Host\bin\$(Configuration)\net10.0-windows10.0.22621.0\</RadioHostDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(RadioHostDir)NitroDrop.Radio.exe" Link="NitroDrop.Radio.exe" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(RadioHostDir)NitroDrop.Radio.dll" Link="NitroDrop.Radio.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(RadioHostDir)NitroDrop.Radio.runtimeconfig.json" Link="NitroDrop.Radio.runtimeconfig.json" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <None Include="$(RadioHostDir)NitroDrop.Radio.deps.json" Link="NitroDrop.Radio.deps.json" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    <None Include="..\..\vendor\wintun\LICENSE.txt" Link="licenses\wintun-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" Visible="false"
+          Condition="Exists('..\..\vendor\wintun\LICENSE.txt')" />
   </ItemGroup>
 
   <!-- Browser extension (load unpacked from <output>\extension) and the iPhone Shortcut guide. -->

@@ -157,8 +157,8 @@ public sealed class AirDropServer : IAsyncDisposable
             [AirDropConstants.ReceiverMediaCapabilities] = Encoding.UTF8.GetBytes(MediaCapabilitiesJson),
             [AirDropConstants.ReceiverComputerName] = Identity.ComputerName,
             [AirDropConstants.ReceiverModelName] = Identity.ModelName,
-            [AirDropConstants.AirDropWinVersion] = AirDropConstants.AirDropWinVersionValue,
         };
+        Identity.AddMarkers(d);
         if (RecordData != null) d[AirDropConstants.ReceiverRecordData] = RecordData;
         return PlistResponse(d);
     }
@@ -189,12 +189,13 @@ public sealed class AirDropServer : IAsyncDisposable
             FilesReceived?.Invoke(new ReceivedFiles(ask, [], 0));
         }
         else _approved[req.RemoteEndPoint.Address] = (ask, DateTime.UtcNow + _o.UploadWindow);
-        return PlistResponse(new Dictionary<string, object>
+        var reply = new Dictionary<string, object>
         {
             [AirDropConstants.ReceiverModelName] = Identity.ModelName,
             [AirDropConstants.ReceiverComputerName] = Identity.ComputerName,
-            [AirDropConstants.AirDropWinVersion] = AirDropConstants.AirDropWinVersionValue,
-        });
+        };
+        Identity.AddMarkers(reply);
+        return PlistResponse(reply);
     }
 
     private async Task<HttpResponse> HandleUpload(HttpRequest req, CancellationToken ct)

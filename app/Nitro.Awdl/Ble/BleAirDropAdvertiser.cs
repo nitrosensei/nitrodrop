@@ -13,7 +13,7 @@ namespace Nitro.Awdl.Ble;
 /// advertising interval and address; BLE-5 asks for a connectable advert at ~100 ms with a rotating tag, which
 /// BluetoothLEAdvertisementPublisher doesn't expose (UNVERIFIED how much that matters; ble_test.py worked as is).
 /// </summary>
-public sealed class BleAirDropAdvertiser : IDisposable
+public sealed class BleAirDropAdvertiser : IAirDropBleAdvertiser
 {
     private BluetoothLEAdvertisementPublisher? _publisher;
 

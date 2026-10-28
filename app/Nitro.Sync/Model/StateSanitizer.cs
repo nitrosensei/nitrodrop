@@ -65,6 +65,7 @@ public static class StateSanitizer
         DeviceName = Clamp(s.DeviceName, StateLimits.MaxName),
         Tabs = Tabs(s.Tabs),
         Apps = Apps(s.Apps),
+        Hardware = s.Hardware?.Sanitized(),
     };
 
     public static string Clamp(string? s, int max)

@@ -74,7 +74,20 @@ public partial class App : Application
         }
         else
         {
-            _svc = new CoreAirDropService();
+            // LAN node always; with our Wi-Fi driver bound, also the elevated radio host (NitroDrop.Radio.exe, one UAC
+            // prompt) and an AWDL node on the "NitroDrop AWDL" Wintun interface (docs/awdl-port.md, Çalışma zamanı).
+            _svc = new CoreAirDropService(new CoreAirDropServiceSettings
+            {
+                Log = AirDropLog,
+                Radio = new RadioIntegration
+                {
+                    Launcher = new ElevatedRadioHostLauncher(),
+                    DriverInstalled = () => SystemProbe.FindDevice() is { Present: true } d
+                        && string.Equals(d.Service, DriverPackage.ServiceName, StringComparison.OrdinalIgnoreCase),
+                    Enabled = settings.DirectIphoneConnection,
+                    CreateBle = () => new Nitro.Awdl.Ble.BleAirDropAdvertiser(),
+                },
+            });
             // Nitro.Sync: tabs/apps between paired NitroDrop PCs, browser extension bridge, iOS Shortcut receiver.
             // Same TLS identity as AirDrop (default pfx); name follows Ayarlar → Görünen ad.
             _sync = new NitroSyncSource();
@@ -107,11 +120,32 @@ public partial class App : Application
         }
 #endif
         CreateTray();
-        if (!e.Args.Contains("--background")) _main.Show();
+        // Portable autostart passes --background (HKCU Run); the MSIX StartupTask passes nothing.
+        bool background = e.Args.Contains("--background") || PackagedApp.LaunchedByStartupTask();
+        if (!background) _main.Show();
         HandleArgs(e.Args);
-        if (!settings.OnboardingCompleted && !e.Args.Contains("--background")) ShowOnboarding();
+        if (!settings.OnboardingCompleted && !background) ShowOnboarding();
         await _vm.StartAsync();
         await _phone.StartAsync();
+    }
+
+    private static readonly object AirDropLogGate = new();
+
+    /// <summary>AirDrop stack + radio host log: %LOCALAPPDATA%\airdrop-win\logs\airdrop.log (rolled at 4 MB). Never throws.</summary>
+    private static void AirDropLog(string line)
+    {
+        lock (AirDropLogGate)
+        {
+            try
+            {
+                var dir = Path.Combine(AppSettings.DataDir, "logs");
+                Directory.CreateDirectory(dir);
+                var path = Path.Combine(dir, "airdrop.log");
+                if (File.Exists(path) && new FileInfo(path).Length > 4 * 1024 * 1024) File.Move(path, path + ".1", overwrite: true);
+                File.AppendAllText(path, $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} {line}{Environment.NewLine}");
+            }
+            catch (Exception) { }
+        }
     }
 
     private void HandleArgs(string[] args)

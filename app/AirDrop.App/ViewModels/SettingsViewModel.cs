@@ -105,6 +105,13 @@ public sealed class SettingsViewModel : Observable
         set { _s.OpenLinksAutomatically = value; Commit(); Raise(); }
     }
 
+    /// <summary>"iPhone'lara doğrudan bağlan (Wi-Fi sürücüsü)": radio host on/off, applied without a restart.</summary>
+    public bool DirectIphoneConnection
+    {
+        get => _s.DirectIphoneConnection;
+        set { _s.DirectIphoneConnection = value; Commit(); Raise(); }
+    }
+
     public bool CopyIncomingToClipboard
     {
         get => _s.CopyIncomingToClipboard;

@@ -37,6 +37,9 @@ app/
                            Services/ContactBookResolver.cs = IContactResolver → ContactBook,
                            Services/SyncSource.cs + DemoSyncSource.cs = Nitro.Sync bağlantısı, ViewModels/DevicesViewModel.cs,
                            Views/ConfirmSheet = eşleştirme kodu / uygulama açma onayı
+  Nitro.Awdl/              AWDL yığını (Owly portu), AdWifiRadio, Wintun köprüsü, BLE reklamı, Ipc/ = radyo hostu boru protokolü
+  Nitro.Radio.Host/        NitroDrop.Radio.exe (requireAdministrator): radyo + "NitroDrop AWDL" Wintun + AwdlHost; uygulama
+                           ayrılınca kartı bırakıp çıkar (docs/awdl-port.md → Çalışma zamanı mimarisi)
   Nitro.Sync/ (+ .Host)    PC'ler arası sekme/uygulama eşitleme, uzantı köprüsü, iOS Kestirme alıcısı (docs/sync-plan.md)
   AirDrop.Cli/             komut satırı
   AirDrop.Tests/           xUnit testleri
@@ -65,12 +68,34 @@ IPv6 link-local ile browse → Discover → Ask → Upload uçtan uca denendi.
 
 ## Arayüz adaptörü (CoreAirDropService)
 
-AWDL arayüzü olana kadar **LAN modu**: `IsHardwareReady=false`, varsayılan arayüz `any`; aynı ağdaki iki Windows PC
-birbirini görür, dosya ve bağlantı gönderir (UI'yi uçtan uca denemek için). `ReceiveMode.Off` ve `ContactsOnly` = kapalı
+İki düğüm, tek kimlik (aynı `ServiceId`, birbirini dışlar):
+- **LAN düğümü** her zaman açık: arayüz `any` (radyo entegrasyonu varken `NetworkBinding.AnyExcept("NitroDrop AWDL")`,
+  yani mDNS Wintun adaptörüne katılmaz/onu yayınlamaz), port 8770. Aynı ağdaki iki Windows PC birbirini görür.
+- **AWDL düğümü** yalnız Wi-Fi sürücümüz kartta bağlıysa (`SystemProbe.FindDevice()` servis `airdropwifi`) ve Ayarlar →
+  Wi-Fi Sürücüsü → "iPhone'lara doğrudan bağlan (Wi-Fi sürücüsü)" açıksa (varsayılan açık, `AppSettings.DirectIphoneConnection`).
+  Akış (`CoreAirDropService.RunRadioAsync`, LAN'ı bekletmeden arka planda): `ElevatedRadioHostLauncher` →
+  `NitroDrop.Radio.exe --user-sid <SID> --parent-pid <pid>` "runas" ile (tek UAC) → `NitroDrop.Radio.<SID>` borusu
+  (sunucu PID'i doğrulanır) → `start` → host `ready` (arayüz adı/index) → `NetworkBinding.Resolve("NitroDrop AWDL")`
+  (Windows listesinde görünene kadar ≤15 s tekrar) → ikinci `AirDropNode` (boş port, mDNS yalnız ff02::fb%wintun).
+  Eşler hangi düğümden geldiyse gönderim o düğümden gider (`_peerOwner`).
+- `RadioPhase` → `HardwareStatus` (Türkçe, durum çipi + Ayarlar satırı; `HardwareStatusChanged` olayıyla UI tazelenir):
+  sürücü yok → eski LAN metni; kapalı; "yönetici izni bekleniyor…"; UAC reddi → "Yönetici izni verilmedi · iPhone
+  bağlantısı kapalı, yerel ağ modu" (yeniden denemek için ayarı kapat/aç — başka ayarı kaydetmek UAC'yi tekrar açmaz);
+  "başlatılıyor…"; hazır → "iPhone bağlantısı hazır · kanal 6 · N cihaz"; hata → "iPhone bağlantısı kurulamadı: <neden>"
+  (sürücü yok / erişilemedi / wintun.dll eksik / uçak modu / kart / ağ arayüzü; teknik ayrıntı loga); host kapandı →
+  "Wi-Fi yardımcısı kapandı · yerel ağ modu". `IsHardwareReady` yalnız `Ready`'de true.
+- **BLE** uyandırma reklamı (`IAirDropBleAdvertiser`, gerçek: `BleAirDropAdvertiser`) yalnız AWDL hazırken ve
+  (alma modu Herkes **veya** gönderim sürerken) açık; Bluetooth kapalıysa hata loglanır, AWDL çalışmaya devam eder.
+- Log: `%LOCALAPPDATA%\airdrop-win\logs\airdrop.log` (host satırları `[radio]` önekiyle) ve hostun kendi
+  `...\logs\radio.log`'u (yükseltilmiş hesabın profilinde).
+
+Sürücü yokken (ya da radyo entegrasyonu verilmemişse — testler, CLI) eskisi gibi yalnız **LAN modu**. `ReceiveMode.Off` ve `ContactsOnly` = kapalı
 (Apple imzalı kaydımız yok). Kendi eşlerimizi `/Discover` ve `/Ask`'taki ek `AirDropWinVersion` anahtarından tanıyıp
 `DeviceKind.Windows` gösteriyoruz; model adımız varsayılan `MacBookPro18,3` (`CoreAirDropServiceSettings.ModelName`).
 Testler adaptörü WPF olmadan derlemek için `IAirDropService.cs`, `IContactResolver.cs`, `CoreAirDropService.cs`,
 `ContactBookResolver.cs` dosyalarını AirDrop.Tests'e link'ler — bu dosyalara WPF tipi girmemeli.
+
+Mimari ve test sürüşü adımları: `docs/awdl-port.md` → "Çalışma zamanı mimarisi" ve "Test sürüşü".
 
 ## Süreklilik: "Cihazlar" sekmesi ve Ayarlar → Senkron (Nitro.Sync)
 
@@ -199,6 +224,37 @@ Kaynak: `brand/final/` (salt okunur). Uygulamadaki karşılıkları:
   çıkarır: `nearby-*`, `devices-*`, `phone-main-*`, `history-*`, `settings-*`, `settings-about-*`,
   `sheet-receive-*`, `menu-*`, `onboarding-1..6-*`, `setup-*`. Çalışan tek örneği atlar.
 
+## Paketleme: MSIX + portable (`packaging/`)
+
+`powershell -ExecutionPolicy Bypass -File packaging\build-release.ps1 [-SkipDriver] [-Sign]` sürücüyü (`build.ps1` +
+`package.ps1` + `adwifi-cli.exe`), uygulamayı ve iki çıktıyı `packaging\out\`'a üretir: `NitroDrop-<sürüm>-win-x64-portable.zip`
+ve `NitroDrop-<sürüm>-x64.msix` (imzasız; `packaging\sign-dev.ps1` kendinden imzalı `CN=Nitrobyte` ile imzalar ve
+`NitroDrop-dev.cer` çıkarır). Kurulum: `packaging\install-msix.ps1` (sertifikayı bir kez `LocalMachine\TrustedPeople`'a alır, UAC
+ister; sonra yöneticisiz `Add-AppxPackage`). Test rehberi: `docs/test-drive.md`.
+
+- **Self-contained, trim yok, tek dosya yok:** .NET 10 Desktop Runtime Windows'ta hazır gelmiyor ve MSIX ona çerçeve paketi
+  olarak bağlanamıyor; WPF trim-safe değil. `NitroDrop.SyncHost.exe`, `NitroDrop.Radio.exe` (varsa) ve `nitro-phoneline-probe.exe`
+  de self-contained yayımlanıp aynı klasöre bindiriliyor (normal derleme çıktıları framework-dependent).
+- **Manifest** (`packaging/AppxManifest.xml`): `runFullTrust`, `phoneLineTransportManagement`, `phoneCall`, `bluetooth`,
+  `internetClientServer`, `privateNetworkClientServer`, `allowElevation`, `unvirtualizedResources`; StartupTask
+  `NitroDropStartup`; app execution alias'ları `NitroDrop.exe`, `NitroDrop.SyncHost.exe`, `nitro-phoneline-probe.exe`
+  (`%LOCALAPPDATA%\Microsoft\WindowsApps\`, paket kimliğiyle ve argümanla başlatır, güncellemede yolu değişmez).
+- **Sanallaştırma kapalı** (`desktop6:FileSystemWriteVirtualization`/`RegistryWriteVirtualization` = disabled): paketli
+  uygulama `%LOCALAPPDATA%\airdrop-win` ve HKCU'ya gerçekten yazar. Yükseltilmiş kurulum yardımcısı (runas ile paket kimliği
+  olmadan da başlasa), Chrome/Edge (native messaging kaydı), RunOnce ve portable sürüm aynı dosya/anahtarları görür; kodda
+  `ApplicationData`'ya geçiş gerekmedi. Store'da `unvirtualizedResources` gerekçe ister. Gerekçe kabul edilmezse sanallaştırılmış
+  AppData'ya geçmek gerekir (o durumda yardımcı ve tarayıcı paket özel klasörünü göremez).
+- **Paketliyken değişen kod** (`Services/PackagedApp.cs`, `PackageIdentity.HasIdentity` ile): "Windows ile başlat" HKCU Run yerine
+  StartupTask (`StartupRegistration.cs`; görev argüman geçmediği için `--background` yerine `ActivationKind.StartupTask`
+  algılanır), RunOnce devam kaydı alias'ı yazar, "Tarayıcıya bağla" host yolu olarak alias'ı kaydeder (`--host-path`), eklenti
+  klasörü `%LOCALAPPDATA%\airdrop-win\extension`'a kopyalanıp oradan gösterilir (WindowsApps sürümlü ve klasör seçicide gezilemiyor).
+- **Kurulum yardımcısı:** `ElevatedHelper` `Environment.ProcessPath` (WindowsApps içindeki exe) ile `runas` yapar. Argümanlar
+  aynı, sürücü dosyaları kurulum klasöründen okunup `%ProgramData%\NitroDrop\driver`'a kopyalanıyor. Pipe ACL'i kullanıcı SID'i
+  ve Yöneticiler, paket kimliğinden bağımsız.
+- **Gezgin "NitroDrop ile gönder":** iki sürümde de **kayıt kodu yok** (yalnızca `--send <dosyalar>` işleniyor; İlk kullanım
+  ekranı bundan bahsediyor). Portable için HKCU `Software\Classes\*\shell\NitroDrop\command` = `"<exe>" --send "%1"`, MSIX için
+  `desktop4:FileExplorerContextMenus` + COM `IExplorerCommand` (ya da `uap:ShareTarget`) gerekir. Yapılmadı.
+
 ## Testler
 
 - bplist: tüm tipler gidiş-dönüş, CPython `plistlib` çıktısını okuma, bizim çıktımızı CPython'a okutma (`.venv` varsa)
@@ -206,6 +262,13 @@ Kaynak: `brand/final/` (salt okunur). Uygulamadaki karşılıkları:
 - güvenlik: path traversal / mutlak yol / sürücü harfi / ters bölü / symlink reddi, ad temizleme, çakışma
 - adaptör (iki CoreAirDropService, loopback mDNS 536xx): keşif, ilerlemeli gönderim, ret, bağlantı paylaşımı,
   Off modunda geri çekilme + Ask reddi + geri gelme, medya yetenekleri/isim güncelleme, model→cihaz türü, hız ölçer
+- radyo hostu (`Awdl/RadioPipeTests.cs`): JSON-satır codec'i (camelCase enum, bilinmeyen alan, bozuk/uzun satır), SID'li boru
+  adı, **gerçek adlandırılmış boru** üstünde sahte yığınla start/stop/durum/log gidiş-dönüşü, uygulama ayrılınca/`quit`/ebeveyn
+  ölünce hostun yığını durdurup çıkması, istemcisiz zaman aşımı, ikinci host'un `FirstPipeInstance` ile reddi, beklenmeyen
+  istemci PID'i ve sahte sunucu PID'i reddi
+- radyo kararları (`RadioServiceTests.cs`, sahte launcher/bağlantı, loopback 537xx): sürücü yok → LAN + UAC yok; UAC reddi →
+  LAN + net durum, yalnız ayar değişince yeniden deneme; launcher hatası; radyo hatası → Türkçe neden; yanıt yok → zaman aşımı;
+  hazır → "NitroDrop AWDL" adına bağlanma + eş sayısı + BLE politikası + kapanışta `quit`; host kapanınca LAN'a dönüş; ayardan kapat/aç
 - kişiler: iCloud/Google/v4/v2.1 vCard, telefon normalizasyonu, bplist/XML/CMS (RSA+ECDSA, bozuk imza) kayıt, eşleme + kalıcılık
 - kurulum sihirbazı (`SetupTests.cs`, `Setup/` içindeki WPF'siz dosyalar link'li): PCI kimliği ayrıştırma/eşleme, adım akışı ve
   atlama, CI/SystemStartOptions/Shell BitLocker ayrıştırma, üretici tablosu (26 SMBIOS örneği), komut kurucular ve tırnaklama

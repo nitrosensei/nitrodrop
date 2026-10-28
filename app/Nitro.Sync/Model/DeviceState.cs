@@ -70,6 +70,8 @@ public sealed record DeviceState
     public long UpdatedAt { get; init; }
     public IReadOnlyList<BrowserTab> Tabs { get; init; } = [];
     public IReadOnlyList<AppInfo> Apps { get; init; } = [];
+    /// <summary>The PC's hardware ("Acer" · "Nitro V 15" · laptop) for model names and device art; null from older peers.</summary>
+    public AirDrop.Core.Devices.HostDevice? Hardware { get; init; }
 
     public static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web)
     {
