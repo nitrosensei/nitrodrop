@@ -39,13 +39,10 @@ Her adımda üç şey yazıyor: **ne yapacaksın**, **ne görmen gerekiyor**, **
 | Arama sesi PC'de (HFP) | **Var** (paket kimliği gerekiyor) | **Yok**: arama yalnızca kontrol (cevapla/reddet iPhone'dan çalar) |
 | Windows ile başlat | Başlangıç görevi (Görev Yöneticisi → Başlangıç uygulamaları) | HKCU Run kaydı |
 | Kaldırma | Ayarlar → Uygulamalar → NitroDrop → Kaldır | Klasörü sil |
-| Gezgin "NitroDrop ile gönder" | İkisinde de **henüz yok** (aşağıdaki nota bak) | |
+| Gezgin "NitroDrop ile gönder" | Yeni sağ tık menüsünde, kurulunca hazır | Ayarlar'dan açılır; Windows 11'de "Diğer seçenekleri göster" altında + Gönder menüsü |
 
 İkisi de ayarları aynı yerde tutar (`%LOCALAPPDATA%\airdrop-win`). **Aynı anda ikisini açma.** Biri açıkken öteki
 açılırsa kendini kapatıp açık olanı öne getirir. Karşılaştırmak için birini tepsiden "Çıkış" ile kapat, ötekini aç.
-
-> **Not:** İlk kullanım ekranı "Gezgin'de sağ tıklayıp NitroDrop ile gönder" diyor ama bu menü kaydı henüz
-> yazılmadı. Dosyayı pencereye sürükle-bırak ile gönder.
 
 ---
 
@@ -100,6 +97,23 @@ açılırsa kendini kapatıp açık olanı öne getirir. Karşılaştırmak içi
 - [ ] Türkçe karakterli bir dosya adı dene (`çiğdem_şükür.txt`).
 - **Olmazsa:** iki PC'nin `ipconfig` çıktısı, hangi yönde çalışmadığı, ekran görüntüsü. Not: misafir ağı ya da
   "Ortak ağ" profili mDNS'i engeller. Ayarlar → Ağ → Wi-Fi → ağ profili **Özel** olmalı.
+
+### A3b. Gezgin sağ tık: "NitroDrop ile gönder"
+
+- [ ] **MSIX:** Gezgin'de bir dosyaya sağ tıkla. Beklenen: yeni (kısa) menüde NitroDrop simgesiyle
+      **NitroDrop ile gönder**. Bir klasörde de görünmeli. Ayarlar → Bu bilgisayar → **Gezgin sağ tık menüsü** açık ve
+      gri (değiştirilemez, "Windows tarafından yönetiliyor").
+- [ ] **Portable:** Ayarlar → Bu bilgisayar → **Gezgin sağ tık menüsü**'nü aç. Sağ tık → **Diğer seçenekleri göster**
+      → **NitroDrop ile gönder**. Ayrıca sağ tık → Diğer seçenekleri göster → **Gönder** → **NitroDrop**.
+- [ ] Tek dosya: NitroDrop öne gelir, Yakındakiler'de "“dosya” göndermeye hazır — bir cihaz seçin". Masaüstündeki cihaza
+      tıkla → gider.
+- [ ] Çoklu seçim: 5 dosya + 1 klasör seç → sağ tık → NitroDrop ile gönder. Beklenen: **tek** "6 öge göndermeye hazır"
+      (son dosya tek başına değil). NitroDrop kapalıyken de dene (ilk açılışta da hepsi gelmeli).
+- [ ] (İsteğe bağlı, MSIX) Çok büyük seçim: bir klasörde ~500 dosyayı seçip gönder → hepsi sayılmalı.
+- [ ] Portable: anahtarı kapat → menü ve Gönder → NitroDrop kaybolur.
+- **Olmazsa:** sağ tık menüsünün ekran görüntüsü, kaç öge seçtiğin ve kaçının geldiği. Portable'da:
+  `reg query "HKCU\Software\Classes\*\shell\NitroDrop" /s`. MSIX'te menü hiç yoksa: Görev Yöneticisi → Ayrıntılar'da
+  `explorer.exe`'yi yeniden başlat ve tekrar bak; olmazsa `Get-AppxPackage Nitrobyte.NitroDrop | Format-List` çıktısı.
 
 ### A4. Ortak pano
 

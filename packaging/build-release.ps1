@@ -12,7 +12,10 @@
      framework-dependent and a fresh PC has no .NET 10 runtime. Payload: extension\, docs\ios-shortcut.md,
      docs\test-drive.md, driver\ (inf/sys/cat; firmware is downloaded by the wizard), wintun\amd64\wintun.dll,
      tools\adwifi-cli.exe, licenses\.
-  3. Artifacts in packaging\out\:
+  3. Explorer menu (MSIX only): app\NitroDrop.ShellExt\build.ps1 -> NitroDrop.ShellExt.dll (native IExplorerCommand,
+     static CRT, self-test runs first) into the MSIX layout; the manifest registers it (desktop4 + com:SurrogateServer).
+     The portable build registers its classic HKCU verb from Ayarlar instead (Services/ExplorerMenu.cs).
+  4. Artifacts in packaging\out\:
        NitroDrop-<ver>-win-x64-portable.zip   unpackaged (calls: ANCS control only, no PC call audio)
        NitroDrop-<ver>-x64.msix               full-trust MSIX, UNSIGNED -> run packaging\sign-dev.ps1
      (-Sign runs sign-dev.ps1 at the end.)
@@ -204,6 +207,11 @@ if (-not $SkipMsix) {
     $assets = Join-Path $layout 'Assets'
     New-Item -ItemType Directory -Force $assets | Out-Null
     Copy-Item (Join-Path $repo 'brand\final\app\store\*.png') $assets -Force
+
+    Step 'Explorer menu: NitroDrop.ShellExt.dll (app\NitroDrop.ShellExt\build.ps1, self-test included)'
+    $shellExtOut = Join-Path $work 'shellext'
+    & (Join-Path $app 'NitroDrop.ShellExt\build.ps1') -OutDir $shellExtOut
+    Copy-Item (Join-Path $shellExtOut 'NitroDrop.ShellExt.dll') $layout -Force
 
     $manifest = (Get-Content (Join-Path $pkgRoot 'AppxManifest.xml') -Raw).Replace('__VERSION__', $Version).Replace('__PUBLISHER__', [Security.SecurityElement]::Escape($Publisher))
     [IO.File]::WriteAllText((Join-Path $layout 'AppxManifest.xml'), $manifest, (New-Object Text.UTF8Encoding($false)))

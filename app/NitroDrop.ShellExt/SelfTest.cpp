@@ -61,6 +61,10 @@ int wmain()
     GetTempPathW(MAX_PATH + 1, tempBuf);
     std::wstring dir = std::wstring(tempBuf) + L"nitrodrop-shellext-selftest-" + std::to_wstring(GetCurrentProcessId());
     CreateDirectoryW(dir.c_str(), nullptr);
+    // %TEMP% may be an 8.3 path (C:\Users\EMRECA~1\…); the shell reports long names.
+    wchar_t longDir[32768];
+    DWORD longLen = GetLongPathNameW(dir.c_str(), longDir, 32768);
+    if (longLen > 0 && longLen < 32768) dir = longDir;
     std::vector<std::wstring> files = {dir + L"\\bir iki.txt", dir + L"\\\u00E7i\u011Fdem \u015F\u00FCk\u00FCr.jpg", dir + L"\\klas\u00F6r"};
     for (size_t i = 0; i < 2; ++i)
     {
@@ -75,10 +79,10 @@ int wmain()
         PIDLIST_ABSOLUTE p = nullptr;
         if (SUCCEEDED(SHParseDisplayName(f.c_str(), nullptr, &p, 0, nullptr))) pidls.push_back(p);
     }
+    std::vector<PCIDLIST_ABSOLUTE> cpidls(pidls.begin(), pidls.end());
     IShellItemArray* items = nullptr;
     HRESULT hr = pidls.size() == files.size()
-        ? SHCreateShellItemArrayFromIDLists(static_cast<UINT>(pidls.size()), const_cast<PCIDLIST_ABSOLUTE_ARRAY>(
-                                                reinterpret_cast<PCIDLIST_ABSOLUTE*>(pidls.data())), &items)
+        ? SHCreateShellItemArrayFromIDLists(static_cast<UINT>(cpidls.size()), cpidls.data(), &items)
         : E_FAIL;
     Check(SUCCEEDED(hr) && items, "IShellItemArray for 2 files + 1 folder");
 
@@ -123,6 +127,7 @@ int wmain()
         shape &= argv.size() > 0 && argv[0].size() > exeTail.size() &&
                  argv[0].compare(argv[0].size() - exeTail.size(), exeTail.size(), exeTail) == 0;
         Check(shape, "Invoke command = <NitroDrop.exe> --send <p1> <p2> <p3>");
+        if (!shape) std::wprintf(L"      got: %ls\n", nd::g_lastLaunch.c_str());
     }
 
     // ---- long selection → --send-list file ----
@@ -158,6 +163,7 @@ int wmain()
     RemoveDirectoryW(dir.c_str());
     CoUninitialize();
 
-    std::printf(g_failures ? "%d FAILED\n" : "all passed\n", g_failures);
+    if (g_failures) std::printf("%d FAILED\n", g_failures);
+    else std::printf("all passed\n");
     return g_failures ? 1 : 0;
 }

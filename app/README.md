@@ -41,6 +41,7 @@ app/
   Nitro.Radio.Host/        NitroDrop.Radio.exe (requireAdministrator): radyo + "NitroDrop AWDL" Wintun + AwdlHost; uygulama
                            ayrılınca kartı bırakıp çıkar (docs/awdl-port.md → Çalışma zamanı mimarisi)
   Nitro.Sync/ (+ .Host)    PC'ler arası sekme/uygulama eşitleme, uzantı köprüsü, iOS Kestirme alıcısı (docs/sync-plan.md)
+  NitroDrop.ShellExt/      MSIX Gezgin menüsü: yerel C++ IExplorerCommand DLL'i + SelfTest + build.ps1 (slnx'te değil)
   AirDrop.Cli/             komut satırı
   AirDrop.Tests/           xUnit testleri
 ```
@@ -270,9 +271,27 @@ ister; sonra yöneticisiz `Add-AppxPackage`). Test rehberi: `docs/test-drive.md`
 - **Kurulum yardımcısı:** `ElevatedHelper` `Environment.ProcessPath` (WindowsApps içindeki exe) ile `runas` yapar. Argümanlar
   aynı, sürücü dosyaları kurulum klasöründen okunup `%ProgramData%\NitroDrop\driver`'a kopyalanıyor. Pipe ACL'i kullanıcı SID'i
   ve Yöneticiler, paket kimliğinden bağımsız.
-- **Gezgin "NitroDrop ile gönder":** iki sürümde de **kayıt kodu yok** (yalnızca `--send <dosyalar>` işleniyor; İlk kullanım
-  ekranı bundan bahsediyor). Portable için HKCU `Software\Classes\*\shell\NitroDrop\command` = `"<exe>" --send "%1"`, MSIX için
-  `desktop4:FileExplorerContextMenus` + COM `IExplorerCommand` (ya da `uap:ShareTarget`) gerekir. Yapılmadı.
+- **Gezgin "NitroDrop ile gönder"** (dosya ve klasörler, çoklu seçim):
+  - **MSIX:** Windows 11'in yeni sağ tık menüsünde. `app/NitroDrop.ShellExt/` = küçük yerel C++ `IExplorerCommand` DLL'i
+    (`NitroDrop.ShellExt.dll`, statik CRT, Gezgin'e .NET yüklenmez). Manifestte `desktop4:FileExplorerContextMenus`
+    (`*` + `Directory`) → CLSID `1A8B53AB-8834-43D9-9046-BFD823F0B536` → `com:SurrogateServer` (dllhost, paket kimliğiyle).
+    `GetState`: seçimin hepsi dosya sistemi ögesiyse görünür. `Invoke`: `%LOCALAPPDATA%\Microsoft\WindowsApps\NitroDrop.exe`
+    (alias; yoksa DLL'in yanındaki exe) `--send "<p1>" "<p2>" …`; komut satırı ~30 000 karakteri aşarsa yollar
+    `%TEMP%\NitroDrop-send-*.txt`'ye (UTF-8, satır başına bir yol) yazılır ve `--send-list "<dosya>"` geçilir; uygulama okuyup
+    siler (yalnızca bu ad + %TEMP% ise). `build-release.ps1` DLL'i `app\NitroDrop.ShellExt\build.ps1` ile derler (önce
+    `SelfTest.exe`: gerçek `IShellItemArray`, COM fabrikası, tırnaklama, liste dosyası; hiçbir şey kaydetmez/başlatmaz) ve
+    yalnızca MSIX düzenine koyar. Ayarlar'daki anahtar "Windows tarafından yönetiliyor" diye açık ve kilitli görünür.
+  - **Portable:** Ayarlar → Bu bilgisayar → **Gezgin sağ tık menüsü** (`Services/ExplorerMenu.cs`, yalnızca HKCU):
+    `Software\Classes\*\shell\NitroDrop` ve `…\Directory\shell\NitroDrop` (MUIVerb, Icon, `MultiSelectModel=Player`,
+    `command` = `"<exe>" --send "%1"`) + `%APPDATA%\Microsoft\Windows\SendTo\NitroDrop.lnk` (`--send`, Gönder menüsü; tüm
+    seçim tek komut satırında). Windows 11'de klasik menüde ("Diğer seçenekleri göster"). Anahtarın durumu kayıt defterinden
+    okunur; portable klasör taşınırsa açılışta eski exe yoksa kayıt yeni yola çevrilir; MSIX açılışta portable'ın bıraktığı
+    kaydı siler (çift görünmesin).
+  - **Çoklu seçim:** `Player` + `%1` ile Gezgin seçilen her öge için ayrı süreç başlatır; ikinci örnekler komut satırını tek
+    örnek borusuyla iletir (bağlanma zaman aşımı 5 sn). `Services/SendBatcher.cs` gelenleri 300 ms sessizlikle tek kümeye
+    toplar; önceki kümeden 2 sn içinde gelen küme bekleyen dosyalara eklenir (yavaş başlayan süreçler), sonra gelen yenisinin
+    yerine geçer. Pencere henüz yokken gelenler bekletilir. Ayrıştırma: `Services/LaunchArgs.cs`.
+  - Metinler tek yerde: `Services/UiStrings.cs` (yerel DLL başlığı `ShellExt.cpp`'de kopya; ikisi birlikte değişir).
 
 ## Testler
 
@@ -294,6 +313,11 @@ ister; sonra yöneticisiz `Add-AppxPackage`). Test rehberi: `docs/test-drive.md`
   (`CommandLineToArgvW` ile gidiş-dönüş), bcdedit/pnputil sonuç sınıflandırma (EN/TR), BitLocker JSON, yardımcı protokolü, setup.json,
   INF tanıma, firmware doğrulama (ağsız), sertifika özellikleri, **geçici kopyalarda gerçek `SignerSignEx` imzası** (bellekteki anahtar,
   hiçbir depo değişmez) ve imzadan sonra hazır kataloğun geçerli kalması (sürücü + firmware derlenmişse)
+- Gezgin menüsü (`ExplorerMenuTests.cs`, sahte kayıt defteri + sahte kısayol deposu, gerçek HKCU'ya dokunmaz): `--send` /
+  `--send-list` ayrıştırma (eksik/yinelenen yol, bayrakta durma, okuyucu hatası), liste dosyası gidiş-dönüşü (Türkçe, BOM'suz,
+  CRLF/LF), yalnız kendi geçici dosyamızın silinmesi, `CommandLineToArgvW` ile tırnaklama (`C:\`, sondaki ters bölü, tırnak),
+  `"%1"` yerine konunca komutun `[exe, --send, yol]` vermesi, HKCU anahtarları/SendTo kaydı ve silme, taşınan portable
+  onarımı, MSIX'te kilitli + artık temizliği, `SendBatcher` debounce/devam/boş/dispose (sahte `TimeProvider`) + gerçek zamanlayıcı
 - uçtan uca (loopback, süreç içi): Türkçe karakterli ad (ğüşİöç) dahil 2 dosya + klasör gönderimi, bayt bayt kontrol;
   ret durumunda Upload'un 403 alması; mDNS yayın + tarama (loopback, port 53530)
 

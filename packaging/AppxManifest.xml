@@ -17,15 +17,23 @@
     internetClientServer,
     privateNetworkClientServer      AirDrop HTTPS server + mDNS (5353), Nitro.Sync peers, iOS Shortcut receiver.
     bluetooth                       iPhone continuity (ANCS/AMS GATT, MAP/PBAP RFCOMM, pairing).
+
+  Explorer "NitroDrop ile gonder" (Windows 11 modern context menu): desktop4:FileExplorerContextMenus maps files (*) and
+  folders (Directory) to the IExplorerCommand in NitroDrop.ShellExt.dll (app/NitroDrop.ShellExt, native C++, static CRT),
+  hosted by com:SurrogateServer (dllhost.exe with this package's identity, not inside explorer.exe). The CLSID must match
+  CLSID_NitroDropSend in ShellExt.cpp. Invoke starts the NitroDrop.exe alias with send/send-list arguments.
 -->
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
+  xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  IgnorableNamespaces="uap uap3 desktop desktop6 rescap">
+  IgnorableNamespaces="uap uap3 desktop desktop4 desktop5 desktop6 com rescap">
 
   <Identity Name="Nitrobyte.NitroDrop"
             Publisher="__PUBLISHER__"
@@ -77,6 +85,24 @@
           </uap3:AppExecutionAlias>
         </uap3:Extension>
 
+        <!-- Explorer right click "NitroDrop ile gonder" for files and folders (see the header comment). -->
+        <desktop4:Extension Category="windows.fileExplorerContextMenus">
+          <desktop4:FileExplorerContextMenus>
+            <desktop5:ItemType Type="*">
+              <desktop5:Verb Id="NitroDropSend" Clsid="1A8B53AB-8834-43D9-9046-BFD823F0B536"/>
+            </desktop5:ItemType>
+            <desktop5:ItemType Type="Directory">
+              <desktop5:Verb Id="NitroDropSend" Clsid="1A8B53AB-8834-43D9-9046-BFD823F0B536"/>
+            </desktop5:ItemType>
+          </desktop4:FileExplorerContextMenus>
+        </desktop4:Extension>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:SurrogateServer DisplayName="NitroDrop Explorer menu">
+              <com:Class Id="1A8B53AB-8834-43D9-9046-BFD823F0B536" Path="NitroDrop.ShellExt.dll" ThreadingModel="STA"/>
+            </com:SurrogateServer>
+          </com:ComServer>
+        </com:Extension>
       </Extensions>
     </Application>
 
