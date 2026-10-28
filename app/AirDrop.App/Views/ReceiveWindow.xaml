@@ -3,16 +3,22 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="NitroDrop" Width="390" SizeToContent="Height" ResizeMode="NoResize" Topmost="True"
         ShowInTaskbar="True" FontFamily="{StaticResource UiFont}" Foreground="{DynamicResource TextPrimary}"
-        UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
+        UseLayoutRounding="True" TextOptions.TextFormattingMode="Ideal" Icon="/Assets/NitroDrop.ico">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" GlassFrameThickness="-1" ResizeBorderThickness="0" UseAeroCaptionButtons="False"/>
     </WindowChrome.WindowChrome>
 
+    <Grid>
     <StackPanel Margin="28,28,28,24">
+        <!-- brand eyebrow: this sheet can appear while the main window is hidden -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,18">
+            <Image Source="{DynamicResource BrandMark}" Height="13" VerticalAlignment="Center"/>
+            <TextBlock Text="NITRODROP · GELEN" Style="{StaticResource MonoLabel}" Margin="7,0,0,0" VerticalAlignment="Center"/>
+        </StackPanel>
         <Grid Width="80" Height="80" HorizontalAlignment="Center">
-            <Ellipse Fill="{DynamicResource Avatar}"/>
-            <TextBlock x:Name="Initials" Foreground="White" FontSize="28" FontWeight="SemiBold"
+            <Ellipse Fill="{DynamicResource Avatar}" Stroke="{DynamicResource AvatarBorder}" StrokeThickness="1"/>
+            <TextBlock x:Name="Initials" Foreground="{DynamicResource AvatarText}" FontSize="27" FontWeight="SemiBold"
                        FontFamily="{StaticResource DisplayFont}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Ellipse x:Name="Photo" Visibility="Collapsed">
                 <Ellipse.Fill>
@@ -20,16 +26,17 @@
                 </Ellipse.Fill>
             </Ellipse>
             <Border Width="28" Height="28" CornerRadius="14" Background="{DynamicResource Badge}"
+                    BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
                     HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                <TextBlock x:Name="Glyph" FontFamily="{StaticResource IconFont}" FontSize="13"
+                <TextBlock x:Name="Glyph" FontFamily="{StaticResource IconFont}" FontSize="13" Foreground="{DynamicResource TextSecondary}"
                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
         </Grid>
 
-        <TextBlock x:Name="Who" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,14,0,0"
+        <TextBlock x:Name="Who" FontSize="17" FontWeight="Bold" FontFamily="{StaticResource DisplayFont}" HorizontalAlignment="Center" Margin="0,14,0,0"
                    TextTrimming="CharacterEllipsis"/>
         <TextBlock x:Name="Device" FontSize="12" HorizontalAlignment="Center" Foreground="{DynamicResource TextSecondary}"/>
-        <TextBlock x:Name="Message" FontSize="13" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10,0,0"/>
+        <TextBlock x:Name="Message" FontSize="13" TextWrapping="Wrap" TextAlignment="Center" Margin="0,10,0,0" LineHeight="18"/>
 
         <Border x:Name="Preview" CornerRadius="12" Margin="0,14,0,0" Height="150" Visibility="Collapsed"
                 BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
@@ -38,8 +45,8 @@
             </Border.Background>
         </Border>
 
-        <Border CornerRadius="10" Background="{DynamicResource Card}" BorderBrush="{DynamicResource CardBorder}"
-                BorderThickness="1" Margin="0,14,0,0" Padding="12,8">
+        <Border CornerRadius="12" Background="{DynamicResource Card}" BorderBrush="{DynamicResource CardBorder}"
+                BorderThickness="1" Margin="0,16,0,0" Padding="14,9">
             <ScrollViewer MaxHeight="150" VerticalScrollBarVisibility="Auto">
                 <ItemsControl x:Name="Items">
                     <ItemsControl.ItemTemplate>
@@ -51,11 +58,11 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="{Binding Glyph}" FontFamily="{StaticResource IconFont}" FontSize="14"
-                                           Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                                           Foreground="{DynamicResource TextSecondary}" VerticalAlignment="Center"/>
                                 <TextBlock Grid.Column="1" Text="{Binding Name}" Margin="10,0" FontSize="12.5"
                                            TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="2" Text="{Binding SizeText}" FontSize="12"
-                                           Foreground="{DynamicResource TextSecondary}" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Text="{Binding SizeText}" Style="{StaticResource MonoLabel}"
+                                           VerticalAlignment="Center"/>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -66,7 +73,7 @@
         <Grid Margin="0,22,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Content="Reddet" Style="{StaticResource PillButton}" IsCancel="True" Click="Decline_Click"/>
@@ -74,7 +81,7 @@
             <Button x:Name="AcceptButton" Grid.Column="2" Content="Kabul Et" Style="{StaticResource AccentPill}"
                     Click="Accept_Click"/>
         </Grid>
-        <TextBlock x:Name="TimeoutText" FontSize="11" HorizontalAlignment="Center" Margin="0,10,0,0"
-                   Foreground="{DynamicResource TextSecondary}"/>
+        <TextBlock x:Name="TimeoutText" Style="{StaticResource MonoLabel}" HorizontalAlignment="Center" Margin="0,12,0,0"/>
     </StackPanel>
+    </Grid>
 </Window>

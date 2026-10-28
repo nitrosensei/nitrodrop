@@ -124,6 +124,10 @@ public readonly struct MacAddr : IEquatable<MacAddr>, IComparable<MacAddr>
     public int CompareTo(MacAddr other) => _v.CompareTo(other._v);
     public static bool operator ==(MacAddr a, MacAddr b) => a._v == b._v;
     public static bool operator !=(MacAddr a, MacAddr b) => a._v != b._v;
+    public static bool operator <(MacAddr a, MacAddr b) => a._v < b._v;
+    public static bool operator >(MacAddr a, MacAddr b) => a._v > b._v;
+    public static bool operator <=(MacAddr a, MacAddr b) => a._v <= b._v;
+    public static bool operator >=(MacAddr a, MacAddr b) => a._v >= b._v;
 
     public override string ToString() =>
         string.Create(17, this, static (span, m) =>

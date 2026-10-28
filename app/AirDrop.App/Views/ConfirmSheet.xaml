@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="NitroDrop" Width="390" SizeToContent="Height" ResizeMode="NoResize" Topmost="True"
         ShowInTaskbar="True" FontFamily="{StaticResource UiFont}" Foreground="{DynamicResource TextPrimary}"
-        UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
+        UseLayoutRounding="True" TextOptions.TextFormattingMode="Ideal" Icon="/Assets/NitroDrop.ico">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" GlassFrameThickness="-1" ResizeBorderThickness="0" UseAeroCaptionButtons="False"/>
@@ -11,45 +11,47 @@
 
     <Grid>
     <StackPanel Margin="28,28,28,24">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,18">
+            <Image Source="{DynamicResource BrandMark}" Height="13" VerticalAlignment="Center"/>
+            <TextBlock x:Name="Eyebrow" Text="NITRODROP · ONAY" Style="{StaticResource MonoLabel}" Margin="7,0,0,0" VerticalAlignment="Center"/>
+        </StackPanel>
         <Grid Width="80" Height="80" HorizontalAlignment="Center">
-            <Ellipse Fill="{DynamicResource SelfAvatar}"/>
-            <TextBlock x:Name="Glyph" Text="&#xE7F8;" FontFamily="{StaticResource IconFont}" FontSize="32" Foreground="White"
+            <Border CornerRadius="22" Background="{DynamicResource Avatar}" BorderBrush="{DynamicResource AvatarBorder}" BorderThickness="1"/>
+            <TextBlock x:Name="Glyph" Text="&#xE7F8;" FontFamily="{StaticResource IconFont}" FontSize="30" Foreground="{DynamicResource AvatarText}"
                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Border x:Name="BadgeBorder" Width="30" Height="30" CornerRadius="15" Background="{DynamicResource Badge}"
-                    HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-2,-2">
-                <Border.Effect>
-                    <DropShadowEffect BlurRadius="6" ShadowDepth="1" Opacity="0.2"/>
-                </Border.Effect>
-                <TextBlock x:Name="Badge" FontFamily="{StaticResource IconFont}" FontSize="13" Foreground="{DynamicResource Accent}"
+                    BorderBrush="{DynamicResource CardBorder}" BorderThickness="1"
+                    HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-5,-5">
+                <TextBlock x:Name="Badge" FontFamily="{StaticResource IconFont}" FontSize="13" Foreground="{DynamicResource AccentTextSafe}"
                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Border>
         </Grid>
 
-        <TextBlock x:Name="Who" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,14,0,0"
+        <TextBlock x:Name="Who" FontSize="17" FontWeight="Bold" FontFamily="{StaticResource DisplayFont}" HorizontalAlignment="Center" Margin="0,14,0,0"
                    TextTrimming="CharacterEllipsis"/>
-        <TextBlock x:Name="Message" FontSize="13" TextWrapping="Wrap" TextAlignment="Center" Margin="0,6,0,0"/>
+        <TextBlock x:Name="Message" FontSize="13" TextWrapping="Wrap" TextAlignment="Center" Margin="0,6,0,0" LineHeight="18" Foreground="{DynamicResource TextSecondary}"/>
 
         <!-- 6-digit pairing code -->
-        <Border x:Name="CodeBox" CornerRadius="12" Background="{DynamicResource Card}" BorderBrush="{DynamicResource CardBorder}"
-                BorderThickness="1" Margin="0,18,0,0" Padding="12,14" Visibility="Collapsed">
-            <TextBlock x:Name="Code" FontSize="36" FontWeight="SemiBold" FontFamily="{StaticResource DisplayFont}"
+        <Border x:Name="CodeBox" CornerRadius="14" Background="{DynamicResource Card}" BorderBrush="{DynamicResource CardBorder}"
+                BorderThickness="1" Margin="0,20,0,0" Padding="12,16" Visibility="Collapsed">
+            <TextBlock x:Name="Code" FontSize="34" FontWeight="Medium" FontFamily="{StaticResource MonoFont}"
                        HorizontalAlignment="Center" Foreground="{DynamicResource TextPrimary}"/>
         </Border>
         <TextBlock x:Name="Question" FontSize="12.5" TextWrapping="Wrap" TextAlignment="Center" Margin="0,12,0,0"
-                   Foreground="{DynamicResource TextSecondary}" Visibility="Collapsed"/>
+                   Foreground="{DynamicResource TextPrimary}" FontWeight="Medium" Visibility="Collapsed"/>
 
         <Grid Margin="0,22,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="CancelButton" Content="İptal" Style="{StaticResource PillButton}" IsCancel="True" Click="Cancel_Click"/>
             <!-- Not IsDefault on purpose: confirming must be a deliberate click. -->
             <Button x:Name="AcceptButton" Grid.Column="2" Content="Onayla" Style="{StaticResource AccentPill}" Click="Accept_Click"/>
         </Grid>
-        <TextBlock x:Name="Footnote" FontSize="11" HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap"
-                   TextAlignment="Center" Foreground="{DynamicResource TextSecondary}"/>
+        <TextBlock x:Name="Footnote" FontSize="11.5" HorizontalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"
+                   TextAlignment="Center" Foreground="{DynamicResource TextTertiary}"/>
     </StackPanel>
     </Grid>
 </Window>

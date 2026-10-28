@@ -13,8 +13,15 @@ public sealed class TrustedDeviceViewModel(string key, DevicePrefs prefs, Action
     public RelayCommand Remove { get; } = new(_ => remove(key));
 }
 
+/// <summary>Row in Ayarlar → Hakkında → Açık kaynak bileşenler.</summary>
+public sealed record LicenseItem(string Name, string Use, string License);
+
 public sealed class SettingsViewModel : Observable
 {
+    public const string WebsiteUrl = "https://nitrobyte.com.tr";
+    // Placeholder until the public repository exists.
+    public const string RepoUrl = "https://github.com/nitrobyte/nitrodrop";
+
     private readonly AppSettings _s;
     private readonly IContactResolver _contacts;
     private readonly Func<Task> _applied;
@@ -30,6 +37,45 @@ public sealed class SettingsViewModel : Observable
         ClearContacts = new RelayCommand(_ => { _contacts.Clear(); RefreshContacts(); }, _ => _contacts.Count > 0);
         RefreshContacts();
         RefreshTrusted();
+        OpenWebsite = new RelayCommand(_ => OpenShell(WebsiteUrl));
+        OpenRepository = new RelayCommand(_ => OpenShell(RepoUrl));
+        OpenLicenses = new RelayCommand(_ => OpenShell(System.IO.Path.Combine(AppContext.BaseDirectory, "licenses")));
+    }
+
+    // ---- Hakkında ----
+
+    public string VersionText
+    {
+        get
+        {
+            var asm = System.Reflection.Assembly.GetEntryAssembly() ?? typeof(SettingsViewModel).Assembly;
+            var v = asm.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false)
+                .OfType<System.Reflection.AssemblyInformationalVersionAttribute>().FirstOrDefault()?.InformationalVersion
+                ?? asm.GetName().Version?.ToString(3) ?? "1.0.0";
+            int plus = v.IndexOf('+');
+            return $"SÜRÜM {(plus > 0 ? v[..plus] : v)} · NITROBYTE";
+        }
+    }
+
+    public string RepositoryUrl => RepoUrl;
+
+    public LicenseItem[] Licenses { get; } =
+    {
+        new("Owly", "AWDL / OWL", "MIT"),
+        new("iwx", "Intel Wi-Fi sürücüsü (OpenBSD)", "ISC"),
+        new("QRCoder", "QR kod", "MIT"),
+        new("Schibsted Grotesk · JetBrains Mono", "yazı tipleri", "OFL 1.1"),
+        new("Intel Wi-Fi firmware", "kurulumda gösterilir", "INTEL"),
+    };
+
+    public RelayCommand OpenWebsite { get; }
+    public RelayCommand OpenRepository { get; }
+    public RelayCommand OpenLicenses { get; }
+
+    private static void OpenShell(string target)
+    {
+        try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(target) { UseShellExecute = true }); }
+        catch (Exception) { /* no handler / folder missing */ }
     }
 
     public string DeviceName

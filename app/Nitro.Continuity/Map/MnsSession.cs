@@ -36,8 +36,9 @@ public sealed class MnsSession
             case ObexOpcode.Connect:
             {
                 var target = req.Find(ObexHeaderId.Target)?.Bytes;
+                // A Connect response always carries version/flags/MTU, even when refused (OBEX 1.5 §3.4.1).
                 if (target is null || !target.AsSpan().SequenceEqual(ObexHeader.UuidBytes(MapUuids.MnsTarget)))
-                    return Respond(ObexResponseCode.NotAcceptable);
+                    return new ObexPacket { Code = (byte)ObexResponseCode.NotAcceptable, IsConnect = true, MaxPacketLength = 0x2000 }.Encode();
                 Connected = true;
                 var r = new ObexPacket
                 {

@@ -1,0 +1,306 @@
+<Window x:Class="AirDrop.App.Views.OnboardingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="NitroDrop · Hoş geldiniz" Width="640" Height="600" ResizeMode="NoResize" ShowInTaskbar="True"
+        WindowStartupLocation="CenterOwner" FontFamily="{StaticResource UiFont}" Icon="/Assets/NitroDrop.ico"
+        Foreground="{DynamicResource TextPrimary}" UseLayoutRounding="True" TextOptions.TextFormattingMode="Ideal">
+
+    <!-- "İlk kullanım": six steps, illustrations drawn from the brand's own shapes (phone r6 + 16:10 screen + orange overlap). -->
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="48" GlassFrameThickness="-1" ResizeBorderThickness="0" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <Style x:Key="StepTitle" TargetType="TextBlock" BasedOn="{StaticResource PageTitle}">
+            <Setter Property="FontSize" Value="25"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="StepBody" TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+            <Setter Property="FontSize" Value="13.5"/>
+            <Setter Property="LineHeight" Value="20"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="MaxWidth" Value="470"/>
+            <Setter Property="Margin" Value="0,10,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <!-- device outlines used by the illustrations -->
+        <Style x:Key="PhoneShape" TargetType="Border">
+            <Setter Property="Width" Value="62"/>
+            <Setter Property="Height" Value="124"/>
+            <Setter Property="CornerRadius" Value="18"/>
+            <Setter Property="Background" Value="{DynamicResource Card}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+        <Style x:Key="ScreenShape" TargetType="Border">
+            <Setter Property="Width" Value="168"/>
+            <Setter Property="Height" Value="105"/>
+            <Setter Property="CornerRadius" Value="9"/>
+            <Setter Property="Background" Value="{DynamicResource Card}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderStrong}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+        </Style>
+        <Style x:Key="Island" TargetType="Border">
+            <Setter Property="Width" Value="18"/>
+            <Setter Property="Height" Value="6"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="Background" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="0,8,0,0"/>
+        </Style>
+        <Style x:Key="Line" TargetType="Border">
+            <Setter Property="Height" Value="6"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="Background" Value="{DynamicResource Track}"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+        </Style>
+        <Style x:Key="ModeChoice" TargetType="RadioButton" BasedOn="{StaticResource Segment}">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="MinWidth" Value="150"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- top bar -->
+        <Grid Margin="22,0,18,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Image Source="{DynamicResource BrandMark}" Height="14" VerticalAlignment="Center"/>
+                <TextBlock x:Name="StepLabel" Text="İLK KULLANIM · 1/6" Style="{StaticResource MonoLabel}" Margin="8,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+            <Button x:Name="SkipButton" Style="{StaticResource QuietLink}" Content="Atla" HorizontalAlignment="Right" VerticalAlignment="Center"
+                    WindowChrome.IsHitTestVisibleInChrome="True" Click="Skip_Click" ToolTip="Tanıtımı kapat (Esc)"/>
+        </Grid>
+
+        <Grid Grid.Row="1" x:Name="Stage" Margin="40,0,40,0" RenderTransformOrigin="0.5,0.5">
+            <Grid.RenderTransform><TranslateTransform/></Grid.RenderTransform>
+
+            <!-- ===== 1 · Hoş geldiniz ===== -->
+            <StackPanel x:Name="Step1" VerticalAlignment="Center">
+                <Grid Width="230" Height="190" HorizontalAlignment="Center">
+                    <Ellipse Width="190" Height="190" Stroke="{DynamicResource RadarRing}" StrokeThickness="1" StrokeDashArray="0.1 4.5" StrokeDashCap="Round"/>
+                    <Ellipse Width="138" Height="138" Stroke="{DynamicResource RadarRing}" StrokeThickness="1"/>
+                    <Ellipse Width="92" Height="92" Stroke="{DynamicResource Pulse}" StrokeThickness="1.5"/>
+                    <Border Width="84" Height="84" CornerRadius="20" Background="{StaticResource AppTileFill}"
+                            BorderBrush="{StaticResource AppTileStroke}" BorderThickness="1">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="22" ShadowDepth="6" Direction="270" Opacity="0.22" Color="{DynamicResource ShadowColor}"/>
+                        </Border.Effect>
+                        <Image Source="{StaticResource MarkOnTile}" Margin="16,17,16,15"/>
+                    </Border>
+                </Grid>
+                <Path Data="{StaticResource WordmarkGeometry}" Fill="{DynamicResource TextPrimary}" Stretch="Uniform" Height="30"
+                      HorizontalAlignment="Center" Margin="0,22,0,0"/>
+                <TextBlock Style="{StaticResource StepBody}" FontSize="14.5" Margin="0,14,0,0"
+                           Text="iPhone, Mac ve PC arasında dosya, pano, bildirim ve sekmeler. Kurulum gerektirmeden, aynı ağda hemen çalışır."/>
+            </StackPanel>
+
+            <!-- ===== 2 · Dosya gönder ===== -->
+            <StackPanel x:Name="Step2" VerticalAlignment="Center" Visibility="Collapsed">
+                <Canvas Width="340" Height="190" HorizontalAlignment="Center">
+                    <Ellipse Width="190" Height="190" Canvas.Left="150" Stroke="{DynamicResource RadarRing}" StrokeThickness="1" StrokeDashArray="0.1 4.5" StrokeDashCap="Round"/>
+                    <Ellipse Width="120" Height="120" Canvas.Left="185" Canvas.Top="35" Stroke="{DynamicResource RadarRing}" StrokeThickness="1"/>
+                    <!-- peer -->
+                    <Ellipse Width="70" Height="70" Canvas.Left="210" Canvas.Top="60" Fill="{DynamicResource Avatar}" Stroke="{DynamicResource Accent}" StrokeThickness="3"/>
+                    <TextBlock Text="AY" Canvas.Left="227" Canvas.Top="79" FontSize="22" FontWeight="SemiBold" Foreground="{DynamicResource AvatarText}"/>
+                    <!-- path of the drag -->
+                    <Path Stroke="{DynamicResource TextTertiary}" StrokeThickness="1.5" StrokeDashArray="2 3" StrokeDashCap="Round"
+                          Data="M 92,118 C 140,150 170,130 205,104"/>
+                    <Path Fill="{DynamicResource TextTertiary}" Data="M 205,104 L 195,104 L 201,96 Z"/>
+                    <!-- file card (the overlap corner in signal orange) -->
+                    <Border Width="64" Height="80" Canvas.Left="28" Canvas.Top="52" CornerRadius="9" Background="{DynamicResource Card}"
+                            BorderBrush="{DynamicResource TextPrimary}" BorderThickness="2">
+                        <Border.RenderTransform><RotateTransform Angle="-8"/></Border.RenderTransform>
+                        <StackPanel Margin="10,14,10,0">
+                            <Border Style="{StaticResource Line}" Width="34"/>
+                            <Border Style="{StaticResource Line}" Width="26"/>
+                            <Border Style="{StaticResource Line}" Width="30"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Width="22" Height="22" Canvas.Left="72" Canvas.Top="108" CornerRadius="0,0,7,0" Background="{DynamicResource AccentGraphic}">
+                        <Border.RenderTransform><RotateTransform Angle="-8"/></Border.RenderTransform>
+                    </Border>
+                </Canvas>
+                <TextBlock Style="{StaticResource StepTitle}" Text="Sürükleyin, bırakın" Margin="0,22,0,0"/>
+                <TextBlock Style="{StaticResource StepBody}"
+                           Text="Dosyayı Yakındakiler'deki cihazın üzerine bırakın. Gezgin'de sağ tıklayıp “NitroDrop ile gönder”i de seçebilirsiniz."/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
+                    <Border Style="{StaticResource KeyCap}"><TextBlock Text="Ctrl" FontFamily="{StaticResource MonoFont}" FontSize="11.5"/></Border>
+                    <TextBlock Text="+" Margin="6,0" VerticalAlignment="Center" Foreground="{DynamicResource TextTertiary}"/>
+                    <Border Style="{StaticResource KeyCap}"><TextBlock Text="Alt" FontFamily="{StaticResource MonoFont}" FontSize="11.5"/></Border>
+                    <TextBlock Text="+" Margin="6,0" VerticalAlignment="Center" Foreground="{DynamicResource TextTertiary}"/>
+                    <Border Style="{StaticResource KeyCap}"><TextBlock Text="A" FontFamily="{StaticResource MonoFont}" FontSize="11.5"/></Border>
+                    <TextBlock Text="kopyaladığınızı son kullandığınız cihaza gönderir" Style="{StaticResource Caption}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- ===== 3 · iPhone'dan al ===== -->
+            <StackPanel x:Name="Step3" VerticalAlignment="Center" Visibility="Collapsed">
+                <Grid Width="340" Height="190" HorizontalAlignment="Center">
+                    <Border Style="{StaticResource PhoneShape}" HorizontalAlignment="Left" Margin="40,0,0,0">
+                        <Grid>
+                            <Border Style="{StaticResource Island}"/>
+                            <!-- share sheet row -->
+                            <Border Width="40" Height="40" CornerRadius="11" Background="{DynamicResource SurfaceSunken}" BorderBrush="{DynamicResource Separator}"
+                                    BorderThickness="1" VerticalAlignment="Bottom" Margin="0,0,0,18">
+                                <TextBlock Text="&#xE72D;" FontFamily="{StaticResource IconFont}" FontSize="16" Foreground="{DynamicResource TextPrimary}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <Path Stroke="{DynamicResource Accent}" StrokeThickness="2" StrokeDashArray="0.1 3" StrokeDashCap="Round"
+                          Data="M 112,80 C 140,40 180,40 200,70"/>
+                    <Ellipse Width="9" Height="9" Fill="{DynamicResource AccentGraphic}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="196,66,0,0"/>
+                    <Border Style="{StaticResource ScreenShape}" Width="130" Height="81" HorizontalAlignment="Right" Margin="0,30,20,0" VerticalAlignment="Center"
+                            BorderBrush="{DynamicResource TextPrimary}">
+                        <Image Source="{DynamicResource BrandMark}" Width="34" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+                <TextBlock Style="{StaticResource StepTitle}" Text="iPhone'dan alın" Margin="0,22,0,0"/>
+                <TextBlock Style="{StaticResource StepBody}"
+                           Text="iPhone'da Paylaş → AirDrop'a dokunun ve bu bilgisayarı seçin. Şimdilik aynı Wi-Fi ağında çalışır; Gelişmiş Kurulum'dan sonra iPhone doğrudan bağlanır."/>
+                <Border Style="{StaticResource Well}" HorizontalAlignment="Center" Margin="0,16,0,0" Padding="12,7">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE946;" FontFamily="{StaticResource IconFont}" FontSize="12" Foreground="{DynamicResource TextSecondary}" VerticalAlignment="Center"/>
+                        <TextBlock Text="Gelişmiş Kurulum'u sonra da yapabilirsiniz: Ayarlar → Wi-Fi Sürücüsü." FontSize="12" Margin="8,0,0,0"
+                                   Foreground="{DynamicResource TextSecondary}"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- ===== 4 · Telefon ===== -->
+            <StackPanel x:Name="Step4" VerticalAlignment="Center" Visibility="Collapsed">
+                <Grid Width="340" Height="190" HorizontalAlignment="Center">
+                    <Border Style="{StaticResource PhoneShape}" Width="78" Height="156" CornerRadius="22" HorizontalAlignment="Center" Margin="0,0,90,0">
+                        <Grid>
+                            <Border Style="{StaticResource Island}" Width="22"/>
+                            <StackPanel VerticalAlignment="Bottom" Margin="0,0,0,22">
+                                <Ellipse Width="34" Height="34" Fill="{DynamicResource Success}"/>
+                            </StackPanel>
+                            <TextBlock Text="&#xE717;" FontFamily="{StaticResource IconFont}" FontSize="15" Foreground="{DynamicResource OnStatus}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,31"/>
+                        </Grid>
+                    </Border>
+                    <!-- notification banner overlapping the phone: the brand's overlap idea -->
+                    <Border Width="190" Height="58" CornerRadius="13" Background="{DynamicResource SurfaceRaised}" BorderBrush="{DynamicResource CardBorder}"
+                            BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="70,30,0,0">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="18" ShadowDepth="5" Direction="270" Opacity="0.14" Color="{DynamicResource ShadowColor}"/>
+                        </Border.Effect>
+                        <Grid Margin="10,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Width="32" Height="32" CornerRadius="9" Background="{DynamicResource AccentGraphic}">
+                                <TextBlock Text="&#xE8BD;" FontFamily="{StaticResource IconFont}" FontSize="14" Foreground="{DynamicResource OnTile}"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                                <Border Style="{StaticResource Line}" Width="64" Background="{DynamicResource TextPrimary}" Opacity="0.85"/>
+                                <Border Style="{StaticResource Line}" Width="110" Margin="0"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                    <Border Width="150" Height="44" CornerRadius="12" Background="{DynamicResource SurfaceRaised}" BorderBrush="{DynamicResource CardBorder}"
+                            BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="110,100,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="10,0" VerticalAlignment="Center">
+                            <TextBlock Text="&#xE8BD;" FontFamily="{StaticResource IconFont}" FontSize="13" Foreground="{DynamicResource TextSecondary}" VerticalAlignment="Center"/>
+                            <Border Style="{StaticResource Line}" Width="80" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+                <TextBlock Style="{StaticResource StepTitle}" Text="Telefonunuz masanızda" Margin="0,22,0,0"/>
+                <TextBlock Style="{StaticResource StepBody}"
+                           Text="Bluetooth ile eşleşen iPhone'un aramaları, mesajları ve bildirimleri bu bilgisayarda görünür; buradan yanıtlarsınız."/>
+                <Button Style="{StaticResource PillButton}" HorizontalAlignment="Center" Margin="0,18,0,0" Click="PairPhone_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE702;" FontFamily="{StaticResource IconFont}" FontSize="13" VerticalAlignment="Center" Margin="0,1,8,0"/>
+                        <TextBlock Text="iPhone'u eşleştir"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <!-- ===== 5 · Cihazlar ===== -->
+            <StackPanel x:Name="Step5" VerticalAlignment="Center" Visibility="Collapsed">
+                <Grid Width="340" Height="190" HorizontalAlignment="Center">
+                    <Border Style="{StaticResource ScreenShape}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="40,22,0,0">
+                        <StackPanel Margin="12,12,12,0">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <Border Width="34" Height="12" CornerRadius="4" Background="{DynamicResource Track}" Margin="0,0,4,0"/>
+                                <Border Width="34" Height="12" CornerRadius="4" Background="{DynamicResource Track}" Margin="0,0,4,0"/>
+                                <Border Width="34" Height="12" CornerRadius="4" Background="{DynamicResource Track}"/>
+                            </StackPanel>
+                            <Border Style="{StaticResource Line}" Width="90"/>
+                            <Border Style="{StaticResource Line}" Width="70"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Style="{StaticResource ScreenShape}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,40,22"
+                            BorderBrush="{DynamicResource TextPrimary}">
+                        <StackPanel Margin="12,12,12,0">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <Border Width="34" Height="12" CornerRadius="4" Background="{DynamicResource Track}" Margin="0,0,4,0"/>
+                                <Border Width="34" Height="12" CornerRadius="4" Background="{DynamicResource AccentGraphic}" Margin="0,0,4,0"/>
+                                <Border Width="34" Height="12" CornerRadius="4" Background="{DynamicResource Track}"/>
+                            </StackPanel>
+                            <Border Style="{StaticResource Line}" Width="100"/>
+                            <Border Style="{StaticResource Line}" Width="60"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+                <TextBlock Style="{StaticResource StepTitle}" Text="Kaldığınız yerden devam" Margin="0,22,0,0"/>
+                <TextBlock Style="{StaticResource StepBody}"
+                           Text="Eşleşen bilgisayarlar birbirinin açık sekmelerini ve uygulamalarını görür. Tarayıcı eklentisi sekmeleri, iPhone Kestirmesi telefonda açık olanı getirir."/>
+            </StackPanel>
+
+            <!-- ===== 6 · Gizlilik ve hazır ===== -->
+            <StackPanel x:Name="Step6" VerticalAlignment="Center" Visibility="Collapsed">
+                <Border Width="64" Height="64" CornerRadius="18" Background="{DynamicResource Inverse}" HorizontalAlignment="Center">
+                    <TextBlock Text="&#xE72E;" FontFamily="{StaticResource IconFont}" FontSize="26" Foreground="{DynamicResource OnInverse}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <TextBlock Style="{StaticResource StepTitle}" Text="Son dokunuşlar" Margin="0,18,0,0"/>
+                <TextBlock Style="{StaticResource StepBody}" Margin="0,8,0,0"
+                           Text="Hiçbir şey sizin onayınız olmadan alınmaz; rehberiniz ve dosyalarınız bu bilgisayarda kalır."/>
+                <Border Style="{StaticResource Section}" Margin="0,20,0,0" MaxWidth="480">
+                    <StackPanel>
+                        <Grid Style="{StaticResource Row}" Margin="16,10">
+                            <TextBlock Text="Görünen ad" FontSize="13" VerticalAlignment="Center"/>
+                            <TextBox x:Name="NameBox" Style="{StaticResource InputBox}" Width="220" HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Border Style="{StaticResource Divider}"/>
+                        <Grid Style="{StaticResource Row}" Margin="16,10">
+                            <TextBlock Text="Beni görebilecekler" FontSize="13" VerticalAlignment="Center"/>
+                            <Border Style="{StaticResource SegmentBar}" HorizontalAlignment="Right">
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="ModeEveryone" Style="{StaticResource Segment}" Content="Herkes (10 dk)" GroupName="mode" IsChecked="True"/>
+                                    <RadioButton x:Name="ModeOff" Style="{StaticResource Segment}" Content="Kapalı" GroupName="mode"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                        <Border Style="{StaticResource Divider}"/>
+                        <Grid Style="{StaticResource Row}">
+                            <TextBlock Text="Windows açılınca başlat" FontSize="13" VerticalAlignment="Center"/>
+                            <CheckBox x:Name="StartupSwitch" Style="{StaticResource Switch}" HorizontalAlignment="Right"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </Grid>
+
+        <!-- footer -->
+        <Grid Grid.Row="2" Margin="32,8,32,26">
+            <Button x:Name="BackButton" Style="{StaticResource SubtlePill}" Content="Geri" HorizontalAlignment="Left" MinWidth="90" Click="Back_Click"/>
+            <StackPanel x:Name="Dots" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button x:Name="NextButton" Style="{StaticResource AccentPill}" Content="İleri" HorizontalAlignment="Right" MinWidth="120" Click="Next_Click"/>
+        </Grid>
+    </Grid>
+</Window>

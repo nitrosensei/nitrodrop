@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using AirDrop.App.Interop;
+using AirDrop.App.Services;
 using AirDrop.App.ViewModels;
 
 namespace AirDrop.App.Views;
@@ -15,13 +16,16 @@ namespace AirDrop.App.Views;
 public partial class MainWindow : Window
 {
     private readonly MainViewModel _vm;
+    private readonly AppSettings? _settings;
     private GlobalHotkey? _hotkey;
 
-    public MainWindow(MainViewModel vm)
+    public MainWindow(MainViewModel vm, AppSettings? settings = null)
     {
         InitializeComponent();
         _vm = vm;
+        _settings = settings;
         DataContext = vm;
+        RestoreSavedBounds(settings);
         SourceInitialized += (_, _) =>
         {
             ApplyBackdrop();
@@ -36,9 +40,7 @@ public partial class MainWindow : Window
 
     private void ApplyBackdrop()
     {
-        bool mica = WindowEffects.Apply(this, App.IsDark);
-        if (mica) Background = Brushes.Transparent;
-        else SetResourceReference(BackgroundProperty, "WindowFallback");
+        WindowEffects.ApplyThemed(this);
     }
 
     private void StartPulse()
@@ -46,7 +48,7 @@ public partial class MainWindow : Window
         var sb = (Storyboard)FindResource("PulseAnimation");
         sb.Begin(Pulse1, true);
         var second = sb.Clone();
-        second.BeginTime = TimeSpan.FromSeconds(1.3);
+        second.BeginTime = TimeSpan.FromSeconds(1.7);
         second.Begin(Pulse2, true);
     }
 
@@ -54,8 +56,44 @@ public partial class MainWindow : Window
     protected override void OnClosing(CancelEventArgs e)
     {
         e.Cancel = true;
+        SaveBounds();
         Hide();
     }
+
+    // ---- window size / position (per user, AppSettings) ----
+
+    private void RestoreSavedBounds(AppSettings? s)
+    {
+        if (s?.WindowWidth is not { } w || s.WindowHeight is not { } h) return;
+        // Clamp to the virtual desktop's work area so a removed monitor never leaves the window off-screen.
+        var wa = SystemParameters.WorkArea;
+        double vl = SystemParameters.VirtualScreenLeft, vt = SystemParameters.VirtualScreenTop;
+        double vw = SystemParameters.VirtualScreenWidth, vh = SystemParameters.VirtualScreenHeight;
+        Width = Math.Clamp(w, MinWidth, Math.Max(MinWidth, wa.Width));
+        Height = Math.Clamp(h, MinHeight, Math.Max(MinHeight, wa.Height));
+        if (s.WindowLeft is { } l && s.WindowTop is { } t &&
+            l + 80 < vl + vw && l + Width - 80 > vl && t >= vt && t + 40 < vt + vh)
+        {
+            WindowStartupLocation = WindowStartupLocation.Manual;
+            Left = l;
+            Top = Math.Min(t, wa.Bottom - 60);
+        }
+    }
+
+    /// <summary>Persists the normal-state bounds (called on hide and on quit).</summary>
+    internal void SaveBounds()
+    {
+        if (_settings is null || !IsLoaded || Left < -10000) return;   // off-screen snapshot windows never save
+        var r = WindowState == WindowState.Normal ? new Rect(Left, Top, ActualWidth, ActualHeight) : RestoreBounds;
+        if (r.IsEmpty || r.Width < 100) return;
+        _settings.WindowLeft = r.Left;
+        _settings.WindowTop = r.Top;
+        _settings.WindowWidth = r.Width;
+        _settings.WindowHeight = r.Height;
+        try { _settings.Save(); } catch (Exception) { /* settings dir unavailable */ }
+    }
+
+    private void ShowOnboarding_Click(object sender, RoutedEventArgs e) => ((App)Application.Current).ShowOnboarding();
 
     // ---- drag & drop ----
 

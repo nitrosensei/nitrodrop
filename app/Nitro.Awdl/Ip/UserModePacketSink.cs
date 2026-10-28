@@ -14,7 +14,7 @@ public sealed class UserModePacketSink : IPacketSink
 {
     private readonly ConcurrentQueue<byte[]> _outbound = new();
     private readonly ManualResetEvent _ready = new(false);
-    private readonly Channel<byte[]> _delivered = Channel.CreateUnbounded<byte[]>();
+    private readonly Channel<byte[]> _delivered = System.Threading.Channels.Channel.CreateUnbounded<byte[]>();
     private readonly object _gate = new();
 
     public WaitHandle ReadWaitHandle => _ready;

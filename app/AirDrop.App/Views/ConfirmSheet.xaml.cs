@@ -24,8 +24,7 @@ public partial class ConfirmSheet : Window
         InitializeComponent();
         SourceInitialized += (_, _) =>
         {
-            if (WindowEffects.Apply(this, App.IsDark, transient: true)) Background = Brushes.Transparent;
-            else SetResourceReference(BackgroundProperty, "WindowFallback");
+            WindowEffects.ApplyThemed(this, transient: true);
         };
         Closed += (_, _) =>
         {
@@ -41,6 +40,7 @@ public partial class ConfirmSheet : Window
     {
         var w = new ConfirmSheet();
         w.Who.Text = p.PeerName;
+        w.Eyebrow.Text = "NITRODROP · EŞLEŞTİRME";
         w.Badge.Text = "";   // link
         w.Message.Text = p.IsInitiator
             ? "ile eşleştiriliyor. Eşleşen bilgisayarlar açık sekmelerini ve uygulamalarını birbirine gösterir."
@@ -59,6 +59,7 @@ public partial class ConfirmSheet : Window
     {
         var w = new ConfirmSheet();
         w.Who.Text = r.FromName;
+        w.Eyebrow.Text = "NITRODROP · UYGULAMA AÇ";
         w.Badge.Text = "";   // open in new window
         w.Message.Text = $"“{r.AppName}” uygulamasını bu bilgisayarda açmak istiyor.";
         w.AcceptButton.Content = "Aç";

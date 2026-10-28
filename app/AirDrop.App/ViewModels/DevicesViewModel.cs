@@ -682,11 +682,14 @@ public sealed class SyncAppViewModel
     public RelayCommand OpenHere { get; }
 }
 
-/// <summary>Stable Apple system colour per key, for letter tiles.</summary>
+/// <summary>
+/// Stable muted tint per key for letter tiles (favicon / app icon fallback). Low-saturation graphite-family mid-tones,
+/// all ≥ 6:1 with the white initial (OnTile), readable on both themes; no rainbow.
+/// </summary>
 internal static class Palette
 {
     private static readonly Brush[] Colors =
-        new[] { "#007AFF", "#34C759", "#FF9500", "#FF2D55", "#AF52DE", "#5856D6", "#FF3B30", "#30B0C7", "#A2845E", "#32ADE6" }
+        new[] { "#5B606A", "#6A5F57", "#56645E", "#5E5A6B", "#6B5A55", "#4F5D6B", "#62605A" }
             .Select(c => { var b = new SolidColorBrush((Color)ColorConverter.ConvertFromString(c)); b.Freeze(); return (Brush)b; })
             .ToArray();
 

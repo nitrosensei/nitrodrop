@@ -13,7 +13,7 @@ public sealed class ProgressArc : FrameworkElement
 
     public static readonly DependencyProperty StrokeProperty = DependencyProperty.Register(
         nameof(Stroke), typeof(Brush), typeof(ProgressArc),
-        new FrameworkPropertyMetadata(Brushes.DodgerBlue, FrameworkPropertyMetadataOptions.AffectsRender));
+        new FrameworkPropertyMetadata(Brushes.Gray, FrameworkPropertyMetadataOptions.AffectsRender));
 
     public static readonly DependencyProperty TrackProperty = DependencyProperty.Register(
         nameof(Track), typeof(Brush), typeof(ProgressArc),

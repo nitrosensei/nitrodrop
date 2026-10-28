@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 
@@ -26,6 +27,16 @@ internal static class WindowEffects
     private static extern int DwmExtendFrameIntoClientArea(IntPtr hwnd, ref Margins m);
 
     public static bool SupportsBackdrop => Environment.OSVersion.Version.Build >= 22621;
+
+    /// <summary>
+    /// Backdrop + brand background: over Mica/Acrylic a mostly opaque <c>WindowTint</c> (warm paper / graphite) so the
+    /// system's cool tint never decides the look; without a backdrop the solid <c>WindowFallback</c>.
+    /// </summary>
+    public static void ApplyThemed(Window w, bool transient = false)
+    {
+        bool backdrop = Apply(w, App.IsDark, transient);
+        w.SetResourceReference(Control.BackgroundProperty, backdrop ? "WindowTint" : "WindowFallback");
+    }
 
     /// <summary>Returns true if the system backdrop was applied (window background must stay transparent).</summary>
     public static bool Apply(Window w, bool dark, bool transient = false)

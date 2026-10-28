@@ -12,12 +12,12 @@ using Nitro.Sync;
 
 namespace AirDrop.App.ViewModels;
 
-public enum MainTab { Nearby, Devices, History, Settings }
+public enum MainTab { Nearby, Devices, Phone, History, Settings }
 
 public sealed class MainViewModel : Observable
 {
-    public const double RadarSize = 440;
-    private const double RingRadius = 150;
+    public const double RadarSize = 480;
+    private const double RingRadius = 166;
     private static readonly TimeSpan EveryoneWindow = TimeSpan.FromMinutes(10);
 
     private readonly IAirDropService _svc;
@@ -93,7 +93,7 @@ public sealed class MainViewModel : Observable
         set
         {
             if (!Set(ref _tab, value)) return;
-            Raise(nameof(IsNearby)); Raise(nameof(IsDevices)); Raise(nameof(IsHistory)); Raise(nameof(IsSettings));
+            Raise(nameof(IsNearby)); Raise(nameof(IsDevices)); Raise(nameof(IsPhone)); Raise(nameof(IsHistory)); Raise(nameof(IsSettings));
             if (value == MainTab.Settings) { Settings.RefreshTrusted(); Devices.RefreshExtensionStatus(); }
         }
     }
@@ -101,6 +101,10 @@ public sealed class MainViewModel : Observable
     public bool IsDevices { get => Tab == MainTab.Devices; set { if (value) Tab = MainTab.Devices; } }
     public bool IsHistory { get => Tab == MainTab.History; set { if (value) Tab = MainTab.History; } }
     public bool IsSettings => Tab == MainTab.Settings;
+    public bool IsPhone { get => Tab == MainTab.Phone; set { if (value) Tab = MainTab.Phone; } }
+
+    /// <summary>"Telefon" tab (iPhone continuity); set by App from ContinuityHost.</summary>
+    public PhoneViewModel? Phone { get; set; }
 
     /// <summary>Files handed over by Explorer ("NitroDrop ile gönder") waiting for a recipient.</summary>
     public IReadOnlyList<string> PendingFiles

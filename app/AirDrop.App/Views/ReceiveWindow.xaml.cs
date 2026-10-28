@@ -63,8 +63,7 @@ public partial class ReceiveWindow : Window
 
         SourceInitialized += (_, _) =>
         {
-            if (WindowEffects.Apply(this, App.IsDark, transient: true)) Background = Brushes.Transparent;
-            else SetResourceReference(BackgroundProperty, "WindowFallback");
+            WindowEffects.ApplyThemed(this, transient: true);
         };
         Closed += (_, _) => _result.TrySetResult(false);
 
@@ -76,6 +75,14 @@ public partial class ReceiveWindow : Window
             if (_left <= 0) Finish(false);
         };
         _timer.Start();
+    }
+
+    /// <summary>Debug snapshot: the sheet without showing or timing out.</summary>
+    internal static ReceiveWindow ForPreview(IncomingRequest req, ContactMatch? contact, ImageSource? photo)
+    {
+        var w = new ReceiveWindow(req, contact, photo);
+        w._timer.Stop();
+        return w;
     }
 
     public static Task<bool> AskAsync(Window? owner, IncomingRequest req, ContactMatch? contact, ImageSource? photo)

@@ -26,6 +26,8 @@ public partial class App : Application
     private MainWindow? _main;
     private MainViewModel? _vm;
     private SetupWizard? _wizard;
+    private ContinuityHost? _phone;
+    private AppSettings? _settings;
 
     public static bool IsDark { get; private set; }
     public static event EventHandler? ThemeChanged;
@@ -42,22 +44,24 @@ public partial class App : Application
         }
         ElevatedHelper.DryRun = e.Args.Contains(ElevatedHelper.DryRunFlag);
 
-        _single = new SingleInstance();
-        if (!_single.IsFirst)
+        // Off-screen snapshots (Debug) run beside a normal instance: no single-instance group, no tray, no network.
+        bool snapshotRun = e.Args.Contains("--snapshot");
+        _single = snapshotRun ? null : new SingleInstance();
+        if (_single is { IsFirst: false })
         {
             SingleInstance.Forward(e.Args.Length > 0 ? e.Args : new[] { "--show" });
             Shutdown();
             return;
         }
-        _single.ArgsReceived += args => Dispatcher.Invoke(() => HandleArgs(args));
+        if (_single is not null) _single.ArgsReceived += args => Dispatcher.Invoke(() => HandleArgs(args));
 
         ApplyTheme();
         SystemEvents.UserPreferenceChanged += (_, a) =>
         {
-            if (a.Category == UserPreferenceCategory.General) Dispatcher.Invoke(ApplyTheme);
+            if (a.Category == UserPreferenceCategory.General) Dispatcher.Invoke(() => { ApplyTheme(); UpdateTrayIcon(); });
         };
 
-        var settings = AppSettings.Load();
+        var settings = _settings = AppSettings.Load();
         var history = HistoryStore.Load();
         // Real stack (LAN until the Wi-Fi driver provides AWDL); --demo / --snapshot use fake peers.
         bool demo = e.Args.Contains("--demo") || e.Args.Contains("--snapshot");
@@ -78,7 +82,12 @@ public partial class App : Application
         }
 
         _vm = new MainViewModel(_svc, _sync, settings, history, contacts, Dispatcher);
-        _main = new MainWindow(_vm);
+        // iPhone continuity ("Telefon" tab): real runtime or demo (docs/ui-integration-continuity.md).
+        _phone = ContinuityHost.Create(demo, (contacts as ContactBookResolver)?.Book, Dispatcher,
+                                       autoplay: e.Args.Contains("--demo"));
+        _vm.Phone = _phone.ViewModel;
+        _main = new MainWindow(_vm, settings);
+        _phone.ShowPhoneTab = () => { if (_vm is not null) _vm.Tab = MainTab.Phone; ShowMain(); };
         _vm.ShowAskSheet = (req, contact, photo) => ReceiveWindow.AskAsync(_main, req, contact, photo);
         _vm.Notify = ShowBalloon;
         _vm.Devices.ShowPairSheet = (prompt, ct) => ConfirmSheet.PairAsync(_main, prompt, ct);
@@ -91,6 +100,7 @@ public partial class App : Application
         if (snap >= 0 && snap + 1 < e.Args.Length)
         {
             await Snapshot.RunAsync(_main, _vm, e.Args[snap + 1]);
+            await ContinuitySnapshots.RenderAsync(e.Args[snap + 1]);
             await _sync.DisposeAsync();
             Shutdown();
             return;
@@ -99,7 +109,9 @@ public partial class App : Application
         CreateTray();
         if (!e.Args.Contains("--background")) _main.Show();
         HandleArgs(e.Args);
+        if (!settings.OnboardingCompleted && !e.Args.Contains("--background")) ShowOnboarding();
         await _vm.StartAsync();
+        await _phone.StartAsync();
     }
 
     private void HandleArgs(string[] args)
@@ -117,6 +129,20 @@ public partial class App : Application
         }
         if (i >= 0 || args.Contains("--show")) ShowMain();
         if (args.Contains(ResumeRegistration.ResumeFlag) || args.Contains("--setup")) ShowSetupWizard(false);
+    }
+
+    private OnboardingWindow? _onboarding;
+
+    /// <summary>"İlk kullanım" intro: once on first launch, again from Ayarlar → Hakkında.</summary>
+    internal void ShowOnboarding()
+    {
+        if (_vm is null || _settings is null || _main is null) return;
+        if (_onboarding is not null) { _onboarding.Activate(); return; }
+        _onboarding = new OnboardingWindow(_vm, _settings);
+        if (_main.IsVisible) _onboarding.Owner = _main;
+        else _onboarding.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+        _onboarding.Closed += (_, _) => _onboarding = null;
+        _onboarding.Show();
     }
 
     private void ShowSetupWizard(bool rollback)
@@ -150,12 +176,41 @@ public partial class App : Application
         _tray = new Forms.NotifyIcon
         {
             Text = "NitroDrop",
-            Icon = System.Drawing.Icon.ExtractAssociatedIcon(Environment.ProcessPath!) ?? System.Drawing.SystemIcons.Application,
             ContextMenuStrip = menu,
-            Visible = true,
         };
+        UpdateTrayIcon();
+        _tray.Visible = true;
         _tray.MouseClick += (_, a) => { if (a.Button == Forms.MouseButtons.Left) ShowMain(); };
         _tray.BalloonTipClicked += (_, _) => _balloonClick?.Invoke();
+    }
+
+    private System.Drawing.Icon? _trayIcon;
+
+    /// <summary>
+    /// Monochrome tray mark that follows the taskbar (not the app) theme: dark drawing on a light taskbar
+    /// (tray-light.ico), white drawing on a dark one (tray-dark.ico). Called again on every theme change.
+    /// </summary>
+    private void UpdateTrayIcon()
+    {
+        if (_tray is null) return;
+        var name = TaskbarUsesLightTheme() ? "tray-light.ico" : "tray-dark.ico";
+        try
+        {
+            var res = GetResourceStream(new Uri($"pack://application:,,,/Assets/{name}"));
+            if (res is null) return;
+            using var s = res.Stream;
+            var icon = new System.Drawing.Icon(s, Forms.SystemInformation.SmallIconSize);
+            _tray.Icon = icon;
+            _trayIcon?.Dispose();
+            _trayIcon = icon;
+        }
+        catch (Exception) { _tray.Icon ??= System.Drawing.SystemIcons.Application; }
+    }
+
+    internal static bool TaskbarUsesLightTheme()
+    {
+        using var k = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+        return k?.GetValue("SystemUsesLightTheme") is int v && v == 1;
     }
 
     private void ShowBalloon(string title, string body, Action? onClick)
@@ -178,7 +233,9 @@ public partial class App : Application
     private async void Quit()
     {
         if (_tray is not null) { _tray.Visible = false; _tray.Dispose(); }
+        _main?.SaveBounds();
         if (_sync is not null) await _sync.DisposeAsync();
+        if (_phone is not null) await _phone.DisposeAsync();
         if (_svc is not null) await _svc.DisposeAsync();
         _single?.Dispose();
         Shutdown();

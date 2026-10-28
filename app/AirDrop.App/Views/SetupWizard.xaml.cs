@@ -34,8 +34,7 @@ public partial class SetupWizard : Window
 
     private void ApplyBackdrop()
     {
-        if (WindowEffects.Apply(this, App.IsDark)) Background = Brushes.Transparent;
-        else SetResourceReference(BackgroundProperty, "WindowFallback");
+        WindowEffects.ApplyThemed(this);
     }
 
     private string? PickSaveFile(string suggested)
@@ -83,8 +82,7 @@ public partial class SetupWizard : Window
         };
         w.SetResourceReference(ForegroundProperty, "TextPrimary");
         w.SetResourceReference(FontFamilyProperty, "UiFont");
-        w.SetResourceReference(BackgroundProperty, "WindowFallback");
-        w.SourceInitialized += (_, _) => WindowEffects.Apply(w, App.IsDark);
+        w.SourceInitialized += (_, _) => WindowEffects.ApplyThemed(w, transient: true);
         ok.Click += (_, _) => w.DialogResult = true;
         return w.ShowDialog() == true;
     }

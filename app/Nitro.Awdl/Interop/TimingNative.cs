@@ -63,6 +63,7 @@ public static class HostClock
 
     private static bool Probe()
     {
+        if (!OperatingSystem.IsWindows()) return false;
         try
         {
             TimingNative.QueryInterruptTimePrecise(out _);

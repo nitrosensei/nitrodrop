@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -26,10 +27,13 @@ internal static class Snapshot
         w.WindowStartupLocation = WindowStartupLocation.Manual;
         w.Left = -20000;
         w.Top = -20000;
+        w.Width = 680;     // default size, whatever the user's saved bounds are
+        w.Height = 760;
         w.Show();
         await vm.StartAsync();
 
         await Task.Delay(6500);                 // demo peers appear
+        await BrandAsync(w, vm, dir);
         Save(w, Path.Combine(dir, "nearby.png"));
         vm.Tab = MainTab.History;
         await Task.Delay(400);
@@ -48,6 +52,117 @@ internal static class Snapshot
         vm.Tab = MainTab.Nearby;
         await SetupWizardAsync(dir);
         if (ElevatedHelper.DryRun) await SetupDryRunAsync(dir);
+    }
+
+    /// <summary>
+    /// Main pages in both themes (nearby-light/dark with the radar and peers, history, settings top, settings-about),
+    /// the receive sheet, the text prompt and a sample context menu + tooltip (popups rendered in a host window).
+    /// </summary>
+    private static async Task BrandAsync(MainWindow w, MainViewModel vm, string dir)
+    {
+        var app = (App)Application.Current;
+        bool wasDark = App.IsDark;
+        foreach (bool dark in new[] { false, true })
+        {
+            string t = dark ? "dark" : "light";
+            app.ApplyTheme(dark);
+            vm.Tab = MainTab.Nearby;
+            await Task.Delay(500);
+            Save(w, Path.Combine(dir, $"nearby-{t}.png"));
+            vm.Tab = MainTab.History;
+            await Task.Delay(300);
+            Save(w, Path.Combine(dir, $"history-{t}.png"));
+            vm.Tab = MainTab.Phone;
+            await Task.Delay(400);
+            Save(w, Path.Combine(dir, $"phone-main-{t}.png"));
+            vm.Tab = MainTab.Settings;
+            await Task.Delay(300);
+            if (FindChild<System.Windows.Controls.ScrollViewer>(w.SettingsPage) is { } sv) sv.ScrollToHome();
+            await Task.Delay(200);
+            Save(w, Path.Combine(dir, $"settings-{t}.png"));
+            await ScrollToAsync(w, w.AboutSection);
+            Save(w, Path.Combine(dir, $"settings-about-{t}.png"));
+
+            var settings = new Services.AppSettings { DeviceName = vm.ComputerName, OnboardingCompleted = true };
+            var ob = new OnboardingWindow(vm, settings)
+            {
+                ShowActivated = false, ShowInTaskbar = false, WindowStartupLocation = WindowStartupLocation.Manual,
+                Left = -20000, Top = -20000,
+            };
+            ob.Show();
+            for (int i = 0; i < 6; i++)
+            {
+                ob.GoTo(i, animate: false);
+                await Task.Delay(250);
+                Save(ob, Path.Combine(dir, $"onboarding-{i + 1}-{t}.png"));
+            }
+            ob.Close();
+
+            var req = new Services.IncomingRequest("Emre'nin iPhone'u", Services.DeviceKind.iPhone, "iPhone16,1",
+                new[] { new Services.IncomingFile("IMG_4821.HEIC", 3_481_000), new Services.IncomingFile("IMG_4822.HEIC", 2_910_000),
+                        new Services.IncomingFile("Sunum.pdf", 1_204_000) },
+                Array.Empty<Uri>(), null);
+            var rw = ReceiveWindow.ForPreview(req, new Services.ContactMatch("Emre Can Temur", null), null);
+            await ShowOffscreenAsync(rw, Path.Combine(dir, $"sheet-receive-{t}.png"));
+
+            // ContextMenu / ToolTip can't live in a window's tree: measure them loose and render directly.
+            var menu = new ContextMenu();
+            foreach (var h in new object[] { "Dosya gönder…", "Panoyu gönder   Ctrl+Alt+A", new Separator(),
+                                             "Fotoğraf ata…", "Yeniden adlandır…", new Separator() })
+                menu.Items.Add(h is string s1 ? new MenuItem { Header = s1 } : h);
+            menu.Items.Add(new MenuItem { Header = "Güvenilir cihaz (sormadan kabul et)", IsChecked = true });
+            var tip = new ToolTip { Content = "Güvenilir cihaz: sormadan kabul edilir" };
+            RenderLoose(new FrameworkElement[] { menu, tip }, Path.Combine(dir, $"menu-{t}.png"));
+        }
+        app.ApplyTheme(wasDark);
+        vm.Tab = MainTab.Nearby;
+    }
+
+    private static void RenderLoose(FrameworkElement[] items, string path)
+    {
+        double y = 0, wmax = 0;
+        var placed = new System.Collections.Generic.List<(FrameworkElement, Rect)>();
+        foreach (var fe in items)
+        {
+            fe.ApplyTemplate();
+            fe.Measure(new Size(400, 600));
+            var r = new Rect(0, y, fe.DesiredSize.Width, fe.DesiredSize.Height);
+            fe.Arrange(r);
+            fe.UpdateLayout();
+            placed.Add((fe, r));
+            y += r.Height;
+            wmax = Math.Max(wmax, r.Width);
+        }
+        const double pad = 16, scale = 1.5;
+        var rtb = new RenderTargetBitmap((int)((wmax + 2 * pad) * scale), (int)((y + 2 * pad) * scale), 96 * scale, 96 * scale, PixelFormats.Pbgra32);
+        var dv = new DrawingVisual();
+        using (var dc = dv.RenderOpen())
+        {
+            dc.DrawRectangle((Brush)Application.Current.Resources["WindowFallback"], null, new Rect(0, 0, wmax + 2 * pad, y + 2 * pad));
+            foreach (var (fe, r) in placed)
+                dc.DrawRectangle(new VisualBrush(fe) { Stretch = Stretch.None, ViewboxUnits = BrushMappingMode.Absolute,
+                    Viewbox = new Rect(0, 0, r.Width, r.Height), AlignmentX = AlignmentX.Left, AlignmentY = AlignmentY.Top },
+                    null, new Rect(pad, pad + r.Y, r.Width, r.Height));
+        }
+        rtb.Render(dv);
+        var enc = new PngBitmapEncoder();
+        enc.Frames.Add(BitmapFrame.Create(rtb));
+        using var fs = File.Create(path);
+        enc.Save(fs);
+    }
+
+    private static async Task ShowOffscreenAsync(Window win, string path)
+    {
+        win.ShowActivated = false;
+        win.ShowInTaskbar = false;
+        win.Topmost = false;
+        win.WindowStartupLocation = WindowStartupLocation.Manual;
+        win.Left = -20000;
+        win.Top = -20000;
+        win.Show();
+        await Task.Delay(350);
+        Save(win, path);
+        win.Close();
     }
 
     /// <summary>

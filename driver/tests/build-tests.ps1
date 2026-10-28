@@ -17,7 +17,7 @@ $env:LIB     = "$msvc\lib\x64;$kits\Lib\$ver\ucrt\x64;$kits\Lib\$ver\um\x64"
 $cl = "$msvc\bin\Hostx64\x64\cl.exe"
 
 $core  = 'iwx_fw.c','iwx_trans.c','iwx_cmd.c','iwx_init.c','iwx_radio.c' | ForEach-Object { (Resolve-Path (Join-Path $here "..\core\$_")).Path }
-$tests = 'main.c','mock_osdep.c','test_fw.c','test_init.c' | ForEach-Object { (Resolve-Path (Join-Path $here $_)).Path }
+$tests = 'main.c','mock_osdep.c','test_fw.c','test_init.c','test_radio.c','test_queues.c' | ForEach-Object { (Resolve-Path (Join-Path $here $_)).Path }
 $exe = Join-Path $out 'iwx_tests.exe'
 
 Push-Location $out

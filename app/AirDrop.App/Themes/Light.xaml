@@ -1,28 +1,113 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<!-- NitroDrop light theme: warm paper canvas, crisp white cards with hairline borders, graphite text.
+     Contrast (WCAG 2.x) against Card #FFFFFF / Canvas #F5F4F1: TextPrimary 16.5 / 15.0, TextSecondary 6.3 / 5.7,
+     TextTertiary 5.2 / 4.7, AccentTextSafe 5.2 / 4.7, DangerText 6.6 / 6.0, SuccessText 5.6 / 5.1, OnAccent on Accent 4.65.
+     Signal orange #F0532A / Accent is never used for text; orange text is AccentTextSafe. -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Color x:Key="AccentColor">#007AFF</Color>
-    <SolidColorBrush x:Key="Accent" Color="#007AFF"/>
-    <SolidColorBrush x:Key="AccentPressed" Color="#0062CC"/>
-    <SolidColorBrush x:Key="WindowFallback" Color="#F2F2F7"/>
-    <SolidColorBrush x:Key="Card" Color="#CCFFFFFF"/>
-    <SolidColorBrush x:Key="CardBorder" Color="#14000000"/>
-    <SolidColorBrush x:Key="TextPrimary" Color="#1C1C1E"/>
-    <SolidColorBrush x:Key="TextSecondary" Color="#8A8A8E"/>
-    <SolidColorBrush x:Key="Ring" Color="#1A007AFF"/>
-    <SolidColorBrush x:Key="Pulse" Color="#33007AFF"/>
-    <SolidColorBrush x:Key="Badge" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="ButtonNeutral" Color="#E5E5EA"/>
-    <SolidColorBrush x:Key="ButtonNeutralHover" Color="#D8D8DE"/>
-    <SolidColorBrush x:Key="Track" Color="#1F000000"/>
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Brand.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- ===== accent (brand/final/app/theme-tokens.md) ===== -->
+    <Color x:Key="AccentColor">#CF4518</Color>
+    <SolidColorBrush x:Key="Accent" Color="#CF4518"/>
+    <SolidColorBrush x:Key="AccentHover" Color="#BC3E12"/>
+    <SolidColorBrush x:Key="AccentPressed" Color="#A8360A"/>
+    <SolidColorBrush x:Key="AccentTextSafe" Color="#C2410C"/>
+    <SolidColorBrush x:Key="OnAccent" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="AccentGraphic" Color="#F0532A"/>
+    <SolidColorBrush x:Key="AccentSubtle" Color="#FCEDE7"/>
+    <SolidColorBrush x:Key="AccentSubtleBorder" Color="#F4CDBE"/>
+    <SolidColorBrush x:Key="FocusRing" Color="#CF4518"/>
+
+    <!-- ===== surfaces ===== -->
+    <SolidColorBrush x:Key="WindowFallback" Color="#F5F4F1"/>
+    <!-- laid over Mica so the warm paper wins over the system's cool tint -->
+    <SolidColorBrush x:Key="WindowTint" Color="#F2F5F4F1"/>
+    <SolidColorBrush x:Key="Card" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="CardBorder" Color="#E4E1DB"/>
+    <SolidColorBrush x:Key="SurfaceRaised" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SurfaceSunken" Color="#F3F2EE"/>
+    <SolidColorBrush x:Key="Separator" Color="#ECE9E4"/>
+    <SolidColorBrush x:Key="BorderStrong" Color="#D6D3CC"/>
+    <SolidColorBrush x:Key="Hover" Color="#F3F1ED"/>
+    <SolidColorBrush x:Key="Pressed" Color="#EAE7E1"/>
+    <SolidColorBrush x:Key="Inverse" Color="#1D1F24"/>
+    <SolidColorBrush x:Key="OnInverse" Color="#EEEFF1"/>
+    <Color x:Key="ShadowColor">#1D1F24</Color>
+
+    <!-- ===== text ===== -->
+    <SolidColorBrush x:Key="TextPrimary" Color="#1D1F24"/>
+    <SolidColorBrush x:Key="TextSecondary" Color="#5B606A"/>
+    <SolidColorBrush x:Key="TextTertiary" Color="#676B73"/>
+    <SolidColorBrush x:Key="TextDisabled" Color="#A3A6AC"/>
+
+    <!-- ===== status ===== -->
+    <SolidColorBrush x:Key="Success" Color="#2FA45B"/>
+    <SolidColorBrush x:Key="SuccessText" Color="#1A7340"/>
+    <SolidColorBrush x:Key="Warning" Color="#E08A12"/>
+    <SolidColorBrush x:Key="WarningText" Color="#9A5806"/>
+    <SolidColorBrush x:Key="WarningSubtle" Color="#FDF3E2"/>
+    <SolidColorBrush x:Key="WarningBorder" Color="#F1D6A6"/>
+    <SolidColorBrush x:Key="Danger" Color="#D92D20"/>
+    <SolidColorBrush x:Key="DangerText" Color="#B42318"/>
+    <SolidColorBrush x:Key="DangerSubtle" Color="#FDECEA"/>
+    <SolidColorBrush x:Key="DangerBorder" Color="#F5C6C0"/>
+    <SolidColorBrush x:Key="OnStatus" Color="#FFFFFF"/>
+
+    <!-- ===== controls ===== -->
+    <SolidColorBrush x:Key="ButtonNeutral" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ButtonNeutralHover" Color="#F3F1ED"/>
+    <SolidColorBrush x:Key="Track" Color="#E6E3DD"/>
+    <SolidColorBrush x:Key="SwitchOn" Color="#1D1F24"/>
+    <SolidColorBrush x:Key="SwitchKnob" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SwitchKnobOn" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SegmentTrack" Color="#EBE9E4"/>
     <SolidColorBrush x:Key="SegmentOn" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="SegmentTrack" Color="#14000000"/>
-    <SolidColorBrush x:Key="Trusted" Color="#34C759"/>
-    <LinearGradientBrush x:Key="Avatar" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#A5ABB8" Offset="0"/>
-        <GradientStop Color="#858994" Offset="1"/>
-    </LinearGradientBrush>
-    <LinearGradientBrush x:Key="SelfAvatar" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#5AC8FA" Offset="0"/>
-        <GradientStop Color="#007AFF" Offset="1"/>
-    </LinearGradientBrush>
+    <SolidColorBrush x:Key="ScrollThumb" Color="#C4C1BA"/>
+    <SolidColorBrush x:Key="TooltipBackground" Color="#1D1F24"/>
+    <SolidColorBrush x:Key="TooltipText" Color="#EEEFF1"/>
+
+    <!-- ===== avatars, radar ===== -->
+    <SolidColorBrush x:Key="Avatar" Color="#ECE9E3"/>
+    <SolidColorBrush x:Key="AvatarBorder" Color="#DEDAD3"/>
+    <SolidColorBrush x:Key="AvatarText" Color="#1D1F24"/>
+    <SolidColorBrush x:Key="SelfAvatar" Color="#1D1F24"/>
+    <SolidColorBrush x:Key="OnSelfAvatar" Color="#EEEFF1"/>
+    <!-- letter tiles (muted mid-tones from Palette) carry white initials; QR needs a white quiet zone -->
+    <SolidColorBrush x:Key="OnTile" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="QrBackground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Badge" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Trusted" Color="#2FA45B"/>
+    <SolidColorBrush x:Key="Ring" Color="#1ACF4518"/>
+    <SolidColorBrush x:Key="Pulse" Color="#66CF4518"/>
+    <SolidColorBrush x:Key="RadarRing" Color="#E2DED7"/>
+    <SolidColorBrush x:Key="RadarRingFaint" Color="#ECE9E3"/>
+    <SolidColorBrush x:Key="RadarCore" Color="#EFEDE8"/>
+
+    <!-- ===== brand mark (light: graphite phone, steel screen, signal-light intersection) ===== -->
+    <SolidColorBrush x:Key="MarkPhone" Color="#1D1F24"/>
+    <SolidColorBrush x:Key="MarkScreen" Color="#9EA3AC"/>
+    <SolidColorBrush x:Key="MarkShare" Color="#F0532A"/>
+    <DrawingImage x:Key="BrandMark">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="#9EA3AC" Geometry="{StaticResource MarkScreenGeometry}"/>
+                <GeometryDrawing Brush="#1D1F24" Geometry="{StaticResource MarkPhoneGeometry}"/>
+                <GeometryDrawing Brush="#F0532A" Geometry="{StaticResource MarkShareGeometry}"/>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+    <DrawingImage x:Key="BrandLockup">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup Transform="{StaticResource LockupMarkTransform}">
+                    <GeometryDrawing Brush="#9EA3AC" Geometry="{StaticResource MarkScreenGeometry}"/>
+                    <GeometryDrawing Brush="#1D1F24" Geometry="{StaticResource MarkPhoneGeometry}"/>
+                    <GeometryDrawing Brush="#F0532A" Geometry="{StaticResource MarkShareGeometry}"/>
+                </DrawingGroup>
+                <GeometryDrawing Brush="#1D1F24" Geometry="{StaticResource WordmarkGeometry}"/>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
 </ResourceDictionary>

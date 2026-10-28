@@ -3,6 +3,7 @@
   <Project Path="AirDrop.Cli/AirDrop.Cli.csproj" />
   <Project Path="AirDrop.Core/AirDrop.Core.csproj" />
   <Project Path="AirDrop.Tests/AirDrop.Tests.csproj" />
+  <Project Path="Nitro.Awdl/Nitro.Awdl.csproj" />
   <Project Path="Nitro.Continuity.Probe/Nitro.Continuity.Probe.csproj" />
   <Project Path="Nitro.Continuity/Nitro.Continuity.csproj" />
   <Project Path="Nitro.Continuity.Windows/Nitro.Continuity.Windows.csproj" />

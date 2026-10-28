@@ -11,6 +11,7 @@
     <AssemblyName>NitroDrop</AssemblyName>
     <RootNamespace>AirDrop.App</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\NitroDrop.ico</ApplicationIcon>
     <Product>NitroDrop</Product>
     <Company>Nitrobyte</Company>
     <!-- DPI comes from app.manifest (WPF); WinForms is only used for the tray icon -->
@@ -20,6 +21,8 @@
   <ItemGroup>
     <ProjectReference Include="..\AirDrop.Core\AirDrop.Core.csproj" />
     <ProjectReference Include="..\Nitro.Sync\Nitro.Sync.csproj" />
+    <!-- iPhone continuity ("Telefon" tab): WinRT transport + pure protocol code. -->
+    <ProjectReference Include="..\Nitro.Continuity.Windows\Nitro.Continuity.Windows.csproj" />
     <!-- Native messaging host (NitroDrop.SyncHost.exe): built first, copied next to NitroDrop.exe below. -->
     <ProjectReference Include="..\Nitro.Sync.Host\Nitro.Sync.Host.csproj" ReferenceOutputAssembly="false" Private="false" />
   </ItemGroup>
@@ -48,6 +51,16 @@
     <None Include="..\..\driver\airdropwifi.inf" Link="driver\airdropwifi.inf" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\driver\out\airdropwifi.sys" Link="driver\airdropwifi.sys" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\driver\out\airdropwifi.sys')" />
     <None Include="..\..\driver\out\airdropwifi.cat" Link="driver\airdropwifi.cat" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\driver\out\airdropwifi.cat')" />
+  </ItemGroup>
+  <!-- Brand assets (brand/final): embedded fonts (static instances of the OFL variable fonts), window/tray icons.
+       Font licences are copied to <output>\licenses (OFL requires them to travel with the fonts). -->
+  <ItemGroup>
+    <Resource Include="Assets\Fonts\*.ttf" />
+    <Resource Include="Assets\NitroDrop.ico" />
+    <Resource Include="Assets\tray-light.ico" />
+    <Resource Include="Assets\tray-dark.ico" />
+    <Resource Include="Assets\NitroDrop-256.png" />
+    <None Include="Assets\Fonts\OFL-*.txt" Link="licenses\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="QRCoder" Version="1.6.0" />

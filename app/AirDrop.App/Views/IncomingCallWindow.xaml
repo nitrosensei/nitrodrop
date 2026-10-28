@@ -1,0 +1,134 @@
+<Window x:Class="AirDrop.App.Views.IncomingCallWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="clr-namespace:AirDrop.App.Views"
+        Title="Gelen arama" Width="360" SizeToContent="Height" ResizeMode="NoResize" Topmost="True"
+        ShowInTaskbar="False" ShowActivated="False" WindowStartupLocation="Manual"
+        FontFamily="{StaticResource UiFont}" Foreground="{DynamicResource TextPrimary}"
+        UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
+
+    <!-- DataContext = CallViewModel. Ringing: macOS-style banner with Reddet / Yanıtla. Active: mini window with timer. -->
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" GlassFrameThickness="-1" ResizeBorderThickness="0" UseAeroCaptionButtons="False"/>
+    </WindowChrome.WindowChrome>
+
+    <Window.Resources>
+        <v:VisibleConverter x:Key="Vis"/>
+        <v:PhotoConverter x:Key="Photo"/>
+
+        <!-- Round action button: Tag = fill brush, Content = glyph -->
+        <Style x:Key="RoundAction" TargetType="Button">
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="{DynamicResource OnStatus}"/>
+            <Setter Property="FontFamily" Value="{StaticResource IconFont}"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Ellipse x:Name="e" Fill="{TemplateBinding Background}"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="e" Property="Opacity" Value="0.88"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="e" Property="Opacity" Value="0.7"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="RoundCaption" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10.5"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,4,0,0"/>
+        </Style>
+    </Window.Resources>
+
+    <Border Padding="14,14,14,12">
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- avatar -->
+                <Grid Width="48" Height="48" VerticalAlignment="Center">
+                    <Ellipse Fill="{DynamicResource Avatar}" Stroke="{DynamicResource AvatarBorder}" StrokeThickness="1"/>
+                    <TextBlock Text="{Binding Initials}" Foreground="{DynamicResource AvatarText}" FontSize="18" FontWeight="SemiBold"
+                               FontFamily="{StaticResource DisplayFont}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text="&#xE77B;" FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource AvatarText}" FontSize="20"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Visibility="{Binding Initials, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
+                    <Ellipse Visibility="{Binding HasPhoto, Converter={StaticResource Vis}}">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding Photo, Converter={StaticResource Photo}}" Stretch="UniformToFill"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <Border Width="20" Height="20" CornerRadius="10" Background="{DynamicResource Success}" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                            Margin="0,0,-2,-2" BorderBrush="{DynamicResource WindowFallback}" BorderThickness="2">
+                        <TextBlock Text="&#xE717;" FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource OnStatus}" FontSize="9"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+
+                <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding DisplayName}" FontSize="15" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding Subtitle}" FontSize="12" Foreground="{DynamicResource TextSecondary}" TextTrimming="CharacterEllipsis"
+                               Visibility="{Binding IsRinging, Converter={StaticResource Vis}}"/>
+                    <TextBlock Text="{Binding RingingCaption}" FontSize="11" Foreground="{DynamicResource TextSecondary}" TextTrimming="CharacterEllipsis"
+                               Visibility="{Binding IsRinging, Converter={StaticResource Vis}}"/>
+                    <TextBlock Text="{Binding DurationText}" FontSize="13" FontWeight="Medium" Foreground="{DynamicResource SuccessText}"
+                               Visibility="{Binding IsRinging, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
+                </StackPanel>
+
+                <!-- ringing: Reddet / Yanıtla -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"
+                            Visibility="{Binding IsRinging, Converter={StaticResource Vis}}">
+                    <StackPanel>
+                        <Button Style="{StaticResource RoundAction}" Background="{DynamicResource Danger}" Content="&#xE778;" Command="{Binding Decline}" ToolTip="Reddet"/>
+                        <TextBlock Text="Reddet" Style="{StaticResource RoundCaption}"/>
+                    </StackPanel>
+                    <StackPanel Margin="12,0,0,0">
+                        <Button Style="{StaticResource RoundAction}" Background="{DynamicResource Success}" Content="&#xE717;" Command="{Binding Answer}" ToolTip="Yanıtla"/>
+                        <TextBlock Text="Yanıtla" Style="{StaticResource RoundCaption}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+            <!-- active call controls -->
+            <StackPanel Visibility="{Binding IsActive, Converter={StaticResource Vis}}" Margin="0,12,0,0">
+                <UniformGrid Rows="1" HorizontalAlignment="Center">
+                    <StackPanel Margin="10,0" Visibility="{Binding CanMute, Converter={StaticResource Vis}}">
+                        <Button x:Name="MuteButton" Style="{StaticResource RoundAction}" Background="{DynamicResource ButtonNeutral}"
+                                Foreground="{DynamicResource TextPrimary}" Content="{Binding MuteGlyph}" Command="{Binding ToggleMute}"/>
+                        <TextBlock Text="{Binding MuteLabel}" Style="{StaticResource RoundCaption}"/>
+                    </StackPanel>
+                    <StackPanel Margin="10,0" Visibility="{Binding CanTransferAudio, Converter={StaticResource Vis}}">
+                        <Button Style="{StaticResource RoundAction}" Background="{DynamicResource ButtonNeutral}"
+                                Foreground="{DynamicResource TextPrimary}" Content="&#xE8EA;" Command="{Binding TransferAudio}"/>
+                        <TextBlock Text="{Binding TransferLabel}" Style="{StaticResource RoundCaption}"/>
+                    </StackPanel>
+                    <StackPanel Margin="10,0">
+                        <Button x:Name="EndButton" Style="{StaticResource RoundAction}" Background="{DynamicResource Danger}" Content="&#xE778;" Click="End_Click"/>
+                        <TextBlock Text="{Binding EndLabel}" Style="{StaticResource RoundCaption}"/>
+                    </StackPanel>
+                </UniformGrid>
+                <TextBlock Text="{Binding AudioNote}" FontSize="11" Foreground="{DynamicResource TextSecondary}" TextWrapping="Wrap"
+                           TextAlignment="Center" Margin="8,10,8,0"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

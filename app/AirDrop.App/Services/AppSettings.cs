@@ -30,6 +30,15 @@ public sealed class AppSettings
     public bool OpenLinksAutomatically { get; set; } = true;
     public bool StartWithWindows { get; set; }
 
+    /// <summary>First-run intro ("İlk kullanım") was finished or skipped.</summary>
+    public bool OnboardingCompleted { get; set; }
+
+    /// <summary>Main window bounds (DIPs), restored and clamped to the work area on start.</summary>
+    public double? WindowLeft { get; set; }
+    public double? WindowTop { get; set; }
+    public double? WindowWidth { get; set; }
+    public double? WindowHeight { get; set; }
+
     /// <summary>Incoming text / links / single images are also put on the Windows clipboard.</summary>
     public bool CopyIncomingToClipboard { get; set; } = true;
 

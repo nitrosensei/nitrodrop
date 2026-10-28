@@ -164,6 +164,41 @@ günlüğe yazılır; ilerleme ayrı `setup.dry-run.json`'da). Debug: `NitroDrop
 tema `setup-*.png` olarak da çizer; `--snapshot <klasör> --setup-dry-run` ayrıca bütün yardımcı eylemlerini dry-run çalıştırıp
 `<klasör>\setup-dry-run.log` yazar.
 
+## Görsel kimlik ve tema sistemi (NitroDrop markası)
+
+Kaynak: `brand/final/` (salt okunur). Uygulamadaki karşılıkları:
+
+- **Tokenlar:** `Themes/Light.xaml` (sıcak kâğıt zemin `#F5F4F1`, beyaz kart, grafit metin, vurgu `#CF4518`) ve
+  `Themes/Dark.xaml` (grafit `#141519`, kart `#1D1F24`, vurgu `#FF6A3D`, vurgunun üstünde koyu metin). Tüm
+  metin/zemin çiftleri WCAG AA. Eski anahtarlar korunur (`Accent`, `Card`, `TextPrimary`, `Ring`, `Pulse`,
+  `Avatar`, `SelfAvatar`…; yeniden adlandırılan yok — `Avatar`/`SelfAvatar` artık düz `SolidColorBrush`).
+  Yeni anahtarlar: `AccentHover/AccentTextSafe/OnAccent/AccentGraphic/AccentSubtle*`, `SurfaceRaised/Sunken`,
+  `Separator`, `BorderStrong`, `Hover/Pressed`, `Inverse/OnInverse`, `TextTertiary/TextDisabled`,
+  `Success*/Warning*/Danger*`, `Switch*`, `ScrollThumb`, `Tooltip*`, `Avatar*`, `Radar*`, `FocusRing`,
+  `WindowTint`, `BrandMark`, `BrandLockup`. Koddan renk yazılmaz; `Foreground="White"` yerine `OnAccent`.
+- **Marka geometrisi:** `Themes/Brand.xaml` (telefon + 16:10 ekran + turuncu kesişim, vektör wordmark — yeniden
+  dizilmez). `Themes/Controls.xaml`: pill butonlar (`AccentPill`, `PillButton`, `SubtlePill`, `Small*`),
+  segment, switch, satır/bölüm, ince scrollbar, tooltip, menü, odak görselleri.
+- **Yazı tipleri:** Schibsted Grotesk (arayüz) ve JetBrains Mono (teknik etiketler), statik kesimler
+  `Assets/Fonts/` içinde gömülü (OFL; lisans metinleri çıktıda `licenses/`).
+- **Simgeler:** pencere/görev çubuğu `Assets/NitroDrop.ico` (ApplicationIcon); tepsi simgesi
+  `tray-light.ico`/`tray-dark.ico`, Windows görev çubuğu temasına (`SystemUsesLightTheme`) göre canlı değişir.
+- **Mica:** `WindowEffects.ApplyThemed` — backdrop varsa yarı saydam `WindowTint`, yoksa opak `WindowFallback`.
+- **Ayarlar → Hakkında:** sürüm, nitrobyte.com.tr ve depo bağlantısı (GitHub adresi yer tutucu), açık kaynak
+  bileşenler (Owly MIT, iwx ISC, QRCoder MIT, yazı tipleri OFL), "Tanıtımı tekrar göster",
+  "by Nitrobyte · Made in Türkiye" (kırmızı `#E30A17` çizgi yalnızca burada).
+- **Pencere:** varsayılan 680×760, en az 600×660, yeniden boyutlanır; konum/boyut `AppSettings.Window*`
+  alanlarında saklanır ve açılışta çalışma alanına sıkıştırılır.
+- **Telefon sekmesi:** "Cihazlar" ile "Geçmiş" arasında, `Views/PhonePanel` (ContinuityHost); Ayarlar →
+  TELEFON bölümünde bildirim/arama/önizleme anahtarları.
+- **İlk kullanım:** `Views/OnboardingWindow` — 6 adım (hoş geldin, gönder, iPhone'dan al, telefon, cihazlar,
+  gizlilik + hazır). Bir kez gösterilir (`AppSettings.OnboardingCompleted`); Atla/Esc, ←/→, nokta göstergesi;
+  animasyon `SystemParameters.ClientAreaAnimation` kapalıysa yapılmaz. Son adım cihaz adını, görünürlüğü ve
+  Windows ile başlatmayı uygular.
+- **Snapshot:** `NitroDrop.exe --snapshot <klasör>` ekranı açmadan (−20000 konumunda) tüm ekranları açık+koyu
+  çıkarır: `nearby-*`, `devices-*`, `phone-main-*`, `history-*`, `settings-*`, `settings-about-*`,
+  `sheet-receive-*`, `menu-*`, `onboarding-1..6-*`, `setup-*`. Çalışan tek örneği atlar.
+
 ## Testler
 
 - bplist: tüm tipler gidiş-dönüş, CPython `plistlib` çıktısını okuma, bizim çıktımızı CPython'a okutma (`.venv` varsa)

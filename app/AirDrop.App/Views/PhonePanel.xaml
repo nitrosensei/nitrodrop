@@ -1,0 +1,753 @@
+<UserControl x:Class="AirDrop.App.Views.PhonePanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:v="clr-namespace:AirDrop.App.Views"
+             xmlns:vm="clr-namespace:AirDrop.App.ViewModels"
+             FontFamily="{StaticResource UiFont}" Foreground="{DynamicResource TextPrimary}"
+             UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
+
+    <!-- "Telefon" tab. DataContext = PhoneViewModel. Hosted by MainWindow (see docs/ui-integration-continuity.md). -->
+    <UserControl.Resources>
+        <v:VisibleConverter x:Key="Vis"/>
+        <v:PhotoConverter x:Key="Photo"/>
+        <v:HexBrushConverter x:Key="Hex"/>
+
+        <Style x:Key="PCard" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource Card}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="14"/>
+        </Style>
+        <Style x:Key="PCaption" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11.5"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        <Style x:Key="PHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11.5"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+            <Setter Property="Margin" Value="14,0,0,6"/>
+        </Style>
+        <Style x:Key="RowButton" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="b" Background="Transparent" CornerRadius="9" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="b" Property="Background" Value="{DynamicResource Track}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Avatar: photo or gradient + initials (or a person glyph for bare numbers). Bind DataContext-relative: Photo, Initials. -->
+        <DataTemplate x:Key="Avatar36">
+            <Grid Width="36" Height="36">
+                <Ellipse Fill="{DynamicResource Avatar}" Stroke="{DynamicResource AvatarBorder}" StrokeThickness="1"/>
+                <TextBlock Text="{Binding Initials}" Foreground="{DynamicResource AvatarText}" FontSize="13" FontWeight="SemiBold"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="&#xE77B;" FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource AvatarText}" FontSize="15"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Visibility="{Binding Initials, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
+            </Grid>
+        </DataTemplate>
+
+        <!-- Small indeterminate spinner -->
+        <Style x:Key="Spinner" TargetType="Control">
+            <Setter Property="Width" Value="18"/>
+            <Setter Property="Height" Value="18"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Grid>
+                            <Ellipse Stroke="{DynamicResource Track}" StrokeThickness="2.2"/>
+                            <Path Stroke="{DynamicResource Accent}" StrokeThickness="2.2" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                  Data="M 9,1.1 A 7.9,7.9 0 0 1 16.9,9" RenderTransformOrigin="0.5,0.5">
+                                <Path.RenderTransform>
+                                    <RotateTransform x:Name="rot"/>
+                                </Path.RenderTransform>
+                                <Path.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Angle" From="0" To="360" Duration="0:0:0.9"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Path.Triggers>
+                            </Path>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- iOS-style "on" toggle used in the pairing illustration (not interactive). The phone mock deliberately uses
+             iOS system colours (it depicts the iPhone Settings screen), not NitroDrop theme tokens. -->
+        <ControlTemplate x:Key="IosOn">
+            <Border Width="38" Height="23" CornerRadius="11.5" Background="#34C759">
+                <Ellipse Width="19" Height="19" Fill="White" HorizontalAlignment="Right" Margin="2,0">
+                    <Ellipse.Effect>
+                        <DropShadowEffect BlurRadius="3" ShadowDepth="1" Opacity="0.25"/>
+                    </Ellipse.Effect>
+                </Ellipse>
+            </Border>
+        </ControlTemplate>
+    </UserControl.Resources>
+
+    <Grid Margin="20,4,20,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- ================= STATUS CARD ================= -->
+        <Border Style="{StaticResource PCard}" Padding="14,12">
+            <StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Width="40" Height="40" VerticalAlignment="Top">
+                        <Border CornerRadius="10" Background="{DynamicResource SelfAvatar}"/>
+                        <TextBlock Text="&#xE8EA;" FontFamily="{StaticResource IconFont}" FontSize="19" Foreground="{DynamicResource OnSelfAvatar}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Ellipse Width="12" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-3,-3"
+                                 Stroke="{DynamicResource Card}" StrokeThickness="2">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Fill" Value="{DynamicResource TextDisabled}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding StatusKind}" Value="ok"><Setter Property="Fill" Value="{DynamicResource Success}"/></DataTrigger>
+                                        <DataTrigger Binding="{Binding StatusKind}" Value="warn"><Setter Property="Fill" Value="{DynamicResource Warning}"/></DataTrigger>
+                                        <DataTrigger Binding="{Binding StatusKind}" Value="error"><Setter Property="Fill" Value="{DynamicResource Danger}"/></DataTrigger>
+                                        <DataTrigger Binding="{Binding StatusKind}" Value="busy"><Setter Property="Fill" Value="{DynamicResource Accent}"/></DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                    </Grid>
+                    <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding StatusTitle}" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                            <Control Style="{StaticResource Spinner}" Width="13" Height="13" Margin="8,1,0,0"
+                                     Visibility="{Binding IsBusy, Converter={StaticResource Vis}}"/>
+                        </StackPanel>
+                        <TextBlock Text="{Binding StatusDetail}" Style="{StaticResource PCaption}" Margin="0,2,0,0"
+                                   Visibility="{Binding HasStatusDetail, Converter={StaticResource Vis}}"/>
+                        <!-- feature chips when connected -->
+                        <WrapPanel Margin="0,6,0,0" Visibility="{Binding IsPaired, Converter={StaticResource Vis}}">
+                            <WrapPanel.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="6"/>
+                                    <Setter Property="Padding" Value="7,2"/>
+                                    <Setter Property="Margin" Value="0,0,6,0"/>
+                                    <Setter Property="Background" Value="{DynamicResource Track}"/>
+                                </Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="11"/>
+                                    <Setter Property="FontWeight" Value="Medium"/>
+                                </Style>
+                            </WrapPanel.Resources>
+                            <Border Visibility="{Binding HasNotificationsFeature, Converter={StaticResource Vis}}"><TextBlock Text="Bildirimler"/></Border>
+                            <Border Visibility="{Binding HasMessagesFeature, Converter={StaticResource Vis}}"><TextBlock Text="Mesajlar"/></Border>
+                            <Border Visibility="{Binding HasCallsFeature, Converter={StaticResource Vis}}"><TextBlock Text="Aramalar"/></Border>
+                            <Border Visibility="{Binding HasMediaFeature, Converter={StaticResource Vis}}"><TextBlock Text="Müzik"/></Border>
+                        </WrapPanel>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Top">
+                        <Button Style="{StaticResource SmallAccentPill}" Content="Bildirim bağlantısını kur" Command="{Binding EstablishLe}"
+                                Visibility="{Binding NeedsLeLink, Converter={StaticResource Vis}}"/>
+                        <Button Style="{StaticResource SmallPill}" Content="Yeniden dene" Command="{Binding Retry}" Margin="6,0,0,0"
+                                Visibility="{Binding IsBlocked, Converter={StaticResource Vis}}"/>
+                        <Button x:Name="MoreButton" Style="{StaticResource IconButton}" Content="&#xE712;" ToolTip="Diğer" Margin="4,0,0,0"
+                                Click="More_Click" Visibility="{Binding IsPaired, Converter={StaticResource Vis}}">
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Kişileri iPhone'dan eşitle" Command="{Binding SyncContacts}"/>
+                                    <MenuItem Header="Bildirim bağlantısını yeniden kur" Command="{Binding EstablishLe}"/>
+                                    <Separator/>
+                                    <MenuItem Header="Bu iPhone'u kullanmayı bırak" Command="{Binding Disconnect}"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <!-- call capability line -->
+                <Border Height="1" Background="{DynamicResource CardBorder}" Margin="0,10,0,8"
+                        Visibility="{Binding IsPaired, Converter={StaticResource Vis}}"/>
+                <Grid Visibility="{Binding IsPaired, Converter={StaticResource Vis}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="&#xE717;" FontFamily="{StaticResource IconFont}" FontSize="13" Margin="0,1,10,0"
+                               Foreground="{DynamicResource TextSecondary}"/>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="{Binding CallCapabilityTitle}" FontSize="12" FontWeight="Medium"/>
+                        <TextBlock Text="{Binding CallCapabilityReason}" Style="{StaticResource PCaption}" Margin="0,1,0,0"/>
+                    </StackPanel>
+                </Grid>
+                <TextBlock Text="{Binding ContactsMessage}" Style="{StaticResource PCaption}" Margin="0,6,0,0"
+                           Visibility="{Binding ContactsMessage, Converter={StaticResource Vis}}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ================= NOW PLAYING + SECTION SWITCH ================= -->
+        <StackPanel Grid.Row="1" Visibility="{Binding NeedsSetup, Converter={StaticResource Vis}, ConverterParameter=invert}">
+            <Border Style="{StaticResource PCard}" Padding="10" Margin="0,10,0,0"
+                    Visibility="{Binding HasNowPlaying, Converter={StaticResource Vis}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Width="40" Height="40" CornerRadius="8" Background="{DynamicResource AppTileFill}">
+                        <TextBlock Text="&#xEC4F;" FontFamily="{StaticResource IconFont}" FontSize="18" Foreground="{DynamicResource OnTile}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" Margin="12,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding NowPlayingTitle}" FontSize="13" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding NowPlayingSubtitle}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <ProgressBar Height="3" Margin="0,6,0,0" Minimum="0" Maximum="1" Value="{Binding NowPlayingProgress, Mode=OneWay}">
+                            <ProgressBar.Template>
+                                <ControlTemplate TargetType="ProgressBar">
+                                    <Grid>
+                                        <Border x:Name="PART_Track" Background="{DynamicResource Track}" CornerRadius="1.5"/>
+                                        <Border x:Name="PART_Indicator" Background="{DynamicResource TextSecondary}" CornerRadius="1.5"
+                                                HorizontalAlignment="Left"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </ProgressBar.Template>
+                        </ProgressBar>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Style="{StaticResource IconButton}" Content="&#xE892;" ToolTip="Önceki" Command="{Binding PreviousTrack}"/>
+                        <Button Style="{StaticResource IconButton}" Content="{Binding PlayPauseGlyph}" FontSize="17" ToolTip="Oynat / Duraklat"
+                                Command="{Binding PlayPause}"/>
+                        <Button Style="{StaticResource IconButton}" Content="&#xE893;" ToolTip="Sonraki" Command="{Binding NextTrack}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border CornerRadius="9" Background="{DynamicResource SegmentTrack}" Padding="2" Margin="0,12,0,10" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton Style="{StaticResource Segment}" GroupName="phoneSections" IsChecked="{Binding IsMessages, Mode=TwoWay}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Mesajlar"/>
+                            <Border CornerRadius="7" Background="{DynamicResource Accent}" Padding="5,0" Margin="6,0,0,0" MinWidth="16"
+                                    Visibility="{Binding UnreadMessages, Converter={StaticResource Vis}}">
+                                <TextBlock Text="{Binding UnreadMessages}" Foreground="{DynamicResource OnAccent}" FontSize="10.5" FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"/>
+                            </Border>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton Style="{StaticResource Segment}" Content="Bildirimler" GroupName="phoneSections"
+                                 IsChecked="{Binding IsNotifications, Mode=TwoWay}"/>
+                    <RadioButton Style="{StaticResource Segment}" GroupName="phoneSections" IsChecked="{Binding IsCalls, Mode=TwoWay}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Aramalar"/>
+                            <Border CornerRadius="7" Background="{DynamicResource Danger}" Padding="5,0" Margin="6,0,0,0" MinWidth="16"
+                                    Visibility="{Binding MissedCalls, Converter={StaticResource Vis}}">
+                                <TextBlock Text="{Binding MissedCalls}" Foreground="{DynamicResource OnStatus}" FontSize="10.5" FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"/>
+                            </Border>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <!-- ================= SETUP (not paired) ================= -->
+        <ScrollViewer x:Name="SetupScroll" Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,12,0,0"
+                      Visibility="{Binding NeedsSetup, Converter={StaticResource Vis}}">
+            <StackPanel>
+                <!-- pairing flow card -->
+                <Border Style="{StaticResource PCard}" Padding="18,16">
+                    <StackPanel>
+                        <TextBlock Text="iPhone'unuzu bağlayın" FontSize="17" FontWeight="SemiBold" FontFamily="{StaticResource DisplayFont}"/>
+                        <TextBlock Style="{StaticResource PCaption}" FontSize="12.5" Margin="0,4,0,12"
+                                   Text="Bildirimler, SMS / iMessage mesajları ve gelen aramalar bu bilgisayarda görünür. Sürücü ya da iPhone uygulaması gerekmez."/>
+
+                        <!-- Guide -->
+                        <StackPanel Visibility="{Binding IsGuideStep, Converter={StaticResource Vis}}">
+                            <ItemsControl ItemsSource="{x:Static vm:PhoneViewModel.GuideSteps}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,10">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="22" Height="22" CornerRadius="11" Background="{DynamicResource Inverse}" VerticalAlignment="Top">
+                                                <TextBlock Text="{Binding Number}" Foreground="{DynamicResource OnInverse}" FontSize="11.5" FontWeight="SemiBold"
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Margin="10,1,0,0">
+                                                <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="Medium"/>
+                                                <TextBlock Text="{Binding Body}" Style="{StaticResource PCaption}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button Style="{StaticResource AccentPill}" Content="iPhone'u bul" HorizontalAlignment="Left" Margin="32,4,0,0"
+                                    Command="{Binding StartPairing}"/>
+                        </StackPanel>
+
+                        <!-- Searching / busy -->
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,4">
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSearchingStep}" Value="True"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+                                        <DataTrigger Binding="{Binding IsBusyStep}" Value="True"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                            <Control Style="{StaticResource Spinner}"/>
+                            <TextBlock Text="{Binding PairingMessage}" FontSize="12.5" Margin="10,0,0,0" VerticalAlignment="Center"
+                                       TextWrapping="Wrap" MaxWidth="400"/>
+                        </StackPanel>
+
+                        <!-- Pick -->
+                        <StackPanel Visibility="{Binding IsPickStep, Converter={StaticResource Vis}}">
+                            <TextBlock Text="Bulunan cihazlar" FontSize="12" Foreground="{DynamicResource TextSecondary}" Margin="0,0,0,6"/>
+                            <ItemsControl ItemsSource="{Binding FoundPhones}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border CornerRadius="10" Background="{DynamicResource Track}" Padding="12,8" Margin="0,0,0,6">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="&#xE8EA;" FontFamily="{StaticResource IconFont}" FontSize="18" VerticalAlignment="Center"/>
+                                                <StackPanel Grid.Column="1" Margin="10,0">
+                                                    <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="Medium"/>
+                                                    <TextBlock Text="{Binding AddressText}" FontSize="11" Foreground="{DynamicResource TextSecondary}"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="2" Style="{StaticResource SmallAccentPill}" Content="Seç"
+                                                        Command="{Binding DataContext.PairDevice, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button Style="{StaticResource LinkButton}" Content="Tekrar ara" Command="{Binding StartPairing}" Margin="2,4,0,0"
+                                    HorizontalAlignment="Left"/>
+                        </StackPanel>
+
+                        <!-- Confirm code -->
+                        <StackPanel Visibility="{Binding IsConfirmStep, Converter={StaticResource Vis}}" HorizontalAlignment="Center" Margin="0,4,0,4">
+                            <TextBlock Text="{Binding PairingMessage}" FontSize="13" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding PairingCode}" FontSize="34" FontWeight="SemiBold" FontFamily="{StaticResource DisplayFont}"
+                                       HorizontalAlignment="Center" Margin="0,8,0,4"/>
+                            <TextBlock Text="{Binding PairingDeviceName}" Style="{StaticResource PCaption}" HorizontalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,14,0,0">
+                                <Button Style="{StaticResource PillButton}" Content="Farklı" Command="{Binding RejectCode}"/>
+                                <Button Style="{StaticResource AccentPill}" Content="Kodlar aynı" Margin="10,0,0,0" Command="{Binding ConfirmCode}"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Enter PIN -->
+                        <StackPanel Visibility="{Binding IsPinStep, Converter={StaticResource Vis}}" Margin="0,4,0,4">
+                            <TextBlock Text="{Binding PairingMessage}" FontSize="13"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                <Border CornerRadius="8" Background="{DynamicResource Track}" Padding="10,6" Width="140">
+                                    <TextBox Text="{Binding PinInput, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FlatText}"
+                                             HorizontalContentAlignment="Left" FontSize="16" MaxLength="16"/>
+                                </Border>
+                                <Button Style="{StaticResource AccentPill}" Content="Gönder" Margin="10,0,0,0" Command="{Binding SubmitPin}"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Error -->
+                        <StackPanel Visibility="{Binding IsErrorStep, Converter={StaticResource Vis}}" Margin="0,4,0,4">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE7BA;" FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource Warning}" FontSize="14" Margin="0,1,8,0"/>
+                                <TextBlock Text="{Binding PairingMessage}" FontSize="12.5" TextWrapping="Wrap" MaxWidth="420"/>
+                            </StackPanel>
+                            <Button Style="{StaticResource SmallAccentPill}" Content="Tekrar dene" HorizontalAlignment="Left" Margin="22,10,0,0"
+                                    Command="{Binding StartPairing}"/>
+                        </StackPanel>
+
+                        <Button Style="{StaticResource LinkButton}" Content="Vazgeç" HorizontalAlignment="Right" Margin="0,6,0,0"
+                                Command="{Binding CancelPairing}"
+                                Visibility="{Binding IsGuideStep, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- iOS settings illustration: the three toggles -->
+                <TextBlock Text="İPHONE'DA AÇILACAK ÜÇ ANAHTAR" Style="{StaticResource SectionTitle}" Margin="4,20,0,8"/>
+                <Border Style="{StaticResource PCard}" Padding="0" ClipToBounds="True">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="240"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- phone mock -->
+                        <Border Margin="16,16,8,16" CornerRadius="22" BorderThickness="5" BorderBrush="#1C1C1E" Background="#F2F2F7">
+                            <StackPanel Margin="8,8,8,12">
+                                <Border Width="54" Height="14" CornerRadius="7" Background="#1C1C1E" HorizontalAlignment="Center"/>
+                                <Grid Margin="2,10,2,8">
+                                    <TextBlock Text="‹ Bluetooth" FontFamily="{StaticResource UiFont}" FontSize="10" Foreground="#007AFF"/>
+                                </Grid>
+                                <TextBlock x:Name="PcNameText" Text="Bu bilgisayar" FontSize="15" FontWeight="Bold" Foreground="#1C1C1E" Margin="2,0,0,8"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <Border CornerRadius="9" Background="White">
+                                    <ItemsControl ItemsSource="{x:Static vm:PhoneViewModel.IosToggles}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="8,6">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding Name}" FontSize="9.5" Foreground="#1C1C1E" TextWrapping="Wrap"
+                                                               VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                                    <Control Grid.Column="1" Template="{StaticResource IosOn}" RenderTransformOrigin="1,0.5">
+                                                        <Control.LayoutTransform>
+                                                            <ScaleTransform ScaleX="0.72" ScaleY="0.72"/>
+                                                        </Control.LayoutTransform>
+                                                    </Control>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                                <TextBlock Text="Ayarlar → Bluetooth → bu bilgisayarın yanındaki ⓘ" FontSize="8.5" Foreground="#8A8A8E"
+                                           TextWrapping="Wrap" Margin="4,8,0,0"/>
+                            </StackPanel>
+                        </Border>
+                        <!-- explanations -->
+                        <ItemsControl Grid.Column="1" ItemsSource="{x:Static vm:PhoneViewModel.IosToggles}" Margin="8,18,16,12">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="28" Height="28" CornerRadius="7" Background="{DynamicResource Track}" VerticalAlignment="Top">
+                                            <TextBlock Text="{Binding Glyph}" FontFamily="{StaticResource IconFont}" FontSize="14"
+                                                       Foreground="{DynamicResource Accent}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                            <TextBlock Text="{Binding Name}" FontSize="12.5" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding Explains}" Style="{StaticResource PCaption}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </Border>
+                <TextBlock Style="{StaticResource PCaption}" Margin="14,10,14,0"
+                           Text="Phone Link (Telefon Bağlantısı) bu iPhone'a bağlıysa önce oradan kaldırın: bir iPhone aynı anda tek bir bilgisayar uygulamasına bildirim ve mesaj verir."/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- ================= CONTENT (paired) ================= -->
+        <Grid Grid.Row="2" Visibility="{Binding NeedsSetup, Converter={StaticResource Vis}, ConverterParameter=invert}">
+
+            <!-- ===== MESSAGES ===== -->
+            <Border Style="{StaticResource PCard}" Visibility="{Binding IsMessages, Converter={StaticResource Vis}}" ClipToBounds="True">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="188"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <ListBox ItemsSource="{Binding Conversations}" SelectedItem="{Binding SelectedConversation, Mode=TwoWay}"
+                             Background="Transparent" BorderThickness="0" Padding="6" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border x:Name="b" CornerRadius="9" Padding="8,7" Background="Transparent" Margin="0,0,0,2">
+                                                <ContentPresenter/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="b" Property="Background" Value="{DynamicResource Track}"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="b" Property="Background" Value="{DynamicResource Accent}"/>
+                                                    <Setter Property="Foreground" Value="{DynamicResource OnAccent}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <ContentPresenter ContentTemplate="{StaticResource Avatar36}" Content="{Binding}"/>
+                                        <Ellipse Width="36" Height="36" Visibility="{Binding Photo, Converter={StaticResource Vis}}">
+                                            <Ellipse.Fill>
+                                                <ImageBrush ImageSource="{Binding Photo, Converter={StaticResource Photo}}" Stretch="UniformToFill"/>
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                        <Ellipse Width="9" Height="9" Fill="{DynamicResource Accent}" Stroke="{DynamicResource Card}" StrokeThickness="1.5"
+                                                 HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-2,0,0,0"
+                                                 Visibility="{Binding HasUnread, Converter={StaticResource Vis}}"/>
+                                    </Grid>
+                                    <StackPanel Grid.Column="1" Margin="9,0,0,0">
+                                        <Grid>
+                                            <TextBlock Text="{Binding DisplayName}" FontSize="12.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"
+                                                       Margin="0,0,40,0"/>
+                                            <TextBlock Text="{Binding LastTimeText}" FontSize="10.5" Opacity="0.65" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding LastText}" FontSize="11.5" Opacity="0.7" TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBlock Text="Henüz mesaj yok.&#x0a;iPhone bağlıyken gelen SMS ve iMessage'lar burada görünür."
+                               Style="{StaticResource PCaption}" TextAlignment="Center" Margin="14,40,14,0"
+                               Visibility="{Binding HasConversations, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
+
+                    <Border Grid.Column="1" Background="{DynamicResource CardBorder}"/>
+
+                    <!-- conversation -->
+                    <Grid Grid.Column="2" Visibility="{Binding HasSelectedConversation, Converter={StaticResource Vis}}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Margin="0,12,0,8" HorizontalAlignment="Center" DataContext="{Binding SelectedConversation}">
+                            <Grid HorizontalAlignment="Center">
+                                <ContentPresenter ContentTemplate="{StaticResource Avatar36}" Content="{Binding}"/>
+                                <Ellipse Width="36" Height="36" Visibility="{Binding Photo, Converter={StaticResource Vis}}">
+                                    <Ellipse.Fill>
+                                        <ImageBrush ImageSource="{Binding Photo, Converter={StaticResource Photo}}" Stretch="UniformToFill"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                            </Grid>
+                            <TextBlock Text="{Binding DisplayName}" FontSize="12" FontWeight="Medium" HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <Border Grid.Row="0" Height="1" VerticalAlignment="Bottom" Background="{DynamicResource CardBorder}"/>
+                        <ScrollViewer x:Name="BubbleScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="12,8">
+                            <ItemsControl ItemsSource="{Binding SelectedConversation.Messages}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,2">
+                                            <Border x:Name="bubble" CornerRadius="16" Padding="11,7" MaxWidth="230" HorizontalAlignment="Left"
+                                                    Background="{DynamicResource ButtonNeutral}">
+                                                <TextBlock x:Name="body" Text="{Binding Body}" FontSize="12.5" TextWrapping="Wrap"/>
+                                            </Border>
+                                            <TextBlock x:Name="meta" Text="{Binding TimeText}" FontSize="10" Foreground="{DynamicResource TextSecondary}"
+                                                       HorizontalAlignment="Left" Margin="6,1,6,2"/>
+                                        </StackPanel>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Outgoing}" Value="True">
+                                                <Setter TargetName="bubble" Property="HorizontalAlignment" Value="Right"/>
+                                                <Setter TargetName="bubble" Property="Background" Value="{DynamicResource Accent}"/>
+                                                <Setter TargetName="body" Property="Foreground" Value="{DynamicResource OnAccent}"/>
+                                                <Setter TargetName="meta" Property="HorizontalAlignment" Value="Right"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding StatusText, Converter={StaticResource Vis}}" Value="Visible">
+                                                <Setter TargetName="meta" Property="Text" Value="{Binding StatusText}"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Failed}" Value="True">
+                                                <Setter TargetName="meta" Property="Foreground" Value="{DynamicResource DangerText}"/>
+                                                <Setter TargetName="bubble" Property="Opacity" Value="0.6"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <!-- reply -->
+                        <Grid Grid.Row="2" Margin="10,6,10,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Border CornerRadius="16" BorderBrush="{DynamicResource CardBorder}" BorderThickness="1" Padding="12,6"
+                                    Background="{DynamicResource Badge}">
+                                <Grid>
+                                    <TextBox x:Name="ReplyBox" Text="{Binding ReplyText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FlatText}"
+                                             HorizontalContentAlignment="Left" FontSize="12.5" AcceptsReturn="False" KeyDown="Reply_KeyDown"
+                                             IsEnabled="{Binding SelectedConversation.CanReply}"/>
+                                    <TextBlock Text="Mesaj" FontSize="12.5" Foreground="{DynamicResource TextSecondary}" IsHitTestVisible="False"
+                                               Margin="2,0,0,0" Visibility="{Binding ReplyText, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
+                                </Grid>
+                            </Border>
+                            <Button Grid.Column="1" Width="30" Height="30" Margin="6,0,0,0" Cursor="Hand" Command="{Binding SendReply}"
+                                    ToolTip="Gönder (iPhone üzerinden)">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Grid>
+                                            <Ellipse x:Name="e" Fill="{DynamicResource Accent}"/>
+                                            <TextBlock Text="&#xE74A;" FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource OnAccent}" FontSize="13"
+                                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsEnabled" Value="False">
+                                                <Setter TargetName="e" Property="Opacity" Value="0.35"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    <TextBlock Grid.Column="2" Text="Bir konuşma seçin" Style="{StaticResource PCaption}" FontSize="12.5"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Visibility="{Binding HasSelectedConversation, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
+                </Grid>
+            </Border>
+
+            <!-- ===== NOTIFICATIONS ===== -->
+            <Grid Visibility="{Binding IsNotifications, Converter={StaticResource Vis}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Margin="4,0,4,8">
+                    <TextBlock Text="iPhone bildirimleri" FontSize="12" Foreground="{DynamicResource TextSecondary}"/>
+                    <Button Style="{StaticResource LinkButton}" Content="Tümünü temizle" HorizontalAlignment="Right" Command="{Binding ClearNotifications}"
+                            Visibility="{Binding HasNotifications, Converter={StaticResource Vis}}"/>
+                </Grid>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Notifications}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource PCard}" Padding="12,10" Margin="0,0,0,8">
+                                    <StackPanel>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="20" Height="20" CornerRadius="5" Background="{Binding AppColor, Converter={StaticResource Hex}}">
+                                                <TextBlock Text="{Binding AppGlyph}" FontFamily="{StaticResource IconFont}" FontSize="11" Foreground="{DynamicResource OnTile}"
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <TextBlock Grid.Column="1" Text="{Binding AppName}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"
+                                                       Margin="8,0,0,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Column="2" Text="{Binding TimeText}" FontSize="11" Foreground="{DynamicResource TextSecondary}"
+                                                       VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold" Margin="0,7,0,0" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding Subtitle}" FontSize="12" FontWeight="Medium" TextTrimming="CharacterEllipsis"
+                                                   Visibility="{Binding HasSubtitle, Converter={StaticResource Vis}}"/>
+                                        <TextBlock Text="{Binding Message}" FontSize="12.5" TextWrapping="Wrap" MaxHeight="54" TextTrimming="CharacterEllipsis"
+                                                   Margin="0,1,0,0"/>
+                                        <WrapPanel Margin="0,8,0,0">
+                                            <Button Style="{StaticResource SmallPill}" Content="{Binding ContinueLabel}" Margin="0,0,6,0"
+                                                    Command="{Binding DataContext.ContinueOnPc, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" Visibility="{Binding CanContinue, Converter={StaticResource Vis}}"/>
+                                            <Button Style="{StaticResource SmallPill}" Content="{Binding PositiveLabel}" Margin="0,0,6,0"
+                                                    Command="{Binding DataContext.NotificationPositive, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" Visibility="{Binding HasPositive, Converter={StaticResource Vis}}"/>
+                                            <Button Style="{StaticResource SmallPill}" Content="{Binding NegativeLabel}" Margin="0,0,6,0"
+                                                    Command="{Binding DataContext.NotificationNegative, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}" Visibility="{Binding HasNegative, Converter={StaticResource Vis}}"/>
+                                        </WrapPanel>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <TextBlock Grid.Row="1" Text="Bildirim yok" Style="{StaticResource PCaption}" FontSize="12.5" HorizontalAlignment="Center"
+                           Margin="0,60,0,0" Visibility="{Binding HasNotifications, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
+            </Grid>
+
+            <!-- ===== CALLS ===== -->
+            <Grid Visibility="{Binding IsCalls, Converter={StaticResource Vis}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Style="{StaticResource PCard}" Padding="14,10" Margin="0,0,0,10"
+                        Visibility="{Binding HasCallCapabilityFix, Converter={StaticResource Vis}}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="&#xE946;" FontFamily="{StaticResource IconFont}" FontSize="14" Foreground="{DynamicResource Accent}"
+                                   Margin="0,1,10,0"/>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Arama sesini bilgisayara almak için" FontSize="12.5" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding CallCapabilityFix}" Style="{StaticResource PCaption}" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="1" Style="{StaticResource PCard}" Padding="6">
+                    <Grid>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding RecentCalls}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="8,7">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <ContentPresenter ContentTemplate="{StaticResource Avatar36}" Content="{Binding}"/>
+                                            <StackPanel Grid.Column="1" Margin="10,0" VerticalAlignment="Center">
+                                                <TextBlock x:Name="name" Text="{Binding DisplayName}" FontSize="13" FontWeight="SemiBold"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Glyph}" FontFamily="{StaticResource IconFont}" FontSize="10"
+                                                               Foreground="{DynamicResource TextSecondary}" Margin="0,2,5,0"/>
+                                                    <TextBlock Text="{Binding OutcomeText}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="2" Text="{Binding TimeText}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"
+                                                       VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding IsMissed}" Value="True">
+                                                <Setter TargetName="name" Property="Foreground" Value="{DynamicResource DangerText}"/>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <TextBlock Text="Son arama yok" Style="{StaticResource PCaption}" FontSize="12.5" HorizontalAlignment="Center"
+                                   Margin="0,50,0,0" Visibility="{Binding HasRecentCalls, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>
