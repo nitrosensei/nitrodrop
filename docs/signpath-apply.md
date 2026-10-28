@@ -29,7 +29,7 @@ Kaynaklar: şartlar https://signpath.org/terms · başvuru https://signpath.org/
 ## 1. GitHub reposunu aç (herkese açık)
 
 1. GitHub'da **iki adımlı doğrulamayı (MFA) aç** (şart: tüm ekip üyeleri MFA kullanmalı).
-2. Organizasyon/repo: depo adresi: **`https://github.com/z3x0fly/nitrodrop`** geçiyor
+2. Organizasyon/repo: depo adresi: **`https://github.com/nitrosensei/nitrodrop`** geçiyor
    (`SettingsViewModel.RepoUrl`, `CODE_SIGNING_POLICY.md`). Bu adla bir `nitrobyte` organizasyonu açıp `nitrodrop`
    reposunu oluştur. Başka ad seçersen bana söyle, bu iki yeri değiştireyim.
 3. `CODE_SIGNING_POLICY.md` içinde kullanıcı adı z3x0fly olarak dolduruldu.
@@ -37,7 +37,7 @@ Kaynaklar: şartlar https://signpath.org/terms · başvuru https://signpath.org/
 
    ```powershell
    cd "C:\Users\Emre Can Temur\airdrop-win"
-   git remote add origin https://github.com/z3x0fly/nitrodrop.git
+   git remote add origin https://github.com/nitrosensei/nitrodrop.git
    git push -u origin main
    ```
 
@@ -73,8 +73,8 @@ Kaynaklar: şartlar https://signpath.org/terms · başvuru https://signpath.org/
 Önerilen cevaplar (İngilizce):
 
 - **Project name:** NitroDrop
-- **Repository URL:** https://github.com/z3x0fly/nitrodrop
-- **Homepage / download page:** https://github.com/z3x0fly/nitrodrop/releases (varsa nitrobyte.com.tr/nitrodrop)
+- **Repository URL:** https://github.com/nitrosensei/nitrodrop
+- **Homepage / download page:** https://github.com/nitrosensei/nitrodrop/releases (varsa nitrobyte.com.tr/nitrodrop)
 - **License:** MIT (all own code); third-party components: MIT/ISC/BSD-3-Clause/OFL-1.1 — see THIRD-PARTY-NOTICES.md.
 - **Description:** "NitroDrop is a free, open-source Windows app that sends and receives files with iPhones, iPads and
   Macs using the AirDrop protocol (interoperability, no Apple code), plus PC-to-PC tab/app sync and iPhone

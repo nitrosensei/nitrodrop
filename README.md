@@ -8,7 +8,7 @@
 <p align="center">
   <b>Free, open-source file sharing between iPhone / iPad / Mac and Windows PCs.</b><br>
   By <a href="https://nitrobyte.com.tr">Nitrobyte</a> · Made in Türkiye · MIT licensed<br>
-  <a href="https://github.com/z3x0fly/nitrodrop/releases">Download</a> · <a href="#-türkçe">Türkçe</a>
+  <a href="https://github.com/nitrosensei/nitrodrop/releases">Download</a> · <a href="#-türkçe">Türkçe</a>
 </p>
 
 <p align="center">
@@ -86,7 +86,7 @@ Secure Boot off and test-signing on; the in-app *Advanced Setup* wizard explains
 everything. The driver is **not** part of the signed app package. Everything else works without it.
 
 ## Download
-See [Releases](https://github.com/z3x0fly/nitrodrop/releases):
+See [Releases](https://github.com/nitrosensei/nitrodrop/releases):
 - `NitroDrop-<version>-x64.msix` — installer (recommended)
 - `NitroDrop-<version>-win-x64-portable.zip` — portable
 - `NitroDrop-driver-<version>...zip` — optional Wi-Fi driver, unsigned (test-signing only)
@@ -141,5 +141,5 @@ kartlarına özel, **isteğe bağlı ve ayrı** bir sürücü var. Microsoft imz
 kapalıyken çalışır; uygulama içindeki *Gelişmiş Kurulum* sihirbazı bedelini açıkça anlatır ve her şeyi geri alabilir.
 Sürücü dışındaki tüm özellikler sürücüsüz çalışır.
 
-İndirme: [Sürümler](https://github.com/z3x0fly/nitrodrop/releases) · Gizlilik: [PRIVACY.md](PRIVACY.md) ·
+İndirme: [Sürümler](https://github.com/nitrosensei/nitrodrop/releases) · Gizlilik: [PRIVACY.md](PRIVACY.md) ·
 İmzalama: [CODE_SIGNING_POLICY.md](CODE_SIGNING_POLICY.md) · Lisans: MIT

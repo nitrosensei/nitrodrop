@@ -3,7 +3,7 @@
 Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org).
 
 This policy applies to the NitroDrop releases published on this repository's
-[Releases](https://github.com/z3x0fly/nitrodrop/releases) page.
+[Releases](https://github.com/nitrosensei/nitrodrop/releases) page.
 
 ## Team roles
 

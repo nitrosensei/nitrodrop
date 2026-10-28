@@ -79,7 +79,7 @@ public sealed class DemoSyncSource : ISyncSource
             Tabs = new[]
             {
                 new BrowserTab { Browser = BrowserKind.Chrome, WindowId = 1, TabId = 11, Active = true, LastAccessed = Ago(TimeSpan.FromMinutes(1)),
-                    Title = "z3x0fly/nitrodrop: NitroDrop", Url = "https://github.com/z3x0fly/nitrodrop" },
+                    Title = "nitrosensei/nitrodrop: NitroDrop", Url = "https://github.com/nitrosensei/nitrodrop" },
                 new BrowserTab { Browser = BrowserKind.Chrome, WindowId = 1, TabId = 12, LastAccessed = Ago(TimeSpan.FromMinutes(4)),
                     Title = "lofi hip hop radio – beats to relax/study to", Url = "https://www.youtube.com/watch?v=jfKfPfyJRdk" },
                 new BrowserTab { Browser = BrowserKind.Chrome, WindowId = 1, TabId = 13, LastAccessed = Ago(TimeSpan.FromMinutes(9)),
