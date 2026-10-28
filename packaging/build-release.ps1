@@ -144,6 +144,13 @@ $common = @('-c', 'Release', '--nologo', '-v', 'q', "-p:Version=$Version", '-p:S
 
 Step 'Nitro.Sync.Host framework-dependent build (paths AirDrop.App.csproj copies from)'
 Invoke-Checked 'dotnet build Nitro.Sync.Host' { dotnet build (Join-Path $app 'Nitro.Sync.Host\Nitro.Sync.Host.csproj') @common }
+# AirDrop.App.csproj also copies NitroDrop.Radio.* from Nitro.Radio.Host\bin\Release; build it first so a clean
+# machine (CI) has those files.
+$radioProj = Join-Path $app 'Nitro.Radio.Host\Nitro.Radio.Host.csproj'
+if (Test-Path $radioProj) {
+    Step 'Nitro.Radio.Host framework-dependent build (paths AirDrop.App.csproj copies from)'
+    Invoke-Checked 'dotnet build Nitro.Radio.Host' { dotnet build $radioProj @common }
+}
 
 if (Test-Path $stage) { Remove-Item -Recurse -Force $stage }
 Step "dotnet publish NitroDrop ($rid, self-contained, untrimmed) -> $stage"
