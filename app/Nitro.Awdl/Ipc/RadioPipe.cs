@@ -24,7 +24,7 @@ public enum RadioFailureKind
     DriverMissing,
     /// <summary>The device refused to open (another process holds it, or not elevated).</summary>
     AccessDenied,
-    /// <summary>wintun.dll is not next to NitroDrop.Radio.exe.</summary>
+    /// <summary>No verified wintun.dll (not downloaded yet, or it failed the SHA-256 / signature check).</summary>
     WintunMissing,
     /// <summary>The hardware radio switch / airplane mode is off.</summary>
     RfKill,

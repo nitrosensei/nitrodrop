@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
 using AirDrop.App.Localization;
@@ -26,6 +27,8 @@ public partial class App : Application
     private IAirDropService? _svc;
     private ISyncSource? _sync;
     private MainWindow? _main;
+    /// <summary>Only for the user-approved Wintun download (wintun.net).</summary>
+    private static readonly System.Net.Http.HttpClient WintunHttp = new() { Timeout = TimeSpan.FromMinutes(2) };
     private MainViewModel? _vm;
     private SetupWizard? _wizard;
     private ContinuityHost? _phone;
@@ -98,6 +101,14 @@ public partial class App : Application
                         && string.Equals(d.Service, DriverPackage.ServiceName, StringComparison.OrdinalIgnoreCase),
                     Enabled = settings.DirectIphoneConnection,
                     CreateBle = () => new Nitro.Awdl.Ble.BleAirDropAdvertiser(),
+                    // wintun.dll is not shipped (non-OSI licence): ask, then download + verify once (Nitro.Awdl.Ip.WintunInstall).
+                    Wintun = new WintunProvisioning
+                    {
+                        IsInstalled = () => Nitro.Awdl.Ip.WintunInstall.IsInstalled(),
+                        Confirm = ct => Dispatcher.InvokeAsync(() =>
+                            Views.ConfirmSheet.WintunDownloadAsync(_main, Nitro.Awdl.Ip.WintunInstall.Directory, ct)).Task.Unwrap(),
+                        Install = ct => Nitro.Awdl.Ip.WintunInstall.InstallAsync(WintunHttp, ct: ct),
+                    },
                 },
             });
             // Nitro.Sync: tabs/apps between paired NitroDrop PCs, browser extension bridge, iOS Shortcut receiver.

@@ -31,7 +31,7 @@ public sealed class ElevatedRadioHostLauncher : IRadioHostLauncher
             UseShellExecute = true,
             Verb = "runas",
             WindowStyle = ProcessWindowStyle.Hidden,
-            Arguments = $"--user-sid {sid} --parent-pid {Environment.ProcessId}",
+            Arguments = $"--user-sid {sid} --parent-pid {Environment.ProcessId} --wintun-dir \"{Nitro.Awdl.Ip.WintunInstall.Directory}\"",
         };
         Process? proc;
         try { proc = Process.Start(psi); }

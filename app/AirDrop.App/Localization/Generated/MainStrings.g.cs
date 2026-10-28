@@ -269,7 +269,7 @@ internal static class MainStrings
     /// <summary>Wi-Fi kartına erişilemedi (başka bir uygulama kullanıyor olabilir)</summary>
     public static string Failure_AccessDenied => S("Failure_AccessDenied");
 
-    /// <summary>wintun.dll eksik</summary>
+    /// <summary>Wi-Fi bileşeni (wintun.dll) yok ya da doğrulanamadı</summary>
     public static string Failure_WintunMissing => S("Failure_WintunMissing");
 
     /// <summary>Wi-Fi kapalı (uçak modu ya da donanım anahtarı)</summary>
@@ -325,4 +325,28 @@ internal static class MainStrings
 
     /// <summary>{0} kapandı (kod {1})</summary>
     public static string Launcher_Exited(object? p0, object? p1) => Loc.Format(S("Launcher_Exited"), p0, p1);
+
+    /// <summary>Wi-Fi bileşeni indirilecek (Wintun, WireGuard LLC) · onayınız bekleniyor</summary>
+    public static string Status_WintunConsent => S("Status_WintunConsent");
+
+    /// <summary>Wi-Fi bileşeni indirilmedi · iPhone bağlantısı kapalı, yerel ağ modu</summary>
+    public static string Status_WintunDeclined => S("Status_WintunDeclined");
+
+    /// <summary>Wi-Fi bileşeni indiriliyor ve doğrulanıyor (Wintun, WireGuard LLC)…</summary>
+    public static string Status_WintunDownloading => S("Status_WintunDownloading");
+
+    /// <summary>Wi-Fi bileşeni indirilemedi ({0}) · yerel ağ modu</summary>
+    public static string Status_WintunFailed(object? p0) => Loc.Format(S("Status_WintunFailed"), p0);
+
+    /// <summary>Wi-Fi bileşeni</summary>
+    public static string Wintun_Eyebrow => S("Wintun_Eyebrow");
+
+    /// <summary>Wi-Fi bileşeni indirilecek (Wintun, WireGuard LLC). iPhone'lara doğrudan bağlanmak için gereken bu sanal ağ...</summary>
+    public static string Wintun_Message => S("Wintun_Message");
+
+    /// <summary>İndir</summary>
+    public static string Wintun_Download => S("Wintun_Download");
+
+    /// <summary>Yaklaşık 0,4 MB · Kaydedileceği yer: {0} · Wintun lisansı: wintun.net</summary>
+    public static string Wintun_Footnote(object? p0) => Loc.Format(S("Wintun_Footnote"), p0);
 }

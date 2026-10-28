@@ -260,7 +260,7 @@
     <value>нет доступа к адаптеру Wi-Fi (возможно, его использует другое приложение)</value>
   </data>
   <data name="Failure_WintunMissing" xml:space="preserve">
-    <value>отсутствует wintun.dll</value>
+    <value>компонент Wi-Fi (wintun.dll) отсутствует или не прошёл проверку</value>
   </data>
   <data name="Failure_RfKill" xml:space="preserve">
     <value>Wi-Fi выключен (режим «в самолете» или аппаратный переключатель)</value>
@@ -315,5 +315,29 @@
   </data>
   <data name="Launcher_Exited" xml:space="preserve">
     <value>{0} завершился (код {1})</value>
+  </data>
+  <data name="Status_WintunConsent" xml:space="preserve">
+    <value>Будет загружен компонент Wi-Fi (Wintun, WireGuard LLC) · ожидается ваше согласие</value>
+  </data>
+  <data name="Status_WintunDeclined" xml:space="preserve">
+    <value>Компонент Wi-Fi не загружен · подключение к iPhone выключено, режим локальной сети</value>
+  </data>
+  <data name="Status_WintunDownloading" xml:space="preserve">
+    <value>Загрузка и проверка компонента Wi-Fi (Wintun, WireGuard LLC)…</value>
+  </data>
+  <data name="Status_WintunFailed" xml:space="preserve">
+    <value>Не удалось загрузить компонент Wi-Fi ({0}) · режим локальной сети</value>
+  </data>
+  <data name="Wintun_Eyebrow" xml:space="preserve">
+    <value>Компонент Wi-Fi</value>
+  </data>
+  <data name="Wintun_Message" xml:space="preserve">
+    <value>Будет загружен компонент Wi-Fi (Wintun, WireGuard LLC). Этот виртуальный сетевой адаптер, нужный для прямого подключения к iPhone, не входит в NitroDrop; он один раз загружается с официального сайта wintun.net. Перед загрузкой проверяются отпечаток файла и подпись WireGuard LLC.</value>
+  </data>
+  <data name="Wintun_Download" xml:space="preserve">
+    <value>Загрузить</value>
+  </data>
+  <data name="Wintun_Footnote" xml:space="preserve">
+    <value>Около 0,4 МБ · Сохраняется в: {0} · Лицензия Wintun: wintun.net</value>
   </data>
 </root>

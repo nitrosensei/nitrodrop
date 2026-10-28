@@ -21,17 +21,7 @@
     <ProjectReference Include="..\Nitro.Awdl\Nitro.Awdl.csproj" />
   </ItemGroup>
 
-  <!-- wintun.dll next to the exe for the target architecture (Nitro.Awdl also copies wintun\{amd64,arm64}\ subfolders,
-       which WintunNative's resolver tries first). Only when tools/fetch-wintun.ps1 has been run. -->
-  <PropertyGroup>
-    <WintunArch Condition="'$(RuntimeIdentifier)' == 'win-arm64' Or ('$(RuntimeIdentifier)' == '' And '$(Platform)' == 'ARM64')">arm64</WintunArch>
-    <WintunArch Condition="'$(WintunArch)' == ''">amd64</WintunArch>
-    <WintunDll>..\..\vendor\wintun\bin\$(WintunArch)\wintun.dll</WintunDll>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Include="$(WintunDll)" Link="wintun.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" Condition="Exists('$(WintunDll)')" />
-    <None Include="..\..\vendor\wintun\LICENSE.txt" Link="licenses\wintun-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" Visible="false"
-          Condition="Exists('..\..\vendor\wintun\LICENSE.txt')" />
-  </ItemGroup>
+  <!-- wintun.dll is not shipped: the app downloads it on demand (Nitro.Awdl/Ip/WintunInstall.cs) and passes its folder
+       as an argument; WintunNative's resolver loads only the pinned, WireGuard-signed build from there. -->
 
 </Project>

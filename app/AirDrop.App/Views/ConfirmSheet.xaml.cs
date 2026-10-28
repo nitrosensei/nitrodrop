@@ -67,6 +67,23 @@ public partial class ConfirmSheet : Window
         return w;
     }
 
+    /// <summary>"Wi-Fi bileşeni indirilecek (Wintun, WireGuard LLC)": consent before the one-time wintun.dll download.</summary>
+    internal static ConfirmSheet ForWintunDownload(string targetDir)
+    {
+        var w = new ConfirmSheet();
+        w.Who.Text = "Wintun · WireGuard LLC";
+        w.Eyebrow.Text = MainStrings.Wintun_Eyebrow;
+        w.Badge.Text = "";   // download
+        w.Message.Text = MainStrings.Wintun_Message;
+        w.AcceptButton.Content = MainStrings.Wintun_Download;
+        w.CancelButton.Content = CommonStrings.Common_Decline;
+        w.Footnote.Text = MainStrings.Wintun_Footnote(targetDir);
+        return w;
+    }
+
+    public static Task<bool> WintunDownloadAsync(Window? owner, string targetDir, CancellationToken ct) =>
+        ShowAsync(ForWintunDownload(targetDir), owner, ct);
+
     public static Task<bool> PairAsync(Window? owner, PairingPrompt p, CancellationToken ct) => ShowAsync(ForPairing(p), owner, ct);
 
     public static Task<bool> LaunchAsync(Window? owner, AppLaunchRequest r, CancellationToken ct) => ShowAsync(ForLaunch(r), owner, ct);

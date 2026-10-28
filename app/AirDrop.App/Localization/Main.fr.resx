@@ -260,7 +260,7 @@
     <value>accès à la carte Wi-Fi impossible (une autre app l'utilise peut-être)</value>
   </data>
   <data name="Failure_WintunMissing" xml:space="preserve">
-    <value>wintun.dll est manquant</value>
+    <value>le composant Wi-Fi (wintun.dll) est absent ou n'a pas pu être vérifié</value>
   </data>
   <data name="Failure_RfKill" xml:space="preserve">
     <value>Wi-Fi désactivé (mode avion ou interrupteur matériel)</value>
@@ -315,5 +315,29 @@
   </data>
   <data name="Launcher_Exited" xml:space="preserve">
     <value>{0} s'est arrêté (code {1})</value>
+  </data>
+  <data name="Status_WintunConsent" xml:space="preserve">
+    <value>Un composant Wi-Fi va être téléchargé (Wintun, WireGuard LLC) · en attente de votre accord</value>
+  </data>
+  <data name="Status_WintunDeclined" xml:space="preserve">
+    <value>Composant Wi-Fi non téléchargé · connexion iPhone désactivée, mode réseau local</value>
+  </data>
+  <data name="Status_WintunDownloading" xml:space="preserve">
+    <value>Téléchargement et vérification du composant Wi-Fi (Wintun, WireGuard LLC)…</value>
+  </data>
+  <data name="Status_WintunFailed" xml:space="preserve">
+    <value>Impossible de télécharger le composant Wi-Fi ({0}) · mode réseau local</value>
+  </data>
+  <data name="Wintun_Eyebrow" xml:space="preserve">
+    <value>Composant Wi-Fi</value>
+  </data>
+  <data name="Wintun_Message" xml:space="preserve">
+    <value>Un composant Wi-Fi va être téléchargé (Wintun, WireGuard LLC). Cet adaptateur réseau virtuel, nécessaire pour se connecter directement aux iPhone, n'est pas fourni avec NitroDrop ; il est téléchargé une seule fois depuis le site officiel wintun.net. Son empreinte et la signature de WireGuard LLC sont vérifiées avant son chargement.</value>
+  </data>
+  <data name="Wintun_Download" xml:space="preserve">
+    <value>Télécharger</value>
+  </data>
+  <data name="Wintun_Footnote" xml:space="preserve">
+    <value>Environ 0,4 Mo · Enregistré dans : {0} · Licence Wintun : wintun.net</value>
   </data>
 </root>

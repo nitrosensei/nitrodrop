@@ -260,7 +260,7 @@
     <value>can't access the Wi-Fi card (another app may be using it)</value>
   </data>
   <data name="Failure_WintunMissing" xml:space="preserve">
-    <value>wintun.dll is missing</value>
+    <value>the Wi-Fi component (wintun.dll) is missing or failed verification</value>
   </data>
   <data name="Failure_RfKill" xml:space="preserve">
     <value>Wi-Fi is off (airplane mode or hardware switch)</value>
@@ -315,5 +315,29 @@
   </data>
   <data name="Launcher_Exited" xml:space="preserve">
     <value>{0} exited (code {1})</value>
+  </data>
+  <data name="Status_WintunConsent" xml:space="preserve">
+    <value>A Wi-Fi component will be downloaded (Wintun, WireGuard LLC) · waiting for your approval</value>
+  </data>
+  <data name="Status_WintunDeclined" xml:space="preserve">
+    <value>Wi-Fi component not downloaded · iPhone connection off, local network mode</value>
+  </data>
+  <data name="Status_WintunDownloading" xml:space="preserve">
+    <value>Downloading and verifying the Wi-Fi component (Wintun, WireGuard LLC)…</value>
+  </data>
+  <data name="Status_WintunFailed" xml:space="preserve">
+    <value>Couldn't download the Wi-Fi component ({0}) · local network mode</value>
+  </data>
+  <data name="Wintun_Eyebrow" xml:space="preserve">
+    <value>Wi-Fi component</value>
+  </data>
+  <data name="Wintun_Message" xml:space="preserve">
+    <value>A Wi-Fi component will be downloaded (Wintun, WireGuard LLC). This virtual network adapter, needed to connect to iPhones directly, does not come with NitroDrop; it is downloaded once from the official wintun.net site. Its fingerprint and WireGuard LLC signature are verified before it is loaded.</value>
+  </data>
+  <data name="Wintun_Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Wintun_Footnote" xml:space="preserve">
+    <value>About 0.4 MB · Saved to: {0} · Wintun licence: wintun.net</value>
   </data>
 </root>

@@ -260,7 +260,7 @@
     <value>kein Zugriff auf die WLAN-Karte (evtl. von einer anderen App belegt)</value>
   </data>
   <data name="Failure_WintunMissing" xml:space="preserve">
-    <value>wintun.dll fehlt</value>
+    <value>die WLAN-Komponente (wintun.dll) fehlt oder konnte nicht geprüft werden</value>
   </data>
   <data name="Failure_RfKill" xml:space="preserve">
     <value>WLAN ist aus (Flugzeugmodus oder Hardwareschalter)</value>
@@ -315,5 +315,29 @@
   </data>
   <data name="Launcher_Exited" xml:space="preserve">
     <value>{0} wurde beendet (Code {1})</value>
+  </data>
+  <data name="Status_WintunConsent" xml:space="preserve">
+    <value>Eine WLAN-Komponente wird heruntergeladen (Wintun, WireGuard LLC) · wartet auf Ihre Zustimmung</value>
+  </data>
+  <data name="Status_WintunDeclined" xml:space="preserve">
+    <value>WLAN-Komponente nicht heruntergeladen · iPhone-Verbindung aus, lokaler Netzwerkmodus</value>
+  </data>
+  <data name="Status_WintunDownloading" xml:space="preserve">
+    <value>WLAN-Komponente wird heruntergeladen und geprüft (Wintun, WireGuard LLC) …</value>
+  </data>
+  <data name="Status_WintunFailed" xml:space="preserve">
+    <value>WLAN-Komponente konnte nicht heruntergeladen werden ({0}) · lokaler Netzwerkmodus</value>
+  </data>
+  <data name="Wintun_Eyebrow" xml:space="preserve">
+    <value>WLAN-Komponente</value>
+  </data>
+  <data name="Wintun_Message" xml:space="preserve">
+    <value>Eine WLAN-Komponente wird heruntergeladen (Wintun, WireGuard LLC). Dieser virtuelle Netzwerkadapter, der für die direkte Verbindung mit iPhones nötig ist, ist nicht in NitroDrop enthalten; er wird einmalig von der offiziellen Seite wintun.net geladen. Fingerabdruck und WireGuard-LLC-Signatur werden vor dem Laden geprüft.</value>
+  </data>
+  <data name="Wintun_Download" xml:space="preserve">
+    <value>Herunterladen</value>
+  </data>
+  <data name="Wintun_Footnote" xml:space="preserve">
+    <value>Etwa 0,4 MB · Speicherort: {0} · Wintun-Lizenz: wintun.net</value>
   </data>
 </root>

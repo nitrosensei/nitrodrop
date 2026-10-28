@@ -1,6 +1,7 @@
 // Nitro.Awdl: awdl0-like interface on Windows with Wintun (https://www.wintun.net, WireGuard LLC).
 // Copyright (c) 2026 Nitrobyte. Uses wintun.dll only through the API in wintun.h (the "Permitted API" of its
-// Prebuilt Binaries License); the dll is fetched by tools/fetch-wintun.ps1 (version + SHA-256 pinned), not committed.
+// Prebuilt Binaries License); the dll is not shipped: WintunInstall downloads it on demand (user consent, pinned SHA-256,
+// Authenticode "WireGuard LLC"); developer builds may use tools/fetch-wintun.ps1's copy next to the assembly.
 
 using System.ComponentModel;
 using System.Diagnostics;
@@ -26,18 +27,36 @@ internal static unsafe partial class WintunNative
         catch (InvalidOperationException) { /* a resolver is already set for this assembly */ }
     }
 
-    /// <summary>wintun\{amd64|arm64}\wintun.dll next to the assembly (as the csproj copies it), else the default search.</summary>
+    /// <summary>
+    /// The verified copy in <see cref="WintunInstall.Directory"/> (downloaded on demand), else a developer build's copy
+    /// next to the assembly (wintun\{arch}\wintun.dll from tools/fetch-wintun.ps1). Each candidate must pass
+    /// <see cref="WintunInstall.Verify(string, bool)"/> (pinned SHA-256 + "WireGuard LLC" signature) and stays open
+    /// (FileShare.Read) until loaded, so it cannot be swapped in between. Nothing found = DllNotFoundException.
+    /// </summary>
     private static nint Resolve(string name, Assembly asm, DllImportSearchPath? path)
     {
         if (name != Dll) return 0;
-        var arch = RuntimeInformation.ProcessArchitecture switch
+        var arch = WintunInstall.Arch;
+        foreach (var candidate in new[]
+                 {
+                     WintunInstall.DllPath(),
+                     Path.Combine(AppContext.BaseDirectory, "wintun", arch, Dll),
+                     Path.Combine(AppContext.BaseDirectory, Dll),
+                 })
         {
-            Architecture.Arm64 => "arm64",
-            Architecture.X86 => "x86",
-            _ => "amd64",
-        };
-        foreach (var candidate in new[] { Path.Combine(AppContext.BaseDirectory, "wintun", arch, Dll), Path.Combine(AppContext.BaseDirectory, Dll) })
-            if (File.Exists(candidate) && NativeLibrary.TryLoad(candidate, out var h)) return h;
+            if (!File.Exists(candidate)) continue;
+            try
+            {
+                using var pin = new FileStream(candidate, FileMode.Open, FileAccess.Read, FileShare.Read);
+                if (WintunInstall.Verify(pin, candidate) is { } why)
+                {
+                    Trace.WriteLine($"wintun: skipping {candidate}: {why}");
+                    continue;
+                }
+                if (NativeLibrary.TryLoad(candidate, out var h)) return h;
+            }
+            catch (Exception e) when (e is IOException or UnauthorizedAccessException) { Trace.WriteLine($"wintun: {candidate}: {e.Message}"); }
+        }
         return 0;
     }
 
@@ -88,9 +107,9 @@ internal static unsafe partial class WintunNative
 [SupportedOSPlatform("windows")]
 public sealed class WintunAdapter : IDisposable
 {
-    /// <summary>Pinned build (tools/fetch-wintun.ps1).</summary>
-    public const string PinnedVersion = "0.14.1";
-    public const string PinnedZipSha256 = "07c256185d6ee3652e09fa55c0b673e2624b565e02c4b9091c79ca7d2f24ef51";
+    /// <summary>Pinned build (WintunInstall, tools/fetch-wintun.ps1).</summary>
+    public const string PinnedVersion = WintunInstall.Version;
+    public const string PinnedZipSha256 = WintunInstall.ZipSha256;
     /// <summary>Default adapter name: shows up as the interface name AirDrop.Core binds to.</summary>
     public const string DefaultName = Ipc.RadioPipe.InterfaceName;
     public const string TunnelType = "NitroDrop";

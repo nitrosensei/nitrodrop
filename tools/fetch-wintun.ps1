@@ -3,15 +3,19 @@
   Downloads Wintun 0.14.1 (WireGuard LLC) into vendor\wintun, verifying the pinned SHA-256.
 
 .DESCRIPTION
-  Only downloads and extracts: it installs nothing, creates no adapter and needs no admin rights.
-  wintun.dll is redistributed under the "Prebuilt Binaries License" (vendor\wintun\LICENSE.txt): unmodified, alongside
-  software that uses it only through the API in wintun.h. vendor\ is gitignored; the build copies
-  vendor\wintun\bin\{amd64,arm64}\wintun.dll next to Nitro.Awdl as wintun\{arch}\wintun.dll when present.
+  DEVELOPER TOOL. Only downloads and extracts: it installs nothing, creates no adapter and needs no admin rights.
+  wintun.dll is under the non-OSI "Prebuilt Binaries License", so NitroDrop's builds and (signed) packages never
+  contain it: the app downloads the same pinned zip on demand after the user agrees (app\Nitro.Awdl\Ip\WintunInstall.cs,
+  same SHA-256 pins, plus an Authenticode "WireGuard LLC" check). vendor\ is gitignored and only used for reference
+  and the unit test that checks the real DLL's signature.
+  -InstallForUser additionally copies this PC's DLL to %LOCALAPPDATA%\airdrop-win\wintun\<arch>\ (where the app
+  looks), so a developer is not asked to download it again.
 #>
 [CmdletBinding()]
 param(
     [string]$Destination = (Join-Path $PSScriptRoot '..\vendor\wintun'),
-    [switch]$Force
+    [switch]$Force,
+    [switch]$InstallForUser
 )
 
 $ErrorActionPreference = 'Stop'
@@ -25,8 +29,18 @@ $DllSha256 = @{
 
 $Destination = [IO.Path]::GetFullPath($Destination)
 $marker = Join-Path $Destination 'VERSION'
+function Install-ForUser {
+    $arch = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm64' } else { 'amd64' }
+    $dir = Join-Path $env:LOCALAPPDATA "airdrop-win\wintun\$arch"
+    New-Item -ItemType Directory -Force $dir | Out-Null
+    Copy-Item (Join-Path $Destination "bin\$arch\wintun.dll") (Join-Path $dir 'wintun.dll') -Force
+    Copy-Item (Join-Path $Destination 'LICENSE.txt') (Join-Path $env:LOCALAPPDATA 'airdrop-win\wintun\LICENSE.txt') -Force
+    Write-Host "Wintun $Version -> $dir (what NitroDrop downloads on demand)"
+}
+
 if (-not $Force -and (Test-Path $marker) -and ((Get-Content $marker -Raw).Trim() -eq $Version)) {
     Write-Host "Wintun $Version already in $Destination"
+    if ($InstallForUser) { Install-ForUser }
     exit 0
 }
 
@@ -59,6 +73,7 @@ try {
     Copy-Item (Join-Path $root 'include\wintun.h') (Join-Path $Destination 'wintun.h')
     Set-Content -Path $marker -Value $Version -Encoding ascii
     Write-Host "Wintun $Version -> $Destination (zip SHA-256 verified)"
+    if ($InstallForUser) { Install-ForUser }
 }
 finally {
     Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue

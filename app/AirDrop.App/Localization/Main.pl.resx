@@ -260,7 +260,7 @@
     <value>brak dostępu do karty Wi-Fi (może jej używać inna aplikacja)</value>
   </data>
   <data name="Failure_WintunMissing" xml:space="preserve">
-    <value>brak pliku wintun.dll</value>
+    <value>brak składnika Wi-Fi (wintun.dll) lub nie przeszedł weryfikacji</value>
   </data>
   <data name="Failure_RfKill" xml:space="preserve">
     <value>Wi-Fi jest wyłączone (tryb samolotowy lub przełącznik sprzętowy)</value>
@@ -315,5 +315,29 @@
   </data>
   <data name="Launcher_Exited" xml:space="preserve">
     <value>{0} zakończył działanie (kod {1})</value>
+  </data>
+  <data name="Status_WintunConsent" xml:space="preserve">
+    <value>Zostanie pobrany składnik Wi-Fi (Wintun, WireGuard LLC) · czekam na Twoją zgodę</value>
+  </data>
+  <data name="Status_WintunDeclined" xml:space="preserve">
+    <value>Nie pobrano składnika Wi-Fi · połączenie z iPhone'em wyłączone, tryb sieci lokalnej</value>
+  </data>
+  <data name="Status_WintunDownloading" xml:space="preserve">
+    <value>Pobieranie i weryfikacja składnika Wi-Fi (Wintun, WireGuard LLC)…</value>
+  </data>
+  <data name="Status_WintunFailed" xml:space="preserve">
+    <value>Nie udało się pobrać składnika Wi-Fi ({0}) · tryb sieci lokalnej</value>
+  </data>
+  <data name="Wintun_Eyebrow" xml:space="preserve">
+    <value>Składnik Wi-Fi</value>
+  </data>
+  <data name="Wintun_Message" xml:space="preserve">
+    <value>Zostanie pobrany składnik Wi-Fi (Wintun, WireGuard LLC). Ta wirtualna karta sieciowa, potrzebna do bezpośredniego łączenia z iPhone'ami, nie jest dołączona do NitroDrop; jest pobierana jednorazowo z oficjalnej strony wintun.net. Przed załadowaniem sprawdzane są odcisk pliku i podpis WireGuard LLC.</value>
+  </data>
+  <data name="Wintun_Download" xml:space="preserve">
+    <value>Pobierz</value>
+  </data>
+  <data name="Wintun_Footnote" xml:space="preserve">
+    <value>Około 0,4 MB · Zapis w: {0} · Licencja Wintun: wintun.net</value>
   </data>
 </root>

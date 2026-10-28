@@ -5,7 +5,7 @@ using Nitro.Awdl.Ipc;
 namespace Nitro.Radio.Host;
 
 /// <summary>
-/// NitroDrop.Radio.exe --user-sid &lt;SID&gt; --parent-pid &lt;pid&gt;
+/// NitroDrop.Radio.exe --user-sid &lt;SID&gt; --parent-pid &lt;pid&gt; [--wintun-dir &lt;dir&gt;]
 /// Started elevated by NitroDrop.exe (ShellExecute "runas"). Serves one app connection on
 /// "NitroDrop.Radio.&lt;SID&gt;" and exits when it ends; the radio is stopped (driver STOP) on the way out. If this process
 /// is killed, closing the device handle stops the radio too and Wintun removes the adapter it created.
@@ -26,6 +26,10 @@ internal static class Program
         }
         OpenLog();
         Log($"start: pid {Environment.ProcessId}, user {sid}, parent {parentPid}");
+        // The app's %LOCALAPPDATA%irdrop-win\wintun (differs from ours when another admin account approved UAC).
+        // Untrusted input: the resolver loads only the pinned, WireGuard-signed build from there.
+        if (Arg(args, "--wintun-dir") is { Length: > 0 } wintunDir && Path.IsPathFullyQualified(wintunDir))
+            Nitro.Awdl.Ip.WintunInstall.Directory = wintunDir;
 
         Task parentExited;
         try

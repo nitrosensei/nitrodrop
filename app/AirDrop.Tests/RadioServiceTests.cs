@@ -91,7 +91,8 @@ public class RadioServiceTests
         }
     }
 
-    private static Rig NewRig(int mdnsPort, Func<IRadioHostConnection> launch, bool driver = true, bool enabled = true)
+    private static Rig NewRig(int mdnsPort, Func<IRadioHostConnection> launch, bool driver = true, bool enabled = true,
+        WintunProvisioning? wintun = null)
     {
         var launcher = new FakeLauncher(launch);
         Rig? rig = null;
@@ -110,6 +111,7 @@ public class RadioServiceTests
                 // No Wintun adapter in tests: record the name the service asks for and bind loopback instead.
                 ResolveBinding = name => { rig!.Resolved.Enqueue(name); return NetworkBinding.Loopback; },
                 ReadyTimeout = TimeSpan.FromSeconds(5),
+                Wintun = wintun,
             },
         });
         rig = new Rig { Svc = svc, Launcher = launcher };
@@ -300,5 +302,75 @@ public class RadioServiceTests
         var lo = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
             .FirstOrDefault(n => n.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up && n.SupportsMulticast);
         if (lo != null) Assert.DoesNotContain(NetworkBinding.AnyExcept(lo.Name).MulticastInterfaces(), n => n.Name == lo.Name);
+    }
+
+    // ---------------- on-demand Wintun (not shipped: non-OSI licence) ----------------
+
+    private sealed class FakeWintun
+    {
+        public bool Installed, Agree, Fail;
+        public int Prompts, Installs;
+        public WintunProvisioning Provisioning => new()
+        {
+            IsInstalled = () => Installed,
+            Confirm = _ => { Prompts++; return Task.FromResult(Agree); },
+            Install = _ =>
+            {
+                Installs++;
+                if (Fail) throw new InvalidDataException("wintun zip SHA-256 mismatch");
+                Installed = true;
+                return Task.CompletedTask;
+            },
+        };
+    }
+
+    [Fact]
+    public async Task WintunMissing_Declined_StaysLan_NoDownload_NoUac()
+    {
+        var w = new FakeWintun { Agree = false };
+        await using var r = NewRig(53721, () => throw new InvalidOperationException("must not launch"), wintun: w.Provisioning);
+        await Start(r);
+        await r.Svc.RadioStartup.WaitAsync(Timeout);
+        Assert.Equal(RadioPhase.WintunDeclined, r.Svc.Phase);
+        Assert.Equal(1, w.Prompts);
+        Assert.Equal(0, w.Installs);
+        Assert.Equal(0, r.Launcher.Launches);
+        Assert.Contains("Wi-Fi bileşeni indirilmedi", r.Svc.HardwareStatus);
+    }
+
+    [Fact]
+    public async Task WintunMissing_Agreed_DownloadsThenLaunches()
+    {
+        var w = new FakeWintun { Agree = true };
+        await using var r = NewRig(53722, () => throw new RadioLaunchCancelledException(), wintun: w.Provisioning);
+        await Start(r);
+        await r.Svc.RadioStartup.WaitAsync(Timeout);
+        Assert.Equal(1, w.Installs);
+        Assert.Equal(1, r.Launcher.Launches);
+        Assert.Equal(RadioPhase.Cancelled, r.Svc.Phase);
+    }
+
+    [Fact]
+    public async Task WintunInstalled_NoPrompt()
+    {
+        var w = new FakeWintun { Installed = true };
+        await using var r = NewRig(53723, () => throw new RadioLaunchCancelledException(), wintun: w.Provisioning);
+        await Start(r);
+        await r.Svc.RadioStartup.WaitAsync(Timeout);
+        Assert.Equal(0, w.Prompts);
+        Assert.Equal(1, r.Launcher.Launches);
+    }
+
+    [Fact]
+    public async Task WintunDownloadFails_ShowsReason_NoUac()
+    {
+        var w = new FakeWintun { Agree = true, Fail = true };
+        await using var r = NewRig(53724, () => throw new InvalidOperationException("must not launch"), wintun: w.Provisioning);
+        await Start(r);
+        await r.Svc.RadioStartup.WaitAsync(Timeout);
+        Assert.Equal(RadioPhase.WintunFailed, r.Svc.Phase);
+        Assert.Equal(0, r.Launcher.Launches);
+        Assert.Contains("Wi-Fi bileşeni indirilemedi", r.Svc.HardwareStatus);
+        Assert.Contains("SHA-256", r.Svc.HardwareStatus);
     }
 }

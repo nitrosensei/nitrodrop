@@ -20,15 +20,12 @@
   <ItemGroup>
     <None Include="LICENSE-OWLY.txt" CopyToOutputDirectory="PreserveNewest" />
     <Compile Remove="Ble\BleAirDropAdvertiser.cs" Condition="'$(TargetFramework)' == 'net10.0'" />
+    <InternalsVisibleTo Include="AirDrop.Tests" />
   </ItemGroup>
 
-  <!-- wintun.dll is not in the repo: tools/fetch-wintun.ps1 puts the SHA-256-pinned build in vendor/wintun
-       (gitignored). Copied next to the assembly when present; WintunAdapter fails with a clear message otherwise. -->
-  <ItemGroup>
-    <None Include="..\..\vendor\wintun\bin\amd64\wintun.dll" Link="wintun\amd64\wintun.dll" CopyToOutputDirectory="PreserveNewest" Visible="false"
-          Condition="Exists('..\..\vendor\wintun\bin\amd64\wintun.dll')" />
-    <None Include="..\..\vendor\wintun\bin\arm64\wintun.dll" Link="wintun\arm64\wintun.dll" CopyToOutputDirectory="PreserveNewest" Visible="false"
-          Condition="Exists('..\..\vendor\wintun\bin\arm64\wintun.dll')" />
-  </ItemGroup>
+  <!-- wintun.dll is never copied into build outputs or packages (its "Prebuilt Binaries License" is not OSI, and the
+       signed NitroDrop packages must contain only open-source components). Ip/WintunInstall.cs downloads the official
+       build on first use after the user agrees (pinned SHA-256 + "WireGuard LLC" Authenticode check) into
+       %LOCALAPPDATA%\airdrop-win\wintun\<arch>\. Developers can pre-seed it: tools/fetch-wintun.ps1 -InstallForUser. -->
 
 </Project>

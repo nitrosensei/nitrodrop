@@ -53,6 +53,23 @@ public sealed record RadioIntegration
     public TimeSpan ReadyTimeout { get; init; } = TimeSpan.FromSeconds(60);
     /// <summary>How long the Wintun interface may take to show up in Windows' interface list after Ready.</summary>
     public TimeSpan InterfaceTimeout { get; init; } = TimeSpan.FromSeconds(15);
+    /// <summary>wintun.dll is downloaded on first use, after the user agrees (null = assume present, e.g. tests).</summary>
+    public WintunProvisioning? Wintun { get; init; }
+}
+
+/// <summary>
+/// The on-demand Wintun download (Nitro.Awdl.Ip.WintunInstall): wintun.dll is not part of NitroDrop's packages (its
+/// licence is not OSI), so the first radio start asks "Wi-Fi bileşeni indirilecek (Wintun, WireGuard LLC)" and only
+/// then downloads and verifies it.
+/// </summary>
+public sealed record WintunProvisioning
+{
+    /// <summary>A verified copy is already on disk.</summary>
+    public required Func<bool> IsInstalled { get; init; }
+    /// <summary>Shows the consent prompt; true = download.</summary>
+    public required Func<CancellationToken, Task<bool>> Confirm { get; init; }
+    /// <summary>Downloads and verifies (throws on any failed check).</summary>
+    public required Func<CancellationToken, Task> Install { get; init; }
 }
 
 /// <summary>Where the iPhone link stands (drives <see cref="CoreAirDropService.HardwareStatus"/>).</summary>
@@ -62,6 +79,13 @@ public enum RadioPhase
     None,
     Disabled,
     NoDriver,
+    /// <summary>Waiting for the user to allow the Wintun download.</summary>
+    WintunConsent,
+    /// <summary>The user did not allow the Wintun download: LAN only.</summary>
+    WintunDeclined,
+    WintunDownloading,
+    /// <summary>Download or verification failed: LAN only.</summary>
+    WintunFailed,
     /// <summary>UAC prompt is up / connecting to the host.</summary>
     Launching,
     Cancelled,
@@ -128,6 +152,10 @@ public sealed class CoreAirDropService : IAirDropService
     public string HardwareStatus => _phase switch
     {
         RadioPhase.Disabled => MainStrings.Status_Disabled,
+        RadioPhase.WintunConsent => MainStrings.Status_WintunConsent,
+        RadioPhase.WintunDeclined => MainStrings.Status_WintunDeclined,
+        RadioPhase.WintunDownloading => MainStrings.Status_WintunDownloading,
+        RadioPhase.WintunFailed => MainStrings.Status_WintunFailed(_error),
         RadioPhase.Launching => MainStrings.Status_Launching,
         RadioPhase.Cancelled => MainStrings.Status_Cancelled,
         RadioPhase.LaunchFailed => MainStrings.Status_LaunchFailed(_error),
@@ -249,6 +277,42 @@ public sealed class CoreAirDropService : IAirDropService
 
     // ---------------- radio host ----------------
 
+    /// <summary>Consent prompt + download when wintun.dll is missing. False = stay LAN only (phase already set).</summary>
+    private async Task<bool> EnsureWintunAsync(WintunProvisioning w, CancellationToken ct)
+    {
+        try { if (w.IsInstalled()) return true; }
+        catch (Exception e) { Log($"wintun check failed: {e.Message}"); }
+
+        SetPhase(RadioPhase.WintunConsent);
+        bool agreed;
+        try { agreed = await w.Confirm(ct); }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested) { return false; }
+        catch (Exception e) { Log($"wintun consent prompt failed: {e.Message}"); agreed = false; }
+        if (ct.IsCancellationRequested) return false;
+        if (!agreed)
+        {
+            Log("wintun: download not allowed, staying in LAN mode");
+            SetPhase(RadioPhase.WintunDeclined);
+            return false;
+        }
+
+        SetPhase(RadioPhase.WintunDownloading);
+        try
+        {
+            await w.Install(ct);
+            Log("wintun: downloaded and verified");
+            return true;
+        }
+        catch (OperationCanceledException) when (ct.IsCancellationRequested) { return false; }
+        catch (Exception e)
+        {
+            Log($"wintun download failed: {e}");
+            _error = e.Message;
+            SetPhase(RadioPhase.WintunFailed);
+            return false;
+        }
+    }
+
     private async Task RunRadioAsync(CancellationToken ct)
     {
         var r = _settings.Radio!;
@@ -257,6 +321,7 @@ public sealed class CoreAirDropService : IAirDropService
         try { installed = r.DriverInstalled(); }
         catch (Exception e) { Log($"driver check failed: {e.Message}"); installed = false; }
         if (!installed) { SetPhase(RadioPhase.NoDriver); return; }
+        if (r.Wintun is { } w && !await EnsureWintunAsync(w, ct)) return;
 
         SetPhase(RadioPhase.Launching);
         IRadioHostConnection conn;

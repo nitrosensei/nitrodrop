@@ -266,7 +266,7 @@
     <value>Wi-Fi kartına erişilemedi (başka bir uygulama kullanıyor olabilir)</value>
   </data>
   <data name="Failure_WintunMissing" xml:space="preserve">
-    <value>wintun.dll eksik</value>
+    <value>Wi-Fi bileşeni (wintun.dll) yok ya da doğrulanamadı</value>
   </data>
   <data name="Failure_RfKill" xml:space="preserve">
     <value>Wi-Fi kapalı (uçak modu ya da donanım anahtarı)</value>
@@ -322,5 +322,30 @@
   </data>
   <data name="Launcher_Exited" xml:space="preserve">
     <value>{0} kapandı (kod {1})</value>
+  </data>
+  <data name="Status_WintunConsent" xml:space="preserve">
+    <value>Wi-Fi bileşeni indirilecek (Wintun, WireGuard LLC) · onayınız bekleniyor</value>
+    <comment>Radio status while the Wintun download consent sheet is open.</comment>
+  </data>
+  <data name="Status_WintunDeclined" xml:space="preserve">
+    <value>Wi-Fi bileşeni indirilmedi · iPhone bağlantısı kapalı, yerel ağ modu</value>
+  </data>
+  <data name="Status_WintunDownloading" xml:space="preserve">
+    <value>Wi-Fi bileşeni indiriliyor ve doğrulanıyor (Wintun, WireGuard LLC)…</value>
+  </data>
+  <data name="Status_WintunFailed" xml:space="preserve">
+    <value>Wi-Fi bileşeni indirilemedi ({0}) · yerel ağ modu</value>
+  </data>
+  <data name="Wintun_Eyebrow" xml:space="preserve">
+    <value>Wi-Fi bileşeni</value>
+  </data>
+  <data name="Wintun_Message" xml:space="preserve">
+    <value>Wi-Fi bileşeni indirilecek (Wintun, WireGuard LLC). iPhone'lara doğrudan bağlanmak için gereken bu sanal ağ bağdaştırıcısı NitroDrop'la birlikte gelmez; resmî wintun.net adresinden bir kez indirilir. Dosyanın parmak izi ve WireGuard LLC imzası yüklenmeden önce doğrulanır.</value>
+  </data>
+  <data name="Wintun_Download" xml:space="preserve">
+    <value>İndir</value>
+  </data>
+  <data name="Wintun_Footnote" xml:space="preserve">
+    <value>Yaklaşık 0,4 MB · Kaydedileceği yer: {0} · Wintun lisansı: wintun.net</value>
   </data>
 </root>
