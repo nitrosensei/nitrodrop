@@ -110,7 +110,7 @@ public sealed class SettingsViewModel : Observable
         new("Owly", "AWDL / OWL", "MIT"),
         new("iwx", SettingsStrings.About_UseIwx, "ISC"),
         new("QRCoder", SettingsStrings.About_UseQr, "MIT"),
-        new("Schibsted Grotesk · JetBrains Mono", SettingsStrings.About_UseFonts, "OFL 1.1"),
+        new("Golos Text · Schibsted Grotesk · JetBrains Mono", SettingsStrings.About_UseFonts, "OFL 1.1"),
         new("Intel Wi-Fi firmware", SettingsStrings.About_UseFirmware, "INTEL"),
     };
 
