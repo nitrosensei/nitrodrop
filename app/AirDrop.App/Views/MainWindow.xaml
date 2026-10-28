@@ -793,6 +793,15 @@
                                 <TextBlock Text="Windows açılınca başlat" FontSize="13" VerticalAlignment="Center"/>
                                 <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" IsChecked="{Binding StartWithWindows}"/>
                             </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <Grid Style="{StaticResource Row}">
+                                <StackPanel Margin="0,0,64,0">
+                                    <TextBlock Text="{Binding ExplorerMenuTitle}" FontSize="13"/>
+                                    <TextBlock Text="{Binding ExplorerMenuCaption}" Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                          IsChecked="{Binding ExplorerMenuEnabled}" IsEnabled="{Binding ExplorerMenuToggleable}"/>
+                            </Grid>
                         </StackPanel>
                     </Border>
 

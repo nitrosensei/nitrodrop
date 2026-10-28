@@ -72,6 +72,10 @@ public sealed class DemoSyncSource : ISyncSource
             DeviceId = "a1b2c3d4e5f6",
             DeviceName = "Emre-Masaüstü",
             UpdatedAt = Ago(TimeSpan.Zero),
+            Hardware = new AirDrop.Core.Devices.HostDevice
+            {
+                Manufacturer = "MSI", Model = "MAG Infinite S3", Chassis = AirDrop.Core.Devices.HostChassis.Desktop, Platform = "windows",
+            },
             Tabs = new[]
             {
                 new BrowserTab { Browser = BrowserKind.Chrome, WindowId = 1, TabId = 11, Active = true, LastAccessed = Ago(TimeSpan.FromMinutes(1)),
@@ -104,7 +108,16 @@ public sealed class DemoSyncSource : ISyncSource
         {
             await Task.Delay(500, ct);
             Put(new SyncPeerInfo("a1b2c3d4e5f6", "Emre-Masaüstü", true, true, DesktopState(), DateTimeOffset.Now, null));
-            Put(new SyncPeerInfo("0f9e8d7c6b5a", "Ofis-Laptop", true, false, null, DateTimeOffset.Now.AddHours(-3), null));
+            Put(new SyncPeerInfo("0f9e8d7c6b5a", "Ofis-Laptop", true, false,
+                new DeviceState
+                {
+                    DeviceId = "0f9e8d7c6b5a", DeviceName = "Ofis-Laptop",
+                    Hardware = new AirDrop.Core.Devices.HostDevice
+                    {
+                        Manufacturer = "Lenovo", Model = "ThinkPad X1 Carbon Gen 11", Chassis = AirDrop.Core.Devices.HostChassis.Laptop, Platform = "windows",
+                    },
+                },
+                DateTimeOffset.Now.AddHours(-3), null));
             await Task.Delay(700, ct);
             Put(new SyncPeerInfo("77aa88bb99cc", "Ayşe-PC", false, true, null, null, null));
             await Task.Delay(1000, ct);

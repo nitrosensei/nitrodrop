@@ -46,7 +46,9 @@ public sealed record AppleModel(string Identifier, string Name, AppleFamily Fami
 /// </summary>
 public static partial class AppleModels
 {
-    private static readonly Dictionary<string, AppleModel> ById = BuildIndex();
+    // Lazy: Table lives in the other partial file, and static initialisers across partial files run in file order.
+    private static readonly Lazy<Dictionary<string, AppleModel>> Index = new(BuildIndex);
+    private static Dictionary<string, AppleModel> ById => Index.Value;
 
     private static Dictionary<string, AppleModel> BuildIndex()
     {

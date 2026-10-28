@@ -97,6 +97,25 @@ Testler adaptörü WPF olmadan derlemek için `IAirDropService.cs`, `IContactRes
 
 Mimari ve test sürüşü adımları: `docs/awdl-port.md` → "Çalışma zamanı mimarisi" ve "Test sürüşü".
 
+## Cihaz modelleri ve cihaz çizimleri
+
+- **Apple tablosu:** `AirDrop.Core/Devices/AppleModels.Data.cs` (427 kimlik: iPhone 1–17/Air/17e, tüm iPad'ler, Intel + Apple
+  silicon Mac'ler `MacXX,Y` dahil, Apple Watch, Vision Pro, iPod touch) — `tools/gen-apple-models.py` ile AppleDB'den (MIT) üretilir,
+  adamawolf gist'iyle çapraz kontrol; yalnızca olgu (kimlik → ad, yıl), biçim (ada / çentik / Ana Ekran düğmesi, MacBook / iMac /
+  mini / Studio / Pro) üreticide türetilir. 2026'da tek kaynakta görünenler `Unverified`. Bilinmeyen kimlik → "iPhone (iPhone19,3)".
+- **Bu PC:** `Devices/LocalHostProbe.cs` (WMI'sız: `HKLM\HARDWARE\DESCRIPTION\System\BIOS` + SMBIOS 'RSMB' tip 3 kasa,
+  yedek `PowerDeterminePlatformRoleEx`), `PcModelNames.cs` temizler ("Acer Nitro V 15", Lenovo → SystemVersion, OEM yer tutucuları atılır,
+  hazır toplama masaüstünde anakart adı).
+- **Yayın:** AirDrop /Discover, /Ask yanıtı ve /Ask isteğinde `AirDropWinVersion` yanında `NitroDropDevice` = {Manufacturer, Model,
+  Chassis, Platform}; `ReceiverModelName` Apple kimliği olarak kalır (`AirDropIdentity.ModelNameForChassis` isteğe bağlı: masaüstü →
+  `Macmini9,1`, AiO → `iMac21,1`; varsayılan değişmedi). Nitro.Sync'te `DeviceState.Hardware`. iPhone (Bluetooth): GATT 0x180A /
+  0x2A24 → `PhoneLinkStatus.ModelId`.
+- **Arayüz:** `Services/DeviceModels.cs` (ad + çizim anahtarı; metinler `DeviceStrings`'te), `Themes/DeviceArt.xaml` (17 çizgi
+  çizim, 24×24) + `Controls/DeviceArtIcon`. Radar rozeti, alma penceresi, Cihazlar PC kartları, Telefon başlığı, Geçmiş satırı.
+  Snapshot: `deviceart-*`, `sheet-receive-pc-*`, `history-models-*`.
+- Doğrulanmamış: iOS'un hangi `ReceiverModelName` için hangi simgeyi çizdiği; iOS'un DIS'i (0x180A) Windows'a açtığı; iPhone 17e
+  biçimi (çentik varsayıldı).
+
 ## Süreklilik: "Cihazlar" sekmesi ve Ayarlar → Senkron (Nitro.Sync)
 
 `Nitro.Sync` (bkz. `docs/sync-plan.md`) WPF uygulamasına `Services/SyncSource.cs` üzerinden bağlı: `ISyncSource` arayüzü,

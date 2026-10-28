@@ -28,6 +28,7 @@ public sealed class ContinuityRuntime : IContinuityService
     private GattStartResult _ancsResult = GattStartResult.Failed;
     private bool _amsOk, _mapOk;
     private PhoneLinkIssue _mapIssue;
+    private string? _modelId;
 
     /// <param name="stateFile">JSON file remembering the chosen iPhone (null = in memory only).</param>
     /// <param name="importVCards">Imports PBAP vCard text into the contact book; returns how many were imported.</param>
@@ -69,7 +70,7 @@ public sealed class ContinuityRuntime : IContinuityService
     public event Action<RecentCall>? CallLogged;
     public event Action<NowPlaying?>? NowPlayingChanged;
 
-    private sealed record State(string? DeviceId, string? Name, ulong Address);
+    private sealed record State(string? DeviceId, string? Name, ulong Address, string? ModelId = null);
 
     public async Task StartAsync(CancellationToken ct = default)
     {
@@ -103,7 +104,8 @@ public sealed class ContinuityRuntime : IContinuityService
     public async Task UseDeviceAsync(PhoneDevice device, CancellationToken ct = default)
     {
         Device = device;
-        SaveState(new State(device.Id, device.Name, device.Address));
+        _modelId = LoadState() is { DeviceId: { } id, ModelId: var m } && id == device.Id ? m : null;
+        SaveState(new State(device.Id, device.Name, device.Address, _modelId));
         _conflict.Reset();
         await _link.UseAsync(device, ct);
         PublishStatus();
@@ -133,6 +135,7 @@ public sealed class ContinuityRuntime : IContinuityService
         await _map.DisconnectAsync();
         await _link.StopAsync();
         Device = null;
+        _modelId = null;
         SaveState(new State(null, null, 0));
         Messages.Clear();
         PublishStatus();
@@ -147,6 +150,11 @@ public sealed class ContinuityRuntime : IContinuityService
             _ancsResult = await Safe(() => _ancs.StartAsync(le), GattStartResult.Failed);
             _calls.SetAncsAvailable(_ancsResult == GattStartResult.Ok);
             _amsOk = await Safe(() => _ams.StartAsync(le), GattStartResult.Failed) == GattStartResult.Ok;
+            if (await Safe(() => DeviceInfoReader.ReadModelNumberAsync(le), (string?)null) is { } model && model != _modelId && Device is { } dev)
+            {
+                _modelId = model;
+                SaveState(new State(dev.Id, dev.Name, dev.Address, model));
+            }
             PublishStatus();
 
             if (_link.Classic is { } classic)
@@ -257,6 +265,7 @@ public sealed class ContinuityRuntime : IContinuityService
                 "Mesajlar kapalı: iPhone'da bu bilgisayarın (i) ekranında \"Bildirimleri Göster\"i açın.", name, PhoneLinkIssue.MessagesNotShared, features),
             _ => new(PhoneLinkState.Connected, $"{name} bağlı", null, name, PhoneLinkIssue.None, features),
         };
+        s = s with { ModelId = Device is null ? null : _modelId };
         if (s == Status) return;
         Status = s;
         StatusChanged?.Invoke(s);

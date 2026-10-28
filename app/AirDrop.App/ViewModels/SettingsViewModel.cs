@@ -133,6 +133,36 @@ public sealed class SettingsViewModel : Observable
         }
     }
 
+    // ---- Gezgin sağ tık menüsü (Services/ExplorerMenu.cs) ----
+
+    private ExplorerMenuService ExplorerMenuSvc => ExplorerMenuIntegration.Default;
+    private string? _explorerMenuError;
+
+    public string ExplorerMenuTitle => UiStrings.ExplorerMenuSetting;
+
+    /// <summary>MSIX: always on (manifest IExplorerCommand), the switch is shown checked and disabled.</summary>
+    public bool ExplorerMenuToggleable => !ExplorerMenuSvc.ManagedByWindows;
+
+    public string ExplorerMenuCaption => _explorerMenuError
+        ?? (ExplorerMenuSvc.ManagedByWindows ? UiStrings.ExplorerMenuCaptionPackaged : UiStrings.ExplorerMenuCaptionPortable);
+
+    /// <summary>Read from the registry each time (the registry is the truth, not settings.json).</summary>
+    public bool ExplorerMenuEnabled
+    {
+        get
+        {
+            try { return ExplorerMenuSvc.IsEnabled; }
+            catch (Exception) { return false; }
+        }
+        set
+        {
+            try { ExplorerMenuSvc.SetEnabled(value); _explorerMenuError = null; }
+            catch (Exception ex) { _explorerMenuError = UiStrings.ExplorerMenuFailed + ex.Message; }
+            Raise();
+            Raise(nameof(ExplorerMenuCaption));
+        }
+    }
+
     public string ContactStatus { get => _contactStatus; private set => Set(ref _contactStatus, value); }
 
     public ObservableCollection<TrustedDeviceViewModel> Trusted { get; } = new();

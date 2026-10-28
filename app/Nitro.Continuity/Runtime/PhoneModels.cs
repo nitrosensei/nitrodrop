@@ -54,8 +54,10 @@ public sealed record PhoneLinkStatus(
     string? Detail = null,
     string? DeviceName = null,
     PhoneLinkIssue Issue = PhoneLinkIssue.None,
-    PhoneFeatures Features = PhoneFeatures.None)
+    PhoneFeatures Features = PhoneFeatures.None,
+    string? ModelId = null)
 {
+    // ModelId: hardware identifier from the phone's Device Information Service ("iPhone15,2"), when it could be read.
     public bool IsConnected => State == PhoneLinkState.Connected;
 
     public static PhoneLinkStatus NotPaired { get; } =

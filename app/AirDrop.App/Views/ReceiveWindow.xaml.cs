@@ -26,11 +26,11 @@ public partial class ReceiveWindow : Window
 
         string who = contact?.Name ?? PeerViewModel.OwnerOf(req.SenderName);
         Who.Text = who;
-        Device.Text = contact is null
-            ? DeviceModels.Describe(req.SenderKind, req.SenderModelName)
-            : $"{req.SenderName} · {DeviceModels.Describe(req.SenderKind, req.SenderModelName)}";
+        string model = DeviceModels.ShortDescribe(req.SenderKind, req.SenderModelName, req.SenderHost);
+        Device.Text = contact is null ? model : $"{req.SenderName} · {model}";
+        Device.ToolTip = DeviceModels.Describe(req.SenderKind, req.SenderModelName, req.SenderHost);
         Initials.Text = PeerViewModel.MakeInitials(who);
-        Glyph.Text = new PeerViewModel(new PeerInfo("", req.SenderName, req.SenderKind)).Glyph;
+        Art.ArtKey = DeviceModels.ArtKey(req.SenderKind, req.SenderModelName, req.SenderHost);
         if (photo is not null)
         {
             PhotoBrush.ImageSource = photo;

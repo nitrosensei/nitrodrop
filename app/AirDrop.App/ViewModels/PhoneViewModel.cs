@@ -278,6 +278,11 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
     public string? StatusDetail => Status.Detail;
     public bool HasStatusDetail => !string.IsNullOrEmpty(Status.Detail);
     public string DeviceName => Status.DeviceName ?? _svc.Device?.Name ?? "iPhone";
+    /// <summary>"iPhone 15 Pro" from the phone's Bluetooth model number; null until it was read.</summary>
+    public string? PhoneModelName => DeviceModels.DescribeIdentifier(Status.ModelId);
+    public bool HasPhoneModel => PhoneModelName is not null;
+    /// <summary>Device art for the header (Themes/DeviceArt.xaml key); island iPhone until the model is known.</summary>
+    public string PhoneArtKey => DeviceModels.ArtKeyForIdentifier(Status.ModelId);
     public bool IsConnected => Status.State == PhoneLinkState.Connected;
     public bool IsPaired => Status.State is not (PhoneLinkState.NotPaired or PhoneLinkState.Pairing or PhoneLinkState.NoBluetooth) || _svc.Device is not null;
     /// <summary>Show the pairing guide instead of the content sections.</summary>

@@ -72,6 +72,18 @@ internal static class Snapshot
             vm.Tab = MainTab.History;
             await Task.Delay(300);
             Save(w, Path.Combine(dir, $"history-{t}.png"));
+            vm.PreviewHistory(new[]
+            {
+                new Services.HistoryEntry { Direction = Services.TransferDirection.Received, DeviceName = "Mert", DeviceKind = Services.DeviceKind.Windows,
+                    ModelName = "MacBookPro18,3", Host = Services.DemoAirDropService.DemoPc, Links = new() { "https://nitrobyte.com.tr" } },
+                new Services.HistoryEntry { Direction = Services.TransferDirection.Sent, DeviceName = "Ayşe", DeviceKind = Services.DeviceKind.Mac,
+                    ModelName = "Mac14,2", Paths = new() { @"C:\yok\Sunum.pdf" }, TotalBytes = 2_400_000 },
+                new Services.HistoryEntry { Direction = Services.TransferDirection.Received, DeviceName = "Emre", DeviceKind = Services.DeviceKind.iPhone,
+                    ModelName = "iPhone16,1", Paths = new() { @"C:\yok\IMG_4821.HEIC", @"C:\yok\IMG_4822.HEIC" }, TotalBytes = 6_391_000 },
+            });
+            await Task.Delay(300);
+            Save(w, Path.Combine(dir, $"history-models-{t}.png"));
+            vm.PreviewHistory(null);
             vm.Tab = MainTab.Phone;
             await Task.Delay(400);
             Save(w, Path.Combine(dir, $"phone-main-{t}.png"));
@@ -104,6 +116,10 @@ internal static class Snapshot
                 Array.Empty<Uri>(), null);
             var rw = ReceiveWindow.ForPreview(req, new Services.ContactMatch("Emre Can Temur", null), null);
             await ShowOffscreenAsync(rw, Path.Combine(dir, $"sheet-receive-{t}.png"));
+            var pcReq = new Services.IncomingRequest("Mert'in PC'si", Services.DeviceKind.Windows, "MacBookPro18,3",
+                new[] { new Services.IncomingFile("Rapor.xlsx", 0) }, Array.Empty<Uri>(), null, null, Services.DemoAirDropService.DemoPc);
+            await ShowOffscreenAsync(ReceiveWindow.ForPreview(pcReq, null, null), Path.Combine(dir, $"sheet-receive-pc-{t}.png"));
+            RenderLoose(new FrameworkElement[] { DeviceArtGallery() }, Path.Combine(dir, $"deviceart-{t}.png"));
 
             // ContextMenu / ToolTip can't live in a window's tree: measure them loose and render directly.
             var menu = new ContextMenu();
@@ -116,6 +132,34 @@ internal static class Snapshot
         }
         app.ApplyTheme(wasDark);
         vm.Tab = MainTab.Nearby;
+    }
+
+    /// <summary>Every device art key at badge (17 px) and large (40 px) size, with its key — for reviewing Themes/DeviceArt.xaml.</summary>
+    private static FrameworkElement DeviceArtGallery()
+    {
+        var panel = new WrapPanel { Width = 380 };
+        foreach (var key in Services.DeviceArtKeys.All)
+        {
+            var cell = new StackPanel { Width = 92, Margin = new Thickness(0, 0, 0, 12) };
+            var row = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
+            var big = new Controls.DeviceArtIcon { ArtKey = key, Width = 40, Height = 40 };
+            big.SetResourceReference(Controls.DeviceArtIcon.StrokeProperty, "TextPrimary");
+            var badge = new Border { Width = 28, Height = 28, CornerRadius = new CornerRadius(14), BorderThickness = new Thickness(1),
+                Margin = new Thickness(8, 0, 0, 0), VerticalAlignment = VerticalAlignment.Bottom };
+            badge.SetResourceReference(Border.BackgroundProperty, "Badge");
+            badge.SetResourceReference(Border.BorderBrushProperty, "CardBorder");
+            var small = new Controls.DeviceArtIcon { ArtKey = key, Width = 17, Height = 17 };
+            small.SetResourceReference(Controls.DeviceArtIcon.StrokeProperty, "TextSecondary");
+            badge.Child = small;
+            row.Children.Add(big);
+            row.Children.Add(badge);
+            cell.Children.Add(row);
+            var label = new TextBlock { Text = key, FontSize = 10.5, HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 4, 0, 0) };
+            label.SetResourceReference(TextBlock.ForegroundProperty, "TextSecondary");
+            cell.Children.Add(label);
+            panel.Children.Add(cell);
+        }
+        return panel;
     }
 
     private static void RenderLoose(FrameworkElement[] items, string path)

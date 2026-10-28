@@ -35,6 +35,11 @@ public sealed class DemoAirDropService : IAirDropService
     public Task SetModeAsync(ReceiveMode mode) { _mode = mode; return Task.CompletedTask; }
     public Task UpdateOptionsAsync(ServiceOptions options) { _opt = options; return Task.CompletedTask; }
 
+    internal static readonly AirDrop.Core.Devices.HostDevice DemoPc = new()
+    {
+        Manufacturer = "Acer", Model = "Nitro V 15", Chassis = AirDrop.Core.Devices.HostChassis.Laptop, Platform = "windows",
+    };
+
     private async Task RunAsync(CancellationToken ct)
     {
         try
@@ -46,6 +51,9 @@ public sealed class DemoAirDropService : IAirDropService
             PeerFound?.Invoke(this, new PeerInfo("p2", "Ayşe'nin MacBook Air'i", DeviceKind.Mac, "Mac14,2"));
             await Task.Delay(2200, ct);
             PeerFound?.Invoke(this, new PeerInfo("p3", "Ofis iPad", DeviceKind.iPad, "iPad13,18"));
+            await Task.Delay(800, ct);
+            // A NitroDrop PC: claims a Mac id on the wire (for iOS) and sends its real hardware in the NitroDropDevice marker.
+            PeerFound?.Invoke(this, new PeerInfo("p4", "Mert'in PC'si", DeviceKind.Windows, "MacBookPro18,3", null, DemoPc));
             await Task.Delay(8000, ct);
 
             if (_mode != ReceiveMode.Off && AskHandler is { } ask)

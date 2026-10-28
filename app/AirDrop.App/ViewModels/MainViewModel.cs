@@ -488,6 +488,16 @@ public sealed class MainViewModel : Observable
         Raise(nameof(HasHistory));
     }
 
+#if DEBUG
+    /// <summary>Snapshot only: shows (or with null, removes) sample rows without writing them to history.json.</summary>
+    internal void PreviewHistory(IReadOnlyList<HistoryEntry>? entries)
+    {
+        if (entries is null) { History.Clear(); foreach (var e in _history.Entries) History.Add(new HistoryItemViewModel(e)); }
+        else foreach (var e in entries) History.Insert(0, new HistoryItemViewModel(e));
+        Raise(nameof(HasHistory));
+    }
+#endif
+
     private static long SafeSize(string path)
     {
         try

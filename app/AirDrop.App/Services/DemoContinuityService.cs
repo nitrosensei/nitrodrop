@@ -55,6 +55,9 @@ public sealed class DemoContinuityService : IContinuityService
     public event Action<RecentCall>? CallLogged;
     public event Action<NowPlaying?>? NowPlayingChanged;
 
+    /// <summary>What the demo iPhone's Device Information Service reports (iPhone 15 Pro).</summary>
+    public const string DemoModelId = "iPhone16,1";
+
     public static readonly PhoneDevice DemoPhone = new("demo-iphone", "Emre'nin iPhone'u", 0xA4C3F0112233, true, true);
 
     public Task StartAsync(CancellationToken ct = default)
@@ -74,7 +77,8 @@ public sealed class DemoContinuityService : IContinuityService
     {
         Device = DemoPhone;
         SetStatus(new PhoneLinkStatus(PhoneLinkState.Connected, $"{DemoPhone.Name} bağlı", null, DemoPhone.Name, PhoneLinkIssue.None,
-            PhoneFeatures.Notifications | PhoneFeatures.Messages | PhoneFeatures.Media | PhoneFeatures.Calls | PhoneFeatures.Contacts));
+            PhoneFeatures.Notifications | PhoneFeatures.Messages | PhoneFeatures.Media | PhoneFeatures.Calls | PhoneFeatures.Contacts,
+            DemoModelId));
         CallCapability = CallCapabilityPolicy.Decide(Capability == Nitro.Continuity.Runtime.CallCapability.FullAudio
             ? new CallEnvironment(true, true, PhoneLineAccess.Allowed, true, true, true)
             : new CallEnvironment(false, AncsAvailable: true));

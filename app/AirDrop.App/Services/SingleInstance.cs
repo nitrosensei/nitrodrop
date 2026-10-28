@@ -32,7 +32,7 @@ public sealed class SingleInstance : IDisposable
         try
         {
             using var c = new NamedPipeClientStream(".", Name, PipeDirection.Out);
-            c.Connect(2000);
+            c.Connect(5000);   // a big Explorer selection starts many forwarders at once; the server takes one at a time
             using var w = new StreamWriter(c, Encoding.UTF8);
             w.Write(string.Join('\n', args));
             return true;

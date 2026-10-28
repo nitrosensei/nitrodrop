@@ -49,11 +49,20 @@
     <Compile Include="..\AirDrop.App\Setup\CodeSigner.cs" Link="App\Setup\CodeSigner.cs" />
   </ItemGroup>
 
+  <!-- Explorer "NitroDrop ile gönder": command line parsing, send batching, HKCU verb / SendTo builder (WPF-free). -->
+  <ItemGroup>
+    <Compile Include="..\AirDrop.App\Services\UiStrings.cs" Link="App\Shell\UiStrings.cs" />
+    <Compile Include="..\AirDrop.App\Services\LaunchArgs.cs" Link="App\Shell\LaunchArgs.cs" />
+    <Compile Include="..\AirDrop.App\Services\SendBatcher.cs" Link="App\Shell\SendBatcher.cs" />
+    <Compile Include="..\AirDrop.App\Services\ExplorerMenu.cs" Link="App\Shell\ExplorerMenu.cs" />
+  </ItemGroup>
+
   <!-- "Telefon" tab logic (WPF-free): view model, demo continuity service, contacts/settings. -->
   <ItemGroup>
     <Compile Include="..\AirDrop.App\ViewModels\PhoneViewModel.cs" Link="App\Phone\PhoneViewModel.cs" />
     <Compile Include="..\AirDrop.App\Services\DemoContinuityService.cs" Link="App\Phone\DemoContinuityService.cs" />
     <Compile Include="..\AirDrop.App\Services\PhoneContacts.cs" Link="App\Phone\PhoneContacts.cs" />
+    <Compile Include="..\AirDrop.App\Services\DeviceModels.cs" Link="App\DeviceModels.cs" />
   </ItemGroup>
 
 </Project>

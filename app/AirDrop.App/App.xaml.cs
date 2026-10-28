@@ -12,7 +12,8 @@ using Forms = System.Windows.Forms;
 namespace AirDrop.App;
 
 /// <remarks>
-/// Command line: <c>--send &lt;files…&gt;</c> (Explorer "NitroDrop ile gönder"), <c>--background</c> (autostart, tray only),
+/// Command line: <c>--send &lt;files…&gt;</c> (Explorer "NitroDrop ile gönder", Gönder menu), <c>--send-list &lt;file&gt;</c>
+/// (MSIX IExplorerCommand with a long selection, see <see cref="LaunchArgs"/>), <c>--background</c> (autostart, tray only),
 /// <c>--setup</c> / <c>--setup-resume</c> (open the "Gelişmiş Kurulum" wizard), <c>--setup-dry-run</c> (the wizard logs
 /// commands instead of running them), <c>--setup-helper …</c> (the elevated helper, see Setup/ElevatedHelper.cs).
 /// </remarks>
@@ -28,6 +29,8 @@ public partial class App : Application
     private SetupWizard? _wizard;
     private ContinuityHost? _phone;
     private AppSettings? _settings;
+    private readonly SendBatcher _sendBatch = new();
+    private readonly System.Collections.Generic.List<string> _deferredSend = new();
 
     public static bool IsDark { get; private set; }
     public static event EventHandler? ThemeChanged;
@@ -53,7 +56,11 @@ public partial class App : Application
             Shutdown();
             return;
         }
-        if (_single is not null) _single.ArgsReceived += args => Dispatcher.Invoke(() => HandleArgs(args));
+        // Forwarded --send calls arrive in bursts (one process per selected file): batch them (SendBatcher), deliver on
+        // the UI thread; until the window exists they wait in _deferredSend.
+        _sendBatch.Flushed += (files, continues) => Dispatcher.BeginInvoke(() => DeliverSend(files, continues));
+        QueueSend(e.Args);
+        if (_single is not null) _single.ArgsReceived += args => Dispatcher.Invoke(() => { QueueSend(args); HandleArgs(args); });
 
         ApplyTheme();
         SystemEvents.UserPreferenceChanged += (_, a) =>
@@ -92,6 +99,8 @@ public partial class App : Application
             // Same TLS identity as AirDrop (default pfx); name follows Ayarlar → Görünen ad.
             _sync = new NitroSyncSource();
             contacts = ContactBookResolver.OpenDefault();
+            // Explorer menu: re-point a moved portable folder / drop a portable leftover under MSIX (Services/ExplorerMenu.cs).
+            ExplorerMenuIntegration.Default.StartupCheck();
         }
 
         _vm = new MainViewModel(_svc, _sync, settings, history, contacts, Dispatcher);
@@ -124,6 +133,12 @@ public partial class App : Application
         bool background = e.Args.Contains("--background") || PackagedApp.LaunchedByStartupTask();
         if (!background) _main.Show();
         HandleArgs(e.Args);
+        if (_deferredSend.Count > 0)
+        {
+            var early = _deferredSend.ToArray();
+            _deferredSend.Clear();
+            DeliverSend(early, continues: false);
+        }
         if (!settings.OnboardingCompleted && !background) ShowOnboarding();
         await _vm.StartAsync();
         await _phone.StartAsync();
@@ -148,20 +163,36 @@ public partial class App : Application
         }
     }
 
+    /// <summary>--send / --send-list paths into the batcher (works before the window exists).</summary>
+    private void QueueSend(string[] args)
+    {
+        var req = LaunchArgs.ParseSend(args);
+        if (req.Requested) _sendBatch.Add(req.Paths);
+    }
+
+    /// <summary>One debounced batch: replaces the pending files, or extends them when it continues the previous batch.</summary>
+    private void DeliverSend(System.Collections.Generic.IReadOnlyList<string> files, bool continues)
+    {
+        if (_vm is null)
+        {
+            _deferredSend.AddRange(files);
+            return;
+        }
+        var merged = continues
+            ? _vm.PendingFiles.Concat(files).Distinct(StringComparer.OrdinalIgnoreCase).ToArray()
+            : files.ToArray();
+        if (merged.Length > 0)
+        {
+            _vm.Tab = MainTab.Nearby;
+            _vm.PendingFiles = merged;
+        }
+        ShowMain();
+    }
+
     private void HandleArgs(string[] args)
     {
         if (_vm is null) return;
-        int i = Array.IndexOf(args, "--send");
-        if (i >= 0)
-        {
-            var files = args.Skip(i + 1).Where(a => File.Exists(a) || Directory.Exists(a)).ToArray();
-            if (files.Length > 0)
-            {
-                _vm.Tab = MainTab.Nearby;
-                _vm.PendingFiles = files;
-            }
-        }
-        if (i >= 0 || args.Contains("--show")) ShowMain();
+        if (args.Contains("--show")) ShowMain();
         if (args.Contains(ResumeRegistration.ResumeFlag) || args.Contains("--setup")) ShowSetupWizard(false);
     }
 
@@ -272,6 +303,7 @@ public partial class App : Application
         if (_phone is not null) await _phone.DisposeAsync();
         if (_svc is not null) await _svc.DisposeAsync();
         _single?.Dispose();
+        _sendBatch.Dispose();
         Shutdown();
     }
 

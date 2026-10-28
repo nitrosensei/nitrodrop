@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:v="clr-namespace:AirDrop.App.Views"
              xmlns:vm="clr-namespace:AirDrop.App.ViewModels"
+             xmlns:ctl="clr-namespace:AirDrop.App.Controls"
              FontFamily="{StaticResource UiFont}" Foreground="{DynamicResource TextPrimary}"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
 
@@ -122,8 +123,8 @@
                     </Grid.ColumnDefinitions>
                     <Grid Width="40" Height="40" VerticalAlignment="Top">
                         <Border CornerRadius="10" Background="{DynamicResource SelfAvatar}"/>
-                        <TextBlock Text="&#xE8EA;" FontFamily="{StaticResource IconFont}" FontSize="19" Foreground="{DynamicResource OnSelfAvatar}"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ctl:DeviceArtIcon Width="26" Height="26" ArtKey="{Binding PhoneArtKey}" Stroke="{DynamicResource OnSelfAvatar}"
+                                           ToolTip="{Binding PhoneModelName}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <Ellipse Width="12" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,-3,-3"
                                  Stroke="{DynamicResource Card}" StrokeThickness="2">
                             <Ellipse.Style>
@@ -145,6 +146,8 @@
                             <Control Style="{StaticResource Spinner}" Width="13" Height="13" Margin="8,1,0,0"
                                      Visibility="{Binding IsBusy, Converter={StaticResource Vis}}"/>
                         </StackPanel>
+                        <TextBlock Text="{Binding PhoneModelName}" Style="{StaticResource MonoLabel}" Margin="0,2,0,0"
+                                   Visibility="{Binding HasPhoneModel, Converter={StaticResource Vis}}"/>
                         <TextBlock Text="{Binding StatusDetail}" Style="{StaticResource PCaption}" Margin="0,2,0,0"
                                    Visibility="{Binding HasStatusDetail, Converter={StaticResource Vis}}"/>
                         <!-- feature chips when connected -->
