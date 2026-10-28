@@ -87,15 +87,17 @@ everything. The driver is **not** part of the signed app package. Everything els
 
 ## Download
 See [Releases](https://github.com/nitrosensei/nitrodrop/releases):
-- `NitroDrop-<version>-x64.msix` — installer (recommended)
+- `NitroDrop-<version>-x64.msix` + `NitroDrop-dev.cer` + `install-msix.ps1` — installer: run
+  `powershell -ExecutionPolicy Bypass -File install-msix.ps1` in that folder (one admin prompt)
 - `NitroDrop-<version>-win-x64-portable.zip` — portable
 - `NitroDrop-driver-<version>...zip` — optional Wi-Fi driver, unsigned (test-signing only)
 
 Requires Windows 10 (2004 or later) or Windows 11, x64.
 
 ## Code signing
-Free code signing provided by [SignPath.io](https://signpath.io), certificate by [SignPath Foundation](https://signpath.org).
-See [CODE_SIGNING_POLICY.md](CODE_SIGNING_POLICY.md) for who builds, reviews and approves releases, and what is (and is not) signed.
+Releases are not signed with a publicly trusted certificate yet. The MSIX is signed with a per-build self-signed
+certificate (`install-msix.ps1` trusts it once); a Microsoft Store listing is planned.
+See [CODE_SIGNING_POLICY.md](CODE_SIGNING_POLICY.md) for how releases are built and what is (and is not) signed.
 
 ## Privacy
 No telemetry, no accounts, no cloud. Network traffic only goes to nearby devices you share with, PCs you paired,
@@ -115,7 +117,7 @@ dotnet test AirDrop.slnx                   # .NET 10 SDK
 ..\packaging\build-release.ps1 -NoSign     # MSIX + portable + driver zip in packaging\out
 ```
 The driver needs Visual Studio Build Tools (MSVC) + WDK 10.0.26100: `driver\build.ps1`.
-Releases are built by GitHub Actions ([release.yml](.github/workflows/release.yml)) and signed via SignPath.
+Releases are built by GitHub Actions ([release.yml](.github/workflows/release.yml)).
 
 ## License
 MIT — see [LICENSE](LICENSE). Third-party components: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).

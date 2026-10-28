@@ -1,5 +1,7 @@
-# Release: build on a GitHub-hosted runner from a v* tag, sign with SignPath (SignPath Foundation certificate),
-# publish a DRAFT GitHub release. Code signing policy: CODE_SIGNING_POLICY.md. Setup steps: docs/signpath-apply.md.
+# Release: build on a GitHub-hosted runner from a v* tag and publish a DRAFT GitHub release.
+# Code signing policy: CODE_SIGNING_POLICY.md.
+# Default (no SignPath secrets): the MSIX is signed with a self-signed certificate created on the runner for this build.
+# Optional SignPath path (if a SignPath project is ever approved; setup steps: docs/signpath-apply.md):
 #
 # Repository settings (Settings → Secrets and variables → Actions):
 #   secret   SIGNPATH_API_TOKEN            API token of the SignPath CI user (submitter)
@@ -10,8 +12,6 @@
 #   variable MSIX_PUBLISHER                exact subject of the SignPath Foundation certificate, e.g.
 #                                          "CN=SignPath Foundation, O=SignPath Foundation, L=Lewes, S=Delaware, C=US"
 #                                          (PLACEHOLDER - copy it from the certificate SignPath shows you)
-# Until SignPath is configured (no SIGNPATH_API_TOKEN), the workflow still builds, tests and creates a draft
-# release with UNSIGNED artifacts so the project has public releases to point the application at.
 name: release
 
 on:
@@ -70,9 +70,17 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
           MSIX_PUBLISHER: ${{ vars.MSIX_PUBLISHER }}
+          HAS_SIGNPATH: ${{ secrets.SIGNPATH_API_TOKEN != '' }}
         run: |
-          $publisher = if ($env:MSIX_PUBLISHER) { $env:MSIX_PUBLISHER } else { Write-Warning 'MSIX_PUBLISHER not set: MSIX Publisher stays CN=Nitrobyte (cannot be signed by SignPath)'; 'CN=Nitrobyte' }
-          & .\packaging\build-release.ps1 -NoSign -DriverOptional -Version $env:VERSION -Publisher $publisher
+          if ($env:HAS_SIGNPATH -eq 'true') {
+            $publisher = if ($env:MSIX_PUBLISHER) { $env:MSIX_PUBLISHER } else { throw 'MSIX_PUBLISHER must be set when SignPath is configured' }
+            & .\packaging\build-release.ps1 -NoSign -DriverOptional -Version $env:VERSION -Publisher $publisher
+          } else {
+            # No public code-signing certificate yet: sign the MSIX with a self-signed certificate created on this
+            # runner for this build only (its private key disappears with the runner). Users trust the published
+            # .cer once via install-msix.ps1.
+            & .\packaging\build-release.ps1 -Sign -DriverOptional -Version $env:VERSION -Publisher 'CN=Nitrobyte'
+          }
           if (-not $?) { exit 1 }
 
       - name: Collect artifacts
@@ -83,6 +91,9 @@ jobs:
           New-Item -ItemType Directory -Force signing-input, driver | Out-Null
           Move-Item "packaging/out/NitroDrop-$env:VERSION-x64.msix" signing-input/
           Move-Item "packaging/out/NitroDrop-$env:VERSION-win-x64-portable.zip" signing-input/
+          foreach ($f in 'NitroDrop-dev.cer', 'install-msix.ps1') {
+            if (Test-Path "packaging/out/$f") { Move-Item "packaging/out/$f" signing-input/ }
+          }
           Get-ChildItem packaging/out -Filter "NitroDrop-driver-$env:VERSION.zip" | Move-Item -Destination driver/
           Get-ChildItem signing-input, driver | Format-Table Name, Length
 
@@ -200,14 +211,14 @@ jobs:
           if [ "$SIGNED" = "true" ]; then
             signing="The MSIX and the NitroDrop binaries in the portable zip are code-signed. Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org). See [CODE_SIGNING_POLICY.md](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_SHA}/CODE_SIGNING_POLICY.md)."
           else
-            signing="**These artifacts are NOT code-signed** (SignPath not configured yet)."
+            signing="**Not signed with a public code-signing certificate yet.** The MSIX is signed with a self-signed certificate made for this build (\`NitroDrop-dev.cer\`). To install, put the three files \`NitroDrop-${VERSION}-x64.msix\`, \`NitroDrop-dev.cer\` and \`install-msix.ps1\` in one folder and run \`powershell -ExecutionPolicy Bypass -File install-msix.ps1\` (one admin prompt: it trusts the certificate in TrustedPeople only). Or use the portable zip (SmartScreen may warn: More info → Run anyway)."
           fi
           cat > notes.md <<NOTES
           NitroDrop ${VERSION}
 
           ${signing}
 
-          - \`NitroDrop-${VERSION}-x64.msix\` — installer package
+          - \`NitroDrop-${VERSION}-x64.msix\` — installer package (+ \`NitroDrop-dev.cer\`, \`install-msix.ps1\`)
           - \`NitroDrop-${VERSION}-win-x64-portable.zip\` — portable, no installation
           - \`NitroDrop-driver-${VERSION}-UNSIGNED-test-signing-only.zip\` — optional Wi-Fi driver for the direct iPhone
             link. **Not signed** (kernel drivers need Microsoft attestation); it only works with Windows test signing,

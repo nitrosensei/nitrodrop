@@ -1,6 +1,8 @@
 # Code signing policy
 
-Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org).
+**Current status: NitroDrop releases are not signed with a publicly trusted code-signing certificate.**
+An application to the SignPath Foundation programme was declined in October 2026 because the project is still new;
+we may apply again later. A Microsoft Store listing (where Microsoft signs the package) is planned.
 
 This policy applies to the NitroDrop releases published on this repository's
 [Releases](https://github.com/nitrosensei/nitrodrop/releases) page.
@@ -15,25 +17,26 @@ This policy applies to the NitroDrop releases published on this repository's
 - **Committers** may change the source code directly.
 - **Reviewers**: every change proposed by someone who is not a committer (for example a pull request from a fork) is
   reviewed by a committer before it is merged.
-- **Approvers** approve each signing request in SignPath before anything is signed.
-- All team members use multi-factor authentication for GitHub and SignPath.
+- **Approvers** decide when a version tag is pushed and the draft release is published.
+- All team members use multi-factor authentication for GitHub.
 
-## How releases are built and signed
+## How releases are built
 
 1. A maintainer pushes a version tag (`v*`). GitHub Actions ([`.github/workflows/release.yml`](.github/workflows/release.yml))
-   builds the release on a GitHub-hosted Windows runner from that tag, runs the tests and uploads the **unsigned**
-   artifacts with `actions/upload-artifact`.
-2. The workflow submits a signing request to SignPath (`signpath/github-action-submit-signing-request`). SignPath verifies
-   that the artifact comes from this repository's GitHub workflow (origin verification).
-3. An approver checks the request (tag, commit, build log) and approves it in SignPath. Only then is it signed.
-4. The signed files are attached to a draft GitHub release, checked and published.
+   builds the release on a GitHub-hosted Windows runner from that tag and runs the tests.
+2. The MSIX is signed on that runner with a **self-signed certificate created for that build only** (`CN=Nitrobyte`).
+   Its private key never leaves the runner and is gone when the job ends. The public part is published as
+   `NitroDrop-dev.cer`; `install-msix.ps1` adds it to the PC's *Trusted People* store (not *Root*, so it cannot vouch
+   for websites) and installs the package.
+3. The artifacts are attached to a draft GitHub release, checked and published. Every file's SHA-256 is shown on the
+   release page.
 
-Nothing is signed from a developer machine. Local builds use a self-signed development certificate (`CN=Nitrobyte`,
-`packaging/sign-dev.ps1`) that is not trusted outside the developer's PC.
+Nothing published is built on a developer machine, except the separately labelled unsigned driver zip (the runner
+has no WDK).
 
-## What is signed
+## What a publicly trusted signature would cover
 
-Only binaries built from this repository's source code:
+When a public certificate (or the Microsoft Store) is in place, it will cover only binaries built from this repository's source code:
 
 - `NitroDrop.exe`, `NitroDrop.dll` — the app
 - `NitroDrop.Radio.exe`, `NitroDrop.Radio.dll` — the elevated Wi-Fi radio helper
@@ -42,11 +45,10 @@ Only binaries built from this repository's source code:
 - our own libraries: `AirDrop.Core.dll`, `Nitro.Awdl.dll`, `Nitro.Sync.dll`, `Nitro.Continuity.dll`,
   `Nitro.Continuity.Windows.dll`
 - `NitroDrop.ShellExt.dll` — the Explorer "Send with NitroDrop" menu (native C++)
-- the package `NitroDrop-<version>-x64.msix` (its Publisher is the SignPath Foundation certificate subject) and the
-  files inside `NitroDrop-<version>-win-x64-portable.zip`
+- the package `NitroDrop-<version>-x64.msix` and the files inside `NitroDrop-<version>-win-x64-portable.zip`
 
 Product name and version metadata of every signed file are set by the build (`Product` = NitroDrop, `Version` = the
-release version) and enforced by the SignPath signing policy.
+release version).
 
 Third-party files in the packages (the .NET runtime, WPF, QRCoder, …) keep their original publishers' signatures or
 are left unsigned; we do not re-sign other people's binaries.
@@ -54,7 +56,7 @@ are left unsigned; we do not re-sign other people's binaries.
 ## What is NOT signed
 
 - **The Wi-Fi kernel driver** (`airdropwifi.sys`, `.inf`, `.cat`) and `adwifi-cli.exe`. Kernel drivers need a
-  Microsoft attestation signature, which a SignPath certificate cannot provide. They are published separately as
+  Microsoft attestation signature, which an ordinary code-signing certificate cannot provide. They are published separately as
   `NitroDrop-driver-<version>.zip`, clearly labelled *unsigned / test signing only*, and are never part of the signed
   packages. The setup wizard explains every system change (BitLocker, Secure Boot, test signing) before making it and
   can undo all of them.
@@ -72,4 +74,4 @@ specifically requested by the user or the person installing or operating it.
 ## Reporting
 
 Security issues or a suspected misuse of the signing certificate: open a GitHub issue (without exploit details) or
-write to the maintainer listed above; we will contact SignPath Foundation and help investigate.
+write to the maintainer listed above.
