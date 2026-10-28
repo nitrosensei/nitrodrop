@@ -36,7 +36,7 @@ public sealed class SettingsViewModel : Observable
 {
     public const string WebsiteUrl = "https://nitrobyte.com.tr";
     // Placeholder until the public repository exists.
-    public const string RepoUrl = "https://github.com/nitrobyte/nitrodrop";
+    public const string RepoUrl = "https://github.com/z3x0fly/nitrodrop";
 
     private readonly AppSettings _s;
     private readonly IContactResolver _contacts;

@@ -3,14 +3,14 @@
 Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org).
 
 This policy applies to the NitroDrop releases published on this repository's
-[Releases](https://github.com/nitrobyte/nitrodrop/releases) page.
+[Releases](https://github.com/z3x0fly/nitrodrop/releases) page.
 
 ## Team roles
 
 | Role | Members |
 |---|---|
-| Committers and reviewers | [Emre Can Temur](https://github.com/GITHUB_HANDLE) (Nitrobyte) |
-| Approvers | [Emre Can Temur](https://github.com/GITHUB_HANDLE) (Nitrobyte) |
+| Committers and reviewers | [Emre Can Temur](https://github.com/z3x0fly) (Nitrobyte) |
+| Approvers | [Emre Can Temur](https://github.com/z3x0fly) (Nitrobyte) |
 
 - **Committers** may change the source code directly.
 - **Reviewers**: every change proposed by someone who is not a committer (for example a pull request from a fork) is
