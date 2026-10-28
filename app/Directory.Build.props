@@ -5,4 +5,14 @@
   <PropertyGroup>
     <DefaultItemExcludes>$(DefaultItemExcludes);bin/**;obj/**;bin-*/**;obj-*/**</DefaultItemExcludes>
   </PropertyGroup>
+
+  <!-- File metadata of every binary we build (SignPath's signing policy enforces product name + version on signed
+       files; packaging\build-release.ps1 passes -p:Version=<release version>). -->
+  <PropertyGroup>
+    <Product>NitroDrop</Product>
+    <Company>Nitrobyte</Company>
+    <Copyright>Copyright (c) 2026 Nitrobyte — Emre Can Temur. MIT License.</Copyright>
+    <!-- ProductVersion = the release version exactly (no "+<commit>" suffix), as the signing policy expects. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+  </PropertyGroup>
 </Project>

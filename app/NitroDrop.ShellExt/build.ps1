@@ -14,6 +14,7 @@
 [CmdletBinding()]
 param(
     [string]$OutDir,
+    [string]$Version = '0.0.0.0',   # a.b.c.d -> VERSIONINFO (ProductName NitroDrop, ShellExt.rc)
     [switch]$SkipSelfTest
 )
 $ErrorActionPreference = 'Stop'
@@ -26,8 +27,7 @@ $OutDir = (Resolve-Path $OutDir).Path
 $objDir = Join-Path $OutDir 'obj'
 New-Item -ItemType Directory -Force $objDir | Out-Null
 
-$vs   = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2022\BuildTools"
-$msvc = (Get-ChildItem "$vs\VC\Tools\MSVC" -ErrorAction Stop | Sort-Object Name -Descending | Select-Object -First 1).FullName
+$msvc = & (Join-Path $PSScriptRoot '..\..\tools\find-msvc.ps1')   # any VS 2022+ with C++ (vswhere), else Build Tools
 $kits = "${env:ProgramFiles(x86)}\Windows Kits\10"
 $sdk  = '10.0.26100.0'
 $cl   = "$msvc\bin\Hostx64\x64\cl.exe"
@@ -39,8 +39,17 @@ $flags = '/nologo', '/W4', '/WX', '/sdl', '/O2', '/MT', '/EHsc', '/GS', '/guard:
          '/DUNICODE', '/D_UNICODE', '/DWIN32_LEAN_AND_MEAN'
 $sysLibs = 'ole32.lib', 'shell32.lib', 'shlwapi.lib', 'uuid.lib', 'user32.lib', 'kernel32.lib'
 
+if ($Version -notmatch '^\d{1,5}\.\d{1,5}\.\d{1,5}\.\d{1,5}$') { throw "-Version must be a.b.c.d (got '$Version')" }
+$v = $Version.Split('.')
+$rc = "$kits\bin\$sdk\x64\rc.exe"
+if (-not (Test-Path $rc)) { throw "rc.exe not found under $kits\bin\$sdk (install the Windows SDK $sdk)" }
+$res = Join-Path $objDir 'ShellExt.res'
+& $rc /nologo "/I$kits\Include\$sdk\um" "/I$kits\Include\$sdk\shared" /dNITRO_VER_MAJOR=$($v[0]) /dNITRO_VER_MINOR=$($v[1]) `
+    /dNITRO_VER_BUILD=$($v[2]) /dNITRO_VER_REV=$($v[3]) "/dNITRO_VER_STR=\`"$Version\`"" "/fo$res" (Join-Path $src 'ShellExt.rc')
+if ($LASTEXITCODE) { throw "rc ShellExt.rc failed (exit $LASTEXITCODE)" }
+
 $dll = Join-Path $OutDir 'NitroDrop.ShellExt.dll'
-& $cl @flags @incs "/Fo$objDir\ShellExt.obj" "/Fe$dll" /LD (Join-Path $src 'ShellExt.cpp') `
+& $cl @flags @incs "/Fo$objDir\ShellExt.obj" "/Fe$dll" /LD (Join-Path $src 'ShellExt.cpp') $res `
     /link /WX /DLL /NXCOMPAT /DYNAMICBASE /guard:cf "/DEF:$(Join-Path $src 'ShellExt.def')" "/IMPLIB:$objDir\NitroDrop.ShellExt.lib" @libs @sysLibs
 if ($LASTEXITCODE) { throw "cl NitroDrop.ShellExt.dll failed (exit $LASTEXITCODE)" }
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SignPath artifact configuration for NitroDrop (paste into the SignPath project → Artifact configurations; keep this
+  file in sync). Input: the GitHub workflow artifact "signing-input" uploaded by .github/workflows/release.yml
+  (actions/upload-artifact zips it, hence the outer <zip-file>), containing
+      NitroDrop-<version>-x64.msix
+      NitroDrop-<version>-win-x64-portable.zip
+  Only NitroDrop's own binaries are signed; third-party files (.NET runtime, WPF, QRCoder, WinRT) are left as they are.
+  The driver zip is NOT part of the signing input (kernel drivers need Microsoft attestation).
+  MSIX: the AppxManifest Identity Publisher must equal the SignPath Foundation certificate subject
+  (build-release.ps1 -Publisher, repository variable MSIX_PUBLISHER).
+  Metadata restrictions: every signed PE file must say ProductName = NitroDrop and ProductVersion = the release
+  version (app/Directory.Build.props, app/NitroDrop.ShellExt/ShellExt.rc, build-release.ps1 -Version).
+-->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <parameters>
+    <parameter name="version" required="true" />
+  </parameters>
+  <zip-file>
+    <msix-file path="NitroDrop-${version}-x64.msix">
+      <pe-file-set product-name="NitroDrop" product-version="${version}">
+        <include path="NitroDrop.exe" />
+        <include path="NitroDrop.dll" />
+        <include path="NitroDrop.Radio.exe" />
+        <include path="NitroDrop.Radio.dll" />
+        <include path="NitroDrop.SyncHost.exe" />
+        <include path="NitroDrop.SyncHost.dll" />
+        <include path="nitro-phoneline-probe.exe" />
+        <include path="nitro-phoneline-probe.dll" />
+        <include path="AirDrop.Core.dll" />
+        <include path="Nitro.Awdl.dll" />
+        <include path="Nitro.Sync.dll" />
+        <include path="Nitro.Continuity.dll" />
+        <include path="Nitro.Continuity.Windows.dll" />
+        <include path="NitroDrop.ShellExt.dll" />
+        <include path="*/NitroDrop.resources.dll" max-matches="unbounded" />
+        <for-each>
+          <authenticode-sign />
+        </for-each>
+      </pe-file-set>
+      <authenticode-sign />
+    </msix-file>
+    <zip-file path="NitroDrop-${version}-win-x64-portable.zip">
+      <pe-file-set product-name="NitroDrop" product-version="${version}">
+        <include path="NitroDrop/NitroDrop.exe" />
+        <include path="NitroDrop/NitroDrop.dll" />
+        <include path="NitroDrop/NitroDrop.Radio.exe" />
+        <include path="NitroDrop/NitroDrop.Radio.dll" />
+        <include path="NitroDrop/NitroDrop.SyncHost.exe" />
+        <include path="NitroDrop/NitroDrop.SyncHost.dll" />
+        <include path="NitroDrop/nitro-phoneline-probe.exe" />
+        <include path="NitroDrop/nitro-phoneline-probe.dll" />
+        <include path="NitroDrop/AirDrop.Core.dll" />
+        <include path="NitroDrop/Nitro.Awdl.dll" />
+        <include path="NitroDrop/Nitro.Sync.dll" />
+        <include path="NitroDrop/Nitro.Continuity.dll" />
+        <include path="NitroDrop/Nitro.Continuity.Windows.dll" />
+        <include path="NitroDrop/*/NitroDrop.resources.dll" max-matches="unbounded" />
+        <for-each>
+          <authenticode-sign />
+        </for-each>
+      </pe-file-set>
+    </zip-file>
+  </zip-file>
+</artifact-configuration>

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   NitroDrop full-trust MSIX (packaged classic app / Desktop Bridge). build-release.ps1 copies this into the layout and
-  replaces __VERSION__ and __PUBLISHER__. Identity Name + Publisher must match the signing certificate subject.
+  replaces __VERSION__ and __PUBLISHER__. Identity Publisher must equal the signing certificate subject exactly:
+  CN=Nitrobyte for local development (sign-dev.ps1), the SignPath Foundation certificate subject for released builds
+  (build-release.ps1 -Publisher, set from the MSIX_PUBLISHER repository variable in .github/workflows/release.yml).
 
   Why each capability:
     runFullTrust                    WPF desktop app (Windows.FullTrustApplication).

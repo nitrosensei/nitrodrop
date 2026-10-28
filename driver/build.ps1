@@ -7,8 +7,7 @@ param(
     [string]$Kmdf = "1.33"   # 1.33 = Windows 11 21H2+ inbox
 )
 $ErrorActionPreference = 'Stop'
-$vs   = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2022\BuildTools"
-$msvc = (Get-ChildItem "$vs\VC\Tools\MSVC" | Sort-Object Name -Descending | Select-Object -First 1).FullName
+$msvc = & (Join-Path $PSScriptRoot '..\tools\find-msvc.ps1')   # any VS 2022+ with C++ (vswhere), else Build Tools
 $kits = "${env:ProgramFiles(x86)}\Windows Kits\10"
 $ver  = "10.0.26100.0"
 $cl   = "$msvc\bin\Hostx64\x64\cl.exe"
