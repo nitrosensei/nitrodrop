@@ -49,14 +49,14 @@ internal static class Program
             finally { writeLock.Release(); }
         }
 
-        await using var pipe = new NamedPipeClientStream(".", NativeMessaging.PipeName(), PipeDirection.InOut,
-            PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly); // server must run as this user
-        try { await pipe.ConnectAsync(3000); }
+        NamedPipeClientStream pipe;
+        try { pipe = await PipeConnect.ConnectAsync(NativeMessaging.PipeName(), 3000); }
         catch (Exception e) when (e is TimeoutException or IOException or UnauthorizedAccessException)
         {
             await ToBrowser(Encoding.UTF8.GetBytes("{\"type\":\"error\",\"error\":\"nitrodrop_not_running\"}"));
             return 2;
         }
+        await using var pipeLifetime = pipe;
 
         var hello = new JsonObject { ["type"] = "hostHello", ["origin"] = origin };
         await NativeMessaging.WriteAsync(pipe, JsonSerializer.SerializeToUtf8Bytes(hello), NativeMessaging.MaxFromBrowser);

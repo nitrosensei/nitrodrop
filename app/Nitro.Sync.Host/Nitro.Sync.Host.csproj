@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <Compile Include="..\Nitro.Sync\Ipc\NativeMessaging.cs" Link="Shared\NativeMessaging.cs" />
+    <Compile Include="..\Nitro.Sync\Ipc\PipeConnect.cs" Link="Shared\PipeConnect.cs" />
   </ItemGroup>
 
 </Project>

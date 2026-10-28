@@ -553,8 +553,7 @@ public class SyncTests
         await using var pc = NewNode("PC", 53665, pipe: pipeName);
         await pc.Service.StartAsync();
 
-        await using var c = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
-        await c.ConnectAsync(5000);
+        await using var c = await Nitro.Sync.Ipc.PipeConnect.ConnectAsync(pipeName, 5000);
 
         async Task Send(JsonObject o) => await NativeMessaging.WriteAsync(c, JsonSerializer.SerializeToUtf8Bytes(o), NativeMessaging.MaxFromBrowser);
         async Task<JsonObject> ReceiveType(string type)
