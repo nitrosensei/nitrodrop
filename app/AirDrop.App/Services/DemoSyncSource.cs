@@ -33,7 +33,7 @@ public sealed class DemoSyncSource : ISyncSource
     public DeviceState? LocalState { get; } = new()
     {
         DeviceId = "demo-self",
-        DeviceName = Environment.MachineName,
+        DeviceName = LocalPcName.Value,
         Tabs = new[] { new BrowserTab { Browser = BrowserKind.Chrome, Title = "NitroDrop", Url = "https://nitrobyte.com.tr/" } },
     };
 
@@ -79,15 +79,15 @@ public sealed class DemoSyncSource : ISyncSource
             Tabs = new[]
             {
                 new BrowserTab { Browser = BrowserKind.Chrome, WindowId = 1, TabId = 11, Active = true, LastAccessed = Ago(TimeSpan.FromMinutes(1)),
-                    Title = "airdrop-win: Windows için AirDrop", Url = "https://github.com/emrecantemur/airdrop-win" },
+                    Title = "z3x0fly/nitrodrop: NitroDrop", Url = "https://github.com/z3x0fly/nitrodrop" },
                 new BrowserTab { Browser = BrowserKind.Chrome, WindowId = 1, TabId = 12, LastAccessed = Ago(TimeSpan.FromMinutes(4)),
                     Title = "lofi hip hop radio – beats to relax/study to", Url = "https://www.youtube.com/watch?v=jfKfPfyJRdk" },
                 new BrowserTab { Browser = BrowserKind.Chrome, WindowId = 1, TabId = 13, LastAccessed = Ago(TimeSpan.FromMinutes(9)),
-                    Title = "Projeler · Nitro", Url = "https://system.nitrobyte.com.tr/projects" },
+                    Title = "İstanbul - Vikipedi", Url = "https://tr.wikipedia.org/wiki/%C4%B0stanbul" },
                 new BrowserTab { Browser = BrowserKind.Chrome, WindowId = 2, TabId = 21, LastAccessed = Ago(TimeSpan.FromMinutes(22)),
                     Title = "c# - RenderTargetBitmap of a VisualBrush is blank - Stack Overflow", Url = "https://stackoverflow.com/questions/2734810" },
                 new BrowserTab { Browser = BrowserKind.Edge, WindowId = 3, TabId = 31, LastAccessed = Ago(TimeSpan.FromHours(1)),
-                    Title = "Gelen Kutusu (3) - emre@nitrobyte.com.tr", Url = "https://mail.google.com/mail/u/0/#inbox" },
+                    Title = "Gelen Kutusu (3) - Gmail", Url = "https://mail.google.com/mail/u/0/#inbox" },
             },
             Apps = new[]
             {

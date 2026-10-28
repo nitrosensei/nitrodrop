@@ -129,13 +129,13 @@ public sealed class DemoContinuityService : IContinuityService
     }
 
     public PhoneNotification AddNotification(string appId, string appName, string title, string? subtitle, string message, DateTime date,
-        bool preExisting = false, AncsCategoryId category = AncsCategoryId.Social, string? positive = null, string? negative = "Sil")
+        bool preExisting = false, AncsCategoryId category = AncsCategoryId.Social, string? positive = null, string? negative = null)
     {
         var flags = AncsEventFlags.NegativeAction | (preExisting ? AncsEventFlags.PreExisting : 0) | (positive is null ? 0 : AncsEventFlags.PositiveAction);
         var n = new PhoneNotification
         {
             Uid = ++_uid, Category = category, Flags = flags, AppIdentifier = appId, AppDisplayName = appName, Title = title,
-            Subtitle = subtitle, Message = message, Date = date, PositiveActionLabel = positive, NegativeActionLabel = negative, AttributesLoaded = true,
+            Subtitle = subtitle, Message = message, Date = date, PositiveActionLabel = positive, NegativeActionLabel = negative ?? AirDrop.App.Localization.PhoneStrings.Phone_Notif_DefaultNegative, AttributesLoaded = true,
         };
         _notifications.Add(n);
         NotificationAdded?.Invoke(n);

@@ -1,12 +1,71 @@
-# NitroDrop
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/banner-dark.png">
+    <img alt="NitroDrop" src="docs/images/banner-light.png" width="820">
+  </picture>
+</p>
 
-**Free, open-source file sharing between iPhone / iPad / Mac and Windows PCs.**
-By [Nitrobyte](https://nitrobyte.com.tr) · Made in Türkiye · MIT licensed
+<p align="center">
+  <b>Free, open-source file sharing between iPhone / iPad / Mac and Windows PCs.</b><br>
+  By <a href="https://nitrobyte.com.tr">Nitrobyte</a> · Made in Türkiye · MIT licensed<br>
+  <a href="https://github.com/z3x0fly/nitrodrop/releases">Download</a> · <a href="#-türkçe">Türkçe</a>
+</p>
 
-> 🇹🇷 Türkçe açıklama aşağıda.
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/nearby-dark.png">
+    <img alt="NitroDrop: nearby devices" src="docs/images/nearby-light.png" width="860">
+  </picture>
+</p>
 
 > **Status: early preview (0.x).** The app, protocol stack and tests are complete; real-hardware testing
-> with iPhones is in progress. Expect rough edges.
+> with iPhones is in progress. Expect rough edges. Screenshots use demo data.
+
+## Screenshots
+
+### Your iPhone on your PC: messages, notifications, calls
+<p align="center">
+  <img alt="Messages" src="docs/images/phone-messages.png" width="32%">
+  <img alt="Notifications" src="docs/images/phone-notifications.png" width="32%">
+  <img alt="Calls" src="docs/images/phone-calls.png" width="32%">
+</p>
+
+### Incoming calls and notifications pop up on the desktop
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/call-ringing-dark.png">
+    <img alt="Incoming call" src="docs/images/call-ringing-light.png" width="360">
+  </picture>
+  <br>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/toast-dark.png">
+    <img alt="WhatsApp notification" src="docs/images/toast-light.png" width="360">
+  </picture>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/toast-sms-dark.png">
+    <img alt="Message notification" src="docs/images/toast-sms-light.png" width="360">
+  </picture>
+</p>
+
+### Receive files · continue where you left off
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/receive-dark.png">
+    <img alt="Incoming files" src="docs/images/receive-light.png" width="300" valign="top">
+  </picture>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/devices-dark.png">
+    <img alt="Open tabs and apps on your other PCs" src="docs/images/devices-light.png" width="540" valign="top">
+  </picture>
+</p>
+
+### First run
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/onboarding-dark.png">
+    <img alt="Getting started" src="docs/images/onboarding-light.png" width="420">
+  </picture>
+</p>
 
 ## What it does
 

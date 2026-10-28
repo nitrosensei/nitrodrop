@@ -23,7 +23,7 @@ public sealed class AppSettings
     private static string FilePath => Path.Combine(DataDir, "settings.json");
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
 
-    public string DeviceName { get; set; } = Environment.MachineName;
+    public string DeviceName { get; set; } = LocalPcName.Value;
     public string ReceiveFolder { get; set; } =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
     public bool PreferCompatibleFormats { get; set; } = true;

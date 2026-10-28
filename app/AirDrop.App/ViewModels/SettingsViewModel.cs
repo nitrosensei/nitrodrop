@@ -129,7 +129,7 @@ public sealed class SettingsViewModel : Observable
         get => _s.DeviceName;
         set
         {
-            var v = string.IsNullOrWhiteSpace(value) ? Environment.MachineName : value.Trim();
+            var v = string.IsNullOrWhiteSpace(value) ? LocalPcName.Value : value.Trim();
             if (v == _s.DeviceName) return;
             _s.DeviceName = v;
             Commit();

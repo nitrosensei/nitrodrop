@@ -19,7 +19,7 @@ public partial class PhonePanel : UserControl
     public PhonePanel()
     {
         InitializeComponent();
-        PcNameText.Text = Environment.MachineName;
+        PcNameText.Text = AirDrop.App.Services.LocalPcName.Value;
         DataContextChanged += (_, _) => Attach(DataContext as PhoneViewModel);
         // Conversation list width follows the main window layout (Views/Responsive.cs).
         DependencyPropertyDescriptor.FromProperty(AirDrop.App.Views.Responsive.ModeProperty, typeof(PhonePanel))

@@ -43,6 +43,7 @@ public partial class App : Application
     {
         base.OnStartup(e);
         var settings = _settings = AppSettings.Load();
+        if (Environment.GetEnvironmentVariable("NITRODROP_DEMO_PCNAME") is { Length: > 0 }) settings.DeviceName = LocalPcName.Value; // public screenshots
         // UI language first: the elevated helper's messages and every window below read it (Localization/Loc.cs).
         // --lang <code> (Debug snapshots, testing) overrides the saved choice for this run without saving it.
         int langArg = Array.IndexOf(e.Args, "--lang");
