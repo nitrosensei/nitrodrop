@@ -30,6 +30,7 @@ Her adımda üç şey yazıyor: **ne yapacaksın**, **ne görmen gerekiyor**, **
 - [ ] Bende hazırlanan dosyalar (`packaging\out\` klasörü), USB bellekte ya da bulutta:
   - `NitroDrop-<sürüm>-x64.msix` (asıl paket), `NitroDrop-dev.cer`, `install-msix.ps1`
   - `NitroDrop-<sürüm>-win-x64-portable.zip` (kurulumsuz sürüm)
+  - `NitroDrop-driver-<sürüm>.zip` (Wi-Fi sürücüsü, **ayrı ve imzasız**; yalnızca Bölüm C için)
 
 ### Hangi paketi kullanayım?
 
@@ -269,7 +270,11 @@ Sihirbaz Acer talimatını gösterir. Acer'da kısaca:
 ### C3. Test modu ve sürücü kurulumu
 
 - [ ] **Test modu** adımı → yönetici izni (UAC) → yeniden başlat. Sağ altta "Test Modu" filigranı görünür.
-- [ ] **Kurulum** adımı: firmware indirilir (Intel lisansını kabul et) → UAC → sürücü kurulur.
+- [ ] **Kurulum** adımı: "Sürücü paketi" kartında **Sürücü paketini seç…** → `NitroDrop-driver-<sürüm>.zip`
+      (ya da içinden çıkardığın `driver\airdropwifi.inf`). "Sürücü paketi hazır" yazmalı. Sonra firmware indirilir
+      (Intel lisansını kabul et) → UAC → sürücü kurulur.
+- [ ] İlk radyo başlangıcında "Wi-Fi bileşeni indirilecek (Wintun, WireGuard LLC)" sorulur → **İndir**
+      (wintun.net'ten bir kez; parmak izi ve WireGuard LLC imzası doğrulanır).
 - [ ] Beklenen: "Kart NitroDrop sürücüsüne bağlandı". Aygıt Yöneticisi'nde (Win + X → Aygıt Yöneticisi) kart
       **Sistem aygıtları** altında, sarı ünlemsiz. Intel Wi-Fi ağ listesinden kaybolur. Bu normal.
 - **Olmazsa:** `%LOCALAPPDATA%\airdrop-win\setup.log` (sihirbazdaki "Kurulum günlüğü" de açar),

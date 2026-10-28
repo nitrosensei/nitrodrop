@@ -132,7 +132,10 @@ slot zamanlayıcısıyla olur.
 
 **Neden ayrı süreç:** sürücü cihazı yalnız SYSTEM/Administrators'a açık (INF SDDL) ve Wintun adaptörü oluşturmak admin
 istiyor; WPF uygulaması yükseltilmeden çalışıyor. Yükseltilmiş tek parça `NitroDrop.Radio.exe` (`app/Nitro.Radio.Host`,
-uygulamayla aynı TFM, çıktıda `NitroDrop.exe`'nin yanında; `wintun.dll` hem yanında hem `wintun\{amd64,arm64}\`).
+uygulamayla aynı TFM, çıktıda `NitroDrop.exe`'nin yanında). `wintun.dll` pakette **yok** (OSI dışı lisans): ilk
+radyo başlangıcında uygulama "Wi-Fi bileşeni indirilecek (Wintun, WireGuard LLC)" diye sorar, onaylanırsa wintun.net'ten
+indirir, zip SHA-256 + DLL SHA-256 + WireGuard LLC Authenticode imzasını doğrular ve `%LOCALAPPDATA%\airdrop-win\wintun\<arch>\`
+altına koyar (`Ip/WintunInstall.cs`); host bu klasörü `--wintun-dir` ile alır ve yüklemeden hemen önce aynı denetimleri yapar.
 
 **Boru protokolü** (`Nitro.Awdl/Ipc/RadioPipe.cs`): ad `NitroDrop.Radio.<kullanıcı SID>`, byte modu, satır başına bir JSON
 (UTF-8, camelCase, enum'lar camelCase metin, bilinmeyen alan/tip yok sayılır, satır ≤256 KB).
@@ -168,8 +171,8 @@ yalnız LAN + Türkçe durum metni. BLE: AWDL hazırken alma modu Herkes ya da g
 
 Kullanıcının yapacakları:
 1. **Önkoşullar:** sürücü kurulu ve kartta bağlı (Gelişmiş Kurulum sihirbazı bitmiş; Ayarlar → Wi-Fi Sürücüsü "Kurulu"),
-   `tools\fetch-wintun.ps1` bir kez çalışmış (`vendor\wintun` dolu), uygulama yeniden derlenmiş (`dotnet build AirDrop.slnx`;
-   çıktıda `NitroDrop.Radio.exe` ve `wintun\amd64\wintun.dll` var). İnternet için başka bir bağlantı (Ethernet/USB/telefon)
+   uygulama derlenmiş (`dotnet build AirDrop.slnx`; çıktıda `NitroDrop.Radio.exe` var). Wintun ilk başlangıçta onayla
+   indirilir (geliştirici makinesinde önceden koymak için: `tools\fetch-wintun.ps1 -InstallForUser`). İnternet için başka bir bağlantı (Ethernet/USB/telefon)
    — kart sürücümüzdeyken Windows Wi-Fi'ı yok.
 2. NitroDrop'u **normal** başlat (yönetici olarak değil). Tek bir UAC penceresi çıkar ("NitroDrop.Radio") → **Evet**.
    İlk seferde Wintun sürücüsü + "NitroDrop AWDL" ağ adaptörü oluşturulur (sistem değişikliği; uygulama kapanınca adaptör silinir).

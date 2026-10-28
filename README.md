@@ -22,12 +22,31 @@ Nitro: NB-0011.
 - **Yedek yol:** USB Wi-Fi adaptör (MT7612U) + Microsoft'un inbox WinUSB'si + user-mode sürücü; kernel kodu/sertifika gerekmez (`docs/usb-plan.md`). Intel kartı olmayan kullanıcılar için.
 - Asla: imzalı-zafiyetli sürücü istismarı (BYOVD).
 
-## Lisans hedefi
-İzin verici (MIT/BSD): iwx ISC, Linux iwlwifi BSD-3 seçeneği, Owly MIT, mt76 BSD-3-Clause-Clear. itlwm (GPL) ve OWL (GPL-3) kodu kopyalanmaz.
+## Lisans
+MIT ([LICENSE](LICENSE)). Üçüncü taraf bileşenler ve lisansları: [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
+(iwx ISC, Linux iwlwifi BSD-3 seçeneği, Owly MIT, QRCoder MIT, AppleDB MIT, yazı tipleri OFL 1.1). itlwm (GPL),
+OWL (GPL-3) ve OpenDrop (GPL-3) kodu kopyalanmaz. Wintun (WireGuard LLC, OSI dışı lisans) pakete konmaz; kullanıcı
+onaylarsa ilk kullanımda indirilip doğrulanır.
+
+## İmzalama / Code signing
+Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org).
+
+- **Code signing policy:** [CODE_SIGNING_POLICY.md](CODE_SIGNING_POLICY.md) — kim imzalar/onaylar, ne imzalanır
+  (NitroDrop.exe, NitroDrop.Radio.exe, NitroDrop.SyncHost.exe, kendi DLL'lerimiz, MSIX, Explorer menüsü DLL'i) ve ne
+  imzalanmaz (çekirdek sürücüsü: ayrı `NitroDrop-driver-<sürüm>.zip`, yalnızca test imzalama; Wintun: WireGuard LLC imzalı, ayrıca indirilir).
+- **Gizlilik / Privacy:** [PRIVACY.md](PRIVACY.md) — telemetri yok; ağ trafiği yalnızca yakındaki cihazlarla ve
+  kullanıcının istediği indirmeler için.
+- **Kaldırma / Uninstall:** MSIX → Windows Ayarlar > Uygulamalar > NitroDrop > Kaldır. Portable → önce Ayarlar'dan
+  Explorer menüsünü ve "Windows ile başlat"ı kapatın, sonra klasörü silin (veriler: `%LOCALAPPDATA%\airdrop-win`).
+  Wi-Fi sürücüsü → Gelişmiş Kurulum > "Geri al" (sürücü, sertifika ve test imzalama modu kaldırılır).
+- Sürümler GitHub Actions'ta (`.github/workflows/release.yml`) imzasız derlenir, SignPath'te imzalanır, taslak
+  sürüm olarak yayımlanır. Başvuru adımları: [docs/signpath-apply.md](docs/signpath-apply.md).
 
 ## Derleme
 - Uygulama: `cd app; dotnet build AirDrop.slnx; dotnet test AirDrop.slnx` (.NET 10)
 - Sürücü: `driver\build.ps1 -Name <ad> -Sources <dosyalar>` (VS 2022 Build Tools MSVC 14.44 + WDK 10.0.26100, KMDF 1.33)
+- Sürüm paketleri: `powershell -ExecutionPolicy Bypass -File packaging\build-release.ps1 [-Sign | -NoSign] [-Publisher "CN=..."] [-DriverOptional]`
+  → `packaging\out\NitroDrop-<sürüm>-x64.msix`, `...-win-x64-portable.zip`, `NitroDrop-driver-<sürüm>.zip` (ayrı, imzasız)
 - UI görüntüsü (Debug, odak çalmaz): `NitroDrop.exe --snapshot <klasör>`
 
 ## Araçlar
