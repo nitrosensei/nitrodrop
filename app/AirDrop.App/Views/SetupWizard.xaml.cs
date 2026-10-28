@@ -20,6 +20,7 @@ public partial class SetupWizard : Window
         DataContext = vm;
         vm.Confirm = Confirm;
         vm.PickSaveFile = PickSaveFile;
+        vm.PickDriverPackage = PickDriverPackage;
         vm.CloseWindow = Close;
         SourceInitialized += (_, _) => ApplyBackdrop();
         App.ThemeChanged += OnThemeChanged;
@@ -46,6 +47,18 @@ public partial class SetupWizard : Window
             FileName = suggested,
             DefaultExt = ".txt",
             Filter = SetupStrings.Setup_SaveDialogFilter,
+        };
+        return dlg.ShowDialog(this) == true ? dlg.FileName : null;
+    }
+
+    /// <summary>NitroDrop-driver-&lt;ver&gt;.zip or the airdropwifi.inf extracted from it.</summary>
+    private string? PickDriverPackage()
+    {
+        var dlg = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = SetupStrings.Setup_PickDriverDialogTitle,
+            Filter = SetupStrings.Setup_PickDriverFilter,
+            CheckFileExists = true,
         };
         return dlg.ShowDialog(this) == true ? dlg.FileName : null;
     }

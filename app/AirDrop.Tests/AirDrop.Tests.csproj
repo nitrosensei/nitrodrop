@@ -52,6 +52,7 @@
     <Compile Include="..\AirDrop.App\Setup\HelperProtocol.cs" Link="App\Setup\HelperProtocol.cs" />
     <Compile Include="..\AirDrop.App\Setup\FirmwareFetcher.cs" Link="App\Setup\FirmwareFetcher.cs" />
     <Compile Include="..\AirDrop.App\Setup\DriverPackage.cs" Link="App\Setup\DriverPackage.cs" />
+    <Compile Include="..\AirDrop.App\Setup\DriverSource.cs" Link="App\Setup\DriverSource.cs" />
     <Compile Include="..\AirDrop.App\Setup\CodeSigner.cs" Link="App\Setup\CodeSigner.cs" />
   </ItemGroup>
 

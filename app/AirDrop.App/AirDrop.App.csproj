@@ -31,7 +31,8 @@
   </ItemGroup>
 
   <!-- NitroDrop.Radio.exe (requireAdministrator) + dll/runtimeconfig/deps next to NitroDrop.exe; CoreAirDropService starts
-       it with "runas". Same TFM as the app, so Nitro.Awdl.dll / wintun\{arch}\wintun.dll already in the output serve both. -->
+       it with "runas". Same TFM as the app, so the Nitro.Awdl.dll in the output serves both (wintun.dll is downloaded
+       on demand by Nitro.Awdl/Ip/WintunInstall.cs, never shipped). -->
   <PropertyGroup>
     <RadioHostDir>..\Nitro.Radio.Host\bin\$(Configuration)\net10.0-windows10.0.22621.0\</RadioHostDir>
   </PropertyGroup>
@@ -40,8 +41,6 @@
     <None Include="$(RadioHostDir)NitroDrop.Radio.dll" Link="NitroDrop.Radio.dll" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     <None Include="$(RadioHostDir)NitroDrop.Radio.runtimeconfig.json" Link="NitroDrop.Radio.runtimeconfig.json" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     <None Include="$(RadioHostDir)NitroDrop.Radio.deps.json" Link="NitroDrop.Radio.deps.json" CopyToOutputDirectory="PreserveNewest" Visible="false" />
-    <None Include="..\..\vendor\wintun\LICENSE.txt" Link="licenses\wintun-LICENSE.txt" CopyToOutputDirectory="PreserveNewest" Visible="false"
-          Condition="Exists('..\..\vendor\wintun\LICENSE.txt')" />
   </ItemGroup>
 
   <!-- Browser extension (load unpacked from <output>\extension) and the iPhone Shortcut guide. -->
@@ -63,8 +62,10 @@
   </ItemGroup>
 
   <!-- Wi-Fi driver package for the setup wizard (Setup/): INF, built .sys and the UNSIGNED catalog from
-       driver\package.ps1. The wizard signs the .sys/.cat per install; the firmware is downloaded. -->
-  <ItemGroup>
+       driver\package.ps1. The wizard signs the .sys/.cat per install; the firmware is downloaded.
+       Developer builds only: release packages are built with -p:NitroBundleDriver=false (packaging\build-release.ps1)
+       and the driver ships separately as NitroDrop-driver-<ver>.zip, which the wizard imports (Setup/DriverSource.cs). -->
+  <ItemGroup Condition="'$(NitroBundleDriver)' != 'false'">
     <None Include="..\..\driver\airdropwifi.inf" Link="driver\airdropwifi.inf" CopyToOutputDirectory="PreserveNewest" />
     <None Include="..\..\driver\out\airdropwifi.sys" Link="driver\airdropwifi.sys" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\driver\out\airdropwifi.sys')" />
     <None Include="..\..\driver\out\airdropwifi.cat" Link="driver\airdropwifi.cat" CopyToOutputDirectory="PreserveNewest" Condition="Exists('..\..\driver\out\airdropwifi.cat')" />

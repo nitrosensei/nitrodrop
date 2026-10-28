@@ -222,9 +222,10 @@ internal static class Snapshot
             // Package as the wizard assembles it: bundled inf/sys/cat + the firmware (from the repo when present).
             var pkg = Path.Combine(dir, "dry-run-pkg");
             Directory.CreateDirectory(pkg);
+            var driverDir = DriverSource.Find() ?? SetupPaths.BundledDriverDir;
             foreach (var f in DriverPackage.BundledFiles)
             {
-                var src = Path.Combine(SetupPaths.BundledDriverDir, f);
+                var src = Path.Combine(driverDir, f);
                 if (File.Exists(src)) File.Copy(src, Path.Combine(pkg, f), overwrite: true);
             }
             var fwDir = new DirectoryInfo(AppContext.BaseDirectory);
@@ -377,6 +378,7 @@ internal static class Snapshot
             ("3-bitlocker", WizardPage.BitLocker, baseSnap, keys, false),
             ("4-secureboot", WizardPage.SecureBoot, baseSnap, null, false),
             ("5-testsigning", WizardPage.TestSigning, baseSnap with { SecureBootOn = false }, null, false),
+            ("6a-driver-package", WizardPage.Install, baseSnap with { SecureBootOn = false, TestSigningActive = true }, null, false),
             ("6-install", WizardPage.Install, baseSnap with { SecureBootOn = false, TestSigningActive = true }, null, true),
             ("7-done", WizardPage.Done, baseSnap with { SecureBootOn = false, TestSigningActive = true,
                 Device = baseSnap.Device! with { Service = "airdropwifi" } }, null, false),
@@ -399,7 +401,8 @@ internal static class Snapshot
             wiz.Show();
             foreach (var p in pages)
             {
-                vm.Preview(p.Page, p.Snap, p.Keys, p.Fw, p.Fw ? license : "");
+                // "6a": release build without the driver next to the exe → the "Sürücü paketini seç…" card.
+                vm.Preview(p.Page, p.Snap, p.Keys, p.Fw, p.Fw ? license : "", driverDir: p.Name.StartsWith("6a") ? "" : null);
                 await Task.Delay(300);
                 Save(wiz, Path.Combine(dir, $"setup-{p.Name}-{(dark ? "dark" : "light")}.png"));
             }

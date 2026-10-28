@@ -342,7 +342,7 @@
     <value>[dry-run] Gerçekte bilgisayar şimdi yeniden başlardı.</value>
   </data>
   <data name="Setup_Error_DriverFileMissing" xml:space="preserve">
-    <value>Sürücü dosyası bu NitroDrop sürümünde yok: {0}. (Geliştirici derlemesi: driver\build.ps1 ve driver\package.ps1 çalıştırın.)</value>
+    <value>Sürücü paketinde bir dosya eksik: {0}. NitroDrop-driver-&lt;sürüm&gt;.zip dosyasını yeniden indirip seçin. (Geliştirici derlemesi: driver\build.ps1 ve driver\package.ps1 çalıştırın.)</value>
   </data>
   <data name="Setup_Status_FirmwareReady" xml:space="preserve">
     <value>Firmware indirildi ve doğrulandı. Lisansı okuyup kabul edin.</value>
@@ -708,5 +708,26 @@
   </data>
   <data name="Vendor_Surface_Step3" xml:space="preserve">
     <value>“Exit” → “Restart now” seçin.</value>
+  </data>
+  <data name="Setup_DriverPkgTitle" xml:space="preserve">
+    <value>Sürücü paketi</value>
+  </data>
+  <data name="Setup_DriverPkgMissing" xml:space="preserve">
+    <value>Wi-Fi sürücüsü NitroDrop'la birlikte gelmez; ayrı bir paket olarak yayımlanır (Microsoft imzası olmadığından yalnızca test imzalama modunda çalışır). Sürüm sayfasından NitroDrop-driver-&lt;sürüm&gt;.zip dosyasını indirin, ardından zip'i ya da içinden çıkardığınız airdropwifi.inf dosyasını seçin.</value>
+  </data>
+  <data name="Setup_DriverPkgFound" xml:space="preserve">
+    <value>Sürücü paketi hazır: {0}</value>
+  </data>
+  <data name="Setup_Btn_PickDriver" xml:space="preserve">
+    <value>Sürücü paketini seç…</value>
+  </data>
+  <data name="Setup_PickDriverDialogTitle" xml:space="preserve">
+    <value>NitroDrop sürücü paketini seçin (zip ya da airdropwifi.inf)</value>
+  </data>
+  <data name="Setup_PickDriverFilter" xml:space="preserve">
+    <value>Sürücü paketi (*.zip;airdropwifi.inf)|*.zip;airdropwifi.inf</value>
+  </data>
+  <data name="Setup_Error_DriverImport" xml:space="preserve">
+    <value>Sürücü paketi okunamadı: {0}</value>
   </data>
 </root>

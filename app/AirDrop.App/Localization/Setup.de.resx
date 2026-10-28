@@ -341,7 +341,7 @@
     <value>[dry-run] Im Ernstfall würde der PC jetzt neu starten.</value>
   </data>
   <data name="Setup_Error_DriverFileMissing" xml:space="preserve">
-    <value>In dieser NitroDrop-Version fehlt eine Treiberdatei: {0}. (Entwicklerbuild: driver\build.ps1 und driver\package.ps1 ausführen.)</value>
+    <value>Im Treiberpaket fehlt eine Datei: {0}. Laden Sie NitroDrop-driver-&lt;Version&gt;.zip erneut herunter und wählen Sie sie aus. (Entwicklerbuild: driver\build.ps1 und driver\package.ps1 ausführen.)</value>
   </data>
   <data name="Setup_Status_FirmwareReady" xml:space="preserve">
     <value>Firmware heruntergeladen und geprüft. Lesen und akzeptieren Sie die Lizenz.</value>
@@ -702,5 +702,26 @@
   </data>
   <data name="Vendor_Surface_Step3" xml:space="preserve">
     <value>Wählen Sie „Exit“ → „Restart now“.</value>
+  </data>
+  <data name="Setup_DriverPkgTitle" xml:space="preserve">
+    <value>Treiberpaket</value>
+  </data>
+  <data name="Setup_DriverPkgMissing" xml:space="preserve">
+    <value>Der WLAN-Treiber ist nicht in NitroDrop enthalten, sondern wird als separates Paket veröffentlicht (ohne Microsoft-Signatur, daher nur im Testsignaturmodus nutzbar). Laden Sie NitroDrop-driver-&lt;Version&gt;.zip von der Release-Seite herunter und wählen Sie dann die ZIP-Datei oder die daraus entpackte airdropwifi.inf aus.</value>
+  </data>
+  <data name="Setup_DriverPkgFound" xml:space="preserve">
+    <value>Treiberpaket bereit: {0}</value>
+  </data>
+  <data name="Setup_Btn_PickDriver" xml:space="preserve">
+    <value>Treiberpaket auswählen …</value>
+  </data>
+  <data name="Setup_PickDriverDialogTitle" xml:space="preserve">
+    <value>NitroDrop-Treiberpaket auswählen (ZIP oder airdropwifi.inf)</value>
+  </data>
+  <data name="Setup_PickDriverFilter" xml:space="preserve">
+    <value>Treiberpaket (*.zip;airdropwifi.inf)|*.zip;airdropwifi.inf</value>
+  </data>
+  <data name="Setup_Error_DriverImport" xml:space="preserve">
+    <value>Treiberpaket konnte nicht gelesen werden: {0}</value>
   </data>
 </root>

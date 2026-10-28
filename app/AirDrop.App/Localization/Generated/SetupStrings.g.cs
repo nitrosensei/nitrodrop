@@ -350,7 +350,7 @@ internal static class SetupStrings
     /// <summary>[dry-run] Gerçekte bilgisayar şimdi yeniden başlardı.</summary>
     public static string Setup_DryRun_Restart => S("Setup_DryRun_Restart");
 
-    /// <summary>Sürücü dosyası bu NitroDrop sürümünde yok: {0}. (Geliştirici derlemesi: driver\build.ps1 ve driver\package....</summary>
+    /// <summary>Sürücü paketinde bir dosya eksik: {0}. NitroDrop-driver-&lt;sürüm&gt;.zip dosyasını yeniden indirip seçin. (Geliş...</summary>
     public static string Setup_Error_DriverFileMissing(object? p0) => Loc.Format(S("Setup_Error_DriverFileMissing"), p0);
 
     /// <summary>Firmware indirildi ve doğrulandı. Lisansı okuyup kabul edin.</summary>
@@ -712,4 +712,25 @@ internal static class SetupStrings
 
     /// <summary>“Exit” → “Restart now” seçin.</summary>
     public static string Vendor_Surface_Step3 => S("Vendor_Surface_Step3");
+
+    /// <summary>Sürücü paketi</summary>
+    public static string Setup_DriverPkgTitle => S("Setup_DriverPkgTitle");
+
+    /// <summary>Wi-Fi sürücüsü NitroDrop'la birlikte gelmez; ayrı bir paket olarak yayımlanır (Microsoft imzası olmadığında...</summary>
+    public static string Setup_DriverPkgMissing => S("Setup_DriverPkgMissing");
+
+    /// <summary>Sürücü paketi hazır: {0}</summary>
+    public static string Setup_DriverPkgFound(object? p0) => Loc.Format(S("Setup_DriverPkgFound"), p0);
+
+    /// <summary>Sürücü paketini seç…</summary>
+    public static string Setup_Btn_PickDriver => S("Setup_Btn_PickDriver");
+
+    /// <summary>NitroDrop sürücü paketini seçin (zip ya da airdropwifi.inf)</summary>
+    public static string Setup_PickDriverDialogTitle => S("Setup_PickDriverDialogTitle");
+
+    /// <summary>Sürücü paketi (*.zip;airdropwifi.inf)|*.zip;airdropwifi.inf</summary>
+    public static string Setup_PickDriverFilter => S("Setup_PickDriverFilter");
+
+    /// <summary>Sürücü paketi okunamadı: {0}</summary>
+    public static string Setup_Error_DriverImport(object? p0) => Loc.Format(S("Setup_Error_DriverImport"), p0);
 }

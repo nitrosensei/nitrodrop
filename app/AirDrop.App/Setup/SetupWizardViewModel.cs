@@ -66,6 +66,7 @@ public sealed class SetupWizardViewModel : Observable
         Recheck = new RelayCommand(_ => Run(async () => { await RefreshAsync(); GoNextIncomplete(); }));
         StartRollback = new RelayCommand(_ => Page = WizardPage.Rollback);
         OpenLog = new RelayCommand(_ => Shell(SetupPaths.LogFile));
+        PickDriver = new RelayCommand(_ => ImportDriver());
         _page = rollbackMode ? WizardPage.Rollback : WizardPage.Compatibility;
         SetupLog.Line += OnLogLine;
     }
@@ -76,6 +77,8 @@ public sealed class SetupWizardViewModel : Observable
     public Func<string, string, string, bool>? Confirm { get; set; }
     /// <summary>Suggested file name → chosen path (or null).</summary>
     public Func<string, string?>? PickSaveFile { get; set; }
+    /// <summary>Open dialog for the driver package (zip or airdropwifi.inf) → chosen path (or null).</summary>
+    public Func<string?>? PickDriverPackage { get; set; }
     public Action? CloseWindow { get; set; }
 
     // ---------------- common state ----------------
@@ -243,6 +246,14 @@ public sealed class SetupWizardViewModel : Observable
     public bool LicenseAccepted { get => _licenseAccepted; set { if (Set(ref _licenseAccepted, value)) RaiseFooter(); } }
     public ObservableCollection<string> LogLines { get; } = new();
 
+    /// <summary>Folder with inf/sys/cat (next to the app in developer builds, else the imported driver zip), or null.</summary>
+    public string? DriverDir => _driverDirOverride is null ? DriverSource.Find() : _driverDirOverride.Length == 0 ? null : _driverDirOverride;
+    private string? _driverDirOverride;   // previews: null = detect, "" = no driver package
+    public bool DriverAvailable => DriverDir is not null;
+    /// <summary>Install page, before the firmware step: the driver zip still has to be picked.</summary>
+    public bool ShowDriverPicker => Page == WizardPage.Install && !FirmwareReady;
+    public string DriverStateText => DriverDir is { } d ? SetupStrings.Setup_DriverPkgFound(d) : SetupStrings.Setup_DriverPkgMissing;
+
     public IReadOnlyList<string> RollbackItems => new[]
     {
         SetupStrings.Setup_RollbackItem1,
@@ -263,6 +274,7 @@ public sealed class SetupWizardViewModel : Observable
     public RelayCommand Recheck { get; }
     public RelayCommand StartRollback { get; }
     public RelayCommand OpenLog { get; }
+    public RelayCommand PickDriver { get; }
 
     public string PrimaryText => Page switch
     {
@@ -283,7 +295,7 @@ public sealed class SetupWizardViewModel : Observable
     {
         WizardPage.Consent => ConsentChecked,
         WizardPage.BitLocker => !BitLockerNeedsBackup || BackupConfirmed,
-        WizardPage.Install => !FirmwareReady || LicenseAccepted,
+        WizardPage.Install => FirmwareReady ? LicenseAccepted : DriverAvailable,
         _ => true,
     };
 
@@ -323,8 +335,9 @@ public sealed class SetupWizardViewModel : Observable
 
     /// <summary>Snapshots/previews: show a page with given data, no detection, no persistence.</summary>
     internal void Preview(WizardPage page, SystemSnapshot snap, BitLockerInfo? details = null, bool firmwareReady = false,
-        string license = "", bool rollbackOk = true)
+        string license = "", bool rollbackOk = true, string? driverDir = null)
     {
+        _driverDirOverride = driverDir;
         _snap = snap;
         _bitLockerDetails = details;
         _firmwareReady = firmwareReady;
@@ -531,13 +544,31 @@ public sealed class SetupWizardViewModel : Observable
         return Task.CompletedTask;
     }
 
+    /// <summary>"Sürücü paketini seç…": the separately downloaded NitroDrop-driver-&lt;ver&gt;.zip (or its extracted inf).</summary>
+    private void ImportDriver()
+    {
+        if (PickDriverPackage?.Invoke() is not { } path) return;
+        Error = "";
+        try
+        {
+            var missing = DriverSource.Import(path);
+            if (missing.Count > 0) Error = SetupStrings.Setup_Error_DriverFileMissing(string.Join(", ", missing));
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException or NotSupportedException)
+        {
+            Error = SetupStrings.Setup_Error_DriverImport(ex.Message);
+        }
+        RaiseAll();
+    }
+
     private async Task PrepareFirmwareAsync()
     {
         var dir = SetupPaths.PackageCache;
+        var driverDir = DriverDir ?? throw new InvalidOperationException(SetupStrings.Setup_Error_DriverFileMissing(DriverPackage.SysName));
         Directory.CreateDirectory(dir);
         foreach (var f in DriverPackage.BundledFiles)
         {
-            var src = Path.Combine(SetupPaths.BundledDriverDir, f);
+            var src = Path.Combine(driverDir, f);
             if (!File.Exists(src))
                 throw new InvalidOperationException(SetupStrings.Setup_Error_DriverFileMissing(f));
             File.Copy(src, Path.Combine(dir, f), overwrite: true);
@@ -556,7 +587,7 @@ public sealed class SetupWizardViewModel : Observable
     /// <summary>Developer builds: reuse a verified copy from the repo's driver\firmware instead of downloading.</summary>
     private static IEnumerable<string> LocalFirmwareDirs()
     {
-        yield return SetupPaths.BundledDriverDir;
+        foreach (var d0 in DriverSource.Candidates()) yield return d0;
         var d = new DirectoryInfo(AppContext.BaseDirectory);
         for (int i = 0; i < 8 && d is not null; i++, d = d.Parent)
         {
@@ -675,6 +706,7 @@ public sealed class SetupWizardViewModel : Observable
                      nameof(RecoveryKeyIds), nameof(HasRecoveryText), nameof(BackupConfirmed), nameof(SuspendOnReboot),
                      nameof(Guide), nameof(GuideSteps), nameof(GuideKeys), nameof(ShowGuide), nameof(SecureBootStillOn),
                      nameof(FirmwareReady), nameof(LicenseText), nameof(LicenseAccepted), nameof(ConsentChecked),
+                     nameof(DriverDir), nameof(DriverAvailable), nameof(ShowDriverPicker), nameof(DriverStateText),
                  })
             Raise(n);
         RaiseFooter();

@@ -341,7 +341,7 @@
     <value>[dry-run] En situation réelle, le PC redémarrerait maintenant.</value>
   </data>
   <data name="Setup_Error_DriverFileMissing" xml:space="preserve">
-    <value>Un fichier du pilote manque dans cette version de NitroDrop : {0}. (Build de développement : exécutez driver\build.ps1 et driver\package.ps1.)</value>
+    <value>Un fichier manque dans le paquet du pilote : {0}. Téléchargez à nouveau NitroDrop-driver-&lt;version&gt;.zip et sélectionnez-le. (Build de développement : exécutez driver\build.ps1 et driver\package.ps1.)</value>
   </data>
   <data name="Setup_Status_FirmwareReady" xml:space="preserve">
     <value>Firmware téléchargé et vérifié. Lisez et acceptez la licence.</value>
@@ -702,5 +702,26 @@
   </data>
   <data name="Vendor_Surface_Step3" xml:space="preserve">
     <value>Choisissez « Exit » → « Restart now ».</value>
+  </data>
+  <data name="Setup_DriverPkgTitle" xml:space="preserve">
+    <value>Paquet du pilote</value>
+  </data>
+  <data name="Setup_DriverPkgMissing" xml:space="preserve">
+    <value>Le pilote Wi-Fi n'est pas fourni avec NitroDrop ; il est publié dans un paquet séparé (sans signature Microsoft, il ne fonctionne qu'en mode de signature de test). Téléchargez NitroDrop-driver-&lt;version&gt;.zip depuis la page de publication, puis sélectionnez le zip ou le fichier airdropwifi.inf que vous en avez extrait.</value>
+  </data>
+  <data name="Setup_DriverPkgFound" xml:space="preserve">
+    <value>Paquet du pilote prêt : {0}</value>
+  </data>
+  <data name="Setup_Btn_PickDriver" xml:space="preserve">
+    <value>Choisir le paquet du pilote…</value>
+  </data>
+  <data name="Setup_PickDriverDialogTitle" xml:space="preserve">
+    <value>Choisissez le paquet du pilote NitroDrop (zip ou airdropwifi.inf)</value>
+  </data>
+  <data name="Setup_PickDriverFilter" xml:space="preserve">
+    <value>Paquet du pilote (*.zip;airdropwifi.inf)|*.zip;airdropwifi.inf</value>
+  </data>
+  <data name="Setup_Error_DriverImport" xml:space="preserve">
+    <value>Impossible de lire le paquet du pilote : {0}</value>
   </data>
 </root>

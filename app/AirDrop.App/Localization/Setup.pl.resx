@@ -341,7 +341,7 @@
     <value>[dry-run] W rzeczywistości komputer uruchomiłby się teraz ponownie.</value>
   </data>
   <data name="Setup_Error_DriverFileMissing" xml:space="preserve">
-    <value>W tej wersji NitroDrop brakuje pliku sterownika: {0}. (Kompilacja deweloperska: uruchom driver\build.ps1 i driver\package.ps1.)</value>
+    <value>W pakiecie sterownika brakuje pliku: {0}. Pobierz ponownie NitroDrop-driver-&lt;wersja&gt;.zip i wybierz go. (Kompilacja deweloperska: uruchom driver\build.ps1 i driver\package.ps1.)</value>
   </data>
   <data name="Setup_Status_FirmwareReady" xml:space="preserve">
     <value>Oprogramowanie układowe zostało pobrane i zweryfikowane. Przeczytaj i zaakceptuj licencję.</value>
@@ -702,5 +702,26 @@
   </data>
   <data name="Vendor_Surface_Step3" xml:space="preserve">
     <value>Wybierz „Exit” → „Restart now”.</value>
+  </data>
+  <data name="Setup_DriverPkgTitle" xml:space="preserve">
+    <value>Pakiet sterownika</value>
+  </data>
+  <data name="Setup_DriverPkgMissing" xml:space="preserve">
+    <value>Sterownik Wi-Fi nie jest dołączony do NitroDrop; jest publikowany jako osobny pakiet (nie ma podpisu Microsoftu, więc działa tylko w trybie podpisywania testowego). Pobierz NitroDrop-driver-&lt;wersja&gt;.zip ze strony wydania, a następnie wybierz plik zip lub wypakowany z niego plik airdropwifi.inf.</value>
+  </data>
+  <data name="Setup_DriverPkgFound" xml:space="preserve">
+    <value>Pakiet sterownika gotowy: {0}</value>
+  </data>
+  <data name="Setup_Btn_PickDriver" xml:space="preserve">
+    <value>Wybierz pakiet sterownika…</value>
+  </data>
+  <data name="Setup_PickDriverDialogTitle" xml:space="preserve">
+    <value>Wybierz pakiet sterownika NitroDrop (zip lub airdropwifi.inf)</value>
+  </data>
+  <data name="Setup_PickDriverFilter" xml:space="preserve">
+    <value>Pakiet sterownika (*.zip;airdropwifi.inf)|*.zip;airdropwifi.inf</value>
+  </data>
+  <data name="Setup_Error_DriverImport" xml:space="preserve">
+    <value>Nie udało się odczytać pakietu sterownika: {0}</value>
   </data>
 </root>

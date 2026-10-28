@@ -341,7 +341,7 @@
     <value>[dry-run] В реальности компьютер сейчас перезагрузился бы.</value>
   </data>
   <data name="Setup_Error_DriverFileMissing" xml:space="preserve">
-    <value>В этой версии NitroDrop нет файла драйвера: {0}. (Сборка разработчика: запустите driver\build.ps1 и driver\package.ps1.)</value>
+    <value>В пакете драйвера нет файла: {0}. Скачайте NitroDrop-driver-&lt;версия&gt;.zip заново и выберите его. (Сборка разработчика: запустите driver\build.ps1 и driver\package.ps1.)</value>
   </data>
   <data name="Setup_Status_FirmwareReady" xml:space="preserve">
     <value>Прошивка загружена и проверена. Прочитайте и примите лицензию.</value>
@@ -702,5 +702,26 @@
   </data>
   <data name="Vendor_Surface_Step3" xml:space="preserve">
     <value>Выберите «Exit» → «Restart now».</value>
+  </data>
+  <data name="Setup_DriverPkgTitle" xml:space="preserve">
+    <value>Пакет драйвера</value>
+  </data>
+  <data name="Setup_DriverPkgMissing" xml:space="preserve">
+    <value>Драйвер Wi-Fi не входит в NitroDrop и публикуется отдельным пакетом (у него нет подписи Microsoft, поэтому он работает только в тестовом режиме подписи). Скачайте NitroDrop-driver-&lt;версия&gt;.zip со страницы выпуска и выберите zip или извлечённый из него файл airdropwifi.inf.</value>
+  </data>
+  <data name="Setup_DriverPkgFound" xml:space="preserve">
+    <value>Пакет драйвера готов: {0}</value>
+  </data>
+  <data name="Setup_Btn_PickDriver" xml:space="preserve">
+    <value>Выбрать пакет драйвера…</value>
+  </data>
+  <data name="Setup_PickDriverDialogTitle" xml:space="preserve">
+    <value>Выберите пакет драйвера NitroDrop (zip или airdropwifi.inf)</value>
+  </data>
+  <data name="Setup_PickDriverFilter" xml:space="preserve">
+    <value>Пакет драйвера (*.zip;airdropwifi.inf)|*.zip;airdropwifi.inf</value>
+  </data>
+  <data name="Setup_Error_DriverImport" xml:space="preserve">
+    <value>Не удалось прочитать пакет драйвера: {0}</value>
   </data>
 </root>

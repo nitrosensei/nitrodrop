@@ -25,6 +25,9 @@ public static class SetupPaths
     public static string ProtectedPackageDir =>
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "NitroDrop", "driver");
 
-    /// <summary>Driver files shipped next to the executable (inf, sys and the pre-built unsigned cat).</summary>
+    /// <summary>Driver files next to the executable (developer builds only: inf, sys and the pre-built unsigned cat).</summary>
     public static string BundledDriverDir => Path.Combine(AppContext.BaseDirectory, "driver");
+
+    /// <summary>inf/sys/cat taken from the separately downloaded NitroDrop-driver-&lt;ver&gt;.zip (DriverSource.Import).</summary>
+    public static string ImportedDriverDir => Path.Combine(DataDir, "driver-src");
 }

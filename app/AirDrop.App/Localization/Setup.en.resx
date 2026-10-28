@@ -341,7 +341,7 @@
     <value>[dry-run] For real, the PC would now restart.</value>
   </data>
   <data name="Setup_Error_DriverFileMissing" xml:space="preserve">
-    <value>This NitroDrop version is missing a driver file: {0}. (Developer build: run driver\build.ps1 and driver\package.ps1.)</value>
+    <value>A file is missing from the driver package: {0}. Download NitroDrop-driver-&lt;version&gt;.zip again and pick it. (Developer build: run driver\build.ps1 and driver\package.ps1.)</value>
   </data>
   <data name="Setup_Status_FirmwareReady" xml:space="preserve">
     <value>Firmware downloaded and verified. Read and accept the license.</value>
@@ -702,5 +702,26 @@
   </data>
   <data name="Vendor_Surface_Step3" xml:space="preserve">
     <value>Choose “Exit” → “Restart now”.</value>
+  </data>
+  <data name="Setup_DriverPkgTitle" xml:space="preserve">
+    <value>Driver package</value>
+  </data>
+  <data name="Setup_DriverPkgMissing" xml:space="preserve">
+    <value>The Wi-Fi driver does not come with NitroDrop; it is published as a separate package (it has no Microsoft signature, so it only works in test-signing mode). Download NitroDrop-driver-&lt;version&gt;.zip from the release page, then pick the zip or the airdropwifi.inf you extracted from it.</value>
+  </data>
+  <data name="Setup_DriverPkgFound" xml:space="preserve">
+    <value>Driver package ready: {0}</value>
+  </data>
+  <data name="Setup_Btn_PickDriver" xml:space="preserve">
+    <value>Choose driver package…</value>
+  </data>
+  <data name="Setup_PickDriverDialogTitle" xml:space="preserve">
+    <value>Choose the NitroDrop driver package (zip or airdropwifi.inf)</value>
+  </data>
+  <data name="Setup_PickDriverFilter" xml:space="preserve">
+    <value>Driver package (*.zip;airdropwifi.inf)|*.zip;airdropwifi.inf</value>
+  </data>
+  <data name="Setup_Error_DriverImport" xml:space="preserve">
+    <value>Couldn't read the driver package: {0}</value>
   </data>
 </root>

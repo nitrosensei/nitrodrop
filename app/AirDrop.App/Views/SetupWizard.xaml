@@ -268,6 +268,15 @@
 
                 <!-- ===== Install ===== -->
                 <StackPanel Visibility="{Binding IsInstall, Converter={StaticResource BoolVis}}">
+                    <!-- Driver package: not in the app (NitroDrop-driver-<ver>.zip ships separately, Setup/DriverSource.cs). -->
+                    <Border Style="{StaticResource WizCard}" Padding="16,12" Visibility="{Binding ShowDriverPicker, Converter={StaticResource BoolVis}}">
+                        <StackPanel>
+                            <TextBlock Text="{l:Loc Setup_DriverPkgTitle}" Style="{StaticResource RowTitle}"/>
+                            <TextBlock Text="{Binding DriverStateText}" Style="{StaticResource Body}" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                            <Button Style="{StaticResource LinkButton}" Content="{l:Loc Setup_Btn_PickDriver}" HorizontalAlignment="Left"
+                                    Margin="0,8,0,0" FontSize="12.5" Command="{Binding PickDriver}"/>
+                        </StackPanel>
+                    </Border>
                     <Border Style="{StaticResource WizCard}" Visibility="{Binding FirmwareReady, Converter={StaticResource BoolVis}}">
                         <StackPanel>
                             <TextBlock Text="{l:Loc Setup_LicenseTitle}" Style="{StaticResource RowTitle}" Margin="16,12,16,6"/>
