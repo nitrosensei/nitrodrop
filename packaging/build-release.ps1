@@ -46,6 +46,8 @@ param(
     [string]$Version,                        # MSIX/assembly version a.b.c.d; default 0.1.<yyDDD>.<HHmm>
     [string]$Publisher = 'CN=Nitrobyte',     # MSIX Identity Publisher = subject of the signing certificate
                                              # (dev: sign-dev.ps1 -Subject; CI: the SignPath Foundation subject)
+    [string]$IdentityName = 'Nitrobyte.NitroDrop',   # Microsoft Store: Package/Identity/Name from Partner Center
+    [string]$PublisherDisplayName = 'Nitrobyte',     # Microsoft Store: Package/Properties/PublisherDisplayName
     [switch]$SkipDriver,                     # reuse driver\out\airdropwifi.{sys,cat} as they are
     [switch]$DriverOptional,                 # driver build/files missing -> warning, no driver zip (CI without WDK)
     [switch]$SkipZip,
@@ -253,7 +255,7 @@ if (-not $SkipMsix) {
     & (Join-Path $app 'NitroDrop.ShellExt\build.ps1') -OutDir $shellExtOut -Version $Version
     Copy-Item (Join-Path $shellExtOut 'NitroDrop.ShellExt.dll') $layout -Force
 
-    $manifest = (Get-Content (Join-Path $pkgRoot 'AppxManifest.xml') -Raw).Replace('__VERSION__', $Version).Replace('__PUBLISHER__', [Security.SecurityElement]::Escape($Publisher))
+    $manifest = (Get-Content (Join-Path $pkgRoot 'AppxManifest.xml') -Raw).Replace('__VERSION__', $Version).Replace('__PUBLISHER__', [Security.SecurityElement]::Escape($Publisher)).Replace('__IDENTITY_NAME__', [Security.SecurityElement]::Escape($IdentityName)).Replace('__PUBLISHER_DISPLAY__', [Security.SecurityElement]::Escape($PublisherDisplayName))
     [IO.File]::WriteAllText((Join-Path $layout 'AppxManifest.xml'), $manifest, (New-Object Text.UTF8Encoding($false)))
 
     # resources.pri: maps Assets\X.png to the scale-*/targetsize-* variants and the localized manifest strings
@@ -317,7 +319,7 @@ foreach ($a in @($zip, $msix, $driverZip)) {
 if ($Sign -and -not $SkipMsix) {
     & (Join-Path $pkgRoot 'sign-dev.ps1') -Msix $msix -Subject $Publisher
 } elseif ($NoSign) {
-    Write-Host '   -NoSign: artifacts are unsigned (SignPath signs them in CI)'
+    Write-Host '   -NoSign: artifacts are unsigned (CI signs them)'
 } elseif (-not $SkipMsix) {
     Write-Host '   MSIX is unsigned: powershell -ExecutionPolicy Bypass -File packaging\sign-dev.ps1'
 }
