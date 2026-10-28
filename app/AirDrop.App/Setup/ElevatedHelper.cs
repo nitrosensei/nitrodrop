@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Setup;
 
@@ -31,7 +32,7 @@ public static class ElevatedHelper
         request.DryRun |= DryRun;
         if (request.DryRun)
         {
-            SetupLog.Write($"[dry-run] yönetici izni istenmeden çalıştırılıyor: {request.Action}");
+            SetupLog.Write($"[dry-run] running without asking for admin rights: {request.Action}");
             return await Task.Run(() => new HelperActions(new DryRunCommandRunner()).Execute(request), ct);
         }
 
@@ -50,15 +51,15 @@ public static class ElevatedHelper
             Verb = "runas",
             WindowStyle = ProcessWindowStyle.Hidden,
         };
-        SetupLog.Write($"yönetici izni isteniyor: {request.Action}");
+        SetupLog.Write($"requesting admin rights: {request.Action}");
         Process? proc;
         try { proc = Process.Start(psi); }
         catch (Win32Exception ex) when (ex.NativeErrorCode == 1223)   // ERROR_CANCELLED: UAC "No"
         {
-            SetupLog.Write("kullanıcı yönetici iznini vermedi");
-            return new HelperResult { Ok = false, Cancelled = true, Message = "Yönetici izni verilmedi. Hazır olduğunuzda tekrar deneyin." };
+            SetupLog.Write("user declined the admin prompt");
+            return new HelperResult { Ok = false, Cancelled = true, Message = SetupStrings.Helper_UacDenied };
         }
-        if (proc is null) return HelperResult.Fail("Yardımcı başlatılamadı.");
+        if (proc is null) return HelperResult.Fail(SetupStrings.Helper_StartFailed);
 
         using (proc)
         using (var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct))
@@ -72,20 +73,20 @@ public static class ElevatedHelper
                 {
                     await Task.WhenAny(connect, Task.Delay(500, CancellationToken.None));
                     if (!server.IsConnected)
-                        return HelperResult.Fail($"Yardımcı sonuç döndürmeden kapandı (kod {(proc.HasExited ? proc.ExitCode : -1)}).");
+                        return HelperResult.Fail(SetupStrings.Helper_ExitedNoResult(proc.HasExited ? proc.ExitCode : -1));
                 }
                 using var reader = new StreamReader(server);
                 var json = await reader.ReadToEndAsync(timeout.Token);
                 var result = JsonSerializer.Deserialize<HelperResult>(json, HelperProtocol.Json);
-                return result ?? HelperResult.Fail("Yardımcıdan boş yanıt geldi.");
+                return result ?? HelperResult.Fail(SetupStrings.Helper_EmptyReply);
             }
             catch (OperationCanceledException)
             {
-                return HelperResult.Fail("Yardımcı zaman aşımına uğradı.");
+                return HelperResult.Fail(SetupStrings.Helper_Timeout);
             }
             catch (JsonException ex)
             {
-                return HelperResult.Fail("Yardımcının yanıtı okunamadı: " + ex.Message);
+                return HelperResult.Fail(SetupStrings.Helper_ReplyUnreadable(ex.Message));
             }
         }
     }
@@ -93,12 +94,14 @@ public static class ElevatedHelper
     /// <summary>Entry point of the elevated process (called from App.OnStartup before anything else).</summary>
     public static int HostMain(string[] args)
     {
-        SetupLog.Prefix = "[yönetici] ";
+        SetupLog.Prefix = "[admin] ";
         if (!HelperProtocol.TryParse(args, out var pipeName, out var request) || request is null)
         {
-            SetupLog.Write("geçersiz yardımcı çağrısı");
+            SetupLog.Write("invalid helper invocation");
             return 2;
         }
+        // The helper is a separate process: show its messages in the UI language the wizard asked for.
+        if (Loc.IsSupported(request.Language)) Loc.SetLanguage(request.Language);
         ICommandRunner runner = request.DryRun ? new DryRunCommandRunner() : new ProcessCommandRunner();
         var result = new HelperActions(runner).Execute(request);
         try
@@ -110,7 +113,7 @@ public static class ElevatedHelper
         }
         catch (Exception ex)
         {
-            SetupLog.Write($"sonuç arayüze iletilemedi: {ex.Message}");
+            SetupLog.Write($"couldn't send the result to the UI: {ex.Message}");
             return 3;
         }
         return result.Ok ? 0 : 1;

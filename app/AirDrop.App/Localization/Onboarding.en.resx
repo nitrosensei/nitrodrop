@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Onboarding_WindowTitle" xml:space="preserve">
+    <value>NitroDrop · Welcome</value>
+  </data>
+  <data name="Onboarding_StepLabel" xml:space="preserve">
+    <value>GETTING STARTED · {0}/{1}</value>
+  </data>
+  <data name="Onboarding_SkipTip" xml:space="preserve">
+    <value>Close the tour (Esc)</value>
+  </data>
+  <data name="Onboarding_Welcome" xml:space="preserve">
+    <value>Files, clipboard, notifications and tabs between iPhone, Mac and PC. Works right away on the same network — nothing to install or set up.</value>
+  </data>
+  <data name="Onboarding_SendTitle" xml:space="preserve">
+    <value>Drag and drop</value>
+  </data>
+  <data name="Onboarding_SendBody" xml:space="preserve">
+    <value>Drop a file on a device in Nearby. Or right-click it in File Explorer and choose “Send with NitroDrop”.</value>
+  </data>
+  <data name="Onboarding_HotkeyHint" xml:space="preserve">
+    <value>sends what you copied to the device you used last</value>
+  </data>
+  <data name="Onboarding_ReceiveTitle" xml:space="preserve">
+    <value>Receive from iPhone</value>
+  </data>
+  <data name="Onboarding_ReceiveBody" xml:space="preserve">
+    <value>On your iPhone, tap Share → AirDrop and choose this PC. For now this works on the same Wi-Fi network; after Advanced Setup, the iPhone connects directly.</value>
+  </data>
+  <data name="Onboarding_ReceiveLater" xml:space="preserve">
+    <value>You can run Advanced Setup later: Settings → Wi-Fi driver.</value>
+  </data>
+  <data name="Onboarding_PhoneTitle" xml:space="preserve">
+    <value>Your phone, right on your desk</value>
+  </data>
+  <data name="Onboarding_PhoneBody" xml:space="preserve">
+    <value>Calls, messages and notifications from an iPhone paired over Bluetooth appear on this PC, and you can answer them right here.</value>
+  </data>
+  <data name="Onboarding_PairIphone" xml:space="preserve">
+    <value>Pair iPhone</value>
+  </data>
+  <data name="Onboarding_DevicesTitle" xml:space="preserve">
+    <value>Pick up where you left off</value>
+  </data>
+  <data name="Onboarding_DevicesBody" xml:space="preserve">
+    <value>Paired PCs see each other's open tabs and apps. The browser extension brings your tabs, and the iPhone shortcut brings whatever is open on your phone.</value>
+  </data>
+  <data name="Onboarding_FinalTitle" xml:space="preserve">
+    <value>Finishing touches</value>
+  </data>
+  <data name="Onboarding_FinalBody" xml:space="preserve">
+    <value>Nothing is received without your OK, and your contacts and files stay on this PC.</value>
+  </data>
+  <data name="Onboarding_DeviceName" xml:space="preserve">
+    <value>Display name</value>
+  </data>
+  <data name="Onboarding_WhoCanSee" xml:space="preserve">
+    <value>Who can see me</value>
+  </data>
+  <data name="Onboarding_ModeEveryone" xml:space="preserve">
+    <value>Everyone (10 min)</value>
+  </data>
+  <data name="Onboarding_ModeOff" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Onboarding_StartWithWindows" xml:space="preserve">
+    <value>Start when Windows starts</value>
+  </data>
+  <data name="Onboarding_LetsGo" xml:space="preserve">
+    <value>Let's go</value>
+  </data>
+  <data name="Onboarding_Start" xml:space="preserve">
+    <value>Get started</value>
+  </data>
+</root>

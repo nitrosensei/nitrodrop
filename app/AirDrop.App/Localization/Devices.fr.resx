@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Devices_Title" xml:space="preserve">
+    <value>Mes appareils</value>
+  </data>
+  <data name="Devices_OpenOnThisPc" xml:space="preserve">
+    <value>Ouvrir sur ce PC</value>
+  </data>
+  <data name="Devices_CopyLink" xml:space="preserve">
+    <value>Copier le lien</value>
+  </data>
+  <data name="Devices_OpenHere" xml:space="preserve">
+    <value>Ouvrir ici</value>
+  </data>
+  <data name="Devices_OpenHereTip" xml:space="preserve">
+    <value>Ouvrir cette app sur ce PC</value>
+  </data>
+  <data name="Devices_OnIphoneNow" xml:space="preserve">
+    <value>EN COURS SUR L'IPHONE</value>
+  </data>
+  <data name="Devices_ContinueOnPc" xml:space="preserve">
+    <value>Continuer sur le PC</value>
+  </data>
+  <data name="Devices_NetworkPcsHeader" xml:space="preserve">
+    <value>PC NITRODROP SUR LE RÉSEAU</value>
+  </data>
+  <data name="Devices_Searching" xml:space="preserve">
+    <value>Recherche de PC sur le réseau…</value>
+  </data>
+  <data name="Devices_SearchingHint" xml:space="preserve">
+    <value>NitroDrop doit être ouvert sur l'autre PC, et les deux PC doivent être sur le même réseau Wi-Fi ou filaire.</value>
+  </data>
+  <data name="Devices_PairedHeader" xml:space="preserve">
+    <value>ASSOCIÉS</value>
+  </data>
+  <data name="Devices_EmptyTitle" xml:space="preserve">
+    <value>Associez vos PC</value>
+  </data>
+  <data name="Devices_EmptyBody" xml:space="preserve">
+    <value>Les PC associés voient les onglets et apps ouverts les uns des autres ; un clic suffit pour les ouvrir ici.</value>
+  </data>
+  <data name="Devices_AddPc" xml:space="preserve">
+    <value>Ajouter un PC</value>
+  </data>
+  <data name="Devices_SyncStartFailed" xml:space="preserve">
+    <value>Impossible de démarrer la synchronisation : {0}</value>
+  </data>
+  <data name="Devices_IphoneSomeApp" xml:space="preserve">
+    <value>une app</value>
+  </data>
+  <data name="Devices_IphoneSharedLink" xml:space="preserve">
+    <value>{0} a partagé un lien</value>
+  </data>
+  <data name="Devices_IphoneAppOpen" xml:space="preserve">
+    <value>Ouvert sur l'iPhone : {0}</value>
+  </data>
+  <data name="Devices_ContinueFailed" xml:space="preserve">
+    <value>Impossible d'ouvrir cette activité sur le PC.</value>
+  </data>
+  <data name="Devices_LinkOpened" xml:space="preserve">
+    <value>{0} a ouvert un lien : {1}</value>
+  </data>
+  <data name="Devices_LinkClickToOpen" xml:space="preserve">
+    <value>{0} : {1} — cliquez pour ouvrir</value>
+  </data>
+  <data name="Devices_AgoJustNow" xml:space="preserve">
+    <value>à l'instant</value>
+  </data>
+  <data name="Devices_AgoHours_Plural" xml:space="preserve">
+    <value>il y a {0} heure|il y a {0} heures</value>
+  </data>
+  <data name="Devices_SameNetwork" xml:space="preserve">
+    <value>NitroDrop · sur le même réseau</value>
+  </data>
+  <data name="Devices_Offline" xml:space="preserve">
+    <value>Hors ligne</value>
+  </data>
+  <data name="Devices_OfflineLastSeen" xml:space="preserve">
+    <value>Hors ligne · vu {0}</value>
+  </data>
+  <data name="Devices_CantConnect" xml:space="preserve">
+    <value>Connexion impossible · {0}</value>
+  </data>
+  <data name="Devices_OnlineConnecting" xml:space="preserve">
+    <value>En ligne · connexion…</value>
+  </data>
+  <data name="Devices_Online" xml:space="preserve">
+    <value>En ligne</value>
+  </data>
+  <data name="Devices_Tabs_Plural" xml:space="preserve">
+    <value>{0} onglet|{0} onglets</value>
+  </data>
+  <data name="Devices_Apps_Plural" xml:space="preserve">
+    <value>{0} app|{0} apps</value>
+  </data>
+  <data name="Devices_NothingShared" xml:space="preserve">
+    <value>rien de partagé</value>
+  </data>
+  <data name="Devices_TabsHeader" xml:space="preserve">
+    <value>ONGLETS · {0}</value>
+  </data>
+  <data name="Devices_AppsHeader" xml:space="preserve">
+    <value>APPS · {0}</value>
+  </data>
+  <data name="Devices_ShowLess" xml:space="preserve">
+    <value>Afficher moins</value>
+  </data>
+  <data name="Devices_ShowAll" xml:space="preserve">
+    <value>Tout afficher ({0})</value>
+  </data>
+  <data name="Pair_Paired" xml:space="preserve">
+    <value>Associé à {0}</value>
+  </data>
+  <data name="Pair_Waiting" xml:space="preserve">
+    <value>En attente…</value>
+  </data>
+  <data name="Pair_Button" xml:space="preserve">
+    <value>Associer</value>
+  </data>
+  <data name="Pair_ErrNotFound" xml:space="preserve">
+    <value>Appareil introuvable sur le réseau</value>
+  </data>
+  <data name="Pair_ErrIdMismatch" xml:space="preserve">
+    <value>L'identifiant de l'appareil ne correspond pas</value>
+  </data>
+  <data name="Pair_ErrBadResponse" xml:space="preserve">
+    <value>Réponse non valide</value>
+  </data>
+  <data name="Pair_ErrKey" xml:space="preserve">
+    <value>Échec de la vérification de la clé</value>
+  </data>
+  <data name="Pair_ErrRejected" xml:space="preserve">
+    <value>L'autre PC a refusé</value>
+  </data>
+  <data name="Pair_ErrNoSync" xml:space="preserve">
+    <value>La synchronisation n'est pas active</value>
+  </data>
+  <data name="Pair_ErrGeneric" xml:space="preserve">
+    <value>Impossible d'associer : {0}</value>
+  </data>
+  <data name="Pair_Eyebrow" xml:space="preserve">
+    <value>NITRODROP · ASSOCIATION</value>
+  </data>
+  <data name="Pair_MessageInitiator" xml:space="preserve">
+    <value>Association en cours. Les PC associés se montrent mutuellement leurs onglets et apps ouverts.</value>
+  </data>
+  <data name="Pair_MessageResponder" xml:space="preserve">
+    <value>souhaite s'associer à ce PC. Les PC associés se montrent mutuellement leurs onglets et apps ouverts.</value>
+  </data>
+  <data name="Pair_Question" xml:space="preserve">
+    <value>Voyez-vous le même code sur l'autre PC ?</value>
+  </data>
+  <data name="Pair_Confirm" xml:space="preserve">
+    <value>Confirmer</value>
+  </data>
+  <data name="Pair_Cancel" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="Pair_Footnote" xml:space="preserve">
+    <value>Si les codes sont différents, cliquez sur « Annuler ».</value>
+  </data>
+  <data name="Launch_Eyebrow" xml:space="preserve">
+    <value>NITRODROP · OUVRIR UNE APP</value>
+  </data>
+  <data name="Launch_Message" xml:space="preserve">
+    <value>souhaite ouvrir « {0} » sur ce PC.</value>
+  </data>
+  <data name="Launch_Footnote" xml:space="preserve">
+    <value>Seules les apps déjà partagées par ce PC peuvent être ouvertes.</value>
+  </data>
+  <data name="Sync_ExtTabsOff" xml:space="preserve">
+    <value>Partage des onglets désactivé</value>
+  </data>
+  <data name="Sync_ExtTabsOffDetail" xml:space="preserve">
+    <value>L'extension ne se connecte pas à NitroDrop ; les autres PC ne voient pas vos onglets.</value>
+  </data>
+  <data name="Sync_ExtConnected" xml:space="preserve">
+    <value>Connectée</value>
+  </data>
+  <data name="Sync_ExtConnectedDetail_Plural" xml:space="preserve">
+    <value>{1} · {0} onglet partagé|{1} · {0} onglets partagés</value>
+  </data>
+  <data name="Sync_BrowsersJoin" xml:space="preserve">
+    <value>{0} et {1}</value>
+  </data>
+  <data name="Sync_ExtNoTabs" xml:space="preserve">
+    <value>Connectée au navigateur, aucun onglet reçu</value>
+  </data>
+  <data name="Sync_ExtNoTabsDetail" xml:space="preserve">
+    <value>Vérifiez que l'extension NitroDrop est installée et activée dans Chrome ou Edge.</value>
+  </data>
+  <data name="Sync_ExtNotInstalled" xml:space="preserve">
+    <value>Non installée</value>
+  </data>
+  <data name="Sync_ExtNotInstalledDetail" xml:space="preserve">
+    <value>Installez l'extension pour voir vos onglets Chrome et Edge sur vos autres PC.</value>
+  </data>
+  <data name="Sync_Registering" xml:space="preserve">
+    <value>Connexion…</value>
+  </data>
+  <data name="Sync_RegisterOk" xml:space="preserve">
+    <value>✓ Connecté à Chrome et Edge. Rechargez l'extension dans le navigateur.</value>
+  </data>
+  <data name="Sync_RegisterFailed" xml:space="preserve">
+    <value>Échec de la connexion : {0}</value>
+  </data>
+  <data name="Sync_HostMissing" xml:space="preserve">
+    <value>{0} introuvable</value>
+  </data>
+  <data name="Sync_ExitCode" xml:space="preserve">
+    <value>code de sortie {0}</value>
+  </data>
+  <data name="Sync_IosSetupTitle" xml:space="preserve">
+    <value>Adresse de configuration pour {0}</value>
+  </data>
+  <data name="Sync_IphoneAddFailed" xml:space="preserve">
+    <value>Impossible d'ajouter l'iPhone : {0}</value>
+  </data>
+  <data name="Sync_IosDeviceDetail" xml:space="preserve">
+    <value>Raccourci · ajouté le {0}</value>
+  </data>
+</root>

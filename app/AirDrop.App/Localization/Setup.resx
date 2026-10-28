@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Setup_WindowTitle" xml:space="preserve">
+    <value>NitroDrop · Gelişmiş Kurulum</value>
+  </data>
+  <data name="Setup_Header" xml:space="preserve">
+    <value>Gelişmiş Kurulum</value>
+  </data>
+  <data name="Setup_DryRunTip" xml:space="preserve">
+    <value>--setup-dry-run: komutlar çalıştırılmaz, yalnızca kurulum günlüğüne yazılır</value>
+  </data>
+  <data name="Setup_DryRunBadge" xml:space="preserve">
+    <value>DRY-RUN · HİÇBİR ŞEY DEĞİŞMEZ</value>
+  </data>
+  <data name="Setup_Step_Compat" xml:space="preserve">
+    <value>Uyumluluk</value>
+  </data>
+  <data name="Setup_Step_Consent" xml:space="preserve">
+    <value>Onay</value>
+  </data>
+  <data name="Setup_Step_TestMode" xml:space="preserve">
+    <value>Test modu</value>
+  </data>
+  <data name="Setup_Step_Install" xml:space="preserve">
+    <value>Kurulum</value>
+  </data>
+  <data name="Setup_Title_Compat" xml:space="preserve">
+    <value>iPhone'larla doğrudan bağlantı</value>
+  </data>
+  <data name="Setup_Title_Unsupported" xml:space="preserve">
+    <value>Bu bilgisayarda henüz desteklenmiyor</value>
+  </data>
+  <data name="Setup_Title_Consent" xml:space="preserve">
+    <value>Neler değişecek?</value>
+  </data>
+  <data name="Setup_Title_BitLockerBackup" xml:space="preserve">
+    <value>Kurtarma anahtarınızı yedekleyin</value>
+  </data>
+  <data name="Setup_Title_SecureBootOn" xml:space="preserve">
+    <value>Secure Boot'u kapatın</value>
+  </data>
+  <data name="Setup_Title_SecureBootOff" xml:space="preserve">
+    <value>Secure Boot kapalı</value>
+  </data>
+  <data name="Setup_Title_SecureBootNone" xml:space="preserve">
+    <value>Secure Boot kullanılmıyor</value>
+  </data>
+  <data name="Setup_Title_TestModeOn" xml:space="preserve">
+    <value>Test modu açık</value>
+  </data>
+  <data name="Setup_Title_RebootNeeded" xml:space="preserve">
+    <value>Yeniden başlatma gerekiyor</value>
+  </data>
+  <data name="Setup_Title_TestModeEnable" xml:space="preserve">
+    <value>Windows test modunu açın</value>
+  </data>
+  <data name="Setup_Title_Install" xml:space="preserve">
+    <value>Sürücüyü kurun</value>
+  </data>
+  <data name="Setup_Title_Done" xml:space="preserve">
+    <value>Hazır!</value>
+  </data>
+  <data name="Setup_Title_Rollback" xml:space="preserve">
+    <value>Kaldır ve eski haline getir</value>
+  </data>
+  <data name="Setup_Title_RollbackFailed" xml:space="preserve">
+    <value>Bazı adımlar tamamlanamadı</value>
+  </data>
+  <data name="Setup_Title_RollbackRestored" xml:space="preserve">
+    <value>Eski haline getirildi</value>
+  </data>
+  <data name="Setup_Title_RollbackAlmost" xml:space="preserve">
+    <value>Neredeyse bitti</value>
+  </data>
+  <data name="Setup_Sub_Compat" xml:space="preserve">
+    <value>NitroDrop, Wi-Fi kartınızı AirDrop'un kullandığı doğrudan bağlantıya hazırlayabilir. Birkaç adım ve iki yeniden başlatma sürer. Her adımda ne olacağını önce anlatırız; siz onaylamadan hiçbir şey değişmez.</value>
+  </data>
+  <data name="Setup_Sub_Unsupported" xml:space="preserve">
+    <value>NitroDrop'un Wi-Fi sürücüsü şimdilik yalnızca Intel Wi-Fi 6 AX203 kartıyla çalışıyor ve bu bilgisayarda bu kart bulunamadı. Aynı ağdaki cihazlarla paylaşım yine çalışır. Kurulum gerektirmeyen USB Wi-Fi adaptörü desteği üzerinde çalışıyoruz.</value>
+  </data>
+  <data name="Setup_Sub_Consent" xml:space="preserve">
+    <value>Hepsi geçicidir; Ayarlar → Wi-Fi Sürücüsü → “Kaldır” ile tek tıkla geri alırsınız.</value>
+  </data>
+  <data name="Setup_Sub_BitLockerOn" xml:space="preserve">
+    <value>Diskiniz BitLocker ile şifreli. Secure Boot ayarını değiştirmek, açılışta 48 haneli kurtarma anahtarının sorulmasına yol açabilir. Anahtar elinizde değilse dosyalarınıza ulaşamazsınız — devam etmeden önce yedekleyin.</value>
+  </data>
+  <data name="Setup_Sub_BitLockerUnknown" xml:space="preserve">
+    <value>BitLocker durumu okunamadı. Emin olmak için ayrıntılı kontrol yapın (yönetici izni istenir).</value>
+  </data>
+  <data name="Setup_Sub_BitLockerNone" xml:space="preserve">
+    <value>Diskiniz BitLocker ile korunmuyor; bu adımda yapmanız gereken bir şey yok.</value>
+  </data>
+  <data name="Setup_Sub_SecureBootOn" xml:space="preserve">
+    <value>{0} için adımlar aşağıda. “BIOS'a yeniden başlat”a bastığınızda bilgisayar doğrudan BIOS ayarlarını açar; adımları telefonla fotoğraflamanız işinizi kolaylaştırır. Windows açılınca kurulum kaldığı yerden devam eder.</value>
+  </data>
+  <data name="Setup_Sub_SecureBootOff" xml:space="preserve">
+    <value>Bu adım tamam.</value>
+  </data>
+  <data name="Setup_Sub_SecureBootNone" xml:space="preserve">
+    <value>Bilgisayar eski (Legacy/CSM) modda açılıyor olabilir; bu durumda Secure Boot zaten devre dışıdır.</value>
+  </data>
+  <data name="Setup_Sub_TestModeOn" xml:space="preserve">
+    <value>Windows kendi imzaladığımız sürücüleri yükleyebiliyor.</value>
+  </data>
+  <data name="Setup_Sub_TestModePending" xml:space="preserve">
+    <value>Test modu açıldı; etkin olması için bilgisayarı yeniden başlatın. Windows açılınca kurulum kaldığı yerden sürer.</value>
+  </data>
+  <data name="Setup_Sub_TestModeEnable" xml:space="preserve">
+    <value>Test modu, Windows'un bu bilgisayarda imzaladığımız sürücüyü yüklemesine izin verir. Bir kez yönetici izni istenir, ardından yeniden başlatılır.</value>
+  </data>
+  <data name="Setup_Sub_Install" xml:space="preserve">
+    <value>Intel'in Wi-Fi firmware'i (linux-firmware deposundan) indirilip SHA-256 ile doğrulanır, sürücü yalnızca bu bilgisayara özel bir sertifikayla imzalanır ve Wi-Fi kartına kurulur.</value>
+  </data>
+  <data name="Setup_Sub_Done" xml:space="preserve">
+    <value>Wi-Fi kartınız artık NitroDrop sürücüsünde. Yakındaki iPhone, iPad ve Mac'ler göründüğünde doğrudan paylaşabilirsiniz. Bu sürücü deneyseldir; sorun yaşarsanız tek tıkla geri alabilirsiniz.</value>
+  </data>
+  <data name="Setup_Sub_Rollback" xml:space="preserve">
+    <value>NitroDrop sürücüsünü kaldırır ve her şeyi kurulumdan önceki haline döndürür. Bir kez yönetici izni istenir.</value>
+  </data>
+  <data name="Setup_Sub_RollbackFailed" xml:space="preserve">
+    <value>Ayrıntılar kurulum günlüğünde. Tekrar deneyebilir ya da Aygıt Yöneticisi'nden Intel sürücüsünü elle seçebilirsiniz.</value>
+  </data>
+  <data name="Setup_Sub_RollbackRestored" xml:space="preserve">
+    <value>Sürücü kaldırıldı, test modu kapatıldı. Filigranın kaybolması için bilgisayarı yeniden başlatın.</value>
+  </data>
+  <data name="Setup_Sub_RollbackAlmost" xml:space="preserve">
+    <value>Son adım: Secure Boot'u yeniden açın. “BIOS'a yeniden başlat”a basın ve aşağıdaki adımları izleyin.</value>
+  </data>
+  <data name="Setup_CardFound" xml:space="preserve">
+    <value>{0} bulundu</value>
+  </data>
+  <data name="Setup_NoCard" xml:space="preserve">
+    <value>Desteklenen Wi-Fi kartı yok</value>
+  </data>
+  <data name="Setup_ThisPc" xml:space="preserve">
+    <value>Bu bilgisayar</value>
+  </data>
+  <data name="Setup_Consent1_Title" xml:space="preserve">
+    <value>Secure Boot kapanır</value>
+  </data>
+  <data name="Setup_Consent1_Body" xml:space="preserve">
+    <value>Sürücümüz henüz Microsoft imzalı değil; BIOS'tan kapatmanız gerekiyor. Adım adım göstereceğiz.</value>
+  </data>
+  <data name="Setup_Consent2_Title" xml:space="preserve">
+    <value>Ekranda “Test Modu” yazısı</value>
+  </data>
+  <data name="Setup_Consent2_Body" xml:space="preserve">
+    <value>Windows sağ alt köşede filigran gösterir. Zararsızdır; geri alınca kaybolur.</value>
+  </data>
+  <data name="Setup_Consent3_Title" xml:space="preserve">
+    <value>Bazı oyunlar açılmaz</value>
+  </data>
+  <data name="Setup_Consent3_Body" xml:space="preserve">
+    <value>Valorant (Vanguard), FACEIT ve benzeri hile korumalı oyunlar çalışmaz. Oynamak için kurulumu geri alıp Secure Boot'u açın.</value>
+  </data>
+  <data name="Setup_Consent4_Title" xml:space="preserve">
+    <value>Koruma bir miktar azalır</value>
+  </data>
+  <data name="Setup_Consent4_Body" xml:space="preserve">
+    <value>Secure Boot'un açılıştaki zararlı yazılım koruması devre dışı kalır. Windows Güvenliği çalışmaya devam eder.</value>
+  </data>
+  <data name="Setup_Consent5_Title" xml:space="preserve">
+    <value>Intel Wi-Fi kartı NitroDrop'a geçer</value>
+  </data>
+  <data name="Setup_Consent5_Body" xml:space="preserve">
+    <value>Sürücü etkinken kart iPhone bağlantısına ayrılır; internete Ethernet, telefon paylaşımı ya da ikinci bir Wi-Fi adaptörüyle çıkılır.</value>
+  </data>
+  <data name="Setup_ConsentAgree" xml:space="preserve">
+    <value>Bunları okudum, anladım ve kabul ediyorum.</value>
+  </data>
+  <data name="Setup_BitLocker_On" xml:space="preserve">
+    <value>BitLocker: açık</value>
+  </data>
+  <data name="Setup_BitLocker_Suspended" xml:space="preserve">
+    <value>BitLocker: askıda (disk şifreli)</value>
+  </data>
+  <data name="Setup_BitLocker_InProgress" xml:space="preserve">
+    <value>BitLocker: şifreleme sürüyor</value>
+  </data>
+  <data name="Setup_BitLocker_Off" xml:space="preserve">
+    <value>BitLocker: kapalı</value>
+  </data>
+  <data name="Setup_BitLocker_NotUsed" xml:space="preserve">
+    <value>BitLocker: kullanılmıyor</value>
+  </data>
+  <data name="Setup_BitLocker_Unknown" xml:space="preserve">
+    <value>BitLocker: bilinmiyor</value>
+  </data>
+  <data name="Setup_NoRecoveryProtector" xml:space="preserve">
+    <value>Bu diskte kurtarma parolası koruyucusu bulunamadı. Microsoft hesabınızı kontrol edin.</value>
+  </data>
+  <data name="Setup_KeyId" xml:space="preserve">
+    <value>Anahtar kimliği: {0}</value>
+  </data>
+  <data name="Setup_ShowKey" xml:space="preserve">
+    <value>Anahtarı göster…</value>
+  </data>
+  <data name="Setup_ShowKeyTip" xml:space="preserve">
+    <value>Yönetici izni istenir; anahtar yalnızca bu pencerede kullanılır</value>
+  </data>
+  <data name="Setup_SaveToFile" xml:space="preserve">
+    <value>Dosyaya kaydet…</value>
+  </data>
+  <data name="Setup_SaveAndPrint" xml:space="preserve">
+    <value>Kaydet ve yazdır…</value>
+  </data>
+  <data name="Setup_OpenMsKey" xml:space="preserve">
+    <value>Microsoft hesabımdaki anahtarı aç (aka.ms/myrecoverykey)</value>
+  </data>
+  <data name="Setup_SuspendTitle" xml:space="preserve">
+    <value>Yeniden başlatırken BitLocker'ı bir kez askıya al</value>
+  </data>
+  <data name="Setup_SuspendBody" xml:space="preserve">
+    <value>Önerilir. Açılışta anahtar sorulmasını önler; disk şifreli kalır ve koruma bir yeniden başlatmadan sonra kendiliğinden geri gelir.</value>
+  </data>
+  <data name="Setup_BackupConfirm" xml:space="preserve">
+    <value>Kurtarma anahtarımı bu bilgisayarın dışında güvenli bir yere kaydettim.</value>
+  </data>
+  <data name="Setup_GuideKeys" xml:space="preserve">
+    <value>BIOS kendiliğinden açılmazsa: {0}.</value>
+  </data>
+  <data name="Setup_GuideBitLockerHint" xml:space="preserve">
+    <value>Açılışta BitLocker kurtarma anahtarı sorulursa, kaydettiğiniz 48 haneli anahtarı yazın.</value>
+  </data>
+  <data name="Setup_Recheck" xml:space="preserve">
+    <value>Durumu yeniden kontrol et</value>
+  </data>
+  <data name="Setup_SecureBootStillOnTitle" xml:space="preserve">
+    <value>Secure Boot hâlâ açık görünüyor</value>
+  </data>
+  <data name="Setup_SecureBootStillOnBody" xml:space="preserve">
+    <value>Windows bu durumda test modunu açmayı reddeder. Önce Secure Boot adımını tamamlayın.</value>
+  </data>
+  <data name="Setup_LicenseTitle" xml:space="preserve">
+    <value>Intel firmware lisansı</value>
+  </data>
+  <data name="Setup_LicenseAccept" xml:space="preserve">
+    <value>Intel firmware lisansını okudum ve kabul ediyorum.</value>
+  </data>
+  <data name="Setup_LogButton" xml:space="preserve">
+    <value>Kurulum günlüğü</value>
+  </data>
+  <data name="Setup_RollbackItem1" xml:space="preserve">
+    <value>NitroDrop Wi-Fi sürücüsü kaldırılır, Intel sürücüsü geri gelir</value>
+  </data>
+  <data name="Setup_RollbackItem2" xml:space="preserve">
+    <value>Bu bilgisayara özel imza sertifikası silinir</value>
+  </data>
+  <data name="Setup_RollbackItem3" xml:space="preserve">
+    <value>Windows test modu kapatılır (filigran yeniden başlatınca kaybolur)</value>
+  </data>
+  <data name="Setup_RollbackItem4" xml:space="preserve">
+    <value>BitLocker koruması askıdaysa sürdürülür</value>
+  </data>
+  <data name="Setup_RollbackItem5" xml:space="preserve">
+    <value>Secure Boot'u yeniden açmanız için adımları gösteririz</value>
+  </data>
+  <data name="Setup_Btn_Start" xml:space="preserve">
+    <value>Başla</value>
+  </data>
+  <data name="Setup_Btn_Continue" xml:space="preserve">
+    <value>Devam</value>
+  </data>
+  <data name="Setup_Btn_RebootToBios" xml:space="preserve">
+    <value>BIOS'a yeniden başlat</value>
+  </data>
+  <data name="Setup_Btn_Restart" xml:space="preserve">
+    <value>Yeniden başlat</value>
+  </data>
+  <data name="Setup_Btn_EnableTestMode" xml:space="preserve">
+    <value>Test modunu aç</value>
+  </data>
+  <data name="Setup_Btn_InstallDriver" xml:space="preserve">
+    <value>Sürücüyü kur</value>
+  </data>
+  <data name="Setup_Btn_DownloadFirmware" xml:space="preserve">
+    <value>Firmware'i indir</value>
+  </data>
+  <data name="Setup_Btn_Retry" xml:space="preserve">
+    <value>Tekrar dene</value>
+  </data>
+  <data name="Setup_Btn_Later" xml:space="preserve">
+    <value>Daha sonra</value>
+  </data>
+  <data name="Setup_Btn_Uninstall" xml:space="preserve">
+    <value>Kaldır</value>
+  </data>
+  <data name="Setup_Status_Checking" xml:space="preserve">
+    <value>Bilgisayarınız kontrol ediliyor…</value>
+  </data>
+  <data name="Setup_Status_ReadingBitLocker" xml:space="preserve">
+    <value>BitLocker ayrıntıları okunuyor (yönetici izni)…</value>
+  </data>
+  <data name="Setup_Status_Saved" xml:space="preserve">
+    <value>Kaydedildi: {0}. Bu dosyayı bilgisayarın dışında (USB bellek, telefon) saklayın.</value>
+  </data>
+  <data name="Setup_Error_SaveFailed" xml:space="preserve">
+    <value>Kaydedilemedi: {0}</value>
+  </data>
+  <data name="Setup_RecoveryFileName" xml:space="preserve">
+    <value>BitLocker Kurtarma Anahtarı {0}.txt</value>
+  </data>
+  <data name="Setup_SaveDialogTitle" xml:space="preserve">
+    <value>Kurtarma anahtarını kaydet</value>
+  </data>
+  <data name="Setup_SaveDialogFilter" xml:space="preserve">
+    <value>Metin dosyası (*.txt)|*.txt</value>
+    <comment>Windows file dialog filter: label|pattern</comment>
+  </data>
+  <data name="Setup_ConfirmBiosTitle" xml:space="preserve">
+    <value>BIOS'a yeniden başlatılsın mı?</value>
+  </data>
+  <data name="Setup_ConfirmBiosBody" xml:space="preserve">
+    <value>Bilgisayar 5 saniye içinde yeniden başlayıp BIOS ayarlarını açacak. Açık dosyalarınızı kaydedin. BIOS'ta işiniz bitince kaydedip çıkın; Windows açılınca NitroDrop kurulumu kaldığı yerden sürdürür.</value>
+  </data>
+  <data name="Setup_Status_Restarting" xml:space="preserve">
+    <value>Yeniden başlatılıyor…</value>
+  </data>
+  <data name="Setup_DryRun_Bios" xml:space="preserve">
+    <value>[dry-run] Gerçekte bilgisayar şimdi BIOS'a yeniden başlardı.</value>
+  </data>
+  <data name="Setup_Status_EnablingTestMode" xml:space="preserve">
+    <value>Test modu açılıyor (yönetici izni)…</value>
+  </data>
+  <data name="Setup_DryRun_Bcdedit" xml:space="preserve">
+    <value>[dry-run] bcdedit çalıştırılmadı. Gerçekte şimdi yeniden başlatmanız istenirdi.</value>
+  </data>
+  <data name="Setup_ConfirmRestartTitle" xml:space="preserve">
+    <value>Yeniden başlatılsın mı?</value>
+  </data>
+  <data name="Setup_ConfirmRestartBody" xml:space="preserve">
+    <value>Bilgisayar 5 saniye içinde yeniden başlayacak. Açık dosyalarınızı kaydedin.</value>
+  </data>
+  <data name="Setup_Error_RestartFailed" xml:space="preserve">
+    <value>Yeniden başlatılamadı. Başlat menüsünden yeniden başlatın.</value>
+  </data>
+  <data name="Setup_DryRun_Restart" xml:space="preserve">
+    <value>[dry-run] Gerçekte bilgisayar şimdi yeniden başlardı.</value>
+  </data>
+  <data name="Setup_Error_DriverFileMissing" xml:space="preserve">
+    <value>Sürücü dosyası bu NitroDrop sürümünde yok: {0}. (Geliştirici derlemesi: driver\build.ps1 ve driver\package.ps1 çalıştırın.)</value>
+  </data>
+  <data name="Setup_Status_FirmwareReady" xml:space="preserve">
+    <value>Firmware indirildi ve doğrulandı. Lisansı okuyup kabul edin.</value>
+  </data>
+  <data name="Setup_Status_Downloading" xml:space="preserve">
+    <value>{0} indiriliyor…</value>
+  </data>
+  <data name="Setup_Error_DownloadFailed" xml:space="preserve">
+    <value>{0} doğrulanmış olarak indirilemedi. İnternet bağlantınızı kontrol edip tekrar deneyin.</value>
+  </data>
+  <data name="Setup_Error_NoCard" xml:space="preserve">
+    <value>Wi-Fi kartı bulunamadı.</value>
+  </data>
+  <data name="Setup_Status_Verifying" xml:space="preserve">
+    <value>Paket doğrulanıyor…</value>
+  </data>
+  <data name="Setup_Error_CatalogMismatch" xml:space="preserve">
+    <value>Sürücü paketi kataloğuyla uyuşmuyor: {0}</value>
+  </data>
+  <data name="Setup_Status_Installing" xml:space="preserve">
+    <value>Sürücü imzalanıp kuruluyor (yönetici izni)…</value>
+  </data>
+  <data name="Setup_DryRun_Install" xml:space="preserve">
+    <value>[dry-run] Hiçbir şey kurulmadı; komutlar günlüğe yazıldı.</value>
+  </data>
+  <data name="Setup_ConfirmRollbackTitle" xml:space="preserve">
+    <value>Eski haline getirilsin mi?</value>
+  </data>
+  <data name="Setup_ConfirmRollbackBody" xml:space="preserve">
+    <value>NitroDrop sürücüsü kaldırılacak, Intel sürücüsü geri gelecek, imza sertifikası silinecek ve test modu kapatılacak.</value>
+  </data>
+  <data name="Setup_Status_Removing" xml:space="preserve">
+    <value>Kaldırılıyor (yönetici izni)…</value>
+  </data>
+  <data name="Setup_DryRun_Rollback" xml:space="preserve">
+    <value>[dry-run] Hiçbir şey kaldırılmadı; komutlar günlüğe yazıldı.</value>
+  </data>
+  <data name="Helper_DryRunBitLocker" xml:space="preserve">
+    <value>[dry-run] BitLocker sorgusu çalıştırılmadı.</value>
+  </data>
+  <data name="Helper_BitLockerReadFailed" xml:space="preserve">
+    <value>BitLocker durumu okunamadı.</value>
+  </data>
+  <data name="Helper_RebootingToBios" xml:space="preserve">
+    <value>Bilgisayar 5 saniye içinde BIOS ayarlarına yeniden başlıyor.</value>
+  </data>
+  <data name="Helper_RebootToBiosFailed" xml:space="preserve">
+    <value>BIOS'a yeniden başlatılamadı (bu bilgisayar UEFI ile açılmamış olabilir). Elle yeniden başlatıp açılışta BIOS tuşuna basın.</value>
+  </data>
+  <data name="Helper_PackageArgsMissing" xml:space="preserve">
+    <value>Paket klasörü ya da donanım kimliği eksik.</value>
+  </data>
+  <data name="Helper_UnsupportedHwId" xml:space="preserve">
+    <value>Desteklenmeyen donanım kimliği: {0}</value>
+  </data>
+  <data name="Helper_PackageIncomplete" xml:space="preserve">
+    <value>Sürücü paketi eksik: {0}</value>
+  </data>
+  <data name="Helper_FirmwareVerifyFailed" xml:space="preserve">
+    <value>Firmware dosyası doğrulanamadı (SHA-256).</value>
+  </data>
+  <data name="Helper_SignatureVerifyFailed" xml:space="preserve">
+    <value>{0} imzası doğrulanamadı.</value>
+  </data>
+  <data name="Helper_CatalogAfterSignFailed" xml:space="preserve">
+    <value>İmzadan sonra katalog doğrulanamadı.</value>
+  </data>
+  <data name="Helper_AddDriverFailed" xml:space="preserve">
+    <value>Sürücü paketi Windows'a eklenemedi. Ayrıntılar kurulum günlüğünde.</value>
+  </data>
+  <data name="Helper_AssignFailed" xml:space="preserve">
+    <value>Sürücü karta atanamadı. “Kaldır ve eski haline getir” ile geri alabilirsiniz.</value>
+  </data>
+  <data name="Helper_NotBound" xml:space="preserve">
+    <value>Sürücü kuruldu ama kart hâlâ Intel sürücüsünde görünüyor. Yeniden başlatıp tekrar kontrol edin.</value>
+  </data>
+  <data name="Helper_ProblemCode" xml:space="preserve">
+    <value>Sürücü bağlandı ama aygıt sorun kodu {0} bildiriyor (donanımda henüz denenmedi).</value>
+  </data>
+  <data name="Helper_InstalledReboot" xml:space="preserve">
+    <value>Sürücü kuruldu. Etkin olması için yeniden başlatın.</value>
+  </data>
+  <data name="Helper_Installed" xml:space="preserve">
+    <value>Sürücü kuruldu ve Wi-Fi kartına bağlandı.</value>
+  </data>
+  <data name="Helper_RemoveFailed" xml:space="preserve">
+    <value>{0} kaldırılamadı</value>
+    <comment>list item joined with '; ' after Helper_SomeStepsFailed</comment>
+  </data>
+  <data name="Helper_TestModeOffFailed" xml:space="preserve">
+    <value>test modu kapatılamadı</value>
+    <comment>list item</comment>
+  </data>
+  <data name="Helper_StillOurs" xml:space="preserve">
+    <value>kart hâlâ NitroDrop sürücüsünde (yeniden başlatınca Intel sürücüsü geri gelir)</value>
+    <comment>list item</comment>
+  </data>
+  <data name="Helper_RolledBack" xml:space="preserve">
+    <value>NitroDrop sürücüsü kaldırıldı, Intel sürücüsü geri yüklendi, test modu kapatıldı.</value>
+  </data>
+  <data name="Helper_SomeStepsFailed" xml:space="preserve">
+    <value>Bazı adımlar tamamlanamadı: {0}</value>
+  </data>
+  <data name="Helper_UnknownAction" xml:space="preserve">
+    <value>Bilinmeyen kurulum eylemi.</value>
+  </data>
+  <data name="Helper_Bcd_Ok" xml:space="preserve">
+    <value>Test modu açıldı. Yeniden başlattıktan sonra etkin olur.</value>
+  </data>
+  <data name="Helper_Bcd_SecureBoot" xml:space="preserve">
+    <value>Windows test modunu açmayı reddetti çünkü Secure Boot hâlâ açık. Önceki adıma dönüp BIOS'tan Secure Boot'u kapatın, sonra tekrar deneyin.</value>
+  </data>
+  <data name="Helper_Bcd_AccessDenied" xml:space="preserve">
+    <value>Yönetici izni alınamadı. Tekrar deneyip izin isteğini onaylayın.</value>
+  </data>
+  <data name="Helper_Bcd_Failed" xml:space="preserve">
+    <value>Test modu açılamadı. Ayrıntılar kurulum günlüğünde.</value>
+  </data>
+  <data name="Helper_UacDenied" xml:space="preserve">
+    <value>Yönetici izni verilmedi. Hazır olduğunuzda tekrar deneyin.</value>
+  </data>
+  <data name="Helper_StartFailed" xml:space="preserve">
+    <value>Yardımcı başlatılamadı.</value>
+  </data>
+  <data name="Helper_ExitedNoResult" xml:space="preserve">
+    <value>Yardımcı sonuç döndürmeden kapandı (kod {0}).</value>
+  </data>
+  <data name="Helper_EmptyReply" xml:space="preserve">
+    <value>Yardımcıdan boş yanıt geldi.</value>
+  </data>
+  <data name="Helper_Timeout" xml:space="preserve">
+    <value>Yardımcı zaman aşımına uğradı.</value>
+  </data>
+  <data name="Helper_ReplyUnreadable" xml:space="preserve">
+    <value>Yardımcının yanıtı okunamadı: {0}</value>
+  </data>
+  <data name="Setup_Backup_Title" xml:space="preserve">
+    <value>BitLocker Kurtarma Anahtarı / BitLocker Recovery Key</value>
+  </data>
+  <data name="Setup_Backup_Computer" xml:space="preserve">
+    <value>Bilgisayar: {0}</value>
+  </data>
+  <data name="Setup_Backup_Date" xml:space="preserve">
+    <value>Tarih: {0}</value>
+  </data>
+  <data name="Setup_Backup_Intro" xml:space="preserve">
+    <value>Bilgisayarınız açılışta kurtarma anahtarı isterse, ekrandaki “Anahtar Kimliği”nin ilk karakterlerini aşağıdakiyle karşılaştırın ve aynıysa 48 haneli anahtarı yazın.</value>
+  </data>
+  <data name="Setup_Backup_KeyId" xml:space="preserve">
+    <value>Anahtar Kimliği (Key ID): {0}</value>
+  </data>
+  <data name="Setup_Backup_Key" xml:space="preserve">
+    <value>Kurtarma Anahtarı: {0}</value>
+  </data>
+  <data name="Setup_Backup_Unreadable" xml:space="preserve">
+    <value>(okunamadı — {0} adresine bakın)</value>
+  </data>
+  <data name="Setup_Backup_StoreOutside" xml:space="preserve">
+    <value>Bu dosyayı bu bilgisayarın dışında saklayın (USB bellek, telefon fotoğrafı, çıktı).</value>
+  </data>
+  <data name="Setup_Backup_MsAccount" xml:space="preserve">
+    <value>Microsoft hesabınıza yedeklendiyse: {0}</value>
+  </data>
+  <data name="Vendor_Save" xml:space="preserve">
+    <value>F10'a basıp “Save &amp; Exit” / “Kaydet ve Çık”ı onaylayın (Yes). Bilgisayar Windows'a döner.</value>
+    <comment>BIOS item names stay in English as shown by the firmware</comment>
+  </data>
+  <data name="Vendor_Enable1" xml:space="preserve">
+    <value>BIOS ayarlarında {0} bölümüne gidin.</value>
+    <comment>{0} = BIOS menu path, e.g. Security → Secure Boot</comment>
+  </data>
+  <data name="Vendor_Enable2" xml:space="preserve">
+    <value>Secure Boot'u yeniden “Enabled” (Açık) yapın. Daha önce “Restore Factory Keys” / “Install default keys” istenirse onaylayın.</value>
+  </data>
+  <data name="Vendor_Enable3" xml:space="preserve">
+    <value>F10 ile kaydedip çıkın (Save &amp; Exit). Windows normal açılır, “Test Modu” yazısı kaybolur.</value>
+  </data>
+  <data name="Vendor_ThinkPad_Keys" xml:space="preserve">
+    <value>Açılışta F1 (ThinkBook: F2); ya da Enter → F1</value>
+  </data>
+  <data name="Vendor_ThinkPad_Step1" xml:space="preserve">
+    <value>Ok tuşlarıyla “Security” sekmesine geçin.</value>
+  </data>
+  <data name="Vendor_ThinkPad_Step2" xml:space="preserve">
+    <value>“Secure Boot” satırına girin (Enter).</value>
+  </data>
+  <data name="Vendor_ThinkPad_Step3" xml:space="preserve">
+    <value>“Secure Boot” değerini “Off” / “Disabled” yapın.</value>
+  </data>
+  <data name="Vendor_ThinkPad_Note" xml:space="preserve">
+    <value>Supervisor şifresi soruyorsa önce o girilmelidir.</value>
+  </data>
+  <data name="Vendor_Lenovo_Keys" xml:space="preserve">
+    <value>Açılışta F2 ya da Fn+F2; olmazsa kapalıyken yan taraftaki Novo deliğine iğneyle basıp “BIOS Setup”</value>
+  </data>
+  <data name="Vendor_Lenovo_Step1" xml:space="preserve">
+    <value>Üstteki “Security” sekmesine geçin (Legion'da gerekirse önce “More Settings”).</value>
+  </data>
+  <data name="Vendor_Lenovo_Step2" xml:space="preserve">
+    <value>“Secure Boot” satırını “Disabled” yapın.</value>
+  </data>
+  <data name="Vendor_Hp_Keys" xml:space="preserve">
+    <value>Açılışta art arda Esc, menüde F10 (BIOS Setup)</value>
+  </data>
+  <data name="Vendor_Hp_Menu" xml:space="preserve">
+    <value>System Configuration (ya da Advanced) → Boot Options / Secure Boot Configuration</value>
+  </data>
+  <data name="Vendor_Hp_Step1" xml:space="preserve">
+    <value>“System Configuration” sekmesinde “Boot Options”a girin (iş modellerinde: “Advanced” → “Secure Boot Configuration”).</value>
+  </data>
+  <data name="Vendor_Hp_Step2" xml:space="preserve">
+    <value>“Secure Boot” kutusunun işaretini kaldırın / “Disable” seçin. “Legacy Support” kapalı kalsın.</value>
+  </data>
+  <data name="Vendor_Hp_Step4" xml:space="preserve">
+    <value>Açılışta HP 4 haneli bir doğrulama kodu gösterip yazmanızı ister: ekrandaki kodu yazıp Enter'a basın. Bu normaldir.</value>
+  </data>
+  <data name="Vendor_Dell_Keys" xml:space="preserve">
+    <value>Dell logosunda F2</value>
+  </data>
+  <data name="Vendor_Dell_Menu" xml:space="preserve">
+    <value>Boot Configuration → Secure Boot (eski BIOS: Secure Boot → Secure Boot Enable)</value>
+  </data>
+  <data name="Vendor_Dell_Step1" xml:space="preserve">
+    <value>Soldaki menüden “Boot Configuration”ı açın (eski görünümde “Secure Boot” → “Secure Boot Enable”).</value>
+  </data>
+  <data name="Vendor_Dell_Step2" xml:space="preserve">
+    <value>“Enable Secure Boot” anahtarını kapatın; uyarıya “Yes” deyin.</value>
+  </data>
+  <data name="Vendor_Dell_Step3" xml:space="preserve">
+    <value>“Apply Changes” (ya da “Apply”), sonra “Exit”. Bilgisayar yeniden başlar.</value>
+  </data>
+  <data name="Vendor_Asus_Name" xml:space="preserve">
+    <value>ASUS (ROG, TUF, Zenbook, Vivobook, anakartlar)</value>
+  </data>
+  <data name="Vendor_Asus_Keys" xml:space="preserve">
+    <value>Açılışta F2 (masaüstü anakart: Del)</value>
+  </data>
+  <data name="Vendor_Asus_Step1" xml:space="preserve">
+    <value>EZ Mode açılırsa F7 ile “Advanced Mode”a geçin.</value>
+  </data>
+  <data name="Vendor_Asus_Step2" xml:space="preserve">
+    <value>Dizüstü: “Security” → “Secure Boot” → “Secure Boot Control” = Disabled.</value>
+  </data>
+  <data name="Vendor_Asus_Step3" xml:space="preserve">
+    <value>Masaüstü anakart: “Boot” → “Secure Boot” → “OS Type” = “Other OS”.</value>
+  </data>
+  <data name="Vendor_Acer_Keys" xml:space="preserve">
+    <value>Acer logosunda F2</value>
+  </data>
+  <data name="Vendor_Acer_Step1" xml:space="preserve">
+    <value>Secure Boot satırı gri ise önce “Security” → “Set Supervisor Password” ile bir BIOS şifresi belirleyin ve bir yere not edin (Acer bu şifre olmadan Secure Boot'u değiştirtmez).</value>
+  </data>
+  <data name="Vendor_Acer_Step2" xml:space="preserve">
+    <value>“Boot” sekmesine geçip “Secure Boot” değerini “Disabled” yapın.</value>
+  </data>
+  <data name="Vendor_Acer_Step4" xml:space="preserve">
+    <value>İsterseniz sonra aynı menüden şifreyi boş bırakarak kaldırabilirsiniz.</value>
+  </data>
+  <data name="Vendor_Msi_Name" xml:space="preserve">
+    <value>MSI (dizüstü ve anakartlar)</value>
+  </data>
+  <data name="Vendor_Msi_Keys" xml:space="preserve">
+    <value>Açılışta Del (bazı dizüstülerde F2)</value>
+  </data>
+  <data name="Vendor_Msi_Menu" xml:space="preserve">
+    <value>Settings → Advanced → Windows OS Configuration → Secure Boot (dizüstü: Security → Secure Boot)</value>
+  </data>
+  <data name="Vendor_Msi_Step1" xml:space="preserve">
+    <value>Dizüstü: “Security” → “Secure Boot” → “Secure Boot” = Disabled.</value>
+  </data>
+  <data name="Vendor_Msi_Step2" xml:space="preserve">
+    <value>Anakart (Click BIOS): F7 ile Advanced → “Settings” → “Advanced” → “Windows OS Configuration” → “Secure Boot” = Disabled.</value>
+  </data>
+  <data name="Vendor_Gigabyte_Keys" xml:space="preserve">
+    <value>Açılışta Del (dizüstü: F2)</value>
+  </data>
+  <data name="Vendor_Gigabyte_Step1" xml:space="preserve">
+    <value>Easy Mode açılırsa F2 ile Advanced Mode'a geçin.</value>
+  </data>
+  <data name="Vendor_Gigabyte_Step2" xml:space="preserve">
+    <value>“Boot” sekmesinde “Secure Boot”a girip “Secure Boot Enable” = Disabled yapın.</value>
+  </data>
+  <data name="Vendor_Samsung_Step1" xml:space="preserve">
+    <value>“Boot” (ya da “Advanced”) sekmesine geçin.</value>
+  </data>
+  <data name="Vendor_Samsung_Step2" xml:space="preserve">
+    <value>“Secure Boot Control” = Off. “OS Mode Selection” sorulursa “UEFI OS” seçili kalsın.</value>
+  </data>
+  <data name="Vendor_Huawei_Step1" xml:space="preserve">
+    <value>BIOS ana menüsünde “Secure Boot” (bazı modellerde “Security” altında) satırını bulun.</value>
+  </data>
+  <data name="Vendor_Huawei_Step2" xml:space="preserve">
+    <value>“Disabled” yapın; şifre soruyorsa BIOS şifrenizi girin.</value>
+  </data>
+  <data name="Vendor_Casper_Keys" xml:space="preserve">
+    <value>Açılışta F2 (bazı modellerde Del)</value>
+  </data>
+  <data name="Vendor_Casper_Step1" xml:space="preserve">
+    <value>“Security” sekmesine geçin. Secure Boot gri ise önce “Set Supervisor Password” ile şifre belirleyin.</value>
+  </data>
+  <data name="Vendor_Casper_Step2" xml:space="preserve">
+    <value>“Secure Boot” (ya da “Secure Boot Control”) = Disabled.</value>
+  </data>
+  <data name="Vendor_Casper_Note" xml:space="preserve">
+    <value>Excalibur modellerinde menü “Boot” sekmesinde de olabilir.</value>
+  </data>
+  <data name="Vendor_Monster_Step1" xml:space="preserve">
+    <value>“Security” sekmesine geçin.</value>
+  </data>
+  <data name="Vendor_Monster_Step2" xml:space="preserve">
+    <value>“Secure Boot” = Disabled (bazı modellerde “Secure Boot Control”).</value>
+  </data>
+  <data name="Vendor_SaveF10F4" xml:space="preserve">
+    <value>F10 (bazı modellerde F4) ile kaydedip çıkın.</value>
+  </data>
+  <data name="Vendor_Clevo_Name" xml:space="preserve">
+    <value>Clevo / Tongfang tabanlı dizüstü</value>
+  </data>
+  <data name="Vendor_Surface_Keys" xml:space="preserve">
+    <value>Kapalıyken ses açma tuşunu basılı tutup güç tuşuna basın</value>
+  </data>
+  <data name="Vendor_Surface_Step1" xml:space="preserve">
+    <value>Soldaki “Security”ye dokunun.</value>
+  </data>
+  <data name="Vendor_Surface_Step2" xml:space="preserve">
+    <value>“Secure Boot” altında “Change configuration” → “None” seçin.</value>
+  </data>
+  <data name="Vendor_Asrock_Name" xml:space="preserve">
+    <value>ASRock anakart</value>
+  </data>
+  <data name="Vendor_Asrock_Keys" xml:space="preserve">
+    <value>Açılışta F2 ya da Del</value>
+  </data>
+  <data name="Vendor_Asrock_Step1" xml:space="preserve">
+    <value>F6 ile Advanced Mode'a geçin, “Security” sekmesini açın.</value>
+  </data>
+  <data name="Vendor_Generic_Name" xml:space="preserve">
+    <value>Diğer üreticiler</value>
+  </data>
+  <data name="Vendor_Generic_Keys" xml:space="preserve">
+    <value>Açılışta F2, Del, F10 ya da Esc (üretici logosunun altında yazar)</value>
+  </data>
+  <data name="Vendor_Generic_Menu" xml:space="preserve">
+    <value>Security ya da Boot → Secure Boot</value>
+  </data>
+  <data name="Vendor_Generic_Step1" xml:space="preserve">
+    <value>“Security”, “Boot” ya da “Authentication” sekmelerinde “Secure Boot” satırını arayın.</value>
+  </data>
+  <data name="Vendor_Generic_Step2" xml:space="preserve">
+    <value>Değerini “Disabled” / “Off” yapın. Gri ise önce “Supervisor/Administrator Password” belirleyin.</value>
+  </data>
+  <data name="Vendor_Generic_Note" xml:space="preserve">
+    <value>Emin olamazsanız üreticinin destek sitesinde “&lt;model&gt; disable secure boot” diye aratın.</value>
+  </data>
+  <data name="Vendor_KeysF2" xml:space="preserve">
+    <value>Açılışta F2</value>
+  </data>
+  <data name="Vendor_Asus_Menu" xml:space="preserve">
+    <value>Advanced Mode (F7) → Boot (ya da Security) → Secure Boot</value>
+  </data>
+  <data name="Vendor_SecureBootDisabled" xml:space="preserve">
+    <value>“Secure Boot” = Disabled.</value>
+  </data>
+  <data name="Vendor_Surface_Step3" xml:space="preserve">
+    <value>“Exit” → “Restart now” seçin.</value>
+  </data>
+</root>

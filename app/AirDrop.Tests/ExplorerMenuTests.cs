@@ -5,7 +5,7 @@ using AirDrop.App.Services;
 namespace AirDrop.Tests;
 
 /// <summary>
-/// Explorer "NitroDrop ile gönder": --send / --send-list parsing, send batching, the HKCU verb + SendTo builder.
+/// Explorer "Send with NitroDrop" (tr: "NitroDrop ile gönder"): --send / --send-list parsing, send batching, the HKCU verb + SendTo builder.
 /// Nothing here touches the real registry or SendTo folder (fakes); list files go to %TEMP% and are deleted.
 /// </summary>
 public class ExplorerMenuTests
@@ -293,6 +293,29 @@ public class ExplorerMenuTests
         Assert.False(svc.StartupCheck());   // off stays off
         svc.SetEnabled(true);
         Assert.True(svc.IsEnabled);
+    }
+
+    [Fact]
+    public void Verb_written_in_another_language_follows_the_ui_language()
+    {
+        var reg = new FakeRegistry();
+        var lnk = new FakeShortcuts();
+        var svc = new ExplorerMenuService(reg, lnk, Exe, packaged: false, fileExists: _ => true);
+        Assert.False(svc.RefreshLanguage());          // not registered → nothing to rewrite
+        svc.SetEnabled(true);
+
+        // as if registered while the UI was English
+        foreach (var key in ExplorerMenu.ShellKeys) reg.SetString(key, "MUIVerb", "Send with NitroDrop");
+        Assert.True(svc.StartupCheck());
+        Assert.All(ExplorerMenu.ShellKeys, k => Assert.Equal(UiStrings.ExplorerMenuVerb, reg.GetString(k, "MUIVerb")));
+        Assert.False(svc.StartupCheck());             // already current
+
+        Assert.True(svc.RefreshLanguage());           // language switch: rewritten in place, still enabled
+        Assert.True(svc.IsEnabled);
+        Assert.Single(lnk.Links);
+
+        var packaged = new ExplorerMenuService(new FakeRegistry(), new FakeShortcuts(), Exe, packaged: true);
+        Assert.False(packaged.RefreshLanguage());
     }
 
     [Fact]

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Onboarding_WindowTitle" xml:space="preserve">
+    <value>NitroDrop · Bienvenue</value>
+  </data>
+  <data name="Onboarding_StepLabel" xml:space="preserve">
+    <value>PRISE EN MAIN · {0}/{1}</value>
+  </data>
+  <data name="Onboarding_SkipTip" xml:space="preserve">
+    <value>Fermer la présentation (Échap)</value>
+  </data>
+  <data name="Onboarding_Welcome" xml:space="preserve">
+    <value>Fichiers, presse-papiers, notifications et onglets entre iPhone, Mac et PC. Fonctionne immédiatement sur le même réseau, sans aucune configuration.</value>
+  </data>
+  <data name="Onboarding_SendTitle" xml:space="preserve">
+    <value>Glissez, déposez</value>
+  </data>
+  <data name="Onboarding_SendBody" xml:space="preserve">
+    <value>Déposez un fichier sur un appareil dans « À proximité ». Vous pouvez aussi faire un clic droit dans l'Explorateur de fichiers et choisir « Envoyer avec NitroDrop ».</value>
+  </data>
+  <data name="Onboarding_HotkeyHint" xml:space="preserve">
+    <value>envoie ce que vous avez copié au dernier appareil utilisé</value>
+  </data>
+  <data name="Onboarding_ReceiveTitle" xml:space="preserve">
+    <value>Recevez depuis l'iPhone</value>
+  </data>
+  <data name="Onboarding_ReceiveBody" xml:space="preserve">
+    <value>Sur l'iPhone, touchez Partager → AirDrop et choisissez ce PC. Pour l'instant, cela fonctionne sur le même réseau Wi-Fi ; après la configuration avancée, l'iPhone se connecte directement.</value>
+  </data>
+  <data name="Onboarding_ReceiveLater" xml:space="preserve">
+    <value>Vous pourrez lancer la configuration avancée plus tard : Paramètres → Pilote Wi-Fi.</value>
+  </data>
+  <data name="Onboarding_PhoneTitle" xml:space="preserve">
+    <value>Votre téléphone sur votre bureau</value>
+  </data>
+  <data name="Onboarding_PhoneBody" xml:space="preserve">
+    <value>Les appels, messages et notifications d'un iPhone associé en Bluetooth s'affichent sur ce PC, et vous y répondez directement d'ici.</value>
+  </data>
+  <data name="Onboarding_PairIphone" xml:space="preserve">
+    <value>Associer l'iPhone</value>
+  </data>
+  <data name="Onboarding_DevicesTitle" xml:space="preserve">
+    <value>Reprenez là où vous en étiez</value>
+  </data>
+  <data name="Onboarding_DevicesBody" xml:space="preserve">
+    <value>Les PC associés voient les onglets et apps ouverts les uns des autres. L'extension de navigateur apporte les onglets, le raccourci iPhone ce qui est ouvert sur le téléphone.</value>
+  </data>
+  <data name="Onboarding_FinalTitle" xml:space="preserve">
+    <value>Derniers réglages</value>
+  </data>
+  <data name="Onboarding_FinalBody" xml:space="preserve">
+    <value>Rien n'est reçu sans votre accord ; vos contacts et fichiers restent sur ce PC.</value>
+  </data>
+  <data name="Onboarding_DeviceName" xml:space="preserve">
+    <value>Nom affiché</value>
+  </data>
+  <data name="Onboarding_WhoCanSee" xml:space="preserve">
+    <value>Qui peut me voir</value>
+  </data>
+  <data name="Onboarding_ModeEveryone" xml:space="preserve">
+    <value>Tout le monde (10 min)</value>
+  </data>
+  <data name="Onboarding_ModeOff" xml:space="preserve">
+    <value>Désactivé</value>
+  </data>
+  <data name="Onboarding_StartWithWindows" xml:space="preserve">
+    <value>Lancer au démarrage de Windows</value>
+  </data>
+  <data name="Onboarding_LetsGo" xml:space="preserve">
+    <value>C'est parti</value>
+  </data>
+  <data name="Onboarding_Start" xml:space="preserve">
+    <value>Commencer</value>
+  </data>
+</root>

@@ -4,6 +4,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using AirDrop.App.Interop;
+using AirDrop.App.Localization;
 using AirDrop.App.ViewModels;
 
 namespace AirDrop.App.Views;
@@ -25,7 +26,7 @@ public partial class NotificationToast : Window
         _item = item;
         _vm = vm;
         DataContext = item;
-        if (!showPreview) MessageText.Text = "Önizleme gizli";
+        if (!showPreview) MessageText.Text = PhoneStrings.Phone_Toast_PreviewHidden;
         _timer = new DispatcherTimer { Interval = lifetime ?? TimeSpan.FromSeconds(7) };
         _timer.Tick += (_, _) => { if (!IsMouseOver) Close(); };
         SourceInitialized += (_, _) =>

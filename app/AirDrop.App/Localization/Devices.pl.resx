@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Devices_Title" xml:space="preserve">
+    <value>Moje urządzenia</value>
+  </data>
+  <data name="Devices_OpenOnThisPc" xml:space="preserve">
+    <value>Otwórz na tym komputerze</value>
+  </data>
+  <data name="Devices_CopyLink" xml:space="preserve">
+    <value>Kopiuj link</value>
+  </data>
+  <data name="Devices_OpenHere" xml:space="preserve">
+    <value>Otwórz tutaj</value>
+  </data>
+  <data name="Devices_OpenHereTip" xml:space="preserve">
+    <value>Otwórz tę aplikację na tym komputerze</value>
+  </data>
+  <data name="Devices_OnIphoneNow" xml:space="preserve">
+    <value>TERAZ NA IPHONIE</value>
+  </data>
+  <data name="Devices_ContinueOnPc" xml:space="preserve">
+    <value>Kontynuuj na komputerze</value>
+  </data>
+  <data name="Devices_NetworkPcsHeader" xml:space="preserve">
+    <value>KOMPUTERY Z NITRODROP W SIECI</value>
+  </data>
+  <data name="Devices_Searching" xml:space="preserve">
+    <value>Szukanie komputerów w sieci…</value>
+  </data>
+  <data name="Devices_SearchingHint" xml:space="preserve">
+    <value>Na drugim komputerze musi być otwarty NitroDrop, a oba komputery muszą być w tej samej sieci Wi-Fi lub przewodowej.</value>
+  </data>
+  <data name="Devices_PairedHeader" xml:space="preserve">
+    <value>SPAROWANE</value>
+  </data>
+  <data name="Devices_EmptyTitle" xml:space="preserve">
+    <value>Sparuj swoje komputery</value>
+  </data>
+  <data name="Devices_EmptyBody" xml:space="preserve">
+    <value>Sparowane komputery widzą nawzajem otwarte karty i aplikacje — otworzysz je tutaj jednym kliknięciem.</value>
+  </data>
+  <data name="Devices_AddPc" xml:space="preserve">
+    <value>Dodaj komputer</value>
+  </data>
+  <data name="Devices_SyncStartFailed" xml:space="preserve">
+    <value>Nie udało się uruchomić synchronizacji: {0}</value>
+  </data>
+  <data name="Devices_IphoneSomeApp" xml:space="preserve">
+    <value>aplikacja</value>
+  </data>
+  <data name="Devices_IphoneSharedLink" xml:space="preserve">
+    <value>{0} udostępnia link</value>
+  </data>
+  <data name="Devices_IphoneAppOpen" xml:space="preserve">
+    <value>Otwarte na iPhonie: {0}</value>
+  </data>
+  <data name="Devices_ContinueFailed" xml:space="preserve">
+    <value>Nie udało się otworzyć tej aktywności na komputerze.</value>
+  </data>
+  <data name="Devices_LinkOpened" xml:space="preserve">
+    <value>{0} otwiera link: {1}</value>
+  </data>
+  <data name="Devices_LinkClickToOpen" xml:space="preserve">
+    <value>{0}: {1} — kliknij, aby otworzyć</value>
+  </data>
+  <data name="Devices_AgoJustNow" xml:space="preserve">
+    <value>przed chwilą</value>
+  </data>
+  <data name="Devices_AgoHours_Plural" xml:space="preserve">
+    <value>{0} godzinę temu|{0} godziny temu|{0} godzin temu</value>
+  </data>
+  <data name="Devices_SameNetwork" xml:space="preserve">
+    <value>NitroDrop · w tej samej sieci</value>
+  </data>
+  <data name="Devices_Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="Devices_OfflineLastSeen" xml:space="preserve">
+    <value>Offline · ostatnio: {0}</value>
+  </data>
+  <data name="Devices_CantConnect" xml:space="preserve">
+    <value>Brak połączenia · {0}</value>
+  </data>
+  <data name="Devices_OnlineConnecting" xml:space="preserve">
+    <value>Online · łączenie…</value>
+  </data>
+  <data name="Devices_Online" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="Devices_Tabs_Plural" xml:space="preserve">
+    <value>{0} karta|{0} karty|{0} kart</value>
+  </data>
+  <data name="Devices_Apps_Plural" xml:space="preserve">
+    <value>{0} aplikacja|{0} aplikacje|{0} aplikacji</value>
+  </data>
+  <data name="Devices_NothingShared" xml:space="preserve">
+    <value>nic nie udostępniono</value>
+  </data>
+  <data name="Devices_TabsHeader" xml:space="preserve">
+    <value>KARTY · {0}</value>
+  </data>
+  <data name="Devices_AppsHeader" xml:space="preserve">
+    <value>APLIKACJE · {0}</value>
+  </data>
+  <data name="Devices_ShowLess" xml:space="preserve">
+    <value>Pokaż mniej</value>
+  </data>
+  <data name="Devices_ShowAll" xml:space="preserve">
+    <value>Pokaż wszystkie ({0})</value>
+  </data>
+  <data name="Pair_Paired" xml:space="preserve">
+    <value>Sparowano z {0}</value>
+  </data>
+  <data name="Pair_Waiting" xml:space="preserve">
+    <value>Oczekiwanie…</value>
+  </data>
+  <data name="Pair_Button" xml:space="preserve">
+    <value>Sparuj</value>
+  </data>
+  <data name="Pair_ErrNotFound" xml:space="preserve">
+    <value>Nie znaleziono urządzenia w sieci</value>
+  </data>
+  <data name="Pair_ErrIdMismatch" xml:space="preserve">
+    <value>Identyfikator urządzenia się nie zgadza</value>
+  </data>
+  <data name="Pair_ErrBadResponse" xml:space="preserve">
+    <value>Nieprawidłowa odpowiedź</value>
+  </data>
+  <data name="Pair_ErrKey" xml:space="preserve">
+    <value>Weryfikacja klucza nie powiodła się</value>
+  </data>
+  <data name="Pair_ErrRejected" xml:space="preserve">
+    <value>Drugi komputer odrzucił prośbę</value>
+  </data>
+  <data name="Pair_ErrNoSync" xml:space="preserve">
+    <value>Synchronizacja nie działa</value>
+  </data>
+  <data name="Pair_ErrGeneric" xml:space="preserve">
+    <value>Nie udało się sparować: {0}</value>
+  </data>
+  <data name="Pair_Eyebrow" xml:space="preserve">
+    <value>NITRODROP · PAROWANIE</value>
+  </data>
+  <data name="Pair_MessageInitiator" xml:space="preserve">
+    <value>Trwa parowanie. Sparowane komputery pokazują sobie nawzajem otwarte karty i aplikacje.</value>
+  </data>
+  <data name="Pair_MessageResponder" xml:space="preserve">
+    <value>chce sparować się z tym komputerem. Sparowane komputery pokazują sobie nawzajem otwarte karty i aplikacje.</value>
+  </data>
+  <data name="Pair_Question" xml:space="preserve">
+    <value>Czy na drugim komputerze widać ten sam kod?</value>
+  </data>
+  <data name="Pair_Confirm" xml:space="preserve">
+    <value>Potwierdź</value>
+  </data>
+  <data name="Pair_Cancel" xml:space="preserve">
+    <value>Anuluj</value>
+  </data>
+  <data name="Pair_Footnote" xml:space="preserve">
+    <value>Jeśli kody się różnią, kliknij „Anuluj”.</value>
+  </data>
+  <data name="Launch_Eyebrow" xml:space="preserve">
+    <value>NITRODROP · OTWIERANIE APLIKACJI</value>
+  </data>
+  <data name="Launch_Message" xml:space="preserve">
+    <value>chce otworzyć „{0}” na tym komputerze.</value>
+  </data>
+  <data name="Launch_Footnote" xml:space="preserve">
+    <value>Można otworzyć tylko aplikacje, które ten komputer już udostępnia.</value>
+  </data>
+  <data name="Sync_ExtTabsOff" xml:space="preserve">
+    <value>Udostępnianie kart jest wyłączone</value>
+  </data>
+  <data name="Sync_ExtTabsOffDetail" xml:space="preserve">
+    <value>Rozszerzenie nie łączy się z NitroDrop, więc inne komputery nie widzą Twoich kart.</value>
+  </data>
+  <data name="Sync_ExtConnected" xml:space="preserve">
+    <value>Połączono</value>
+  </data>
+  <data name="Sync_ExtConnectedDetail_Plural" xml:space="preserve">
+    <value>{1} · {0} karta udostępniona|{1} · {0} karty udostępnione|{1} · {0} kart udostępnionych</value>
+  </data>
+  <data name="Sync_BrowsersJoin" xml:space="preserve">
+    <value>{0} i {1}</value>
+  </data>
+  <data name="Sync_ExtNoTabs" xml:space="preserve">
+    <value>Połączono z przeglądarką, brak kart</value>
+  </data>
+  <data name="Sync_ExtNoTabsDetail" xml:space="preserve">
+    <value>Upewnij się, że rozszerzenie NitroDrop jest zainstalowane i włączone w Chrome lub Edge.</value>
+  </data>
+  <data name="Sync_ExtNotInstalled" xml:space="preserve">
+    <value>Nie zainstalowano</value>
+  </data>
+  <data name="Sync_ExtNotInstalledDetail" xml:space="preserve">
+    <value>Zainstaluj rozszerzenie, aby widzieć karty Chrome i Edge na innych komputerach.</value>
+  </data>
+  <data name="Sync_Registering" xml:space="preserve">
+    <value>Łączenie…</value>
+  </data>
+  <data name="Sync_RegisterOk" xml:space="preserve">
+    <value>✓ Połączono z Chrome i Edge. Załaduj ponownie rozszerzenie w przeglądarce.</value>
+  </data>
+  <data name="Sync_RegisterFailed" xml:space="preserve">
+    <value>Nie udało się połączyć: {0}</value>
+  </data>
+  <data name="Sync_HostMissing" xml:space="preserve">
+    <value>Nie znaleziono {0}</value>
+  </data>
+  <data name="Sync_ExitCode" xml:space="preserve">
+    <value>kod wyjścia {0}</value>
+  </data>
+  <data name="Sync_IosSetupTitle" xml:space="preserve">
+    <value>Adres konfiguracji dla {0}</value>
+  </data>
+  <data name="Sync_IphoneAddFailed" xml:space="preserve">
+    <value>Nie udało się dodać iPhone'a: {0}</value>
+  </data>
+  <data name="Sync_IosDeviceDetail" xml:space="preserve">
+    <value>Skrót · dodano {0}</value>
+  </data>
+</root>

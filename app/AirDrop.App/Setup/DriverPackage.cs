@@ -59,7 +59,7 @@ public static class DriverPackage
                 catch (Exception) { /* unreadable INF: skip */ }
             }
         }
-        catch (Exception ex) { SetupLog.Write($"INF klasörü okunamadı: {ex.Message}"); }
+        catch (Exception ex) { SetupLog.Write($"couldn't read the INF folder: {ex.Message}"); }
         return found.OrderBy(n => n, StringComparer.OrdinalIgnoreCase).ToList();
     }
 

@@ -1,0 +1,112 @@
+{
+  "extName": {
+    "message": "NitroDrop Tabs"
+  },
+  "extDescription": {
+    "message": "Synchronisiert Ihre offenen Tabs mit NitroDrop auf Ihre anderen PCs und sendet Links an Telefon oder PC."
+  },
+  "sendToLabel": {
+    "message": "An Telefon oder PC senden"
+  },
+  "otherDevices": {
+    "message": "Andere Geräte"
+  },
+  "statusOk": {
+    "message": "Verbunden"
+  },
+  "statusConnecting": {
+    "message": "Verbindung wird hergestellt…"
+  },
+  "statusNotRunning": {
+    "message": "NitroDrop läuft nicht"
+  },
+  "statusNotInstalled": {
+    "message": "Browser-Verknüpfung nicht eingerichtet"
+  },
+  "cannotSend": {
+    "message": "Diese Seite kann nicht gesendet werden"
+  },
+  "onlyWebPages": {
+    "message": "Nur http- und https-Seiten"
+  },
+  "noTargets": {
+    "message": "Keine Geräte in der Nähe. Stellen Sie AirDrop auf dem iPhone auf „Jeder für 10 Minuten“ oder öffnen Sie NitroDrop auf Ihrem anderen PC."
+  },
+  "sending": {
+    "message": "Wird gesendet…"
+  },
+  "sentTo": {
+    "message": "An $NAME$ gesendet",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "sendFailed": {
+    "message": "Senden fehlgeschlagen"
+  },
+  "sendFailedReason": {
+    "message": "Senden fehlgeschlagen: $REASON$",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "noDevices": {
+    "message": "Noch keine anderen Geräte. Öffnen Sie NitroDrop auf Ihrem anderen PC und koppeln Sie ihn."
+  },
+  "offline": {
+    "message": "offline"
+  },
+  "appOpen": {
+    "message": "$APP$ ist geöffnet",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "sharedLink": {
+    "message": "Geteilter Link"
+  },
+  "continueOnPc": {
+    "message": "Auf dem PC fortsetzen"
+  },
+  "noTabs": {
+    "message": "Keine offenen Tabs"
+  },
+  "moreTabs_one": {
+    "message": "$COUNT$ weiterer Tab",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_few": {
+    "message": "$COUNT$ weitere Tabs",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_many": {
+    "message": "$COUNT$ weitere Tabs",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_other": {
+    "message": "$COUNT$ weitere Tabs",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  }
+}

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Setup;
 
@@ -58,34 +59,34 @@ public static class SetupCommands
 
     public static CommandSpec TestSigning(bool on) =>
         new(Sys("bcdedit.exe"), new[] { "/set", "{current}", "testsigning", on ? "on" : "off" },
-            on ? "Test imzalama modunu aç" : "Test imzalama modunu kapat");
+            on ? "Turn test signing on" : "Turn test signing off");
 
     /// <summary>Restart straight into UEFI firmware setup (needs admin and a UEFI machine).</summary>
     public static CommandSpec RebootToFirmware(int delaySeconds = 5) =>
-        new(Sys("shutdown.exe"), new[] { "/r", "/fw", "/t", delaySeconds.ToString() }, "BIOS/UEFI ayarlarına yeniden başlat");
+        new(Sys("shutdown.exe"), new[] { "/r", "/fw", "/t", delaySeconds.ToString() }, "Restart into BIOS/UEFI setup");
 
     public static CommandSpec Reboot(int delaySeconds = 5) =>
-        new(Sys("shutdown.exe"), new[] { "/r", "/t", delaySeconds.ToString() }, "Yeniden başlat");
+        new(Sys("shutdown.exe"), new[] { "/r", "/t", delaySeconds.ToString() }, "Restart");
 
     public static CommandSpec SuspendBitLocker(string drive, int rebootCount = 1) =>
         new(Sys("manage-bde.exe"), new[] { "-protectors", "-disable", CheckDrive(drive), "-RebootCount", rebootCount.ToString() },
-            $"BitLocker'ı {rebootCount} yeniden başlatma için askıya al");
+            $"Suspend BitLocker for {rebootCount} restart(s)");
 
     public static CommandSpec ResumeBitLocker(string drive) =>
-        new(Sys("manage-bde.exe"), new[] { "-protectors", "-enable", CheckDrive(drive) }, "BitLocker korumasını sürdür");
+        new(Sys("manage-bde.exe"), new[] { "-protectors", "-enable", CheckDrive(drive) }, "Resume BitLocker protection");
 
     /// <summary>Stage the package in the driver store and install it where it is the best match.</summary>
     public static CommandSpec AddDriver(string infPath) =>
-        new(Sys("pnputil.exe"), new[] { "/add-driver", infPath, "/install" }, "Sürücü paketini ekle");
+        new(Sys("pnputil.exe"), new[] { "/add-driver", infPath, "/install" }, "Add the driver package");
 
     public static CommandSpec DeleteDriver(string publishedInf)
     {
-        if (!OemInf.IsMatch(publishedInf)) throw new ArgumentException($"geçersiz yayımlanmış INF adı: {publishedInf}", nameof(publishedInf));
-        return new(Sys("pnputil.exe"), new[] { "/delete-driver", publishedInf, "/uninstall", "/force" }, $"{publishedInf} sürücüsünü kaldır");
+        if (!OemInf.IsMatch(publishedInf)) throw new ArgumentException($"invalid published INF name: {publishedInf}", nameof(publishedInf));
+        return new(Sys("pnputil.exe"), new[] { "/delete-driver", publishedInf, "/uninstall", "/force" }, $"Remove driver {publishedInf}");
     }
 
     public static CommandSpec ScanDevices() =>
-        new(Sys("pnputil.exe"), new[] { "/scan-devices" }, "Donanım değişikliklerini tara (Intel sürücüsü geri bağlansın)");
+        new(Sys("pnputil.exe"), new[] { "/scan-devices" }, "Scan for hardware changes (lets the Intel driver bind again)");
 
     /// <summary>
     /// BitLocker details via WMI (Win32_EncryptableVolume, admin only) as locale-independent JSON.
@@ -107,12 +108,12 @@ public static class SetupCommands
         string encoded = Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
         return new(Path.Combine(SystemDir, @"WindowsPowerShell\v1.0\powershell.exe"),
             new[] { "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-EncodedCommand", encoded },
-            "BitLocker durumunu oku");
+            "Read BitLocker status");
     }
 
     private static string CheckDrive(string drive)
     {
-        if (!DriveLetter.IsMatch(drive)) throw new ArgumentException($"geçersiz sürücü: {drive}", nameof(drive));
+        if (!DriveLetter.IsMatch(drive)) throw new ArgumentException($"invalid drive: {drive}", nameof(drive));
         return drive.ToUpperInvariant();
     }
 
@@ -125,12 +126,12 @@ public static class SetupCommands
         if (exitCode == 0) return BcdOutcome.Ok;
         var o = output ?? "";
         if (o.Contains("Secure Boot", StringComparison.OrdinalIgnoreCase)
-            || o.Contains("Güvenli Önyükleme", StringComparison.OrdinalIgnoreCase)
-            || o.Contains("güvenli önyükleme", StringComparison.OrdinalIgnoreCase)
+            || o.Contains("Güvenli Önyükleme", StringComparison.OrdinalIgnoreCase)   // l10n-allow: tool output pattern
+            || o.Contains("güvenli önyükleme", StringComparison.OrdinalIgnoreCase)   // l10n-allow: tool output pattern
             || secureBootOn == true)
             return BcdOutcome.BlockedBySecureBoot;
         if (o.Contains("Access is denied", StringComparison.OrdinalIgnoreCase)
-            || o.Contains("Erişim engellendi", StringComparison.OrdinalIgnoreCase)
+            || o.Contains("Erişim engellendi", StringComparison.OrdinalIgnoreCase)   // l10n-allow: tool output pattern
             || exitCode == 5)
             return BcdOutcome.AccessDenied;
         return BcdOutcome.Failed;
@@ -138,11 +139,10 @@ public static class SetupCommands
 
     public static string Describe(BcdOutcome o) => o switch
     {
-        BcdOutcome.Ok => "Test modu açıldı. Yeniden başlattıktan sonra etkin olur.",
-        BcdOutcome.BlockedBySecureBoot =>
-            "Windows test modunu açmayı reddetti çünkü Secure Boot hâlâ açık. Önceki adıma dönüp BIOS'tan Secure Boot'u kapatın, sonra tekrar deneyin.",
-        BcdOutcome.AccessDenied => "Yönetici izni alınamadı. Tekrar deneyip izin isteğini onaylayın.",
-        _ => "Test modu açılamadı. Ayrıntılar kurulum günlüğünde.",
+        BcdOutcome.Ok => SetupStrings.Helper_Bcd_Ok,
+        BcdOutcome.BlockedBySecureBoot => SetupStrings.Helper_Bcd_SecureBoot,
+        BcdOutcome.AccessDenied => SetupStrings.Helper_Bcd_AccessDenied,
+        _ => SetupStrings.Helper_Bcd_Failed,
     };
 
     /// <summary>pnputil: 0 ok, 3010 reboot required, 259 (ERROR_NO_MORE_ITEMS) = nothing was installed/updated.</summary>

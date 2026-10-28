@@ -8,6 +8,7 @@ using System.Windows.Media.Animation;
 using AirDrop.App.Interop;
 using AirDrop.App.Services;
 using AirDrop.App.ViewModels;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Views;
 
@@ -41,9 +42,11 @@ public partial class OnboardingWindow : Window
         StartupSwitch.IsChecked = settings.StartWithWindows;
         SourceInitialized += (_, _) => WindowEffects.ApplyThemed(this);
         App.ThemeChanged += OnThemeChanged;
+        Loc.LanguageChanged += OnLanguageChanged;
         Closed += (_, _) =>
         {
             App.ThemeChanged -= OnThemeChanged;
+            Loc.LanguageChanged -= OnLanguageChanged;
             MarkCompleted();
         };
         PreviewKeyDown += OnKey;
@@ -51,6 +54,9 @@ public partial class OnboardingWindow : Window
     }
 
     private void OnThemeChanged(object? sender, EventArgs e) => WindowEffects.ApplyThemed(this);
+
+    /// <summary>Step label and footer buttons are set from code: refresh them in the new language.</summary>
+    private void OnLanguageChanged(object? sender, EventArgs e) => GoTo(_index, animate: false);
 
     /// <summary>Also used by the Debug snapshot.</summary>
     internal void GoTo(int index, bool animate = true)
@@ -64,9 +70,10 @@ public partial class OnboardingWindow : Window
             _dots[i].Width = i == index ? 22 : 7;
             _dots[i].SetResourceReference(Border.BackgroundProperty, i == index ? "Accent" : i < index ? "TextTertiary" : "Track");
         }
-        StepLabel.Text = $"İLK KULLANIM · {index + 1}/{Count}";
+        StepLabel.Text = OnboardingStrings.Onboarding_StepLabel(index + 1, Count);
         BackButton.Visibility = index == 0 ? Visibility.Hidden : Visibility.Visible;
-        NextButton.Content = index == Count - 1 ? "Başla" : index == 0 ? "Başlayalım" : "İleri";
+        NextButton.Content = index == Count - 1 ? OnboardingStrings.Onboarding_Start
+            : index == 0 ? OnboardingStrings.Onboarding_LetsGo : CommonStrings.Common_Next;
         SkipButton.Visibility = index == Count - 1 ? Visibility.Hidden : Visibility.Visible;
 
         // Short fade + slide; skipped when Windows animations are off (reduced motion).

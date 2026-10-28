@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Devices_Title" xml:space="preserve">
+    <value>My devices</value>
+  </data>
+  <data name="Devices_OpenOnThisPc" xml:space="preserve">
+    <value>Open on this PC</value>
+  </data>
+  <data name="Devices_CopyLink" xml:space="preserve">
+    <value>Copy link</value>
+  </data>
+  <data name="Devices_OpenHere" xml:space="preserve">
+    <value>Open here</value>
+  </data>
+  <data name="Devices_OpenHereTip" xml:space="preserve">
+    <value>Open this app on this PC</value>
+  </data>
+  <data name="Devices_OnIphoneNow" xml:space="preserve">
+    <value>ON IPHONE NOW</value>
+  </data>
+  <data name="Devices_ContinueOnPc" xml:space="preserve">
+    <value>Continue on PC</value>
+  </data>
+  <data name="Devices_NetworkPcsHeader" xml:space="preserve">
+    <value>NITRODROP PCS ON THIS NETWORK</value>
+  </data>
+  <data name="Devices_Searching" xml:space="preserve">
+    <value>Looking for PCs on your network…</value>
+  </data>
+  <data name="Devices_SearchingHint" xml:space="preserve">
+    <value>NitroDrop needs to be open on the other PC, and both PCs must be on the same Wi-Fi or wired network.</value>
+  </data>
+  <data name="Devices_PairedHeader" xml:space="preserve">
+    <value>PAIRED</value>
+  </data>
+  <data name="Devices_EmptyTitle" xml:space="preserve">
+    <value>Pair your PCs</value>
+  </data>
+  <data name="Devices_EmptyBody" xml:space="preserve">
+    <value>Paired PCs see each other's open tabs and apps, and you can open any of them here with one click.</value>
+  </data>
+  <data name="Devices_AddPc" xml:space="preserve">
+    <value>Add PC</value>
+  </data>
+  <data name="Devices_SyncStartFailed" xml:space="preserve">
+    <value>Sync couldn't start: {0}</value>
+  </data>
+  <data name="Devices_IphoneSomeApp" xml:space="preserve">
+    <value>an app</value>
+  </data>
+  <data name="Devices_IphoneSharedLink" xml:space="preserve">
+    <value>{0} shared a link</value>
+  </data>
+  <data name="Devices_IphoneAppOpen" xml:space="preserve">
+    <value>{0} is open on iPhone</value>
+  </data>
+  <data name="Devices_ContinueFailed" xml:space="preserve">
+    <value>This activity couldn't be opened on the PC.</value>
+  </data>
+  <data name="Devices_LinkOpened" xml:space="preserve">
+    <value>{0} opened a link: {1}</value>
+  </data>
+  <data name="Devices_LinkClickToOpen" xml:space="preserve">
+    <value>{0}: {1} — click to open</value>
+  </data>
+  <data name="Devices_AgoJustNow" xml:space="preserve">
+    <value>just now</value>
+  </data>
+  <data name="Devices_AgoHours_Plural" xml:space="preserve">
+    <value>{0} hour ago|{0} hours ago</value>
+  </data>
+  <data name="Devices_SameNetwork" xml:space="preserve">
+    <value>NitroDrop · on this network</value>
+  </data>
+  <data name="Devices_Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="Devices_OfflineLastSeen" xml:space="preserve">
+    <value>Offline · last seen {0}</value>
+  </data>
+  <data name="Devices_CantConnect" xml:space="preserve">
+    <value>Can't connect · {0}</value>
+  </data>
+  <data name="Devices_OnlineConnecting" xml:space="preserve">
+    <value>Online · connecting…</value>
+  </data>
+  <data name="Devices_Online" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="Devices_Tabs_Plural" xml:space="preserve">
+    <value>{0} tab|{0} tabs</value>
+  </data>
+  <data name="Devices_Apps_Plural" xml:space="preserve">
+    <value>{0} app|{0} apps</value>
+  </data>
+  <data name="Devices_NothingShared" xml:space="preserve">
+    <value>nothing shared</value>
+  </data>
+  <data name="Devices_TabsHeader" xml:space="preserve">
+    <value>TABS · {0}</value>
+  </data>
+  <data name="Devices_AppsHeader" xml:space="preserve">
+    <value>APPS · {0}</value>
+  </data>
+  <data name="Devices_ShowLess" xml:space="preserve">
+    <value>Show less</value>
+  </data>
+  <data name="Devices_ShowAll" xml:space="preserve">
+    <value>Show all ({0})</value>
+  </data>
+  <data name="Pair_Paired" xml:space="preserve">
+    <value>Paired with {0}</value>
+  </data>
+  <data name="Pair_Waiting" xml:space="preserve">
+    <value>Waiting…</value>
+  </data>
+  <data name="Pair_Button" xml:space="preserve">
+    <value>Pair</value>
+  </data>
+  <data name="Pair_ErrNotFound" xml:space="preserve">
+    <value>Device not found on the network</value>
+  </data>
+  <data name="Pair_ErrIdMismatch" xml:space="preserve">
+    <value>The device ID doesn't match</value>
+  </data>
+  <data name="Pair_ErrBadResponse" xml:space="preserve">
+    <value>Invalid response</value>
+  </data>
+  <data name="Pair_ErrKey" xml:space="preserve">
+    <value>Key verification failed</value>
+  </data>
+  <data name="Pair_ErrRejected" xml:space="preserve">
+    <value>The other PC declined</value>
+  </data>
+  <data name="Pair_ErrNoSync" xml:space="preserve">
+    <value>Sync isn't running</value>
+  </data>
+  <data name="Pair_ErrGeneric" xml:space="preserve">
+    <value>Couldn't pair: {0}</value>
+  </data>
+  <data name="Pair_Eyebrow" xml:space="preserve">
+    <value>NITRODROP · PAIRING</value>
+  </data>
+  <data name="Pair_MessageInitiator" xml:space="preserve">
+    <value>Pairing in progress. Paired PCs show each other their open tabs and apps.</value>
+  </data>
+  <data name="Pair_MessageResponder" xml:space="preserve">
+    <value>wants to pair with this PC. Paired PCs show each other their open tabs and apps.</value>
+  </data>
+  <data name="Pair_Question" xml:space="preserve">
+    <value>Do you see the same code on the other PC?</value>
+  </data>
+  <data name="Pair_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Pair_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Pair_Footnote" xml:space="preserve">
+    <value>If the codes are different, click Cancel.</value>
+  </data>
+  <data name="Launch_Eyebrow" xml:space="preserve">
+    <value>NITRODROP · OPEN APP</value>
+  </data>
+  <data name="Launch_Message" xml:space="preserve">
+    <value>wants to open “{0}” on this PC.</value>
+  </data>
+  <data name="Launch_Footnote" xml:space="preserve">
+    <value>Only apps this PC already shares can be opened.</value>
+  </data>
+  <data name="Sync_ExtTabsOff" xml:space="preserve">
+    <value>Tab sharing is off</value>
+  </data>
+  <data name="Sync_ExtTabsOffDetail" xml:space="preserve">
+    <value>The extension won't connect to NitroDrop, so your other PCs can't see your tabs.</value>
+  </data>
+  <data name="Sync_ExtConnected" xml:space="preserve">
+    <value>Connected</value>
+  </data>
+  <data name="Sync_ExtConnectedDetail_Plural" xml:space="preserve">
+    <value>{1} · sharing {0} tab|{1} · sharing {0} tabs</value>
+  </data>
+  <data name="Sync_BrowsersJoin" xml:space="preserve">
+    <value>{0} and {1}</value>
+  </data>
+  <data name="Sync_ExtNoTabs" xml:space="preserve">
+    <value>Connected to the browser, no tabs yet</value>
+  </data>
+  <data name="Sync_ExtNoTabsDetail" xml:space="preserve">
+    <value>Make sure the NitroDrop extension is installed and turned on in Chrome or Edge.</value>
+  </data>
+  <data name="Sync_ExtNotInstalled" xml:space="preserve">
+    <value>Not installed</value>
+  </data>
+  <data name="Sync_ExtNotInstalledDetail" xml:space="preserve">
+    <value>Install the extension to see your Chrome and Edge tabs on your other PCs.</value>
+  </data>
+  <data name="Sync_Registering" xml:space="preserve">
+    <value>Connecting…</value>
+  </data>
+  <data name="Sync_RegisterOk" xml:space="preserve">
+    <value>✓ Connected to Chrome and Edge. Reload the extension in your browser.</value>
+  </data>
+  <data name="Sync_RegisterFailed" xml:space="preserve">
+    <value>Couldn't connect: {0}</value>
+  </data>
+  <data name="Sync_HostMissing" xml:space="preserve">
+    <value>{0} not found</value>
+  </data>
+  <data name="Sync_ExitCode" xml:space="preserve">
+    <value>exit code {0}</value>
+  </data>
+  <data name="Sync_IosSetupTitle" xml:space="preserve">
+    <value>Setup address for {0}</value>
+  </data>
+  <data name="Sync_IphoneAddFailed" xml:space="preserve">
+    <value>Couldn't add the iPhone: {0}</value>
+  </data>
+  <data name="Sync_IosDeviceDetail" xml:space="preserve">
+    <value>Shortcut · added {0}</value>
+  </data>
+</root>

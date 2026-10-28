@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Win32;
 using Nitro.Sync.Ipc;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Services;
 
@@ -45,7 +46,7 @@ internal static class ExtensionHost
     /// <summary>Runs <c>NitroDrop.SyncHost.exe register --extension-id …</c> (writes HKCU only).</summary>
     public static async Task<(bool Ok, string Message)> RegisterAsync()
     {
-        if (!File.Exists(HostExe)) return (false, "NitroDrop.SyncHost.exe bulunamadı");
+        if (!File.Exists(HostExe)) return (false, DevicesStrings.Sync_HostMissing("NitroDrop.SyncHost.exe"));
         try
         {
             var psi = new ProcessStartInfo(HostExe)
@@ -69,7 +70,7 @@ internal static class ExtensionHost
             var outp = p.StandardOutput.ReadToEndAsync();
             await p.WaitForExitAsync();
             var text = ((await outp) + (await err)).Trim();
-            return p.ExitCode == 0 ? (true, "Chrome ve Edge'e bağlandı") : (false, text.Length > 0 ? text : $"çıkış kodu {p.ExitCode}");
+            return p.ExitCode == 0 ? (true, "Registered for Chrome and Edge") : (false, text.Length > 0 ? text : DevicesStrings.Sync_ExitCode(p.ExitCode));
         }
         catch (Exception e) { return (false, e.Message); }
     }

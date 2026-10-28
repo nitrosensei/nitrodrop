@@ -1,0 +1,112 @@
+{
+  "extName": {
+    "message": "NitroDrop – karty"
+  },
+  "extDescription": {
+    "message": "Synchronizuje otwarte karty z innymi komputerami przez NitroDrop i wysyła linki na telefon lub komputer."
+  },
+  "sendToLabel": {
+    "message": "Wyślij na telefon lub komputer"
+  },
+  "otherDevices": {
+    "message": "Inne urządzenia"
+  },
+  "statusOk": {
+    "message": "Połączono"
+  },
+  "statusConnecting": {
+    "message": "Łączenie…"
+  },
+  "statusNotRunning": {
+    "message": "NitroDrop nie jest uruchomiony"
+  },
+  "statusNotInstalled": {
+    "message": "Połączenie z przeglądarką nie jest skonfigurowane"
+  },
+  "cannotSend": {
+    "message": "Tej strony nie można wysłać"
+  },
+  "onlyWebPages": {
+    "message": "Tylko strony http i https"
+  },
+  "noTargets": {
+    "message": "Brak urządzeń w pobliżu. Ustaw AirDrop na iPhonie na „Wszyscy przez 10 minut” albo otwórz NitroDrop na drugim komputerze."
+  },
+  "sending": {
+    "message": "Wysyłanie…"
+  },
+  "sentTo": {
+    "message": "Wysłano do: $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "sendFailed": {
+    "message": "Nie udało się wysłać"
+  },
+  "sendFailedReason": {
+    "message": "Nie udało się wysłać: $REASON$",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "noDevices": {
+    "message": "Nie ma jeszcze innych urządzeń. Otwórz NitroDrop na drugim komputerze i sparuj go."
+  },
+  "offline": {
+    "message": "offline"
+  },
+  "appOpen": {
+    "message": "Otwarte: $APP$",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "sharedLink": {
+    "message": "Udostępniony link"
+  },
+  "continueOnPc": {
+    "message": "Kontynuuj na komputerze"
+  },
+  "noTabs": {
+    "message": "Brak otwartych kart"
+  },
+  "moreTabs_one": {
+    "message": "Jeszcze $COUNT$ karta",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_few": {
+    "message": "Jeszcze $COUNT$ karty",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_many": {
+    "message": "Jeszcze $COUNT$ kart",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_other": {
+    "message": "Jeszcze $COUNT$ karty",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  }
+}

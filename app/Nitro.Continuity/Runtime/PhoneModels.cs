@@ -60,8 +60,9 @@ public sealed record PhoneLinkStatus(
     // ModelId: hardware identifier from the phone's Device Information Service ("iPhone15,2"), when it could be read.
     public bool IsConnected => State == PhoneLinkState.Connected;
 
+    // Title/Detail are English diagnostics (logs, probe); the app derives its localized text from State/Issue/DeviceName.
     public static PhoneLinkStatus NotPaired { get; } =
-        new(PhoneLinkState.NotPaired, "iPhone bağlı değil", "Başlamak için iPhone'unuzu eşleştirin.");
+        new(PhoneLinkState.NotPaired, "No iPhone connected", "Pair your iPhone to get started.");
 }
 
 /// <summary>A (paired or discovered) phone. <see cref="Id"/> is the classic BluetoothDevice id.</summary>
@@ -83,7 +84,31 @@ public interface IPairingPrompt
 
 public enum PairingOutcome { Paired, AlreadyPaired, Rejected, Canceled, Failed, NotFound }
 
-public sealed record PairingResult(PairingOutcome Outcome, string Message)
+/// <summary>Which specific case produced a <see cref="PairingResult"/> (the app maps it to localized text).</summary>
+public enum PairingDetail
+{
+    /// <summary>Nothing more specific than <see cref="PairingResult.Outcome"/>.</summary>
+    None,
+    /// <summary>Paired over LE / HID bait: the notification link is up.</summary>
+    NotificationLinkEstablished,
+    /// <summary>Device lookup failed (Arg = error text).</summary>
+    LookupFailed,
+    /// <summary>Windows reports CanPair = false.</summary>
+    WindowsCannotPair,
+    /// <summary>The phone did not answer.</summary>
+    NoResponse,
+    /// <summary>No Apple LE advertiser nearby.</summary>
+    NoAppleDeviceNearby,
+    /// <summary>The LE pairing was refused.</summary>
+    LeRejected,
+    /// <summary>The HID bait was never tapped on the iPhone.</summary>
+    HidBaitTimeout,
+}
+
+/// <param name="Message">English diagnostic text (logs).</param>
+/// <param name="Detail">Specific case, for the app's localized message.</param>
+/// <param name="Arg">Device name (Paired/AlreadyPaired) or error detail (failures).</param>
+public sealed record PairingResult(PairingOutcome Outcome, string Message, PairingDetail Detail = PairingDetail.None, string? Arg = null)
 {
     public bool Success => Outcome is PairingOutcome.Paired or PairingOutcome.AlreadyPaired;
 }
@@ -134,18 +159,37 @@ public enum CallCapability
     FullAudio,
 }
 
-/// <param name="Reason">Why this level (Turkish, shown under the status card).</param>
-/// <param name="Fix">What the user can do to get <see cref="CallCapability.FullAudio"/>; null when nothing to do.</param>
-public sealed record CallCapabilityInfo(CallCapability Capability, string Reason, string? Fix = null)
+/// <summary>The first PhoneLine step that failed (or <see cref="Ready"/>); the app maps it to a localized reason + fix.</summary>
+public enum CallBlocker
+{
+    Ready,
+    NotConnected,
+    NoPackageIdentity,
+    /// <summary>PhoneLine threw (see <see cref="CallCapabilityInfo.Error"/>).</summary>
+    LineError,
+    NoHandsFreeTransport,
+    DeniedBySystem,
+    DeniedByUser,
+    AccessUnknown,
+    NotRegistered,
+    ConnectFailed,
+}
+
+/// <param name="Reason">Why this level (English diagnostic; the app shows localized text built from <see cref="Blocker"/>).</param>
+/// <param name="Fix">What the user can do to get <see cref="CallCapability.FullAudio"/> (English); null when nothing to do.</param>
+/// <param name="Blocker">Machine-readable reason.</param>
+/// <param name="Error">Exception text for <see cref="CallBlocker.LineError"/>.</param>
+public sealed record CallCapabilityInfo(CallCapability Capability, string Reason, string? Fix = null,
+    CallBlocker Blocker = CallBlocker.NotConnected, string? Error = null)
 {
     public string Title => Capability switch
     {
-        CallCapability.FullAudio => "Aramalar: ses bu bilgisayarda",
-        CallCapability.ControlOnly => "Aramalar: yanıtla / reddet (ses telefonda)",
-        _ => "Aramalar kullanılamıyor",
+        CallCapability.FullAudio => "Calls: audio on this PC",
+        CallCapability.ControlOnly => "Calls: answer / decline (audio on the phone)",
+        _ => "Calls unavailable",
     };
 
-    public static CallCapabilityInfo Unknown { get; } = new(CallCapability.None, "iPhone bağlı değil.");
+    public static CallCapabilityInfo Unknown { get; } = new(CallCapability.None, "No iPhone connected.");
 }
 
 /// <summary>PhoneLineTransportDevice.RequestAccessAsync result (DeviceAccessStatus) plus "not tried".</summary>
@@ -163,8 +207,11 @@ public sealed record CallEnvironment(
 
 public static class CallCapabilityPolicy
 {
-    public const string FixPackage = "NitroDrop'u MSIX paketiyle kurun (docs/continuity-plan.md §9.5). Paket, Windows'un arama sesini uygulamaya vermesi için gerekli.";
-    public const string FixPhoneLink = "Phone Link (Telefon Bağlantısı) uygulamasında bu iPhone'un bağlantısını kaldırın; ardından iPhone'u Windows Bluetooth ayarlarından kaldırıp NitroDrop ile yeniden eşleştirin.";
+    public const string FixPackage = "Install NitroDrop from the MSIX package (docs/continuity-plan.md §9.5): Windows only hands call audio to packaged apps.";
+    public const string FixPhoneLink = "Remove this iPhone in Phone Link, then remove it from Windows Bluetooth settings and pair it again with NitroDrop.";
+    public const string FixHandsFree = "Pair the iPhone in Windows Bluetooth settings and allow contact sync during pairing.";
+    public const string FixPrivacy = "Allow NitroDrop in Windows Settings → Privacy & security → Phone calls.";
+    public const string FixNearby = "Make sure the iPhone is nearby with Bluetooth on.";
 
     /// <summary>
     /// FullAudio only when every PhoneLine step succeeded (identity → transport → access → RegisterApp → ConnectAsync).
@@ -173,30 +220,31 @@ public static class CallCapabilityPolicy
     public static CallCapabilityInfo Decide(CallEnvironment e)
     {
         if (e.HasPackageIdentity && e.TransportFound && e.Access == PhoneLineAccess.Allowed && e.Registered == true && e.Connected == true)
-            return new(CallCapability.FullAudio, "Windows Eller Serbest bağlantısı hazır: aramalar bu bilgisayarın hoparlör ve mikrofonuyla konuşulabilir.");
+            return new(CallCapability.FullAudio, "Windows Hands-Free link ready: calls use this PC's speakers and microphone.",
+                Blocker: CallBlocker.Ready);
 
-        var (reason, fix) = FirstBlocker(e);
+        var (blocker, reason, fix) = FirstBlocker(e);
         if (e.AncsAvailable)
-            return new(CallCapability.ControlOnly, reason + " Aramaları buradan yanıtlayıp reddedebilirsiniz; konuşma iPhone'da sürer.", fix);
-        return new(CallCapability.None, reason + " Bildirim bağlantısı (ANCS) da yok.", fix);
+            return new(CallCapability.ControlOnly, reason + " Calls can be answered or declined here; audio stays on the iPhone.", fix, blocker, e.Error);
+        return new(CallCapability.None, reason + " The notification link (ANCS) is not available either.", fix, blocker, e.Error);
     }
 
-    private static (string Reason, string? Fix) FirstBlocker(CallEnvironment e)
+    private static (CallBlocker Blocker, string Reason, string? Fix) FirstBlocker(CallEnvironment e)
     {
         if (!e.HasPackageIdentity)
-            return ("NitroDrop paketsiz çalışıyor; Windows arama sesini yalnızca paket kimliği olan uygulamalara veriyor.", FixPackage);
+            return (CallBlocker.NoPackageIdentity, "NitroDrop runs unpackaged; Windows only gives call audio to apps with a package identity.", FixPackage);
         if (e.Error is { Length: > 0 } err)
-            return ($"Windows arama hattı açılamadı ({err}).", null);
+            return (CallBlocker.LineError, $"Could not open the Windows phone line ({err}).", null);
         if (!e.TransportFound)
-            return ("iPhone Windows'ta \"Eller Serbest\" (HFP) cihazı olarak görünmüyor.", "iPhone'u Windows Bluetooth ayarlarından eşleştirin; eşleşme sırasında \"Kişileri Eşitle\"ye izin verin.");
+            return (CallBlocker.NoHandsFreeTransport, "Windows does not list the iPhone as a Hands-Free (HFP) device.", FixHandsFree);
         return e.Access switch
         {
-            PhoneLineAccess.DeniedBySystem => ("Bu iPhone'un aramaları başka bir uygulamaya (büyük olasılıkla Phone Link) kayıtlı.", FixPhoneLink),
-            PhoneLineAccess.DeniedByUser => ("Telefon araması erişimine izin verilmedi.", "Windows Ayarlar → Gizlilik ve güvenlik → Telefon aramaları'ndan NitroDrop'a izin verin."),
+            PhoneLineAccess.DeniedBySystem => (CallBlocker.DeniedBySystem, "This iPhone's calls are registered to another app (most likely Phone Link).", FixPhoneLink),
+            PhoneLineAccess.DeniedByUser => (CallBlocker.DeniedByUser, "Phone call access was not allowed.", FixPrivacy),
             PhoneLineAccess.NotChecked or PhoneLineAccess.Unspecified or PhoneLineAccess.Error =>
-                ("Windows arama erişimi doğrulanamadı.", null),
-            _ when e.Registered != true => ("Windows uygulama kaydını kabul etmedi (RegisterApp).", FixPhoneLink),
-            _ => ("Windows Eller Serbest bağlantısını kuramadı (ConnectAsync).", "iPhone'un Bluetooth'unun açık ve yakında olduğundan emin olun."),
+                (CallBlocker.AccessUnknown, "Windows call access could not be verified.", null),
+            _ when e.Registered != true => (CallBlocker.NotRegistered, "Windows did not accept the app registration (RegisterApp).", FixPhoneLink),
+            _ => (CallBlocker.ConnectFailed, "Windows could not set up the Hands-Free link (ConnectAsync).", FixNearby),
         };
     }
 }

@@ -1,7 +1,8 @@
 <Window x:Class="AirDrop.App.Views.SetupWizard"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="NitroDrop · Gelişmiş Kurulum" Width="600" Height="760" ResizeMode="CanMinimize"
+        xmlns:l="clr-namespace:AirDrop.App.Localization"
+        Title="{l:Loc Setup_WindowTitle}" Width="600" Height="760" ResizeMode="CanMinimize"
         WindowStartupLocation="CenterOwner" FontFamily="{StaticResource UiFont}"
         Foreground="{DynamicResource TextPrimary}" UseLayoutRounding="True"
         TextOptions.TextFormattingMode="Ideal" Icon="/Assets/NitroDrop.ico">
@@ -54,12 +55,12 @@
         <!-- title bar -->
         <StackPanel Orientation="Horizontal" Margin="20,0,150,0" VerticalAlignment="Center">
             <Image Source="{DynamicResource BrandMark}" Height="15" VerticalAlignment="Center"/>
-            <TextBlock Text="Gelişmiş Kurulum" FontSize="13" FontWeight="SemiBold" Margin="9,0,0,0" VerticalAlignment="Center"/>
+            <TextBlock Text="{l:Loc Setup_Header}" FontSize="13" FontWeight="SemiBold" Margin="9,0,0,0" VerticalAlignment="Center"/>
             <Border Margin="10,0,0,0" Padding="7,2" CornerRadius="6" Background="{DynamicResource WarningSubtle}"
                     BorderBrush="{DynamicResource WarningBorder}" BorderThickness="1"
                     Visibility="{Binding IsDryRun, Converter={StaticResource BoolVis}}"
-                    ToolTip="--setup-dry-run: komutlar çalıştırılmaz, yalnızca kurulum günlüğüne yazılır">
-                <TextBlock Text="DRY-RUN · HİÇBİR ŞEY DEĞİŞMEZ" Style="{StaticResource MonoLabel}" FontSize="10" Foreground="{DynamicResource WarningText}"/>
+                    ToolTip="{l:Loc Setup_DryRunTip}">
+                <TextBlock Text="{l:Loc Setup_DryRunBadge}" Style="{StaticResource MonoLabel}" FontSize="10" Foreground="{DynamicResource WarningText}"/>
             </Border>
         </StackPanel>
 
@@ -165,7 +166,7 @@
                     </Border>
                     <Border Style="{StaticResource WizCard}">
                         <Grid Margin="16,12">
-                            <TextBlock Text="Bunları okudum, anladım ve kabul ediyorum." Style="{StaticResource RowTitle}"
+                            <TextBlock Text="{l:Loc Setup_ConsentAgree}" Style="{StaticResource RowTitle}"
                                        VerticalAlignment="Center" Margin="0,0,60,0"/>
                             <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
                                       IsChecked="{Binding ConsentChecked}"/>
@@ -178,39 +179,42 @@
                     <Border Style="{StaticResource WizCard}">
                         <StackPanel>
                             <Grid Margin="16,12">
-                                <TextBlock Text="{Binding BitLockerStateText}" Style="{StaticResource RowTitle}" VerticalAlignment="Center"/>
-                                <Button Style="{StaticResource SmallPill}" Content="Anahtarı göster…" HorizontalAlignment="Right"
-                                        Command="{Binding CheckBitLocker}" ToolTip="Yönetici izni istenir; anahtar yalnızca bu pencerede kullanılır"/>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding BitLockerStateText}" Style="{StaticResource RowTitle}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                <Button Grid.Column="1" Style="{StaticResource SmallPill}" Content="{l:Loc Setup_ShowKey}" VerticalAlignment="Center"
+                                        Command="{Binding CheckBitLocker}" ToolTip="{l:Loc Setup_ShowKeyTip}"/>
                             </Grid>
                             <StackPanel Visibility="{Binding HasRecoveryText, Converter={StaticResource BoolVis}}">
                                 <Border Style="{StaticResource Divider}"/>
                                 <TextBlock Text="{Binding RecoveryKeyIds}" Style="{StaticResource Body}" Margin="16,10,16,0"
                                            FontFamily="{StaticResource MonoFont}"/>
-                                <StackPanel Orientation="Horizontal" Margin="16,10,16,12"
-                                            Visibility="{Binding HasRecoveryDetails, Converter={StaticResource BoolVis}}">
-                                    <Button Style="{StaticResource AccentPill}" Content="Dosyaya kaydet…" Command="{Binding SaveRecoveryKey}"/>
-                                    <Button Style="{StaticResource PillButton}" Content="Kaydet ve yazdır…" Margin="10,0,0,0" Command="{Binding PrintRecoveryKey}"/>
-                                </StackPanel>
+                                <WrapPanel Orientation="Horizontal" Margin="16,10,16,12"
+                                           Visibility="{Binding HasRecoveryDetails, Converter={StaticResource BoolVis}}">
+                                    <Button Style="{StaticResource AccentPill}" Content="{l:Loc Setup_SaveToFile}" Margin="0,0,10,0" Command="{Binding SaveRecoveryKey}"/>
+                                    <Button Style="{StaticResource PillButton}" Content="{l:Loc Setup_SaveAndPrint}" Command="{Binding PrintRecoveryKey}"/>
+                                </WrapPanel>
                             </StackPanel>
                             <Border Style="{StaticResource Divider}"/>
                             <Button Style="{StaticResource LinkButton}" Margin="16,11" FontSize="12.5" HorizontalAlignment="Left"
-                                    Content="Microsoft hesabımdaki anahtarı aç (aka.ms/myrecoverykey)" Command="{Binding OpenMyRecoveryKey}"/>
+                                    Content="{l:Loc Setup_OpenMsKey}" Command="{Binding OpenMyRecoveryKey}"/>
                         </StackPanel>
                     </Border>
                     <Border Style="{StaticResource WizCard}" Visibility="{Binding BitLockerNeedsBackup, Converter={StaticResource BoolVis}}">
                         <StackPanel>
                             <Grid Margin="16,12">
                                 <StackPanel Margin="0,0,60,0">
-                                    <TextBlock Text="Yeniden başlatırken BitLocker'ı bir kez askıya al" Style="{StaticResource RowTitle}"/>
-                                    <TextBlock Style="{StaticResource Body}" Margin="0,2,0,0"
-                                               Text="Önerilir. Açılışta anahtar sorulmasını önler; disk şifreli kalır ve koruma bir yeniden başlatmadan sonra kendiliğinden geri gelir."/>
+                                    <TextBlock Text="{l:Loc Setup_SuspendTitle}" Style="{StaticResource RowTitle}"/>
+                                    <TextBlock Style="{StaticResource Body}" Margin="0,2,0,0" Text="{l:Loc Setup_SuspendBody}"/>
                                 </StackPanel>
                                 <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
                                           IsChecked="{Binding SuspendOnReboot}"/>
                             </Grid>
                             <Border Style="{StaticResource Divider}"/>
                             <Grid Margin="16,12">
-                                <TextBlock Text="Kurtarma anahtarımı bu bilgisayarın dışında güvenli bir yere kaydettim." Style="{StaticResource RowTitle}"
+                                <TextBlock Text="{l:Loc Setup_BackupConfirm}" Style="{StaticResource RowTitle}"
                                            VerticalAlignment="Center" Margin="0,0,60,0"/>
                                 <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
                                           IsChecked="{Binding BackupConfirmed}"/>
@@ -223,8 +227,13 @@
                 <Border Style="{StaticResource WizCard}" Visibility="{Binding ShowGuide, Converter={StaticResource BoolVis}}">
                     <StackPanel Margin="16,14">
                         <Grid>
-                            <TextBlock Text="{Binding Guide.DisplayName}" Style="{StaticResource RowTitle}"/>
-                            <TextBlock Text="{Binding MachineText}" FontSize="11.5" HorizontalAlignment="Right"
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding Guide.DisplayName}" Style="{StaticResource RowTitle}" Margin="0,0,12,0"/>
+                            <TextBlock Grid.Column="1" Text="{Binding MachineText}" FontSize="11.5" MaxWidth="200" VerticalAlignment="Center"
+                                       TextTrimming="CharacterEllipsis" ToolTip="{Binding MachineText}"
                                        Foreground="{DynamicResource TextSecondary}"/>
                         </Grid>
                         <ItemsControl ItemsSource="{Binding GuideSteps}" Margin="0,8,0,0">
@@ -237,11 +246,10 @@
                         <TextBlock Text="{Binding Guide.Note}" Style="{StaticResource HideWhenNull}" Margin="0,10,0,0"/>
                         <Border Style="{StaticResource Divider}" Margin="0,12,0,0"/>
                         <TextBlock Text="{Binding GuideKeys}" Style="{StaticResource Body}" Margin="0,10,0,0"/>
-                        <TextBlock Style="{StaticResource Body}" Margin="0,4,0,0"
-                                   Text="Açılışta BitLocker kurtarma anahtarı sorulursa, kaydettiğiniz 48 haneli anahtarı yazın."/>
+                        <TextBlock Style="{StaticResource Body}" Margin="0,4,0,0" Text="{l:Loc Setup_GuideBitLockerHint}"/>
                     </StackPanel>
                 </Border>
-                <Button Style="{StaticResource LinkButton}" Content="Durumu yeniden kontrol et" HorizontalAlignment="Center"
+                <Button Style="{StaticResource LinkButton}" Content="{l:Loc Setup_Recheck}" HorizontalAlignment="Center"
                         Margin="0,12,0,0" FontSize="12.5" Command="{Binding Recheck}"
                         Visibility="{Binding IsSecureBoot, Converter={StaticResource BoolVis}}"/>
 
@@ -250,12 +258,11 @@
                     <Border Style="{StaticResource WizCard}" Padding="16,12" Background="{DynamicResource WarningSubtle}" BorderBrush="{DynamicResource WarningBorder}"
                             Visibility="{Binding SecureBootStillOn, Converter={StaticResource BoolVis}}">
                         <StackPanel>
-                            <TextBlock Text="Secure Boot hâlâ açık görünüyor" Style="{StaticResource RowTitle}"/>
-                            <TextBlock Style="{StaticResource Body}" Margin="0,2,0,0"
-                                       Text="Windows bu durumda test modunu açmayı reddeder. Önce Secure Boot adımını tamamlayın."/>
+                            <TextBlock Text="{l:Loc Setup_SecureBootStillOnTitle}" Style="{StaticResource RowTitle}"/>
+                            <TextBlock Style="{StaticResource Body}" Margin="0,2,0,0" Text="{l:Loc Setup_SecureBootStillOnBody}"/>
                         </StackPanel>
                     </Border>
-                    <Button Style="{StaticResource LinkButton}" Content="Durumu yeniden kontrol et" HorizontalAlignment="Center"
+                    <Button Style="{StaticResource LinkButton}" Content="{l:Loc Setup_Recheck}" HorizontalAlignment="Center"
                             Margin="0,12,0,0" FontSize="12.5" Command="{Binding Recheck}"/>
                 </StackPanel>
 
@@ -263,13 +270,13 @@
                 <StackPanel Visibility="{Binding IsInstall, Converter={StaticResource BoolVis}}">
                     <Border Style="{StaticResource WizCard}" Visibility="{Binding FirmwareReady, Converter={StaticResource BoolVis}}">
                         <StackPanel>
-                            <TextBlock Text="Intel firmware lisansı" Style="{StaticResource RowTitle}" Margin="16,12,16,6"/>
+                            <TextBlock Text="{l:Loc Setup_LicenseTitle}" Style="{StaticResource RowTitle}" Margin="16,12,16,6"/>
                             <TextBox Text="{Binding LicenseText, Mode=OneWay}" IsReadOnly="True" Height="150" Margin="16,0,16,12"
                                      TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" FontFamily="{StaticResource MonoFont}" FontSize="11"
                                      Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextSecondary}"/>
                             <Border Style="{StaticResource Divider}"/>
                             <Grid Margin="16,12">
-                                <TextBlock Text="Intel firmware lisansını okudum ve kabul ediyorum." Style="{StaticResource RowTitle}"
+                                <TextBlock Text="{l:Loc Setup_LicenseAccept}" Style="{StaticResource RowTitle}"
                                            VerticalAlignment="Center" Margin="0,0,60,0"/>
                                 <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
                                           IsChecked="{Binding LicenseAccepted}"/>
@@ -288,7 +295,7 @@
 
                 <!-- ===== Done ===== -->
                 <StackPanel Visibility="{Binding IsDone, Converter={StaticResource BoolVis}}" HorizontalAlignment="Center" Margin="0,16,0,0">
-                    <Button Style="{StaticResource LinkButton}" Content="Kaldır ve eski haline getir" FontSize="12.5"
+                    <Button Style="{StaticResource LinkButton}" Content="{l:Loc Setup_Title_Rollback}" FontSize="12.5"
                             HorizontalAlignment="Center" Command="{Binding StartRollback}"/>
                 </StackPanel>
 
@@ -323,12 +330,19 @@
 
         <!-- footer -->
         <Grid Grid.Row="3" Margin="32,10,32,24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="110"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <Button Style="{StaticResource PillButton}" Content="{Binding SecondaryText}" HorizontalAlignment="Left"
                     Command="{Binding Secondary}" IsEnabled="{Binding SecondaryEnabled}"
                     Visibility="{Binding SecondaryVisible, Converter={StaticResource BoolVis}}"/>
-            <Button Style="{StaticResource QuietLink}" Content="Kurulum günlüğü" HorizontalAlignment="Center" VerticalAlignment="Center"
-                    Command="{Binding OpenLog}"/>
-            <Button HorizontalAlignment="Right" Content="{Binding PrimaryText}" Command="{Binding Primary}"
+            <Button Grid.Column="1" Style="{StaticResource QuietLink}" VerticalAlignment="Center" HorizontalAlignment="Center"
+                    Margin="12,0" Command="{Binding OpenLog}" ToolTip="{l:Loc Setup_LogButton}">
+                <TextBlock Text="{l:Loc Setup_LogButton}" TextTrimming="CharacterEllipsis"/>
+            </Button>
+            <Button Grid.Column="2" HorizontalAlignment="Right" Content="{Binding PrimaryText}" Command="{Binding Primary}"
                     IsEnabled="{Binding PrimaryEnabled}" MinWidth="150" Style="{StaticResource AccentPill}"/>
         </Grid>
     </Grid>

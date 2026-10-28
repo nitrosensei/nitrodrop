@@ -35,11 +35,11 @@ public enum ExplorerMenuState
 /// Portable (unpackaged) Explorer integration, per user, no admin:
 /// <list type="bullet">
 /// <item><c>HKCU\Software\Classes\*\shell\NitroDrop</c> and <c>…\Directory\shell\NitroDrop</c>: MUIVerb
-///   "NitroDrop ile gönder", Icon, <c>MultiSelectModel=Player</c> (no 15-item limit; Explorer then runs the
+///   <see cref="UiStrings.ExplorerMenuVerb"/> (UI language at registration time), Icon, <c>MultiSelectModel=Player</c> (no 15-item limit; Explorer then runs the
 ///   command once per selected item, <see cref="SendBatcher"/> merges them), <c>command</c> =
-///   <c>"…\NitroDrop.exe" --send "%1"</c>. On Windows 11 it is under "Diğer seçenekleri göster" (classic menu);
+///   <c>"…\NitroDrop.exe" --send "%1"</c>. On Windows 11 it is under "Show more options" (classic menu);
 ///   only packaged apps get into the new menu (IExplorerCommand, see app/NitroDrop.ShellExt).</item>
-/// <item><c>%APPDATA%\Microsoft\Windows\SendTo\NitroDrop.lnk</c> → <c>NitroDrop.exe --send</c>: Gönder menu,
+/// <item><c>%APPDATA%\Microsoft\Windows\SendTo\NitroDrop.lnk</c> → <c>NitroDrop.exe --send</c>: Send to menu,
 ///   all selected items in one command line.</item>
 /// </list>
 /// WPF-free (linked into AirDrop.Tests).
@@ -111,7 +111,7 @@ public static class ExplorerMenu
     }
 }
 
-/// <summary>Ayarlar → Bu bilgisayar → "Gezgin sağ tık menüsü" and the startup check. WPF-free.</summary>
+/// <summary>Ayarlar → Bu bilgisayar → File Explorer context menu switch and the startup check. WPF-free.</summary>
 public sealed class ExplorerMenuService(IUserRegistry registry, IShortcutStore shortcuts, string exePath, bool packaged,
                                         Func<string, bool>? fileExists = null)
 {
@@ -131,6 +131,19 @@ public sealed class ExplorerMenuService(IUserRegistry registry, IShortcutStore s
     }
 
     /// <summary>
+    /// After a UI language switch: rewrites the classic verb (MUIVerb) and the SendTo description in the new language when
+    /// the entry is registered for this exe. Packaged builds have nothing to rewrite (the native command reads the
+    /// language from HKCU itself). Returns true when something was written.
+    /// </summary>
+    /// <exception cref="Exception">Registry / shortcut write failed.</exception>
+    public bool RefreshLanguage()
+    {
+        if (packaged || ExplorerMenu.GetState(registry, exePath) != ExplorerMenuState.On) return false;
+        ExplorerMenu.Register(registry, shortcuts, exePath);
+        return true;
+    }
+
+    /// <summary>
     /// Once per start. Packaged: removes a classic entry a portable build left behind (it would show twice, like the
     /// HKCU Run value <c>StartupRegistration</c> removes). Portable: when the entry points at an exe that no longer
     /// exists (folder moved), re-points it here. Another existing copy's entry is left alone.
@@ -145,6 +158,13 @@ public sealed class ExplorerMenuService(IUserRegistry registry, IShortcutStore s
             {
                 if (state == ExplorerMenuState.Off) return false;
                 ExplorerMenu.Unregister(registry, shortcuts);
+                return true;
+            }
+            if (state == ExplorerMenuState.On)
+            {
+                // Registered in another UI language (changed while we were not running): follow the current one.
+                if (registry.GetString(ExplorerMenu.ShellKeys[0], "MUIVerb") == UiStrings.ExplorerMenuVerb) return false;
+                ExplorerMenu.Register(registry, shortcuts, exePath);
                 return true;
             }
             if (state != ExplorerMenuState.OtherExe) return false;

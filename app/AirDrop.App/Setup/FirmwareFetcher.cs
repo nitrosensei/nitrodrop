@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Setup;
 
@@ -62,7 +63,7 @@ public sealed class FirmwareFetcher(HttpClient http)
         var dest = Path.Combine(destDir, f.Name);
         if (Verify(dest, f))
         {
-            SetupLog.Write($"firmware önbellekte doğrulandı: {f.Name}");
+            SetupLog.Write($"firmware verified in cache: {f.Name}");
             return dest;
         }
         foreach (var dir in alsoLookIn ?? Enumerable.Empty<string>())
@@ -71,7 +72,7 @@ public sealed class FirmwareFetcher(HttpClient http)
             if (Verify(candidate, f))
             {
                 File.Copy(candidate, dest, overwrite: true);
-                SetupLog.Write($"firmware yerel kopyadan alındı: {candidate}");
+                SetupLog.Write($"firmware taken from local copy: {candidate}");
                 return dest;
             }
         }
@@ -80,8 +81,8 @@ public sealed class FirmwareFetcher(HttpClient http)
         foreach (var url in FirmwareSpec.Urls(f))
         {
             ct.ThrowIfCancellationRequested();
-            progress?.Report($"{f.Name} indiriliyor…");
-            SetupLog.Write($"indiriliyor: {url}");
+            progress?.Report(SetupStrings.Setup_Status_Downloading(f.Name));
+            SetupLog.Write($"downloading: {url}");
             try
             {
                 using var req = new HttpRequestMessage(HttpMethod.Get, url);
@@ -94,19 +95,18 @@ public sealed class FirmwareFetcher(HttpClient http)
             }
             catch (Exception ex) when (ex is HttpRequestException or IOException or TaskCanceledException && !ct.IsCancellationRequested)
             {
-                SetupLog.Write($"başarısız: {url} ({ex.Message})");
+                SetupLog.Write($"failed: {url} ({ex.Message})");
                 continue;
             }
             if (Verify(tmp, f))
             {
                 File.Move(tmp, dest, overwrite: true);
-                SetupLog.Write($"indirildi ve doğrulandı: {f.Name} sha256={f.Sha256}");
+                SetupLog.Write($"downloaded and verified: {f.Name} sha256={f.Sha256}");
                 return dest;
             }
-            SetupLog.Write($"SHA-256 uyuşmadı: {url} (gelen {Sha256Of(tmp)})");
+            SetupLog.Write($"SHA-256 mismatch: {url} (got {Sha256Of(tmp)})");
         }
         try { File.Delete(tmp); } catch (Exception) { }
-        throw new InvalidOperationException(
-            $"{f.Name} doğrulanmış olarak indirilemedi. İnternet bağlantınızı kontrol edip tekrar deneyin.");
+        throw new InvalidOperationException(SetupStrings.Setup_Error_DownloadFailed(f.Name));
     }
 }

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Onboarding_WindowTitle" xml:space="preserve">
+    <value>NitroDrop · Hoş geldiniz</value>
+  </data>
+  <data name="Onboarding_StepLabel" xml:space="preserve">
+    <value>İLK KULLANIM · {0}/{1}</value>
+  </data>
+  <data name="Onboarding_SkipTip" xml:space="preserve">
+    <value>Tanıtımı kapat (Esc)</value>
+  </data>
+  <data name="Onboarding_Welcome" xml:space="preserve">
+    <value>iPhone, Mac ve PC arasında dosya, pano, bildirim ve sekmeler. Kurulum gerektirmeden, aynı ağda hemen çalışır.</value>
+  </data>
+  <data name="Onboarding_SendTitle" xml:space="preserve">
+    <value>Sürükleyin, bırakın</value>
+  </data>
+  <data name="Onboarding_SendBody" xml:space="preserve">
+    <value>Dosyayı Yakındakiler'deki cihazın üzerine bırakın. Gezgin'de sağ tıklayıp “NitroDrop ile gönder”i de seçebilirsiniz.</value>
+  </data>
+  <data name="Onboarding_HotkeyHint" xml:space="preserve">
+    <value>kopyaladığınızı son kullandığınız cihaza gönderir</value>
+    <comment>follows the key combination Ctrl + Alt + A</comment>
+  </data>
+  <data name="Onboarding_ReceiveTitle" xml:space="preserve">
+    <value>iPhone'dan alın</value>
+  </data>
+  <data name="Onboarding_ReceiveBody" xml:space="preserve">
+    <value>iPhone'da Paylaş → AirDrop'a dokunun ve bu bilgisayarı seçin. Şimdilik aynı Wi-Fi ağında çalışır; Gelişmiş Kurulum'dan sonra iPhone doğrudan bağlanır.</value>
+  </data>
+  <data name="Onboarding_ReceiveLater" xml:space="preserve">
+    <value>Gelişmiş Kurulum'u sonra da yapabilirsiniz: Ayarlar → Wi-Fi Sürücüsü.</value>
+  </data>
+  <data name="Onboarding_PhoneTitle" xml:space="preserve">
+    <value>Telefonunuz masanızda</value>
+  </data>
+  <data name="Onboarding_PhoneBody" xml:space="preserve">
+    <value>Bluetooth ile eşleşen iPhone'un aramaları, mesajları ve bildirimleri bu bilgisayarda görünür; buradan yanıtlarsınız.</value>
+  </data>
+  <data name="Onboarding_PairIphone" xml:space="preserve">
+    <value>iPhone'u eşleştir</value>
+  </data>
+  <data name="Onboarding_DevicesTitle" xml:space="preserve">
+    <value>Kaldığınız yerden devam</value>
+  </data>
+  <data name="Onboarding_DevicesBody" xml:space="preserve">
+    <value>Eşleşen bilgisayarlar birbirinin açık sekmelerini ve uygulamalarını görür. Tarayıcı eklentisi sekmeleri, iPhone Kestirmesi telefonda açık olanı getirir.</value>
+  </data>
+  <data name="Onboarding_FinalTitle" xml:space="preserve">
+    <value>Son dokunuşlar</value>
+  </data>
+  <data name="Onboarding_FinalBody" xml:space="preserve">
+    <value>Hiçbir şey sizin onayınız olmadan alınmaz; rehberiniz ve dosyalarınız bu bilgisayarda kalır.</value>
+  </data>
+  <data name="Onboarding_DeviceName" xml:space="preserve">
+    <value>Görünen ad</value>
+  </data>
+  <data name="Onboarding_WhoCanSee" xml:space="preserve">
+    <value>Beni görebilecekler</value>
+  </data>
+  <data name="Onboarding_ModeEveryone" xml:space="preserve">
+    <value>Herkes (10 dk)</value>
+  </data>
+  <data name="Onboarding_ModeOff" xml:space="preserve">
+    <value>Kapalı</value>
+  </data>
+  <data name="Onboarding_StartWithWindows" xml:space="preserve">
+    <value>Windows açılınca başlat</value>
+  </data>
+  <data name="Onboarding_LetsGo" xml:space="preserve">
+    <value>Başlayalım</value>
+  </data>
+  <data name="Onboarding_Start" xml:space="preserve">
+    <value>Başla</value>
+  </data>
+</root>

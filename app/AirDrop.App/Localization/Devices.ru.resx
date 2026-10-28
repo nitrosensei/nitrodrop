@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Devices_Title" xml:space="preserve">
+    <value>Мои устройства</value>
+  </data>
+  <data name="Devices_OpenOnThisPc" xml:space="preserve">
+    <value>Открыть на этом компьютере</value>
+  </data>
+  <data name="Devices_CopyLink" xml:space="preserve">
+    <value>Копировать ссылку</value>
+  </data>
+  <data name="Devices_OpenHere" xml:space="preserve">
+    <value>Открыть здесь</value>
+  </data>
+  <data name="Devices_OpenHereTip" xml:space="preserve">
+    <value>Открыть это приложение на этом компьютере</value>
+  </data>
+  <data name="Devices_OnIphoneNow" xml:space="preserve">
+    <value>СЕЙЧАС НА IPHONE</value>
+  </data>
+  <data name="Devices_ContinueOnPc" xml:space="preserve">
+    <value>Продолжить на компьютере</value>
+  </data>
+  <data name="Devices_NetworkPcsHeader" xml:space="preserve">
+    <value>КОМПЬЮТЕРЫ С NITRODROP В СЕТИ</value>
+  </data>
+  <data name="Devices_Searching" xml:space="preserve">
+    <value>Поиск компьютеров в сети…</value>
+  </data>
+  <data name="Devices_SearchingHint" xml:space="preserve">
+    <value>На другом компьютере должен быть открыт NitroDrop, и оба компьютера должны быть в одной сети Wi-Fi или проводной сети.</value>
+  </data>
+  <data name="Devices_PairedHeader" xml:space="preserve">
+    <value>СВЯЗАННЫЕ</value>
+  </data>
+  <data name="Devices_EmptyTitle" xml:space="preserve">
+    <value>Свяжите свои компьютеры</value>
+  </data>
+  <data name="Devices_EmptyBody" xml:space="preserve">
+    <value>Связанные компьютеры видят открытые вкладки и приложения друг друга — открывайте их здесь одним щелчком.</value>
+  </data>
+  <data name="Devices_AddPc" xml:space="preserve">
+    <value>Добавить компьютер</value>
+  </data>
+  <data name="Devices_SyncStartFailed" xml:space="preserve">
+    <value>Не удалось запустить синхронизацию: {0}</value>
+  </data>
+  <data name="Devices_IphoneSomeApp" xml:space="preserve">
+    <value>приложение</value>
+  </data>
+  <data name="Devices_IphoneSharedLink" xml:space="preserve">
+    <value>Ссылка с устройства {0}</value>
+  </data>
+  <data name="Devices_IphoneAppOpen" xml:space="preserve">
+    <value>Открыто на iPhone: {0}</value>
+  </data>
+  <data name="Devices_ContinueFailed" xml:space="preserve">
+    <value>Не удалось открыть это действие на компьютере.</value>
+  </data>
+  <data name="Devices_LinkOpened" xml:space="preserve">
+    <value>Открыта ссылка с {0}: {1}</value>
+  </data>
+  <data name="Devices_LinkClickToOpen" xml:space="preserve">
+    <value>{0}: {1} — щелкните, чтобы открыть</value>
+  </data>
+  <data name="Devices_AgoJustNow" xml:space="preserve">
+    <value>только что</value>
+  </data>
+  <data name="Devices_AgoHours_Plural" xml:space="preserve">
+    <value>{0} час назад|{0} часа назад|{0} часов назад</value>
+  </data>
+  <data name="Devices_SameNetwork" xml:space="preserve">
+    <value>NitroDrop · в этой сети</value>
+  </data>
+  <data name="Devices_Offline" xml:space="preserve">
+    <value>Не в сети</value>
+  </data>
+  <data name="Devices_OfflineLastSeen" xml:space="preserve">
+    <value>Не в сети · последняя активность: {0}</value>
+  </data>
+  <data name="Devices_CantConnect" xml:space="preserve">
+    <value>Нет подключения · {0}</value>
+  </data>
+  <data name="Devices_OnlineConnecting" xml:space="preserve">
+    <value>В сети · подключение…</value>
+  </data>
+  <data name="Devices_Online" xml:space="preserve">
+    <value>В сети</value>
+  </data>
+  <data name="Devices_Tabs_Plural" xml:space="preserve">
+    <value>{0} вкладка|{0} вкладки|{0} вкладок</value>
+  </data>
+  <data name="Devices_Apps_Plural" xml:space="preserve">
+    <value>{0} приложение|{0} приложения|{0} приложений</value>
+  </data>
+  <data name="Devices_NothingShared" xml:space="preserve">
+    <value>ничего не передается</value>
+  </data>
+  <data name="Devices_TabsHeader" xml:space="preserve">
+    <value>ВКЛАДКИ · {0}</value>
+  </data>
+  <data name="Devices_AppsHeader" xml:space="preserve">
+    <value>ПРИЛОЖЕНИЯ · {0}</value>
+  </data>
+  <data name="Devices_ShowLess" xml:space="preserve">
+    <value>Свернуть</value>
+  </data>
+  <data name="Devices_ShowAll" xml:space="preserve">
+    <value>Показать все ({0})</value>
+  </data>
+  <data name="Pair_Paired" xml:space="preserve">
+    <value>Связь с {0} установлена</value>
+  </data>
+  <data name="Pair_Waiting" xml:space="preserve">
+    <value>Ожидание…</value>
+  </data>
+  <data name="Pair_Button" xml:space="preserve">
+    <value>Связать</value>
+  </data>
+  <data name="Pair_ErrNotFound" xml:space="preserve">
+    <value>Устройство не найдено в сети</value>
+  </data>
+  <data name="Pair_ErrIdMismatch" xml:space="preserve">
+    <value>Идентификатор устройства не совпадает</value>
+  </data>
+  <data name="Pair_ErrBadResponse" xml:space="preserve">
+    <value>Недопустимый ответ</value>
+  </data>
+  <data name="Pair_ErrKey" xml:space="preserve">
+    <value>Не удалось проверить ключ</value>
+  </data>
+  <data name="Pair_ErrRejected" xml:space="preserve">
+    <value>Другой компьютер отклонил запрос</value>
+  </data>
+  <data name="Pair_ErrNoSync" xml:space="preserve">
+    <value>Синхронизация не запущена</value>
+  </data>
+  <data name="Pair_ErrGeneric" xml:space="preserve">
+    <value>Не удалось связать: {0}</value>
+  </data>
+  <data name="Pair_Eyebrow" xml:space="preserve">
+    <value>NITRODROP · СВЯЗЫВАНИЕ</value>
+  </data>
+  <data name="Pair_MessageInitiator" xml:space="preserve">
+    <value>Идет связывание. Связанные компьютеры показывают друг другу открытые вкладки и приложения.</value>
+  </data>
+  <data name="Pair_MessageResponder" xml:space="preserve">
+    <value>хочет связаться с этим компьютером. Связанные компьютеры показывают друг другу открытые вкладки и приложения.</value>
+  </data>
+  <data name="Pair_Question" xml:space="preserve">
+    <value>Вы видите такой же код на другом компьютере?</value>
+  </data>
+  <data name="Pair_Confirm" xml:space="preserve">
+    <value>Подтвердить</value>
+  </data>
+  <data name="Pair_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Pair_Footnote" xml:space="preserve">
+    <value>Если коды отличаются, нажмите «Отмена».</value>
+  </data>
+  <data name="Launch_Eyebrow" xml:space="preserve">
+    <value>NITRODROP · ОТКРЫТИЕ ПРИЛОЖЕНИЯ</value>
+  </data>
+  <data name="Launch_Message" xml:space="preserve">
+    <value>хочет открыть «{0}» на этом компьютере.</value>
+  </data>
+  <data name="Launch_Footnote" xml:space="preserve">
+    <value>Открыть можно только приложения, которые этот компьютер уже показывает.</value>
+  </data>
+  <data name="Sync_ExtTabsOff" xml:space="preserve">
+    <value>Общий доступ к вкладкам выключен</value>
+  </data>
+  <data name="Sync_ExtTabsOffDetail" xml:space="preserve">
+    <value>Расширение не подключается к NitroDrop, поэтому другие компьютеры не видят ваши вкладки.</value>
+  </data>
+  <data name="Sync_ExtConnected" xml:space="preserve">
+    <value>Подключено</value>
+  </data>
+  <data name="Sync_ExtConnectedDetail_Plural" xml:space="preserve">
+    <value>{1} · {0} вкладка в общем доступе|{1} · {0} вкладки в общем доступе|{1} · {0} вкладок в общем доступе</value>
+  </data>
+  <data name="Sync_BrowsersJoin" xml:space="preserve">
+    <value>{0} и {1}</value>
+  </data>
+  <data name="Sync_ExtNoTabs" xml:space="preserve">
+    <value>Подключено к браузеру, вкладок пока нет</value>
+  </data>
+  <data name="Sync_ExtNoTabsDetail" xml:space="preserve">
+    <value>Убедитесь, что расширение NitroDrop установлено и включено в Chrome или Edge.</value>
+  </data>
+  <data name="Sync_ExtNotInstalled" xml:space="preserve">
+    <value>Не установлено</value>
+  </data>
+  <data name="Sync_ExtNotInstalledDetail" xml:space="preserve">
+    <value>Установите расширение, чтобы видеть вкладки Chrome и Edge на других компьютерах.</value>
+  </data>
+  <data name="Sync_Registering" xml:space="preserve">
+    <value>Подключение…</value>
+  </data>
+  <data name="Sync_RegisterOk" xml:space="preserve">
+    <value>✓ Подключено к Chrome и Edge. Перезагрузите расширение в браузере.</value>
+  </data>
+  <data name="Sync_RegisterFailed" xml:space="preserve">
+    <value>Не удалось подключить: {0}</value>
+  </data>
+  <data name="Sync_HostMissing" xml:space="preserve">
+    <value>Не найден файл {0}</value>
+  </data>
+  <data name="Sync_ExitCode" xml:space="preserve">
+    <value>код выхода {0}</value>
+  </data>
+  <data name="Sync_IosSetupTitle" xml:space="preserve">
+    <value>Адрес настройки для {0}</value>
+  </data>
+  <data name="Sync_IphoneAddFailed" xml:space="preserve">
+    <value>Не удалось добавить iPhone: {0}</value>
+  </data>
+  <data name="Sync_IosDeviceDetail" xml:space="preserve">
+    <value>Быстрая команда · добавлено {0}</value>
+  </data>
+</root>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Unit_Byte" xml:space="preserve">
+    <value>B</value>
+    <comment>byte unit</comment>
+  </data>
+  <data name="Unit_KB" xml:space="preserve">
+    <value>KB</value>
+  </data>
+  <data name="Unit_MB" xml:space="preserve">
+    <value>MB</value>
+  </data>
+  <data name="Unit_GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="Unit_TB" xml:space="preserve">
+    <value>TB</value>
+  </data>
+  <data name="Unit_Format" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} number, {1} unit; use a no-break space if your typography wants one</comment>
+  </data>
+  <data name="Time_YesterdayAt" xml:space="preserve">
+    <value>Dün {0}</value>
+    <comment>{0} = clock time</comment>
+  </data>
+  <data name="Time_JustNow" xml:space="preserve">
+    <value>Az önce</value>
+  </data>
+  <data name="Time_Today" xml:space="preserve">
+    <value>Bugün</value>
+  </data>
+  <data name="Time_Yesterday" xml:space="preserve">
+    <value>Dün</value>
+  </data>
+  <data name="Time_MinutesAgo_Plural" xml:space="preserve">
+    <value>{0} dk önce</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Vazgeç</value>
+  </data>
+  <data name="Common_OK" xml:space="preserve">
+    <value>Tamam</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="Common_Open" xml:space="preserve">
+    <value>Aç</value>
+  </data>
+  <data name="Common_Remove" xml:space="preserve">
+    <value>Kaldır</value>
+  </data>
+  <data name="Common_Done" xml:space="preserve">
+    <value>Bitti</value>
+  </data>
+  <data name="Common_Back" xml:space="preserve">
+    <value>Geri</value>
+  </data>
+  <data name="Common_Next" xml:space="preserve">
+    <value>İleri</value>
+  </data>
+  <data name="Common_Skip" xml:space="preserve">
+    <value>Atla</value>
+  </data>
+  <data name="Common_Clear" xml:space="preserve">
+    <value>Temizle</value>
+  </data>
+  <data name="Common_Copy" xml:space="preserve">
+    <value>Kopyala</value>
+  </data>
+  <data name="Common_Settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="Common_Accept" xml:space="preserve">
+    <value>Kabul et</value>
+  </data>
+  <data name="Common_Decline" xml:space="preserve">
+    <value>Reddet</value>
+  </data>
+  <data name="Common_OpenFolder" xml:space="preserve">
+    <value>Klasörü aç</value>
+  </data>
+  <data name="Common_ShowInFolder" xml:space="preserve">
+    <value>Klasörde göster</value>
+  </data>
+  <data name="Files_Plural" xml:space="preserve">
+    <value>{0} dosya</value>
+  </data>
+  <data name="Links_Plural" xml:space="preserve">
+    <value>{0} bağlantı</value>
+  </data>
+  <data name="Items_Plural" xml:space="preserve">
+    <value>{0} öğe</value>
+  </data>
+  <data name="Devices_Count_Plural" xml:space="preserve">
+    <value>{0} cihaz</value>
+  </data>
+  <data name="Language_Auto" xml:space="preserve">
+    <value>Windows diliyle aynı</value>
+  </data>
+</root>

@@ -212,7 +212,11 @@ public class PhoneRuntimeTests
         var d = CallCapabilityPolicy.Decide(new CallEnvironment(false, AncsAvailable: true));
         Assert.Equal(CallCapability.ControlOnly, d.Capability);
         Assert.Equal(CallCapabilityPolicy.FixPackage, d.Fix);
-        Assert.Contains("paketsiz", d.Reason);
+        Assert.Equal(CallBlocker.NoPackageIdentity, d.Blocker);
+        // The app's localized text (tests run in Turkish).
+        Assert.Contains("paketsiz", PhoneViewModel.CapabilityReason(d));
+        Assert.Contains("yanıtlayıp reddedebilirsiniz", PhoneViewModel.CapabilityReason(d));
+        Assert.Contains("MSIX", PhoneViewModel.CapabilityFix(d.Blocker));
     }
 
     [Theory]
@@ -223,6 +227,7 @@ public class PhoneRuntimeTests
         var d = CallCapabilityPolicy.Decide(new CallEnvironment(true, true, access, registered, null, true));
         Assert.Equal(CallCapability.ControlOnly, d.Capability);
         Assert.Equal(fix, d.Fix);
+        Assert.Contains("Phone Link", PhoneViewModel.CapabilityFix(d.Blocker));
     }
 
     [Fact]
@@ -230,6 +235,13 @@ public class PhoneRuntimeTests
     {
         Assert.Contains("HFP", CallCapabilityPolicy.Decide(new CallEnvironment(true, AncsAvailable: true)).Reason);
         Assert.Contains("boom", CallCapabilityPolicy.Decide(new CallEnvironment(true, Error: "boom")).Reason);
+        var noHfp = CallCapabilityPolicy.Decide(new CallEnvironment(true, AncsAvailable: true));
+        Assert.Equal(CallBlocker.NoHandsFreeTransport, noHfp.Blocker);
+        Assert.Contains("HFP", PhoneViewModel.CapabilityReason(noHfp));
+        var error = CallCapabilityPolicy.Decide(new CallEnvironment(true, Error: "boom"));
+        Assert.Equal(CallBlocker.LineError, error.Blocker);
+        Assert.Contains("boom", PhoneViewModel.CapabilityReason(error));
+        Assert.Contains("ANCS", PhoneViewModel.CapabilityReason(error));   // None: no notification link either
     }
 
     // ---- MNS → MessageStore → view model ------------------------------------------------------------------------
@@ -397,7 +409,7 @@ public class PhoneRuntimeTests
     [Fact]
     public void Format_WhenAndInitials()
     {
-        Assert.Equal("şimdi", PhoneFormat.When(Now.AddSeconds(-20), Now));
+        Assert.Equal("Az önce", PhoneFormat.When(Now.AddSeconds(-20), Now));
         Assert.Equal("5 dk önce", PhoneFormat.When(Now.AddMinutes(-5), Now));
         Assert.Equal("ZK", PhoneFormat.Initials("Zeynep Kaya"));
         Assert.Equal("", PhoneFormat.Initials("+90 532 111 22 33"));

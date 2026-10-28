@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Builds NitroDrop.ShellExt.dll (MSIX "NitroDrop ile gönder" IExplorerCommand) and runs its self-test.
+  Builds NitroDrop.ShellExt.dll (MSIX "Send with NitroDrop" IExplorerCommand, six languages) and runs its self-test.
 
 .DESCRIPTION
   VS 2022 Build Tools (MSVC) + Windows SDK 10.0.26100, x64, static CRT (/MT; the MSIX carries no VC++ runtime),

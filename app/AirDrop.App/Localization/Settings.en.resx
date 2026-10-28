@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Settings_SectionThisPc" xml:space="preserve">
+    <value>THIS PC</value>
+  </data>
+  <data name="Settings_DeviceName" xml:space="preserve">
+    <value>Display name</value>
+  </data>
+  <data name="Settings_SaveReceivedTo" xml:space="preserve">
+    <value>Save received files to</value>
+  </data>
+  <data name="Settings_ChangeFolder" xml:space="preserve">
+    <value>Change…</value>
+  </data>
+  <data name="Settings_StartWithWindows" xml:space="preserve">
+    <value>Start when Windows starts</value>
+  </data>
+  <data name="Settings_SectionLanguage" xml:space="preserve">
+    <value>LANGUAGE</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>App language</value>
+  </data>
+  <data name="Settings_LanguageCaption" xml:space="preserve">
+    <value>Changes apply right away.</value>
+  </data>
+  <data name="Settings_LanguageAutoWith" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="Settings_SectionReceiving" xml:space="preserve">
+    <value>RECEIVING</value>
+  </data>
+  <data name="Settings_JpgPhotos" xml:space="preserve">
+    <value>Receive iPhone photos as JPG</value>
+  </data>
+  <data name="Settings_JpgPhotosCaption" xml:space="preserve">
+    <value>Asks for JPG instead of HEIC and H.264 instead of HEVC video, so files open on any Windows PC.</value>
+  </data>
+  <data name="Settings_OpenLinks" xml:space="preserve">
+    <value>Open received links in the browser</value>
+  </data>
+  <data name="Settings_SectionClipboard" xml:space="preserve">
+    <value>SHARED CLIPBOARD</value>
+  </data>
+  <data name="Settings_CopyIncoming" xml:space="preserve">
+    <value>Copy received items to the clipboard</value>
+  </data>
+  <data name="Settings_CopyIncomingCaption" xml:space="preserve">
+    <value>Text, links and single photos from an iPhone are ready to paste with Ctrl+V.</value>
+  </data>
+  <data name="Settings_SendClipboard" xml:space="preserve">
+    <value>Send clipboard to phone</value>
+  </data>
+  <data name="Settings_SendClipboardCaption" xml:space="preserve">
+    <value>Sends the text, link, image or file you copied to the device you used last.</value>
+  </data>
+  <data name="Settings_Hotkey" xml:space="preserve">
+    <value>Ctrl + Alt + A</value>
+  </data>
+  <data name="Settings_HotkeyInUse" xml:space="preserve">
+    <value>{0} (used by another app)</value>
+  </data>
+  <data name="Settings_SectionContacts" xml:space="preserve">
+    <value>CONTACTS AND PHOTOS</value>
+  </data>
+  <data name="Settings_ContactsPrivacy" xml:space="preserve">
+    <value>Works just like on a Mac: the verified identity an iPhone sends is matched only against your own contacts. Your contacts never leave this PC.</value>
+  </data>
+  <data name="Settings_ImportContacts" xml:space="preserve">
+    <value>Import contacts (.vcf)</value>
+  </data>
+  <data name="Settings_ContactsNone" xml:space="preserve">
+    <value>No contacts imported. To see your contacts' photos, choose a .vcf file exported from iCloud or Google.</value>
+  </data>
+  <data name="Settings_ContactsImported_Plural" xml:space="preserve">
+    <value>{0} contact imported. People in your contacts appear with their photos.|{0} contacts imported. People in your contacts appear with their photos.</value>
+  </data>
+  <data name="Settings_ContactsImporting" xml:space="preserve">
+    <value>Importing…</value>
+  </data>
+  <data name="Settings_ContactsNoneFound" xml:space="preserve">
+    <value>No contacts found in the file. {0}</value>
+  </data>
+  <data name="Settings_ContactsImportFailed" xml:space="preserve">
+    <value>Couldn't import: {0}</value>
+  </data>
+  <data name="Settings_PickFolderTitle" xml:space="preserve">
+    <value>Folder for received files</value>
+  </data>
+  <data name="Settings_PickContactsTitle" xml:space="preserve">
+    <value>Contacts file (.vcf)</value>
+  </data>
+  <data name="Settings_AllFiles" xml:space="preserve">
+    <value>All files</value>
+  </data>
+  <data name="Settings_SectionTrusted" xml:space="preserve">
+    <value>TRUSTED DEVICES</value>
+  </data>
+  <data name="Settings_TrustedHint" xml:space="preserve">
+    <value>In Nearby, right-click a device and choose “Trusted device” — anything it sends is accepted without asking.</value>
+  </data>
+  <data name="Settings_SectionSync" xml:space="preserve">
+    <value>SYNC</value>
+  </data>
+  <data name="Settings_ShareTabs" xml:space="preserve">
+    <value>Share my tabs</value>
+  </data>
+  <data name="Settings_ShareTabsCaption" xml:space="preserve">
+    <value>Your open tabs in Chrome and Edge show up on paired PCs. Incognito and InPrivate tabs are never shared.</value>
+  </data>
+  <data name="Settings_ShareApps" xml:space="preserve">
+    <value>Share my open apps</value>
+  </data>
+  <data name="Settings_ShareAppsCaption" xml:space="preserve">
+    <value>Only the app's name, icon and window title are sent; file paths stay on this PC.</value>
+  </data>
+  <data name="Settings_ExcludedApps" xml:space="preserve">
+    <value>Apps never to share</value>
+  </data>
+  <data name="Settings_ExcludedAppsCaption" xml:space="preserve">
+    <value>Password managers and system processes are always excluded.</value>
+  </data>
+  <data name="Settings_RemoveFromList" xml:space="preserve">
+    <value>Remove from list</value>
+  </data>
+  <data name="Settings_ExcludePlaceholder" xml:space="preserve">
+    <value>App file, e.g. Telegram.exe</value>
+  </data>
+  <data name="Settings_Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Settings_SectionExtension" xml:space="preserve">
+    <value>BROWSER EXTENSION</value>
+  </data>
+  <data name="Settings_InstallExtension" xml:space="preserve">
+    <value>Install extension</value>
+  </data>
+  <data name="Settings_ExtStep1" xml:space="preserve">
+    <value>Open `chrome://extensions` in Chrome or `edge://extensions` in Edge and turn on **Developer mode**.</value>
+  </data>
+  <data name="Settings_ExtStep2" xml:space="preserve">
+    <value>Click **Load unpacked** and select this folder:</value>
+  </data>
+  <data name="Settings_CopyPath" xml:space="preserve">
+    <value>Copy path</value>
+  </data>
+  <data name="Settings_ExtStep3" xml:space="preserve">
+    <value>Connect the browser so the extension can talk to NitroDrop (for this user only; no administrator permission needed).</value>
+  </data>
+  <data name="Settings_ConnectBrowser" xml:space="preserve">
+    <value>Connect browser</value>
+  </data>
+  <data name="Settings_SectionPairedPcs" xml:space="preserve">
+    <value>PAIRED PCS</value>
+  </data>
+  <data name="Settings_NoPairedPcs" xml:space="preserve">
+    <value>No paired PCs yet. Use “Add PC” on the Devices tab.</value>
+  </data>
+  <data name="Settings_SectionIphoneShortcut" xml:space="preserve">
+    <value>IPHONE (SHORTCUT)</value>
+  </data>
+  <data name="Settings_QrHint" xml:space="preserve">
+    <value>Scan this with the Camera on your iPhone and paste the address into the shortcut's “Get Contents of URL” action.</value>
+  </data>
+  <data name="Settings_QrWarning" xml:space="preserve">
+    <value>This address is shown only once and contains a key unique to this iPhone. Only transfer it to your own phone.</value>
+  </data>
+  <data name="Settings_CopyAddress" xml:space="preserve">
+    <value>Copy address</value>
+  </data>
+  <data name="Settings_ShortcutHelp" xml:space="preserve">
+    <value>Shortcut instructions</value>
+  </data>
+  <data name="Settings_IphoneShortcutCaption" xml:space="preserve">
+    <value>With Shortcuts, the app you open on your iPhone and the links you share come to this PC.</value>
+  </data>
+  <data name="Settings_AddIphone" xml:space="preserve">
+    <value>Add iPhone</value>
+  </data>
+  <data name="Settings_SectionPhone" xml:space="preserve">
+    <value>PHONE</value>
+  </data>
+  <data name="Settings_ShowNotifications" xml:space="preserve">
+    <value>Show iPhone notifications</value>
+  </data>
+  <data name="Settings_ShowCalls" xml:space="preserve">
+    <value>Show incoming calls</value>
+  </data>
+  <data name="Settings_MessagePreview" xml:space="preserve">
+    <value>Message previews in notifications</value>
+  </data>
+  <data name="Settings_MessagePreviewCaption" xml:space="preserve">
+    <value>When off, only the sender and the app are shown.</value>
+  </data>
+  <data name="Settings_SectionDriver" xml:space="preserve">
+    <value>WI-FI DRIVER</value>
+  </data>
+  <data name="Settings_DirectIphone" xml:space="preserve">
+    <value>Connect directly to iPhones (Wi-Fi driver)</value>
+  </data>
+  <data name="Settings_DriverInstall" xml:space="preserve">
+    <value>Set up…</value>
+  </data>
+  <data name="Settings_DriverRollback" xml:space="preserve">
+    <value>Remove and restore…</value>
+  </data>
+  <data name="Settings_DriverStateInstalled" xml:space="preserve">
+    <value>Installed — the Wi-Fi card uses the NitroDrop driver</value>
+  </data>
+  <data name="Settings_DriverStateUnsupported" xml:space="preserve">
+    <value>No supported Intel Wi-Fi card found</value>
+  </data>
+  <data name="Settings_DriverStateIncomplete" xml:space="preserve">
+    <value>Setup not finished</value>
+  </data>
+  <data name="Settings_DriverStateNotInstalled" xml:space="preserve">
+    <value>Not installed</value>
+  </data>
+  <data name="Settings_DriverDetailInstalled" xml:space="preserve">
+    <value>Ready for direct (AirDrop) connections with iPhone, iPad and Mac. While the Wi-Fi card uses this driver, use another connection for the internet.</value>
+  </data>
+  <data name="Settings_DriverDetailUnsupported" xml:space="preserve">
+    <value>Sharing with devices on the same network (LAN mode) works now. Support for USB Wi-Fi adapters is planned.</value>
+  </data>
+  <data name="Settings_DriverDetailFound" xml:space="preserve">
+    <value>{0} found. Advanced Setup is needed for direct connections to iPhones.</value>
+  </data>
+  <data name="About_Section" xml:space="preserve">
+    <value>ABOUT</value>
+  </data>
+  <data name="About_Tagline" xml:space="preserve">
+    <value>Share files, links and your clipboard with iPhone, iPad and Mac, plus tabs and apps between paired PCs. Free and open source.</value>
+  </data>
+  <data name="About_ShowTour" xml:space="preserve">
+    <value>Show the tour again</value>
+  </data>
+  <data name="About_SourceCode" xml:space="preserve">
+    <value>Source code</value>
+  </data>
+  <data name="About_OpenSource" xml:space="preserve">
+    <value>OPEN-SOURCE COMPONENTS</value>
+  </data>
+  <data name="About_LicenseTexts" xml:space="preserve">
+    <value>License texts</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>VERSION {0} · NITROBYTE</value>
+  </data>
+  <data name="About_UseIwx" xml:space="preserve">
+    <value>Intel Wi-Fi driver (OpenBSD)</value>
+  </data>
+  <data name="About_UseQr" xml:space="preserve">
+    <value>QR codes</value>
+  </data>
+  <data name="About_UseFonts" xml:space="preserve">
+    <value>fonts</value>
+  </data>
+  <data name="About_UseFirmware" xml:space="preserve">
+    <value>shown during setup</value>
+  </data>
+  <data name="Explorer_MenuVerb" xml:space="preserve">
+    <value>Send with NitroDrop</value>
+  </data>
+  <data name="Explorer_SendToDescription" xml:space="preserve">
+    <value>Send the selected items with NitroDrop</value>
+  </data>
+  <data name="Explorer_Setting" xml:space="preserve">
+    <value>File Explorer context menu</value>
+  </data>
+  <data name="Explorer_CaptionPortable" xml:space="preserve">
+    <value>Adds “Send with NitroDrop” when you right-click files and folders (on Windows 11 under “Show more options”) and NitroDrop to the Send to menu.</value>
+  </data>
+  <data name="Explorer_CaptionPackaged" xml:space="preserve">
+    <value>Managed by Windows: “Send with NitroDrop” is in the context menu as long as NitroDrop is installed.</value>
+  </data>
+  <data name="Explorer_Failed" xml:space="preserve">
+    <value>Couldn't add the File Explorer menu: {0}</value>
+  </data>
+</root>

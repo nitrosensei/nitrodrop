@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Setup_WindowTitle" xml:space="preserve">
+    <value>NitroDrop · Расширенная настройка</value>
+  </data>
+  <data name="Setup_Header" xml:space="preserve">
+    <value>Расширенная настройка</value>
+  </data>
+  <data name="Setup_DryRunTip" xml:space="preserve">
+    <value>--setup-dry-run: команды не выполняются, а только записываются в журнал установки</value>
+  </data>
+  <data name="Setup_DryRunBadge" xml:space="preserve">
+    <value>ПРОБНЫЙ ЗАПУСК · НИЧЕГО НЕ МЕНЯЕТСЯ</value>
+  </data>
+  <data name="Setup_Step_Compat" xml:space="preserve">
+    <value>Совместимость</value>
+  </data>
+  <data name="Setup_Step_Consent" xml:space="preserve">
+    <value>Согласие</value>
+  </data>
+  <data name="Setup_Step_TestMode" xml:space="preserve">
+    <value>Тестовый режим</value>
+  </data>
+  <data name="Setup_Step_Install" xml:space="preserve">
+    <value>Установка</value>
+  </data>
+  <data name="Setup_Title_Compat" xml:space="preserve">
+    <value>Прямое подключение к iPhone</value>
+  </data>
+  <data name="Setup_Title_Unsupported" xml:space="preserve">
+    <value>На этом компьютере пока не поддерживается</value>
+  </data>
+  <data name="Setup_Title_Consent" xml:space="preserve">
+    <value>Что изменится?</value>
+  </data>
+  <data name="Setup_Title_BitLockerBackup" xml:space="preserve">
+    <value>Сохраните ключ восстановления</value>
+  </data>
+  <data name="Setup_Title_SecureBootOn" xml:space="preserve">
+    <value>Отключите безопасную загрузку</value>
+  </data>
+  <data name="Setup_Title_SecureBootOff" xml:space="preserve">
+    <value>Безопасная загрузка отключена</value>
+  </data>
+  <data name="Setup_Title_SecureBootNone" xml:space="preserve">
+    <value>Безопасная загрузка не используется</value>
+  </data>
+  <data name="Setup_Title_TestModeOn" xml:space="preserve">
+    <value>Тестовый режим включен</value>
+  </data>
+  <data name="Setup_Title_RebootNeeded" xml:space="preserve">
+    <value>Требуется перезагрузка</value>
+  </data>
+  <data name="Setup_Title_TestModeEnable" xml:space="preserve">
+    <value>Включите тестовый режим Windows</value>
+  </data>
+  <data name="Setup_Title_Install" xml:space="preserve">
+    <value>Установите драйвер</value>
+  </data>
+  <data name="Setup_Title_Done" xml:space="preserve">
+    <value>Готово!</value>
+  </data>
+  <data name="Setup_Title_Rollback" xml:space="preserve">
+    <value>Удалить и восстановить</value>
+  </data>
+  <data name="Setup_Title_RollbackFailed" xml:space="preserve">
+    <value>Некоторые шаги не выполнены</value>
+  </data>
+  <data name="Setup_Title_RollbackRestored" xml:space="preserve">
+    <value>Восстановлено</value>
+  </data>
+  <data name="Setup_Title_RollbackAlmost" xml:space="preserve">
+    <value>Почти готово</value>
+  </data>
+  <data name="Setup_Sub_Compat" xml:space="preserve">
+    <value>NitroDrop может подготовить вашу карту Wi-Fi к прямому подключению, которое использует AirDrop. Это займет несколько шагов и две перезагрузки. Перед каждым шагом мы объясним, что произойдет; без вашего согласия ничего не изменится.</value>
+  </data>
+  <data name="Setup_Sub_Unsupported" xml:space="preserve">
+    <value>Пока драйвер Wi-Fi NitroDrop работает только с картой Intel Wi-Fi 6 AX203, а на этом компьютере ее нет. Обмен с устройствами в той же сети по-прежнему работает. Мы работаем над поддержкой USB-адаптеров Wi-Fi, которым не нужна настройка.</value>
+  </data>
+  <data name="Setup_Sub_Consent" xml:space="preserve">
+    <value>Все это временно: отменить можно одним щелчком в разделе «Параметры» → «Драйвер Wi-Fi» → «Удалить».</value>
+  </data>
+  <data name="Setup_Sub_BitLockerOn" xml:space="preserve">
+    <value>Ваш диск зашифрован BitLocker. После изменения параметров безопасной загрузки (Secure Boot) при запуске может потребоваться 48-значный ключ восстановления. Без него вы не получите доступ к файлам — сохраните ключ, прежде чем продолжить.</value>
+  </data>
+  <data name="Setup_Sub_BitLockerUnknown" xml:space="preserve">
+    <value>Не удалось определить состояние BitLocker. Для уверенности выполните подробную проверку (потребуется разрешение администратора).</value>
+  </data>
+  <data name="Setup_Sub_BitLockerNone" xml:space="preserve">
+    <value>Диск не защищен BitLocker, на этом шаге ничего делать не нужно.</value>
+  </data>
+  <data name="Setup_Sub_SecureBootOn" xml:space="preserve">
+    <value>Ниже — шаги для {0}. После нажатия «Перезагрузить в BIOS» компьютер сразу откроет настройки BIOS; удобно заранее сфотографировать шаги на телефон. Когда Windows загрузится, настройка продолжится с того же места.</value>
+  </data>
+  <data name="Setup_Sub_SecureBootOff" xml:space="preserve">
+    <value>Этот шаг выполнен.</value>
+  </data>
+  <data name="Setup_Sub_SecureBootNone" xml:space="preserve">
+    <value>Возможно, компьютер загружается в устаревшем режиме (Legacy/CSM) — тогда безопасная загрузка уже отключена.</value>
+  </data>
+  <data name="Setup_Sub_TestModeOn" xml:space="preserve">
+    <value>Теперь Windows может загружать драйверы, подписанные нами.</value>
+  </data>
+  <data name="Setup_Sub_TestModePending" xml:space="preserve">
+    <value>Тестовый режим включен — перезагрузите компьютер, чтобы он заработал. После запуска Windows настройка продолжится с того же места.</value>
+  </data>
+  <data name="Setup_Sub_TestModeEnable" xml:space="preserve">
+    <value>Тестовый режим позволяет Windows загрузить драйвер, который мы подписываем на этом компьютере. Один раз потребуется разрешение администратора, затем компьютер перезагрузится.</value>
+  </data>
+  <data name="Setup_Sub_Install" xml:space="preserve">
+    <value>Прошивка Wi-Fi от Intel загружается (из репозитория linux-firmware) и проверяется по SHA-256, драйвер подписывается сертификатом, созданным только для этого компьютера, и устанавливается на карту Wi-Fi.</value>
+  </data>
+  <data name="Setup_Sub_Done" xml:space="preserve">
+    <value>Теперь ваша карта Wi-Fi работает с драйвером NitroDrop. Когда рядом появятся iPhone, iPad и Mac, можно обмениваться с ними напрямую. Драйвер экспериментальный: если что-то пойдет не так, все можно отменить одним щелчком.</value>
+  </data>
+  <data name="Setup_Sub_Rollback" xml:space="preserve">
+    <value>Удаляет драйвер NitroDrop и возвращает все в состояние до настройки. Один раз потребуется разрешение администратора.</value>
+  </data>
+  <data name="Setup_Sub_RollbackFailed" xml:space="preserve">
+    <value>Подробности — в журнале установки. Можно повторить попытку или вручную выбрать драйвер Intel в диспетчере устройств.</value>
+  </data>
+  <data name="Setup_Sub_RollbackRestored" xml:space="preserve">
+    <value>Драйвер удален, тестовый режим отключен. Перезагрузите компьютер, чтобы надпись на экране исчезла.</value>
+  </data>
+  <data name="Setup_Sub_RollbackAlmost" xml:space="preserve">
+    <value>Последний шаг: снова включите безопасную загрузку. Нажмите «Перезагрузить в BIOS» и выполните шаги ниже.</value>
+  </data>
+  <data name="Setup_CardFound" xml:space="preserve">
+    <value>Найдено: {0}</value>
+  </data>
+  <data name="Setup_NoCard" xml:space="preserve">
+    <value>Нет поддерживаемой карты Wi-Fi</value>
+  </data>
+  <data name="Setup_ThisPc" xml:space="preserve">
+    <value>Этот компьютер</value>
+  </data>
+  <data name="Setup_Consent1_Title" xml:space="preserve">
+    <value>Безопасная загрузка (Secure Boot) будет отключена</value>
+  </data>
+  <data name="Setup_Consent1_Body" xml:space="preserve">
+    <value>Наш драйвер пока не подписан Microsoft, поэтому ее нужно отключить в BIOS. Мы покажем все по шагам.</value>
+  </data>
+  <data name="Setup_Consent2_Title" xml:space="preserve">
+    <value>Надпись «Тестовый режим» на экране</value>
+  </data>
+  <data name="Setup_Consent2_Body" xml:space="preserve">
+    <value>Windows показывает водяной знак в правом нижнем углу. Он безвреден и исчезнет, если отменить настройку.</value>
+  </data>
+  <data name="Setup_Consent3_Title" xml:space="preserve">
+    <value>Некоторые игры не запустятся</value>
+  </data>
+  <data name="Setup_Consent3_Body" xml:space="preserve">
+    <value>Игры с античитом, например Valorant (Vanguard) и FACEIT, не будут работать. Чтобы играть в них, отмените настройку и снова включите безопасную загрузку.</value>
+  </data>
+  <data name="Setup_Consent4_Title" xml:space="preserve">
+    <value>Защита немного ослабнет</value>
+  </data>
+  <data name="Setup_Consent4_Body" xml:space="preserve">
+    <value>Защита от вредоносных программ при загрузке, которую дает безопасная загрузка, будет отключена. «Безопасность Windows» продолжит работать.</value>
+  </data>
+  <data name="Setup_Consent5_Title" xml:space="preserve">
+    <value>Карта Wi-Fi Intel перейдет к NitroDrop</value>
+  </data>
+  <data name="Setup_Consent5_Body" xml:space="preserve">
+    <value>Пока драйвер активен, карта занята подключением к iPhone; в интернет можно выходить через Ethernet, раздачу с телефона или второй адаптер Wi-Fi.</value>
+  </data>
+  <data name="Setup_ConsentAgree" xml:space="preserve">
+    <value>Я прочитал(а), понял(а) и согласен(на).</value>
+  </data>
+  <data name="Setup_BitLocker_On" xml:space="preserve">
+    <value>BitLocker: включен</value>
+  </data>
+  <data name="Setup_BitLocker_Suspended" xml:space="preserve">
+    <value>BitLocker: приостановлен (диск зашифрован)</value>
+  </data>
+  <data name="Setup_BitLocker_InProgress" xml:space="preserve">
+    <value>BitLocker: идет шифрование</value>
+  </data>
+  <data name="Setup_BitLocker_Off" xml:space="preserve">
+    <value>BitLocker: выключен</value>
+  </data>
+  <data name="Setup_BitLocker_NotUsed" xml:space="preserve">
+    <value>BitLocker: не используется</value>
+  </data>
+  <data name="Setup_BitLocker_Unknown" xml:space="preserve">
+    <value>BitLocker: неизвестно</value>
+  </data>
+  <data name="Setup_NoRecoveryProtector" xml:space="preserve">
+    <value>На этом диске не найден предохранитель с паролем восстановления. Проверьте учетную запись Майкрософт.</value>
+  </data>
+  <data name="Setup_KeyId" xml:space="preserve">
+    <value>Идентификатор ключа: {0}</value>
+  </data>
+  <data name="Setup_ShowKey" xml:space="preserve">
+    <value>Показать ключ…</value>
+  </data>
+  <data name="Setup_ShowKeyTip" xml:space="preserve">
+    <value>Потребуется разрешение администратора; ключ используется только в этом окне</value>
+  </data>
+  <data name="Setup_SaveToFile" xml:space="preserve">
+    <value>Сохранить в файл…</value>
+  </data>
+  <data name="Setup_SaveAndPrint" xml:space="preserve">
+    <value>Сохранить и напечатать…</value>
+  </data>
+  <data name="Setup_OpenMsKey" xml:space="preserve">
+    <value>Открыть ключ в моей учетной записи Майкрософт (aka.ms/myrecoverykey)</value>
+  </data>
+  <data name="Setup_SuspendTitle" xml:space="preserve">
+    <value>Приостановить BitLocker на одну перезагрузку</value>
+  </data>
+  <data name="Setup_SuspendBody" xml:space="preserve">
+    <value>Рекомендуется. Ключ не будет запрошен при загрузке; диск останется зашифрованным, а защита сама возобновится после одной перезагрузки.</value>
+  </data>
+  <data name="Setup_BackupConfirm" xml:space="preserve">
+    <value>Я сохранил(а) ключ восстановления в надежном месте вне этого компьютера.</value>
+  </data>
+  <data name="Setup_GuideKeys" xml:space="preserve">
+    <value>Если BIOS не откроется сам: {0}.</value>
+  </data>
+  <data name="Setup_GuideBitLockerHint" xml:space="preserve">
+    <value>Если при загрузке будет запрошен ключ восстановления BitLocker, введите сохраненный 48-значный ключ.</value>
+  </data>
+  <data name="Setup_Recheck" xml:space="preserve">
+    <value>Проверить снова</value>
+  </data>
+  <data name="Setup_SecureBootStillOnTitle" xml:space="preserve">
+    <value>Похоже, безопасная загрузка все еще включена</value>
+  </data>
+  <data name="Setup_SecureBootStillOnBody" xml:space="preserve">
+    <value>В этом случае Windows не разрешит включить тестовый режим. Сначала завершите шаг с безопасной загрузкой.</value>
+  </data>
+  <data name="Setup_LicenseTitle" xml:space="preserve">
+    <value>Лицензия на прошивку Intel</value>
+  </data>
+  <data name="Setup_LicenseAccept" xml:space="preserve">
+    <value>Я прочитал(а) и принимаю лицензию на прошивку Intel.</value>
+  </data>
+  <data name="Setup_LogButton" xml:space="preserve">
+    <value>Журнал установки</value>
+  </data>
+  <data name="Setup_RollbackItem1" xml:space="preserve">
+    <value>Драйвер Wi-Fi NitroDrop удаляется, возвращается драйвер Intel</value>
+  </data>
+  <data name="Setup_RollbackItem2" xml:space="preserve">
+    <value>Сертификат подписи, созданный для этого компьютера, удаляется</value>
+  </data>
+  <data name="Setup_RollbackItem3" xml:space="preserve">
+    <value>Тестовый режим Windows отключается (надпись исчезнет после перезагрузки)</value>
+  </data>
+  <data name="Setup_RollbackItem4" xml:space="preserve">
+    <value>Если защита BitLocker была приостановлена, она возобновляется</value>
+  </data>
+  <data name="Setup_RollbackItem5" xml:space="preserve">
+    <value>Мы покажем, как снова включить безопасную загрузку</value>
+  </data>
+  <data name="Setup_Btn_Start" xml:space="preserve">
+    <value>Начать</value>
+  </data>
+  <data name="Setup_Btn_Continue" xml:space="preserve">
+    <value>Продолжить</value>
+  </data>
+  <data name="Setup_Btn_RebootToBios" xml:space="preserve">
+    <value>Перезагрузить в BIOS</value>
+  </data>
+  <data name="Setup_Btn_Restart" xml:space="preserve">
+    <value>Перезагрузить</value>
+  </data>
+  <data name="Setup_Btn_EnableTestMode" xml:space="preserve">
+    <value>Включить тестовый режим</value>
+  </data>
+  <data name="Setup_Btn_InstallDriver" xml:space="preserve">
+    <value>Установить драйвер</value>
+  </data>
+  <data name="Setup_Btn_DownloadFirmware" xml:space="preserve">
+    <value>Загрузить прошивку</value>
+  </data>
+  <data name="Setup_Btn_Retry" xml:space="preserve">
+    <value>Повторить</value>
+  </data>
+  <data name="Setup_Btn_Later" xml:space="preserve">
+    <value>Позже</value>
+  </data>
+  <data name="Setup_Btn_Uninstall" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Setup_Status_Checking" xml:space="preserve">
+    <value>Проверка компьютера…</value>
+  </data>
+  <data name="Setup_Status_ReadingBitLocker" xml:space="preserve">
+    <value>Чтение сведений BitLocker (разрешение администратора)…</value>
+  </data>
+  <data name="Setup_Status_Saved" xml:space="preserve">
+    <value>Сохранено: {0}. Храните этот файл вне компьютера (USB-накопитель, телефон).</value>
+  </data>
+  <data name="Setup_Error_SaveFailed" xml:space="preserve">
+    <value>Не удалось сохранить: {0}</value>
+  </data>
+  <data name="Setup_RecoveryFileName" xml:space="preserve">
+    <value>Ключ восстановления BitLocker {0}.txt</value>
+  </data>
+  <data name="Setup_SaveDialogTitle" xml:space="preserve">
+    <value>Сохранение ключа восстановления</value>
+  </data>
+  <data name="Setup_SaveDialogFilter" xml:space="preserve">
+    <value>Текстовый файл (*.txt)|*.txt</value>
+  </data>
+  <data name="Setup_ConfirmBiosTitle" xml:space="preserve">
+    <value>Перезагрузить в BIOS?</value>
+  </data>
+  <data name="Setup_ConfirmBiosBody" xml:space="preserve">
+    <value>Через 5 секунд компьютер перезагрузится и откроет настройки BIOS. Сохраните открытые файлы. Закончив в BIOS, сохраните изменения и выйдите; после запуска Windows NitroDrop продолжит настройку с того же места.</value>
+  </data>
+  <data name="Setup_Status_Restarting" xml:space="preserve">
+    <value>Перезагрузка…</value>
+  </data>
+  <data name="Setup_DryRun_Bios" xml:space="preserve">
+    <value>[dry-run] В реальности компьютер сейчас перезагрузился бы в BIOS.</value>
+  </data>
+  <data name="Setup_Status_EnablingTestMode" xml:space="preserve">
+    <value>Включение тестового режима (разрешение администратора)…</value>
+  </data>
+  <data name="Setup_DryRun_Bcdedit" xml:space="preserve">
+    <value>[dry-run] bcdedit не запускался. В реальности сейчас потребовалась бы перезагрузка.</value>
+  </data>
+  <data name="Setup_ConfirmRestartTitle" xml:space="preserve">
+    <value>Перезагрузить сейчас?</value>
+  </data>
+  <data name="Setup_ConfirmRestartBody" xml:space="preserve">
+    <value>Компьютер перезагрузится через 5 секунд. Сохраните открытые файлы.</value>
+  </data>
+  <data name="Setup_Error_RestartFailed" xml:space="preserve">
+    <value>Не удалось перезагрузить. Перезагрузите компьютер через меню «Пуск».</value>
+  </data>
+  <data name="Setup_DryRun_Restart" xml:space="preserve">
+    <value>[dry-run] В реальности компьютер сейчас перезагрузился бы.</value>
+  </data>
+  <data name="Setup_Error_DriverFileMissing" xml:space="preserve">
+    <value>В этой версии NitroDrop нет файла драйвера: {0}. (Сборка разработчика: запустите driver\build.ps1 и driver\package.ps1.)</value>
+  </data>
+  <data name="Setup_Status_FirmwareReady" xml:space="preserve">
+    <value>Прошивка загружена и проверена. Прочитайте и примите лицензию.</value>
+  </data>
+  <data name="Setup_Status_Downloading" xml:space="preserve">
+    <value>Загрузка {0}…</value>
+  </data>
+  <data name="Setup_Error_DownloadFailed" xml:space="preserve">
+    <value>Не удалось загрузить проверенную копию {0}. Проверьте подключение к интернету и повторите попытку.</value>
+  </data>
+  <data name="Setup_Error_NoCard" xml:space="preserve">
+    <value>Карта Wi-Fi не найдена.</value>
+  </data>
+  <data name="Setup_Status_Verifying" xml:space="preserve">
+    <value>Проверка пакета…</value>
+  </data>
+  <data name="Setup_Error_CatalogMismatch" xml:space="preserve">
+    <value>Пакет драйвера не соответствует каталогу: {0}</value>
+  </data>
+  <data name="Setup_Status_Installing" xml:space="preserve">
+    <value>Подпись и установка драйвера (разрешение администратора)…</value>
+  </data>
+  <data name="Setup_DryRun_Install" xml:space="preserve">
+    <value>[dry-run] Ничего не установлено; команды записаны в журнал.</value>
+  </data>
+  <data name="Setup_ConfirmRollbackTitle" xml:space="preserve">
+    <value>Восстановить исходное состояние?</value>
+  </data>
+  <data name="Setup_ConfirmRollbackBody" xml:space="preserve">
+    <value>Драйвер NitroDrop будет удален, драйвер Intel восстановлен, сертификат подписи удален, а тестовый режим отключен.</value>
+  </data>
+  <data name="Setup_Status_Removing" xml:space="preserve">
+    <value>Удаление (разрешение администратора)…</value>
+  </data>
+  <data name="Setup_DryRun_Rollback" xml:space="preserve">
+    <value>[dry-run] Ничего не удалено; команды записаны в журнал.</value>
+  </data>
+  <data name="Helper_DryRunBitLocker" xml:space="preserve">
+    <value>[dry-run] Запрос BitLocker не выполнялся.</value>
+  </data>
+  <data name="Helper_BitLockerReadFailed" xml:space="preserve">
+    <value>Не удалось определить состояние BitLocker.</value>
+  </data>
+  <data name="Helper_RebootingToBios" xml:space="preserve">
+    <value>Через 5 секунд компьютер перезагрузится в настройки BIOS.</value>
+  </data>
+  <data name="Helper_RebootToBiosFailed" xml:space="preserve">
+    <value>Не удалось перезагрузиться в BIOS (возможно, компьютер запущен не в режиме UEFI). Перезагрузите его вручную и при запуске нажмите клавишу входа в BIOS.</value>
+  </data>
+  <data name="Helper_PackageArgsMissing" xml:space="preserve">
+    <value>Не указана папка пакета или идентификатор оборудования.</value>
+  </data>
+  <data name="Helper_UnsupportedHwId" xml:space="preserve">
+    <value>Неподдерживаемый идентификатор оборудования: {0}</value>
+  </data>
+  <data name="Helper_PackageIncomplete" xml:space="preserve">
+    <value>Пакет драйвера неполный: {0}</value>
+  </data>
+  <data name="Helper_FirmwareVerifyFailed" xml:space="preserve">
+    <value>Не удалось проверить файл прошивки (SHA-256).</value>
+  </data>
+  <data name="Helper_SignatureVerifyFailed" xml:space="preserve">
+    <value>Не удалось проверить подпись {0}.</value>
+  </data>
+  <data name="Helper_CatalogAfterSignFailed" xml:space="preserve">
+    <value>Не удалось проверить каталог после подписи.</value>
+  </data>
+  <data name="Helper_AddDriverFailed" xml:space="preserve">
+    <value>Не удалось добавить пакет драйвера в Windows. Подробности — в журнале установки.</value>
+  </data>
+  <data name="Helper_AssignFailed" xml:space="preserve">
+    <value>Не удалось назначить драйвер карте. Отменить можно кнопкой «Удалить и восстановить».</value>
+  </data>
+  <data name="Helper_NotBound" xml:space="preserve">
+    <value>Драйвер установлен, но карта по-прежнему работает с драйвером Intel. Перезагрузите компьютер и проверьте снова.</value>
+  </data>
+  <data name="Helper_ProblemCode" xml:space="preserve">
+    <value>Драйвер подключен, но устройство сообщает код ошибки {0} (на реальном оборудовании еще не проверялось).</value>
+  </data>
+  <data name="Helper_InstalledReboot" xml:space="preserve">
+    <value>Драйвер установлен. Перезагрузите компьютер, чтобы он заработал.</value>
+  </data>
+  <data name="Helper_Installed" xml:space="preserve">
+    <value>Драйвер установлен и подключен к карте Wi-Fi.</value>
+  </data>
+  <data name="Helper_RemoveFailed" xml:space="preserve">
+    <value>не удалось удалить {0}</value>
+  </data>
+  <data name="Helper_TestModeOffFailed" xml:space="preserve">
+    <value>не удалось отключить тестовый режим</value>
+  </data>
+  <data name="Helper_StillOurs" xml:space="preserve">
+    <value>карта все еще работает с драйвером NitroDrop (после перезагрузки вернется драйвер Intel)</value>
+  </data>
+  <data name="Helper_RolledBack" xml:space="preserve">
+    <value>Драйвер NitroDrop удален, драйвер Intel восстановлен, тестовый режим отключен.</value>
+  </data>
+  <data name="Helper_SomeStepsFailed" xml:space="preserve">
+    <value>Некоторые шаги не выполнены: {0}</value>
+  </data>
+  <data name="Helper_UnknownAction" xml:space="preserve">
+    <value>Неизвестное действие настройки.</value>
+  </data>
+  <data name="Helper_Bcd_Ok" xml:space="preserve">
+    <value>Тестовый режим включен. Он заработает после перезагрузки.</value>
+  </data>
+  <data name="Helper_Bcd_SecureBoot" xml:space="preserve">
+    <value>Windows не разрешила включить тестовый режим, потому что безопасная загрузка (Secure Boot) все еще включена. Вернитесь на предыдущий шаг, отключите ее в BIOS и повторите попытку.</value>
+  </data>
+  <data name="Helper_Bcd_AccessDenied" xml:space="preserve">
+    <value>Не удалось получить разрешение администратора. Повторите попытку и подтвердите запрос.</value>
+  </data>
+  <data name="Helper_Bcd_Failed" xml:space="preserve">
+    <value>Не удалось включить тестовый режим. Подробности — в журнале установки.</value>
+  </data>
+  <data name="Helper_UacDenied" xml:space="preserve">
+    <value>Разрешение администратора не получено. Повторите попытку, когда будете готовы.</value>
+  </data>
+  <data name="Helper_StartFailed" xml:space="preserve">
+    <value>Не удалось запустить помощник установки.</value>
+  </data>
+  <data name="Helper_ExitedNoResult" xml:space="preserve">
+    <value>Помощник установки закрылся, не вернув результат (код {0}).</value>
+  </data>
+  <data name="Helper_EmptyReply" xml:space="preserve">
+    <value>Помощник установки вернул пустой ответ.</value>
+  </data>
+  <data name="Helper_Timeout" xml:space="preserve">
+    <value>Истекло время ожидания помощника установки.</value>
+  </data>
+  <data name="Helper_ReplyUnreadable" xml:space="preserve">
+    <value>Не удалось прочитать ответ помощника установки: {0}</value>
+  </data>
+  <data name="Setup_Backup_Title" xml:space="preserve">
+    <value>Ключ восстановления BitLocker / BitLocker Recovery Key</value>
+  </data>
+  <data name="Setup_Backup_Computer" xml:space="preserve">
+    <value>Компьютер: {0}</value>
+  </data>
+  <data name="Setup_Backup_Date" xml:space="preserve">
+    <value>Дата: {0}</value>
+  </data>
+  <data name="Setup_Backup_Intro" xml:space="preserve">
+    <value>Если при загрузке компьютер запросит ключ восстановления, сравните первые символы «Идентификатора ключа» на экране с указанным ниже и, если они совпадают, введите 48-значный ключ.</value>
+  </data>
+  <data name="Setup_Backup_KeyId" xml:space="preserve">
+    <value>Идентификатор ключа (Key ID): {0}</value>
+  </data>
+  <data name="Setup_Backup_Key" xml:space="preserve">
+    <value>Ключ восстановления: {0}</value>
+  </data>
+  <data name="Setup_Backup_Unreadable" xml:space="preserve">
+    <value>(не удалось прочитать — см. {0})</value>
+  </data>
+  <data name="Setup_Backup_StoreOutside" xml:space="preserve">
+    <value>Храните этот файл вне компьютера (USB-накопитель, фото на телефоне, распечатка).</value>
+  </data>
+  <data name="Setup_Backup_MsAccount" xml:space="preserve">
+    <value>Если ключ сохранен в учетной записи Майкрософт: {0}</value>
+  </data>
+  <data name="Vendor_Save" xml:space="preserve">
+    <value>Нажмите F10 и подтвердите «Save &amp; Exit» (Yes). Компьютер вернется в Windows.</value>
+  </data>
+  <data name="Vendor_Enable1" xml:space="preserve">
+    <value>В настройках BIOS перейдите в раздел {0}.</value>
+  </data>
+  <data name="Vendor_Enable2" xml:space="preserve">
+    <value>Снова установите для Secure Boot значение «Enabled». Если сначала будет предложено «Restore Factory Keys» / «Install default keys», подтвердите.</value>
+  </data>
+  <data name="Vendor_Enable3" xml:space="preserve">
+    <value>Сохраните изменения и выйдите клавишей F10 (Save &amp; Exit). Windows загрузится как обычно, надпись «Тестовый режим» исчезнет.</value>
+  </data>
+  <data name="Vendor_ThinkPad_Keys" xml:space="preserve">
+    <value>при включении нажмите F1 (ThinkBook: F2) или Enter → F1</value>
+  </data>
+  <data name="Vendor_ThinkPad_Step1" xml:space="preserve">
+    <value>С помощью клавиш со стрелками перейдите на вкладку «Security».</value>
+  </data>
+  <data name="Vendor_ThinkPad_Step2" xml:space="preserve">
+    <value>Откройте пункт «Secure Boot» (Enter).</value>
+  </data>
+  <data name="Vendor_ThinkPad_Step3" xml:space="preserve">
+    <value>Установите для «Secure Boot» значение «Off» / «Disabled».</value>
+  </data>
+  <data name="Vendor_ThinkPad_Note" xml:space="preserve">
+    <value>Если запрашивается пароль супервизора (Supervisor), сначала введите его.</value>
+  </data>
+  <data name="Vendor_Lenovo_Keys" xml:space="preserve">
+    <value>при включении нажмите F2 или Fn+F2; если не помогает — на выключенном компьютере нажмите иглой кнопку Novo в отверстии сбоку и выберите «BIOS Setup»</value>
+  </data>
+  <data name="Vendor_Lenovo_Step1" xml:space="preserve">
+    <value>Перейдите на вкладку «Security» вверху (на Legion при необходимости сначала откройте «More Settings»).</value>
+  </data>
+  <data name="Vendor_Lenovo_Step2" xml:space="preserve">
+    <value>Установите для «Secure Boot» значение «Disabled».</value>
+  </data>
+  <data name="Vendor_Hp_Keys" xml:space="preserve">
+    <value>при включении несколько раз нажмите Esc, затем в меню — F10 (BIOS Setup)</value>
+  </data>
+  <data name="Vendor_Hp_Menu" xml:space="preserve">
+    <value>System Configuration (или Advanced) → Boot Options / Secure Boot Configuration</value>
+  </data>
+  <data name="Vendor_Hp_Step1" xml:space="preserve">
+    <value>На вкладке «System Configuration» откройте «Boot Options» (в бизнес-моделях: «Advanced» → «Secure Boot Configuration»).</value>
+  </data>
+  <data name="Vendor_Hp_Step2" xml:space="preserve">
+    <value>Снимите флажок «Secure Boot» / выберите «Disable». «Legacy Support» оставьте выключенным.</value>
+  </data>
+  <data name="Vendor_Hp_Step4" xml:space="preserve">
+    <value>При загрузке HP покажет 4-значный код подтверждения и попросит его ввести: наберите код с экрана и нажмите Enter. Это нормально.</value>
+  </data>
+  <data name="Vendor_Dell_Keys" xml:space="preserve">
+    <value>нажмите F2 при появлении логотипа Dell</value>
+  </data>
+  <data name="Vendor_Dell_Menu" xml:space="preserve">
+    <value>Boot Configuration → Secure Boot (старый BIOS: Secure Boot → Secure Boot Enable)</value>
+  </data>
+  <data name="Vendor_Dell_Step1" xml:space="preserve">
+    <value>Откройте «Boot Configuration» в меню слева (в старом интерфейсе: «Secure Boot» → «Secure Boot Enable»).</value>
+  </data>
+  <data name="Vendor_Dell_Step2" xml:space="preserve">
+    <value>Выключите переключатель «Enable Secure Boot» и ответьте «Yes» на предупреждение.</value>
+  </data>
+  <data name="Vendor_Dell_Step3" xml:space="preserve">
+    <value>Нажмите «Apply Changes» (или «Apply»), затем «Exit». Компьютер перезагрузится.</value>
+  </data>
+  <data name="Vendor_Asus_Name" xml:space="preserve">
+    <value>ASUS (ROG, TUF, Zenbook, Vivobook, материнские платы)</value>
+  </data>
+  <data name="Vendor_Asus_Keys" xml:space="preserve">
+    <value>при включении нажмите F2 (настольная материнская плата: Del)</value>
+  </data>
+  <data name="Vendor_Asus_Step1" xml:space="preserve">
+    <value>Если откроется EZ Mode, нажмите F7, чтобы перейти в «Advanced Mode».</value>
+  </data>
+  <data name="Vendor_Asus_Step2" xml:space="preserve">
+    <value>Ноутбук: «Security» → «Secure Boot» → «Secure Boot Control» = Disabled.</value>
+  </data>
+  <data name="Vendor_Asus_Step3" xml:space="preserve">
+    <value>Настольная материнская плата: «Boot» → «Secure Boot» → «OS Type» = «Other OS».</value>
+  </data>
+  <data name="Vendor_Acer_Keys" xml:space="preserve">
+    <value>нажмите F2 при появлении логотипа Acer</value>
+  </data>
+  <data name="Vendor_Acer_Step1" xml:space="preserve">
+    <value>Если пункт Secure Boot неактивен, сначала задайте пароль BIOS в «Security» → «Set Supervisor Password» и запишите его (без этого пароля Acer не позволяет менять Secure Boot).</value>
+  </data>
+  <data name="Vendor_Acer_Step2" xml:space="preserve">
+    <value>Перейдите на вкладку «Boot» и установите для «Secure Boot» значение «Disabled».</value>
+  </data>
+  <data name="Vendor_Acer_Step4" xml:space="preserve">
+    <value>Позже пароль можно удалить в том же меню, оставив поле пустым.</value>
+  </data>
+  <data name="Vendor_Msi_Name" xml:space="preserve">
+    <value>MSI (ноутбуки и материнские платы)</value>
+  </data>
+  <data name="Vendor_Msi_Keys" xml:space="preserve">
+    <value>при включении нажмите Del (на некоторых ноутбуках F2)</value>
+  </data>
+  <data name="Vendor_Msi_Menu" xml:space="preserve">
+    <value>Settings → Advanced → Windows OS Configuration → Secure Boot (ноутбук: Security → Secure Boot)</value>
+  </data>
+  <data name="Vendor_Msi_Step1" xml:space="preserve">
+    <value>Ноутбук: «Security» → «Secure Boot» → «Secure Boot» = Disabled.</value>
+  </data>
+  <data name="Vendor_Msi_Step2" xml:space="preserve">
+    <value>Материнская плата (Click BIOS): F7 для Advanced → «Settings» → «Advanced» → «Windows OS Configuration» → «Secure Boot» = Disabled.</value>
+  </data>
+  <data name="Vendor_Gigabyte_Keys" xml:space="preserve">
+    <value>при включении нажмите Del (ноутбук: F2)</value>
+  </data>
+  <data name="Vendor_Gigabyte_Step1" xml:space="preserve">
+    <value>Если откроется Easy Mode, нажмите F2, чтобы перейти в Advanced Mode.</value>
+  </data>
+  <data name="Vendor_Gigabyte_Step2" xml:space="preserve">
+    <value>На вкладке «Boot» откройте «Secure Boot» и установите «Secure Boot Enable» = Disabled.</value>
+  </data>
+  <data name="Vendor_Samsung_Step1" xml:space="preserve">
+    <value>Перейдите на вкладку «Boot» (или «Advanced»).</value>
+  </data>
+  <data name="Vendor_Samsung_Step2" xml:space="preserve">
+    <value>«Secure Boot Control» = Off. Если появится «OS Mode Selection», оставьте выбранным «UEFI OS».</value>
+  </data>
+  <data name="Vendor_Huawei_Step1" xml:space="preserve">
+    <value>Найдите пункт «Secure Boot» в главном меню BIOS (на некоторых моделях — в разделе «Security»).</value>
+  </data>
+  <data name="Vendor_Huawei_Step2" xml:space="preserve">
+    <value>Установите значение «Disabled»; если запрашивается пароль, введите пароль BIOS.</value>
+  </data>
+  <data name="Vendor_Casper_Keys" xml:space="preserve">
+    <value>при включении нажмите F2 (на некоторых моделях Del)</value>
+  </data>
+  <data name="Vendor_Casper_Step1" xml:space="preserve">
+    <value>Перейдите на вкладку «Security». Если Secure Boot неактивна, сначала задайте пароль через «Set Supervisor Password».</value>
+  </data>
+  <data name="Vendor_Casper_Step2" xml:space="preserve">
+    <value>«Secure Boot» (или «Secure Boot Control») = Disabled.</value>
+  </data>
+  <data name="Vendor_Casper_Note" xml:space="preserve">
+    <value>На моделях Excalibur настройка может быть и на вкладке «Boot».</value>
+  </data>
+  <data name="Vendor_Monster_Step1" xml:space="preserve">
+    <value>Перейдите на вкладку «Security».</value>
+  </data>
+  <data name="Vendor_Monster_Step2" xml:space="preserve">
+    <value>«Secure Boot» = Disabled (на некоторых моделях «Secure Boot Control»).</value>
+  </data>
+  <data name="Vendor_SaveF10F4" xml:space="preserve">
+    <value>Сохраните изменения и выйдите клавишей F10 (на некоторых моделях F4).</value>
+  </data>
+  <data name="Vendor_Clevo_Name" xml:space="preserve">
+    <value>Ноутбук на базе Clevo / Tongfang</value>
+  </data>
+  <data name="Vendor_Surface_Keys" xml:space="preserve">
+    <value>на выключенном Surface удерживайте кнопку увеличения громкости и нажмите кнопку питания</value>
+  </data>
+  <data name="Vendor_Surface_Step1" xml:space="preserve">
+    <value>Коснитесь пункта «Security» слева.</value>
+  </data>
+  <data name="Vendor_Surface_Step2" xml:space="preserve">
+    <value>В разделе «Secure Boot» выберите «Change configuration» → «None».</value>
+  </data>
+  <data name="Vendor_Asrock_Name" xml:space="preserve">
+    <value>Материнская плата ASRock</value>
+  </data>
+  <data name="Vendor_Asrock_Keys" xml:space="preserve">
+    <value>при включении нажмите F2 или Del</value>
+  </data>
+  <data name="Vendor_Asrock_Step1" xml:space="preserve">
+    <value>Нажмите F6, чтобы перейти в Advanced Mode, и откройте вкладку «Security».</value>
+  </data>
+  <data name="Vendor_Generic_Name" xml:space="preserve">
+    <value>Другие производители</value>
+  </data>
+  <data name="Vendor_Generic_Keys" xml:space="preserve">
+    <value>при включении нажмите F2, Del, F10 или Esc (клавиша указана под логотипом производителя)</value>
+  </data>
+  <data name="Vendor_Generic_Menu" xml:space="preserve">
+    <value>Security или Boot → Secure Boot</value>
+  </data>
+  <data name="Vendor_Generic_Step1" xml:space="preserve">
+    <value>Найдите пункт «Secure Boot» на вкладке «Security», «Boot» или «Authentication».</value>
+  </data>
+  <data name="Vendor_Generic_Step2" xml:space="preserve">
+    <value>Установите значение «Disabled» / «Off». Если пункт неактивен, сначала задайте «Supervisor/Administrator Password».</value>
+  </data>
+  <data name="Vendor_Generic_Note" xml:space="preserve">
+    <value>Если сомневаетесь, найдите на сайте поддержки производителя «&lt;модель&gt; disable secure boot».</value>
+  </data>
+  <data name="Vendor_KeysF2" xml:space="preserve">
+    <value>при включении нажмите F2</value>
+  </data>
+  <data name="Vendor_Asus_Menu" xml:space="preserve">
+    <value>Advanced Mode (F7) → Boot (или Security) → Secure Boot</value>
+  </data>
+  <data name="Vendor_SecureBootDisabled" xml:space="preserve">
+    <value>«Secure Boot» = Disabled.</value>
+  </data>
+  <data name="Vendor_Surface_Step3" xml:space="preserve">
+    <value>Выберите «Exit» → «Restart now».</value>
+  </data>
+</root>

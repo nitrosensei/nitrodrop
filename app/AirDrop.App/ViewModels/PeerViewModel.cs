@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Media;
+using AirDrop.App.Localization;
 using AirDrop.App.Services;
 
 namespace AirDrop.App.ViewModels;
@@ -13,15 +14,13 @@ public sealed class PeerViewModel : Observable
     public const double Size = 84;        // avatar diameter
     public const double ItemWidth = 132;  // avatar + name label column
 
-    private static readonly CultureInfo Tr = new("tr-TR");
-
     private double _x, _y, _progress;
     private PeerState _state;
     private string _displayName;
     private string _initials;
     private ImageSource? _avatar;
     private bool _isTrusted, _isContact;
-    private string? _speedText;
+    private TransferProgress? _lastProgress;
 
     public PeerViewModel(PeerInfo info)
     {
@@ -76,7 +75,7 @@ public sealed class PeerViewModel : Observable
         set
         {
             if (!Set(ref _state, value)) return;
-            if (!IsBusy) _speedText = null;
+            if (!IsBusy) _lastProgress = null;
             Raise(nameof(StatusText));
             Raise(nameof(IsBusy));
         }
@@ -86,11 +85,11 @@ public sealed class PeerViewModel : Observable
 
     public string StatusText => State switch
     {
-        PeerState.Waiting => "Bekleniyor…",
-        PeerState.Sending => _speedText ?? "Gönderiliyor…",
-        PeerState.Sent => "Gönderildi",
-        PeerState.Declined => "Reddedildi",
-        PeerState.Failed => "Başarısız",
+        PeerState.Waiting => MainStrings.Peer_Waiting,
+        PeerState.Sending => _lastProgress is { } p ? Format.Speed(p) : MainStrings.Peer_Sending,
+        PeerState.Sent => MainStrings.Peer_Sent,
+        PeerState.Declined => MainStrings.Peer_Declined,
+        PeerState.Failed => MainStrings.Peer_Failed,
         _ => DeviceLabel,
     };
 
@@ -98,7 +97,7 @@ public sealed class PeerViewModel : Observable
     {
         State = PeerState.Sending;
         Progress = p.Fraction;
-        _speedText = Format.Speed(p);
+        _lastProgress = p;
         Raise(nameof(StatusText));
     }
 
@@ -133,28 +132,24 @@ public sealed class PeerViewModel : Observable
         var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length == 0) return "?";
         if (parts.Length == 1)
-            return (parts[0].Length >= 2 ? parts[0][..2] : parts[0]).ToUpper(Tr);
-        return string.Concat(new[] { parts[0], parts[^1] }.Select(p => char.ToUpper(p[0], Tr)));
+            return (parts[0].Length >= 2 ? parts[0][..2] : parts[0]).ToUpper(Loc.Culture);
+        return string.Concat(new[] { parts[0], parts[^1] }.Select(p => char.ToUpper(p[0], Loc.Culture)));
     }
 }
 
+/// <summary>Transfer rate / time left in the UI language (sizes: <see cref="Loc.Bytes"/>).</summary>
 internal static class Format
 {
-    private static readonly CultureInfo Tr = new("tr-TR");
-
-    public static string Size(long b)
-    {
-        if (b < 1024) return $"{b} B";
-        if (b < 1024 * 1024) return (b / 1024.0).ToString("0.#", Tr) + " KB";
-        if (b < 1024L * 1024 * 1024) return (b / 1048576.0).ToString("0.#", Tr) + " MB";
-        return (b / 1073741824.0).ToString("0.##", Tr) + " GB";
-    }
+    public static string Rate(double bytesPerSecond) =>
+        MainStrings.Speed_MBps((bytesPerSecond / 1048576.0).ToString("0.0", Loc.Culture));
 
     public static string Speed(TransferProgress p)
     {
-        var s = (p.BytesPerSecond / 1048576.0).ToString("0.0", Tr) + " MB/sn";
+        var s = Rate(p.BytesPerSecond);
         if (p.Remaining is { } r)
-            s += r.TotalSeconds < 60 ? $" · {Math.Ceiling(r.TotalSeconds)} sn" : $" · {Math.Ceiling(r.TotalMinutes)} dk";
+            s += " · " + (r.TotalSeconds < 60
+                ? MainStrings.Speed_SecondsLeft(Math.Ceiling(r.TotalSeconds))
+                : MainStrings.Speed_MinutesLeft(Math.Ceiling(r.TotalMinutes)));
         return s;
     }
 }

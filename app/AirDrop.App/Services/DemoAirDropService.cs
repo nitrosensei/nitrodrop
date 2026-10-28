@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Services;
 
@@ -15,7 +16,7 @@ public sealed class DemoAirDropService : IAirDropService
     private ServiceOptions? _opt;
 
     public bool IsHardwareReady => false;
-    public string HardwareStatus => "Wi-Fi sürücüsü henüz kurulu değil · demo modu";
+    public string HardwareStatus => MainStrings.Status_Demo;
     public event EventHandler? HardwareStatusChanged { add { } remove { } }
 
     public event EventHandler<PeerInfo>? PeerFound;

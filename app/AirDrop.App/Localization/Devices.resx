@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Devices_Title" xml:space="preserve">
+    <value>Cihazlarım</value>
+  </data>
+  <data name="Devices_OpenOnThisPc" xml:space="preserve">
+    <value>Bu bilgisayarda aç</value>
+  </data>
+  <data name="Devices_CopyLink" xml:space="preserve">
+    <value>Bağlantıyı kopyala</value>
+  </data>
+  <data name="Devices_OpenHere" xml:space="preserve">
+    <value>Burada aç</value>
+  </data>
+  <data name="Devices_OpenHereTip" xml:space="preserve">
+    <value>Bu uygulamayı bu bilgisayarda aç</value>
+  </data>
+  <data name="Devices_OnIphoneNow" xml:space="preserve">
+    <value>IPHONE'DA ŞU AN</value>
+  </data>
+  <data name="Devices_ContinueOnPc" xml:space="preserve">
+    <value>PC'de devam et</value>
+  </data>
+  <data name="Devices_NetworkPcsHeader" xml:space="preserve">
+    <value>AĞDAKİ NITRODROP BİLGİSAYARLARI</value>
+  </data>
+  <data name="Devices_Searching" xml:space="preserve">
+    <value>Ağdaki bilgisayarlar aranıyor…</value>
+  </data>
+  <data name="Devices_SearchingHint" xml:space="preserve">
+    <value>Diğer bilgisayarda NitroDrop açık ve aynı Wi-Fi ya da kablolu ağa bağlı olmalı.</value>
+  </data>
+  <data name="Devices_PairedHeader" xml:space="preserve">
+    <value>EŞLEŞTİRİLMİŞ</value>
+  </data>
+  <data name="Devices_EmptyTitle" xml:space="preserve">
+    <value>Bilgisayarlarınızı eşleştirin</value>
+  </data>
+  <data name="Devices_EmptyBody" xml:space="preserve">
+    <value>Eşleşen bilgisayarlar birbirinin açık sekmelerini ve uygulamalarını görür; tek tıkla burada açarsınız.</value>
+  </data>
+  <data name="Devices_AddPc" xml:space="preserve">
+    <value>Bilgisayar ekle</value>
+  </data>
+  <data name="Devices_SyncStartFailed" xml:space="preserve">
+    <value>Senkron başlatılamadı: {0}</value>
+  </data>
+  <data name="Devices_IphoneSomeApp" xml:space="preserve">
+    <value>bir uygulama</value>
+  </data>
+  <data name="Devices_IphoneSharedLink" xml:space="preserve">
+    <value>{0} bir bağlantı paylaştı</value>
+  </data>
+  <data name="Devices_IphoneAppOpen" xml:space="preserve">
+    <value>iPhone'da {0} açık</value>
+    <comment>{0} = app name or Devices_IphoneSomeApp</comment>
+  </data>
+  <data name="Devices_ContinueFailed" xml:space="preserve">
+    <value>Bu etkinlik PC'de açılamadı.</value>
+  </data>
+  <data name="Devices_LinkOpened" xml:space="preserve">
+    <value>{0} bir bağlantı açtı: {1}</value>
+    <comment>{0} = PC name, {1} = page title or domain</comment>
+  </data>
+  <data name="Devices_LinkClickToOpen" xml:space="preserve">
+    <value>{0}: {1} — açmak için tıklayın</value>
+  </data>
+  <data name="Devices_AgoJustNow" xml:space="preserve">
+    <value>az önce</value>
+    <comment>lower case, used inside a sentence</comment>
+  </data>
+  <data name="Devices_AgoHours_Plural" xml:space="preserve">
+    <value>{0} saat önce</value>
+  </data>
+  <data name="Devices_SameNetwork" xml:space="preserve">
+    <value>NitroDrop · aynı ağda</value>
+  </data>
+  <data name="Devices_Offline" xml:space="preserve">
+    <value>Çevrim dışı</value>
+  </data>
+  <data name="Devices_OfflineLastSeen" xml:space="preserve">
+    <value>Çevrim dışı · son görülme {0}</value>
+    <comment>{0} = 'az önce' / '5 dk önce' / '2 saat önce' / date</comment>
+  </data>
+  <data name="Devices_CantConnect" xml:space="preserve">
+    <value>Bağlanılamıyor · {0}</value>
+  </data>
+  <data name="Devices_OnlineConnecting" xml:space="preserve">
+    <value>Çevrim içi · bağlanıyor…</value>
+  </data>
+  <data name="Devices_Online" xml:space="preserve">
+    <value>Çevrim içi</value>
+  </data>
+  <data name="Devices_Tabs_Plural" xml:space="preserve">
+    <value>{0} sekme</value>
+  </data>
+  <data name="Devices_Apps_Plural" xml:space="preserve">
+    <value>{0} uygulama</value>
+  </data>
+  <data name="Devices_NothingShared" xml:space="preserve">
+    <value>paylaşılan bir şey yok</value>
+  </data>
+  <data name="Devices_TabsHeader" xml:space="preserve">
+    <value>SEKMELER · {0}</value>
+  </data>
+  <data name="Devices_AppsHeader" xml:space="preserve">
+    <value>UYGULAMALAR · {0}</value>
+  </data>
+  <data name="Devices_ShowLess" xml:space="preserve">
+    <value>Daha az göster</value>
+  </data>
+  <data name="Devices_ShowAll" xml:space="preserve">
+    <value>Tümünü göster ({0})</value>
+  </data>
+  <data name="Pair_Paired" xml:space="preserve">
+    <value>{0} ile eşleştirildi</value>
+  </data>
+  <data name="Pair_Waiting" xml:space="preserve">
+    <value>Bekleniyor…</value>
+  </data>
+  <data name="Pair_Button" xml:space="preserve">
+    <value>Eşleştir</value>
+  </data>
+  <data name="Pair_ErrNotFound" xml:space="preserve">
+    <value>Cihaz ağda bulunamadı</value>
+  </data>
+  <data name="Pair_ErrIdMismatch" xml:space="preserve">
+    <value>Cihaz kimliği uyuşmuyor</value>
+  </data>
+  <data name="Pair_ErrBadResponse" xml:space="preserve">
+    <value>Geçersiz yanıt</value>
+  </data>
+  <data name="Pair_ErrKey" xml:space="preserve">
+    <value>Anahtar doğrulaması başarısız</value>
+  </data>
+  <data name="Pair_ErrRejected" xml:space="preserve">
+    <value>Diğer bilgisayar reddetti</value>
+  </data>
+  <data name="Pair_ErrNoSync" xml:space="preserve">
+    <value>Senkron çalışmıyor</value>
+  </data>
+  <data name="Pair_ErrGeneric" xml:space="preserve">
+    <value>Eşleştirilemedi: {0}</value>
+  </data>
+  <data name="Pair_Eyebrow" xml:space="preserve">
+    <value>NITRODROP · EŞLEŞTİRME</value>
+  </data>
+  <data name="Pair_MessageInitiator" xml:space="preserve">
+    <value>ile eşleştiriliyor. Eşleşen bilgisayarlar açık sekmelerini ve uygulamalarını birbirine gösterir.</value>
+    <comment>shown under the other PC's name (bold line above); Turkish continues that name as a sentence</comment>
+  </data>
+  <data name="Pair_MessageResponder" xml:space="preserve">
+    <value>bu bilgisayarla eşleşmek istiyor. Eşleşen bilgisayarlar açık sekmelerini ve uygulamalarını birbirine gösterir.</value>
+    <comment>continues the other PC's name shown in bold above (it is the sentence subject)</comment>
+  </data>
+  <data name="Pair_Question" xml:space="preserve">
+    <value>Diğer bilgisayarda da aynı kodu görüyor musunuz?</value>
+  </data>
+  <data name="Pair_Confirm" xml:space="preserve">
+    <value>Onayla</value>
+  </data>
+  <data name="Pair_Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Pair_Footnote" xml:space="preserve">
+    <value>Kodlar farklıysa İptal'e basın.</value>
+  </data>
+  <data name="Launch_Eyebrow" xml:space="preserve">
+    <value>NITRODROP · UYGULAMA AÇ</value>
+  </data>
+  <data name="Launch_Message" xml:space="preserve">
+    <value>“{0}” uygulamasını bu bilgisayarda açmak istiyor.</value>
+    <comment>continues the requesting PC's name shown above; {0} = app name</comment>
+  </data>
+  <data name="Launch_Footnote" xml:space="preserve">
+    <value>Yalnızca bu bilgisayarda zaten paylaşılan uygulamalar açılabilir.</value>
+  </data>
+  <data name="Sync_ExtTabsOff" xml:space="preserve">
+    <value>Sekme paylaşımı kapalı</value>
+  </data>
+  <data name="Sync_ExtTabsOffDetail" xml:space="preserve">
+    <value>Eklenti NitroDrop'a bağlanmaz; diğer bilgisayarlar sekmelerinizi görmez.</value>
+  </data>
+  <data name="Sync_ExtConnected" xml:space="preserve">
+    <value>Bağlı</value>
+  </data>
+  <data name="Sync_ExtConnectedDetail_Plural" xml:space="preserve">
+    <value>{1} · {0} sekme paylaşılıyor</value>
+    <comment>{0} = tab count, {1} = 'Chrome', 'Edge' or Sync_BrowsersJoin</comment>
+  </data>
+  <data name="Sync_BrowsersJoin" xml:space="preserve">
+    <value>{0} ve {1}</value>
+  </data>
+  <data name="Sync_ExtNoTabs" xml:space="preserve">
+    <value>Tarayıcıya bağlı, sekme gelmedi</value>
+  </data>
+  <data name="Sync_ExtNoTabsDetail" xml:space="preserve">
+    <value>Chrome ya da Edge'de NitroDrop eklentisinin yüklü ve açık olduğundan emin olun.</value>
+  </data>
+  <data name="Sync_ExtNotInstalled" xml:space="preserve">
+    <value>Kurulu değil</value>
+  </data>
+  <data name="Sync_ExtNotInstalledDetail" xml:space="preserve">
+    <value>Chrome ve Edge sekmelerinizi diğer bilgisayarlarınızda görmek için eklentiyi kurun.</value>
+  </data>
+  <data name="Sync_Registering" xml:space="preserve">
+    <value>Bağlanıyor…</value>
+  </data>
+  <data name="Sync_RegisterOk" xml:space="preserve">
+    <value>✓ Chrome ve Edge'e bağlandı. Tarayıcıda eklentiyi yeniden yükleyin.</value>
+  </data>
+  <data name="Sync_RegisterFailed" xml:space="preserve">
+    <value>Bağlanamadı: {0}</value>
+  </data>
+  <data name="Sync_HostMissing" xml:space="preserve">
+    <value>{0} bulunamadı</value>
+  </data>
+  <data name="Sync_ExitCode" xml:space="preserve">
+    <value>çıkış kodu {0}</value>
+  </data>
+  <data name="Sync_IosSetupTitle" xml:space="preserve">
+    <value>{0} için kurulum adresi</value>
+  </data>
+  <data name="Sync_IphoneAddFailed" xml:space="preserve">
+    <value>iPhone eklenemedi: {0}</value>
+  </data>
+  <data name="Sync_IosDeviceDetail" xml:space="preserve">
+    <value>Kestirme · eklendi {0}</value>
+    <comment>{0} = short date</comment>
+  </data>
+</root>

@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using AirDrop.App.Localization;
 using AirDrop.App.Services;
 
 namespace AirDrop.App.ViewModels;
@@ -16,6 +17,21 @@ public sealed class TrustedDeviceViewModel(string key, DevicePrefs prefs, Action
 /// <summary>Row in Ayarlar → Hakkında → Açık kaynak bileşenler.</summary>
 public sealed record LicenseItem(string Name, string Use, string License);
 
+/// <summary>
+/// Entry of Ayarlar → Dil: <see cref="Code"/> null = follow Windows ("Windows diliyle aynı (English)"). Native names are
+/// never translated; the auto entry's label re-reads on language changes (Observable).
+/// </summary>
+public sealed class LanguageOption(string? code) : Observable
+{
+    public string? Code { get; } = code;
+
+    public string Label => Code is null
+        ? SettingsStrings.Settings_LanguageAutoWith(CommonStrings.Language_Auto, NativeName(Loc.ResolveDefault()))
+        : NativeName(Code);
+
+    private static string NativeName(string code) => Loc.Languages.First(l => l.Code == code).NativeName;
+}
+
 public sealed class SettingsViewModel : Observable
 {
     public const string WebsiteUrl = "https://nitrobyte.com.tr";
@@ -25,7 +41,8 @@ public sealed class SettingsViewModel : Observable
     private readonly AppSettings _s;
     private readonly IContactResolver _contacts;
     private readonly Func<Task> _applied;
-    private string _contactStatus = "";
+    // Contact status as a text factory, so a language switch re-renders it (OnLanguageChanged → Raise("")).
+    private Func<string> _contactStatus = () => "";
 
     public SettingsViewModel(AppSettings s, IContactResolver contacts, Func<Task> applied)
     {
@@ -40,6 +57,35 @@ public sealed class SettingsViewModel : Observable
         OpenWebsite = new RelayCommand(_ => OpenShell(WebsiteUrl));
         OpenRepository = new RelayCommand(_ => OpenShell(RepoUrl));
         OpenLicenses = new RelayCommand(_ => OpenShell(System.IO.Path.Combine(AppContext.BaseDirectory, "licenses")));
+        Languages = new[] { new LanguageOption(null) }.Concat(Loc.Languages.Select(l => new LanguageOption(l.Code))).ToArray();
+    }
+
+    // ---- Dil ----
+
+    /// <summary>"Windows diliyle aynı" + the six UI languages. Stable instances, so the selection survives a switch.</summary>
+    public LanguageOption[] Languages { get; }
+    private string? _pendingLanguage;   // "" = auto chosen, switch not applied yet
+
+    public LanguageOption SelectedLanguage
+    {
+        get => Languages.FirstOrDefault(o => o.Code is not null && o.Code == (_pendingLanguage ?? _s.Language)) ?? Languages[0];
+        set
+        {
+            if (value is null || value == SelectedLanguage) return;
+            var code = value.Code;
+            // Answer the binding's re-read with the new choice right away (the switch itself is deferred below).
+            _pendingLanguage = code ?? "";
+            // After the ComboBox finishes its selection change: the switch re-raises every binding on this page.
+            void Apply()
+            {
+                UiLanguage.Change(code, _s);
+                _pendingLanguage = null;
+                // The classic Explorer verb / SendTo description are written in the UI language: rewrite them.
+                try { ExplorerMenuSvc.RefreshLanguage(); } catch (Exception) { /* registry unavailable */ }
+            }
+            if (System.Windows.Application.Current?.Dispatcher is { } d) d.BeginInvoke(Apply);
+            else Apply();
+        }
     }
 
     // ---- Hakkında ----
@@ -53,19 +99,19 @@ public sealed class SettingsViewModel : Observable
                 .OfType<System.Reflection.AssemblyInformationalVersionAttribute>().FirstOrDefault()?.InformationalVersion
                 ?? asm.GetName().Version?.ToString(3) ?? "1.0.0";
             int plus = v.IndexOf('+');
-            return $"SÜRÜM {(plus > 0 ? v[..plus] : v)} · NITROBYTE";
+            return SettingsStrings.About_Version(plus > 0 ? v[..plus] : v);
         }
     }
 
     public string RepositoryUrl => RepoUrl;
 
-    public LicenseItem[] Licenses { get; } =
+    public LicenseItem[] Licenses => new LicenseItem[]
     {
         new("Owly", "AWDL / OWL", "MIT"),
-        new("iwx", "Intel Wi-Fi sürücüsü (OpenBSD)", "ISC"),
-        new("QRCoder", "QR kod", "MIT"),
-        new("Schibsted Grotesk · JetBrains Mono", "yazı tipleri", "OFL 1.1"),
-        new("Intel Wi-Fi firmware", "kurulumda gösterilir", "INTEL"),
+        new("iwx", SettingsStrings.About_UseIwx, "ISC"),
+        new("QRCoder", SettingsStrings.About_UseQr, "MIT"),
+        new("Schibsted Grotesk · JetBrains Mono", SettingsStrings.About_UseFonts, "OFL 1.1"),
+        new("Intel Wi-Fi firmware", SettingsStrings.About_UseFirmware, "INTEL"),
     };
 
     public RelayCommand OpenWebsite { get; }
@@ -118,8 +164,23 @@ public sealed class SettingsViewModel : Observable
         set { _s.CopyIncomingToClipboard = value; Commit(); Raise(); }
     }
 
-    /// <summary>Set by the window once the global hotkey is (or isn't) registered.</summary>
-    public string HotkeyStatus { get; set; } = "Ctrl + Alt + A";
+    /// <summary>Set by the window when Ctrl+Alt+A could not be registered (another app owns it).</summary>
+    public bool HotkeyInUse
+    {
+        get => _hotkeyInUse;
+        set { _hotkeyInUse = value; Raise(); Raise(nameof(HotkeyStatus)); }
+    }
+    private bool _hotkeyInUse;
+
+    /// <summary>
+    /// Key chip text ("Strg + Alt + A" in German). Kept settable for the window: any assignment means the hotkey is
+    /// taken (use <see cref="HotkeyInUse"/>); the assigned text itself is ignored so it stays localized.
+    /// </summary>
+    public string HotkeyStatus
+    {
+        get => HotkeyInUse ? SettingsStrings.Settings_HotkeyInUse(SettingsStrings.Settings_Hotkey) : SettingsStrings.Settings_Hotkey;
+        set => HotkeyInUse = true;
+    }
 
     public bool StartWithWindows
     {
@@ -143,7 +204,7 @@ public sealed class SettingsViewModel : Observable
     /// <summary>MSIX: always on (manifest IExplorerCommand), the switch is shown checked and disabled.</summary>
     public bool ExplorerMenuToggleable => !ExplorerMenuSvc.ManagedByWindows;
 
-    public string ExplorerMenuCaption => _explorerMenuError
+    public string ExplorerMenuCaption => (_explorerMenuError is { } err ? UiStrings.ExplorerMenuFailed(err) : null)
         ?? (ExplorerMenuSvc.ManagedByWindows ? UiStrings.ExplorerMenuCaptionPackaged : UiStrings.ExplorerMenuCaptionPortable);
 
     /// <summary>Read from the registry each time (the registry is the truth, not settings.json).</summary>
@@ -157,13 +218,19 @@ public sealed class SettingsViewModel : Observable
         set
         {
             try { ExplorerMenuSvc.SetEnabled(value); _explorerMenuError = null; }
-            catch (Exception ex) { _explorerMenuError = UiStrings.ExplorerMenuFailed + ex.Message; }
+            catch (Exception ex) { _explorerMenuError = ex.Message; }
             Raise();
             Raise(nameof(ExplorerMenuCaption));
         }
     }
 
-    public string ContactStatus { get => _contactStatus; private set => Set(ref _contactStatus, value); }
+    public string ContactStatus => _contactStatus();
+
+    private void SetContactStatus(Func<string> text)
+    {
+        _contactStatus = text;
+        Raise(nameof(ContactStatus));
+    }
 
     public ObservableCollection<TrustedDeviceViewModel> Trusted { get; } = new();
     public bool HasTrusted => Trusted.Count > 0;
@@ -185,14 +252,15 @@ public sealed class SettingsViewModel : Observable
         Raise(nameof(HasTrusted));
     }
 
-    private void RefreshContacts() =>
-        ContactStatus = _contacts.Count == 0
-            ? "Rehber içe aktarılmadı. Kişilerin fotoğrafları için iCloud ya da Google'dan dışa aktardığınız .vcf dosyasını seçin."
-            : $"{_contacts.Count} kişi içe aktarıldı. Rehberinizdeki kişiler fotoğraflarıyla görünür.";
+    private string ContactCountText() => _contacts.Count == 0
+        ? SettingsStrings.Settings_ContactsNone
+        : SettingsStrings.Settings_ContactsImported_Plural(_contacts.Count);
+
+    private void RefreshContacts() => SetContactStatus(ContactCountText);
 
     private void PickFolder()
     {
-        var dlg = new Microsoft.Win32.OpenFolderDialog { Title = "Alınan dosyaların kaydedileceği klasör", InitialDirectory = _s.ReceiveFolder };
+        var dlg = new Microsoft.Win32.OpenFolderDialog { Title = SettingsStrings.Settings_PickFolderTitle, InitialDirectory = _s.ReceiveFolder };
         if (dlg.ShowDialog() != true) return;
         _s.ReceiveFolder = dlg.FolderName;
         Commit();
@@ -203,22 +271,23 @@ public sealed class SettingsViewModel : Observable
     {
         var dlg = new Microsoft.Win32.OpenFileDialog
         {
-            Title = "Rehber dosyası (.vcf)",
-            Filter = "vCard (*.vcf)|*.vcf|Tüm dosyalar|*.*",
+            Title = SettingsStrings.Settings_PickContactsTitle,
+            Filter = $"vCard (*.vcf)|*.vcf|{SettingsStrings.Settings_AllFiles}|*.*",
             Multiselect = true,
         };
         if (dlg.ShowDialog() != true) return;
-        ContactStatus = "İçe aktarılıyor…";
+        SetContactStatus(() => SettingsStrings.Settings_ContactsImporting);
         int added = 0;
         try
         {
             foreach (var f in dlg.FileNames) added += await _contacts.ImportAsync(f);
             RefreshContacts();
-            if (added == 0) ContactStatus = "Dosyada kişi bulunamadı. " + ContactStatus;
+            if (added == 0) SetContactStatus(() => SettingsStrings.Settings_ContactsNoneFound(ContactCountText()));
         }
         catch (Exception ex)
         {
-            ContactStatus = "İçe aktarılamadı: " + ex.Message;
+            var msg = ex.Message;
+            SetContactStatus(() => SettingsStrings.Settings_ContactsImportFailed(msg));
         }
         await _applied();
     }

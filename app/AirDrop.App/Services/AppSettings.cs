@@ -33,6 +33,9 @@ public sealed class AppSettings
     /// <summary>Ayarlar → Wi-Fi Sürücüsü: start the elevated radio host for iPhones when the driver is installed.</summary>
     public bool DirectIphoneConnection { get; set; } = true;
 
+    /// <summary>UI language (two-letter code, see Localization/Loc.cs); null = follow the Windows display language.</summary>
+    public string? Language { get; set; }
+
     /// <summary>First-run intro ("İlk kullanım") was finished or skipped.</summary>
     public bool OnboardingCompleted { get; set; }
 

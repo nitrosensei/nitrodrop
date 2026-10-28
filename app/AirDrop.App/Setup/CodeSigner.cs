@@ -56,7 +56,7 @@ public static class CodeSigner
     /// <summary>Authenticode-signs a PE (.sys) or catalog (.cat) in place with SHA-256. No timestamp (offline, test mode).</summary>
     public static void SignFile(string path, X509Certificate2 certWithKey)
     {
-        if (!certWithKey.HasPrivateKey) throw new ArgumentException("sertifikanın özel anahtarı yok", nameof(certWithKey));
+        if (!certWithKey.HasPrivateKey) throw new ArgumentException("the certificate has no private key", nameof(certWithKey));
         var full = Path.GetFullPath(path);
 
         IntPtr fileName = Marshal.StringToHGlobalUni(full);
@@ -104,7 +104,7 @@ public static class CodeSigner
 
             int hr = SignerSignEx(0, ref subject, ref signerCert, ref sig, IntPtr.Zero, null, IntPtr.Zero, IntPtr.Zero, out var ctx);
             if (ctx != IntPtr.Zero) SignerFreeSignerContext(ctx);
-            if (hr != 0) throw new CryptographicException($"SignerSignEx başarısız ({Path.GetFileName(full)}): 0x{hr:X8}", Marshal.GetExceptionForHR(hr));
+            if (hr != 0) throw new CryptographicException($"SignerSignEx failed ({Path.GetFileName(full)}): 0x{hr:X8}", Marshal.GetExceptionForHR(hr));
             GC.KeepAlive(certWithKey);
         }
         finally

@@ -6,6 +6,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using Nitro.Awdl.Ipc;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Services;
 
@@ -23,8 +24,8 @@ public sealed class ElevatedRadioHostLauncher : IRadioHostLauncher
 
     public async Task<IRadioHostConnection> LaunchAsync(CancellationToken ct = default)
     {
-        if (!File.Exists(ExePath)) throw new FileNotFoundException($"{ExeName} bulunamadı", ExePath);
-        string sid = WindowsIdentity.GetCurrent().User?.Value ?? throw new InvalidOperationException("Kullanıcı SID'i okunamadı");
+        if (!File.Exists(ExePath)) throw new FileNotFoundException(MainStrings.Launcher_NotFound(ExeName), ExePath);
+        string sid = WindowsIdentity.GetCurrent().User?.Value ?? throw new InvalidOperationException(MainStrings.Launcher_NoSid);
         var psi = new ProcessStartInfo(ExePath)
         {
             UseShellExecute = true,
@@ -38,7 +39,7 @@ public sealed class ElevatedRadioHostLauncher : IRadioHostLauncher
         {
             throw new RadioLaunchCancelledException();
         }
-        if (proc is null) throw new InvalidOperationException($"{ExeName} başlatılamadı");
+        if (proc is null) throw new InvalidOperationException(MainStrings.Launcher_StartFailed(ExeName));
 
         using (proc)
         {
@@ -49,7 +50,7 @@ public sealed class ElevatedRadioHostLauncher : IRadioHostLauncher
             await Task.WhenAny(connect, Task.Delay(500, CancellationToken.None));
             if (connect.IsCompletedSuccessfully) return connect.Result;
             _ = connect.ContinueWith(t => t.Exception, TaskScheduler.Default);   // observe
-            throw new InvalidOperationException($"{ExeName} kapandı (kod {(proc.HasExited ? proc.ExitCode : -1)})");
+            throw new InvalidOperationException(MainStrings.Launcher_Exited(ExeName, proc.HasExited ? proc.ExitCode : -1));
         }
     }
 }

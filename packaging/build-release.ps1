@@ -112,7 +112,7 @@ Step 'Wintun (tools\fetch-wintun.ps1, no-op when vendor\wintun is current)'
 & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $repo 'tools\fetch-wintun.ps1') -Destination (Join-Path $repo 'vendor\wintun')
 if ($LASTEXITCODE) { throw 'fetch-wintun.ps1 failed' }
 
-$common = @('-c', 'Release', '--nologo', '-v', 'q', "-p:Version=$Version", '-p:SatelliteResourceLanguages=en%3Btr')
+$common = @('-c', 'Release', '--nologo', '-v', 'q', "-p:Version=$Version", '-p:SatelliteResourceLanguages=tr%3Ben%3Bde%3Bfr%3Bru%3Bpl')
 
 Step 'Nitro.Sync.Host framework-dependent build (paths AirDrop.App.csproj copies from)'
 Invoke-Checked 'dotnet build Nitro.Sync.Host' { dotnet build (Join-Path $app 'Nitro.Sync.Host\Nitro.Sync.Host.csproj') @common }
@@ -216,17 +216,19 @@ if (-not $SkipMsix) {
     $manifest = (Get-Content (Join-Path $pkgRoot 'AppxManifest.xml') -Raw).Replace('__VERSION__', $Version).Replace('__PUBLISHER__', [Security.SecurityElement]::Escape($Publisher))
     [IO.File]::WriteAllText((Join-Path $layout 'AppxManifest.xml'), $manifest, (New-Object Text.UTF8Encoding($false)))
 
-    # resources.pri: maps Assets\X.png to the scale-*/targetsize-* variants. Indexed from a mini tree (manifest +
-    # Assets only), otherwise makepri would index the whole 200 MB payload.
+    # resources.pri: maps Assets\X.png to the scale-*/targetsize-* variants and the localized manifest strings
+    # (packaging\Strings\<lang>\Resources.resw -> ms-resource:AppDescription ...). Indexed from a mini tree
+    # (manifest + Assets + Strings only), otherwise makepri would index the whole 200 MB payload.
     Step 'resources.pri (makepri)'
     $makepri = Find-SdkTool 'makepri.exe'
     $priRoot = Join-Path $work 'pri'
     if (Test-Path $priRoot) { Remove-Item -Recurse -Force $priRoot }
     New-Item -ItemType Directory -Force $priRoot | Out-Null
     Copy-Item $assets (Join-Path $priRoot 'Assets') -Recurse
+    Copy-Item (Join-Path $pkgRoot 'Strings') (Join-Path $priRoot 'Strings') -Recurse
     Copy-Item (Join-Path $layout 'AppxManifest.xml') $priRoot
     $priCfg = Join-Path $work 'priconfig.xml'
-    Invoke-Checked 'makepri createconfig' { & $makepri createconfig /cf $priCfg /dq tr-TR /pv 10.0.0 /o | Out-Null }
+    Invoke-Checked 'makepri createconfig' { & $makepri createconfig /cf $priCfg /dq tr-TR_en-US_de-DE_fr-FR_ru-RU_pl-PL /pv 10.0.0 /o | Out-Null }
     Invoke-Checked 'makepri new' { & $makepri new /pr $priRoot /cf $priCfg /mn (Join-Path $priRoot 'AppxManifest.xml') /of (Join-Path $layout 'resources.pri') /o | Out-Null }
 
     Step "makeappx pack (validates the manifest schema) -> $msix"

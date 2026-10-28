@@ -1,0 +1,21 @@
+<Project>
+  <!--
+    UI strings (Localization/<Module>.resx = Turkish source, <Module>.<lang>.resx = translations).
+    Imported by AirDrop.App.csproj and AirDrop.Tests.csproj (the tests compile the WPF-free Loc/Plural, the generated
+    accessors and the same resources: NitroLocLinked=true). Satellite assemblies (en/, de/, fr/, ru/, pl/
+    *.resources.dll) are produced next to the exe.
+    Strongly-typed accessors: Localization/Generated/<Module>Strings.g.cs, written by `python -I tools/l10n.py gen`
+    (also after import/remove) and checked against the resx by LocalizationTests. They are plain checked-in C#
+    rather than MSBuild StronglyTyped* output because WPF's temporary markup-compile project does not see the latter.
+  -->
+  <PropertyGroup>
+    <NitroLocDir>$(MSBuildThisFileDirectory)</NitroLocDir>
+    <NeutralLanguage>tr</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(NitroLocLinked)' == 'true'">
+    <Compile Include="$(NitroLocDir)*.cs" Link="App\Localization\%(Filename)%(Extension)" />
+    <Compile Include="$(NitroLocDir)Generated\*.cs" Link="App\Localization\Generated\%(Filename)%(Extension)" />
+    <EmbeddedResource Include="$(NitroLocDir)*.resx" Link="App\Localization\%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

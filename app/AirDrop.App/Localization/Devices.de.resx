@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Devices_Title" xml:space="preserve">
+    <value>Meine Geräte</value>
+  </data>
+  <data name="Devices_OpenOnThisPc" xml:space="preserve">
+    <value>Auf diesem PC öffnen</value>
+  </data>
+  <data name="Devices_CopyLink" xml:space="preserve">
+    <value>Link kopieren</value>
+  </data>
+  <data name="Devices_OpenHere" xml:space="preserve">
+    <value>Hier öffnen</value>
+  </data>
+  <data name="Devices_OpenHereTip" xml:space="preserve">
+    <value>Diese App auf diesem PC öffnen</value>
+  </data>
+  <data name="Devices_OnIphoneNow" xml:space="preserve">
+    <value>GERADE AUF DEM IPHONE</value>
+  </data>
+  <data name="Devices_ContinueOnPc" xml:space="preserve">
+    <value>Auf dem PC fortsetzen</value>
+  </data>
+  <data name="Devices_NetworkPcsHeader" xml:space="preserve">
+    <value>NITRODROP-PCS IM NETZWERK</value>
+  </data>
+  <data name="Devices_Searching" xml:space="preserve">
+    <value>Suche nach PCs im Netzwerk…</value>
+  </data>
+  <data name="Devices_SearchingHint" xml:space="preserve">
+    <value>Auf dem anderen PC muss NitroDrop geöffnet und mit demselben WLAN oder kabelgebundenen Netzwerk verbunden sein.</value>
+  </data>
+  <data name="Devices_PairedHeader" xml:space="preserve">
+    <value>GEKOPPELT</value>
+  </data>
+  <data name="Devices_EmptyTitle" xml:space="preserve">
+    <value>Koppeln Sie Ihre PCs</value>
+  </data>
+  <data name="Devices_EmptyBody" xml:space="preserve">
+    <value>Gekoppelte PCs sehen gegenseitig ihre geöffneten Tabs und Apps – mit einem Klick öffnen Sie sie hier.</value>
+  </data>
+  <data name="Devices_AddPc" xml:space="preserve">
+    <value>PC hinzufügen</value>
+  </data>
+  <data name="Devices_SyncStartFailed" xml:space="preserve">
+    <value>Synchronisierung konnte nicht gestartet werden: {0}</value>
+  </data>
+  <data name="Devices_IphoneSomeApp" xml:space="preserve">
+    <value>eine App</value>
+  </data>
+  <data name="Devices_IphoneSharedLink" xml:space="preserve">
+    <value>{0} hat einen Link geteilt</value>
+  </data>
+  <data name="Devices_IphoneAppOpen" xml:space="preserve">
+    <value>{0} ist auf dem iPhone geöffnet</value>
+  </data>
+  <data name="Devices_ContinueFailed" xml:space="preserve">
+    <value>Diese Aktivität konnte auf dem PC nicht geöffnet werden.</value>
+  </data>
+  <data name="Devices_LinkOpened" xml:space="preserve">
+    <value>{0} hat einen Link geöffnet: {1}</value>
+  </data>
+  <data name="Devices_LinkClickToOpen" xml:space="preserve">
+    <value>{0}: {1} – zum Öffnen klicken</value>
+  </data>
+  <data name="Devices_AgoJustNow" xml:space="preserve">
+    <value>gerade eben</value>
+  </data>
+  <data name="Devices_AgoHours_Plural" xml:space="preserve">
+    <value>vor {0} Stunde|vor {0} Stunden</value>
+  </data>
+  <data name="Devices_SameNetwork" xml:space="preserve">
+    <value>NitroDrop · im selben Netzwerk</value>
+  </data>
+  <data name="Devices_Offline" xml:space="preserve">
+    <value>Offline</value>
+  </data>
+  <data name="Devices_OfflineLastSeen" xml:space="preserve">
+    <value>Offline · zuletzt gesehen {0}</value>
+  </data>
+  <data name="Devices_CantConnect" xml:space="preserve">
+    <value>Keine Verbindung · {0}</value>
+  </data>
+  <data name="Devices_OnlineConnecting" xml:space="preserve">
+    <value>Online · Verbindung wird hergestellt…</value>
+  </data>
+  <data name="Devices_Online" xml:space="preserve">
+    <value>Online</value>
+  </data>
+  <data name="Devices_Tabs_Plural" xml:space="preserve">
+    <value>{0} Tab|{0} Tabs</value>
+  </data>
+  <data name="Devices_Apps_Plural" xml:space="preserve">
+    <value>{0} App|{0} Apps</value>
+  </data>
+  <data name="Devices_NothingShared" xml:space="preserve">
+    <value>nichts freigegeben</value>
+  </data>
+  <data name="Devices_TabsHeader" xml:space="preserve">
+    <value>TABS · {0}</value>
+  </data>
+  <data name="Devices_AppsHeader" xml:space="preserve">
+    <value>APPS · {0}</value>
+  </data>
+  <data name="Devices_ShowLess" xml:space="preserve">
+    <value>Weniger anzeigen</value>
+  </data>
+  <data name="Devices_ShowAll" xml:space="preserve">
+    <value>Alle anzeigen ({0})</value>
+  </data>
+  <data name="Pair_Paired" xml:space="preserve">
+    <value>Mit {0} gekoppelt</value>
+  </data>
+  <data name="Pair_Waiting" xml:space="preserve">
+    <value>Warten…</value>
+  </data>
+  <data name="Pair_Button" xml:space="preserve">
+    <value>Koppeln</value>
+  </data>
+  <data name="Pair_ErrNotFound" xml:space="preserve">
+    <value>Gerät im Netzwerk nicht gefunden</value>
+  </data>
+  <data name="Pair_ErrIdMismatch" xml:space="preserve">
+    <value>Die Geräte-ID stimmt nicht überein</value>
+  </data>
+  <data name="Pair_ErrBadResponse" xml:space="preserve">
+    <value>Ungültige Antwort</value>
+  </data>
+  <data name="Pair_ErrKey" xml:space="preserve">
+    <value>Schlüsselprüfung fehlgeschlagen</value>
+  </data>
+  <data name="Pair_ErrRejected" xml:space="preserve">
+    <value>Der andere PC hat abgelehnt</value>
+  </data>
+  <data name="Pair_ErrNoSync" xml:space="preserve">
+    <value>Die Synchronisierung läuft nicht</value>
+  </data>
+  <data name="Pair_ErrGeneric" xml:space="preserve">
+    <value>Koppeln fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Pair_Eyebrow" xml:space="preserve">
+    <value>NITRODROP · KOPPLUNG</value>
+  </data>
+  <data name="Pair_MessageInitiator" xml:space="preserve">
+    <value>Wird gekoppelt. Gekoppelte PCs zeigen sich gegenseitig ihre geöffneten Tabs und Apps.</value>
+  </data>
+  <data name="Pair_MessageResponder" xml:space="preserve">
+    <value>möchte sich mit diesem PC koppeln. Gekoppelte PCs zeigen sich gegenseitig ihre geöffneten Tabs und Apps.</value>
+  </data>
+  <data name="Pair_Question" xml:space="preserve">
+    <value>Sehen Sie denselben Code auf dem anderen PC?</value>
+  </data>
+  <data name="Pair_Confirm" xml:space="preserve">
+    <value>Bestätigen</value>
+  </data>
+  <data name="Pair_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Pair_Footnote" xml:space="preserve">
+    <value>Wenn die Codes abweichen, klicken Sie auf „Abbrechen“.</value>
+  </data>
+  <data name="Launch_Eyebrow" xml:space="preserve">
+    <value>NITRODROP · APP ÖFFNEN</value>
+  </data>
+  <data name="Launch_Message" xml:space="preserve">
+    <value>möchte „{0}“ auf diesem PC öffnen.</value>
+  </data>
+  <data name="Launch_Footnote" xml:space="preserve">
+    <value>Nur Apps, die dieser PC bereits freigibt, können geöffnet werden.</value>
+  </data>
+  <data name="Sync_ExtTabsOff" xml:space="preserve">
+    <value>Tab-Freigabe ist aus</value>
+  </data>
+  <data name="Sync_ExtTabsOffDetail" xml:space="preserve">
+    <value>Die Erweiterung verbindet sich nicht mit NitroDrop; andere PCs sehen Ihre Tabs nicht.</value>
+  </data>
+  <data name="Sync_ExtConnected" xml:space="preserve">
+    <value>Verbunden</value>
+  </data>
+  <data name="Sync_ExtConnectedDetail_Plural" xml:space="preserve">
+    <value>{1} · {0} Tab wird geteilt|{1} · {0} Tabs werden geteilt</value>
+  </data>
+  <data name="Sync_BrowsersJoin" xml:space="preserve">
+    <value>{0} und {1}</value>
+  </data>
+  <data name="Sync_ExtNoTabs" xml:space="preserve">
+    <value>Mit dem Browser verbunden, noch keine Tabs</value>
+  </data>
+  <data name="Sync_ExtNoTabsDetail" xml:space="preserve">
+    <value>Stellen Sie sicher, dass die NitroDrop-Erweiterung in Chrome oder Edge installiert und aktiviert ist.</value>
+  </data>
+  <data name="Sync_ExtNotInstalled" xml:space="preserve">
+    <value>Nicht installiert</value>
+  </data>
+  <data name="Sync_ExtNotInstalledDetail" xml:space="preserve">
+    <value>Installieren Sie die Erweiterung, um Ihre Chrome- und Edge-Tabs auf Ihren anderen PCs zu sehen.</value>
+  </data>
+  <data name="Sync_Registering" xml:space="preserve">
+    <value>Wird verbunden…</value>
+  </data>
+  <data name="Sync_RegisterOk" xml:space="preserve">
+    <value>✓ Mit Chrome und Edge verbunden. Laden Sie die Erweiterung im Browser neu.</value>
+  </data>
+  <data name="Sync_RegisterFailed" xml:space="preserve">
+    <value>Verbindung fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Sync_HostMissing" xml:space="preserve">
+    <value>{0} wurde nicht gefunden</value>
+  </data>
+  <data name="Sync_ExitCode" xml:space="preserve">
+    <value>Exitcode {0}</value>
+  </data>
+  <data name="Sync_IosSetupTitle" xml:space="preserve">
+    <value>Einrichtungsadresse für {0}</value>
+  </data>
+  <data name="Sync_IphoneAddFailed" xml:space="preserve">
+    <value>iPhone konnte nicht hinzugefügt werden: {0}</value>
+  </data>
+  <data name="Sync_IosDeviceDetail" xml:space="preserve">
+    <value>Kurzbefehl · hinzugefügt am {0}</value>
+  </data>
+</root>

@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using AirDrop.App.Localization;
 using AirDrop.App.Services;
 using Nitro.Continuity.Ancs;
 using Nitro.Continuity.Runtime;
@@ -18,9 +19,21 @@ namespace AirDrop.App.ViewModels;
 
 // No WPF types in this file (ICommand is System.ObjectModel): it is linked into AirDrop.Tests.
 
-public abstract class PhoneObservable : INotifyPropertyChanged
+/// <summary>
+/// Base of the phone view models. Like <c>Observable</c> it follows UI language changes: by default every
+/// binding is re-read (all text is computed from state in getters). Item types that exist in large numbers
+/// (message bubbles) opt out and are refreshed by <see cref="PhoneViewModel"/> instead.
+/// </summary>
+public abstract class PhoneObservable : INotifyPropertyChanged, ILanguageAware
 {
+    protected PhoneObservable(bool followLanguage = true)
+    {
+        if (followLanguage) Loc.Subscribe(this);
+    }
+
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    public virtual void OnLanguageChanged() => Raise(string.Empty);
 
     protected bool Set<T>(ref T field, T value, [CallerMemberName] string? name = null)
     {
@@ -46,23 +59,23 @@ public enum PhoneSection { Messages, Notifications, Calls }
 
 public enum PairStep { Guide, Searching, Pick, Confirm, EnterPin, Busy, Success, Error }
 
+/// <summary>Phone-tab formatting in the UI culture (<see cref="Loc.Culture"/>).</summary>
 public static class PhoneFormat
 {
-    public static readonly CultureInfo Tr = CultureInfo.GetCultureInfo("tr-TR");
-
+    /// <summary>"Az önce" / "5 dk önce" within the hour, then <see cref="Loc.When"/> (time today, yesterday, weekday, date).</summary>
     public static string When(DateTimeOffset t, DateTimeOffset now)
     {
         var d = now - t;
-        if (d < TimeSpan.FromMinutes(1)) return "şimdi";
-        if (d < TimeSpan.FromHours(1)) return $"{(int)d.TotalMinutes} dk önce";
-        if (t.Date == now.Date) return t.ToString("HH:mm", Tr);
-        if (t.Date == now.Date.AddDays(-1)) return "Dün";
-        if (d < TimeSpan.FromDays(7)) return t.ToString("dddd", Tr);
-        return t.ToString("d MMM", Tr);
+        if (d < TimeSpan.FromMinutes(1)) return CommonStrings.Time_JustNow;
+        if (d < TimeSpan.FromHours(1)) return CommonStrings.Time_MinutesAgo_Plural((int)d.TotalMinutes);
+        return Loc.When(t.DateTime, now.DateTime);
     }
 
+    /// <summary>Message timestamp ("14:05" / "2:05 PM").</summary>
+    public static string Time(DateTimeOffset t) => Loc.Time(t.DateTime);
+
     public static string Duration(TimeSpan d) =>
-        d.TotalHours >= 1 ? d.ToString(@"h\:mm\:ss", Tr) : d.ToString(@"mm\:ss", Tr);
+        d.TotalHours >= 1 ? d.ToString(@"h\:mm\:ss", Loc.Culture) : d.ToString(@"mm\:ss", Loc.Culture);
 
     public static string Initials(string? name)
     {
@@ -70,7 +83,7 @@ public static class PhoneFormat
         if (name.Any(char.IsAsciiDigit) && !name.Any(char.IsLetter)) return "";
         var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         var s = parts.Length >= 2 ? $"{parts[0][0]}{parts[^1][0]}" : parts[0][..1];
-        return s.ToUpper(Tr);
+        return s.ToUpper(Loc.Culture);
     }
 }
 
@@ -106,8 +119,10 @@ public sealed class NotificationItem : PhoneObservable
     public string Message { get; set; } = "";
     public DateTimeOffset Time { get; set; }
     public AncsCategoryId Category { get; set; }
-    public string? PositiveLabel { get; set; }
-    public string? NegativeLabel { get; set; }
+    private string? _positive, _negative;
+    /// <summary>Action label from the iPhone; "" = action without a label (shown with our default), null = no action.</summary>
+    public string? PositiveLabel { get => _positive is "" ? PhoneStrings.Phone_Notif_DefaultPositive : _positive; set => _positive = value; }
+    public string? NegativeLabel { get => _negative is "" ? PhoneStrings.Phone_Notif_DefaultNegative : _negative; set => _negative = value; }
     public bool IsPreExisting { get; set; }
     public ContinuationTarget? Continuation { get; set; }
     public string AppColor => PhoneAppVisuals.For(AppId).Color;
@@ -117,7 +132,8 @@ public sealed class NotificationItem : PhoneObservable
     public bool HasSubtitle => !string.IsNullOrEmpty(Subtitle);
     public bool IsMessagesApp => AppId == "com.apple.MobileSMS";
     public bool CanContinue => IsMessagesApp || Continuation is not null;
-    public string ContinueLabel => IsMessagesApp ? "Mesajlarda aç" : Continuation is { } c ? $"{c.DisplayName} ile aç" : "";
+    public string ContinueLabel => IsMessagesApp ? PhoneStrings.Phone_Notif_OpenInMessages
+        : Continuation is { } c ? PhoneStrings.Phone_Notif_OpenWith(c.DisplayName) : "";
     private string _timeText = "";
     public string TimeText { get => _timeText; set => Set(ref _timeText, value); }
 
@@ -127,17 +143,18 @@ public sealed class NotificationItem : PhoneObservable
 public sealed class MessageBubble : PhoneObservable
 {
     private PhoneMessage _m;
-    public MessageBubble(PhoneMessage m) => _m = m;
+    // Not subscribed to language changes itself (there can be thousands): PhoneViewModel refreshes bubbles.
+    public MessageBubble(PhoneMessage m) : base(followLanguage: false) => _m = m;
     public PhoneMessage Message { get => _m; set { _m = value; Raise(string.Empty); } }
     public string Handle => _m.Handle;
     public string Body => _m.Body;
     public bool Outgoing => _m.Outgoing;
     public DateTimeOffset Time => _m.Time;
-    public string TimeText => _m.Time.ToString("HH:mm", PhoneFormat.Tr);
+    public string TimeText => PhoneFormat.Time(_m.Time);
     public string? StatusText => _m.Status switch
     {
-        MessageStatus.Sending => "Gönderiliyor…",
-        MessageStatus.Failed => "Gönderilemedi",
+        MessageStatus.Sending => PhoneStrings.Phone_Message_Sending,
+        MessageStatus.Failed => PhoneStrings.Phone_Message_Failed,
         _ => null,
     };
     public bool Failed => _m.Status == MessageStatus.Failed;
@@ -157,19 +174,23 @@ public sealed class ConversationItem : PhoneObservable
     public bool HasUnread => Unread > 0;
     private string _timeText = "";
     public string LastTimeText { get => _timeText; set => Set(ref _timeText, value); }
-    public string LastText => Messages.Count == 0 ? "" : (Messages[^1].Outgoing ? "Siz: " : "") + Messages[^1].Body;
+    public string LastText => Messages.Count == 0 ? ""
+        : Messages[^1].Outgoing ? PhoneStrings.Phone_Conversation_You(Messages[^1].Body) : Messages[^1].Body;
     public DateTimeOffset LastTime => Messages.Count == 0 ? DateTimeOffset.MinValue : Messages[^1].Time;
     /// <summary>Alphanumeric senders (banks, 2FA) cannot be replied to.</summary>
     public bool CanReply => Address.Any(char.IsAsciiDigit) && !Address.Any(char.IsLetter);
     public void Touch() { Raise(nameof(LastText)); Raise(nameof(LastTime)); }
 }
 
-public sealed class RecentCallItem
+public sealed class RecentCallItem : PhoneObservable
 {
     public required RecentCall Call { get; init; }
-    public required string DisplayName { get; init; }
+    /// <summary>Contact / reported name; null = unknown caller (shown localized).</summary>
+    public string? Name { get; init; }
     public string? Number { get; init; }
-    public string TimeText { get; set; } = "";
+    public string DisplayName => Name ?? (Number is { Length: > 0 } n ? PhoneNumbers.Pretty(n) : PhoneStrings.Phone_Call_Unknown);
+    private string _timeText = "";
+    public string TimeText { get => _timeText; set => Set(ref _timeText, value); }
     public bool IsMissed => Call.Outcome == CallOutcome.Missed;
     public string Initials => PhoneFormat.Initials(DisplayName);
     public string Glyph => Call.Outcome switch
@@ -181,10 +202,12 @@ public sealed class RecentCallItem
     };
     public string OutcomeText => Call.Outcome switch
     {
-        CallOutcome.Missed => "Cevapsız arama",
-        CallOutcome.Declined => "Reddedildi",
-        CallOutcome.Outgoing => Call.Duration > TimeSpan.Zero ? $"Giden · {PhoneFormat.Duration(Call.Duration)}" : "Giden",
-        _ => Call.Duration > TimeSpan.Zero ? $"Gelen · {PhoneFormat.Duration(Call.Duration)}" : "Gelen",
+        CallOutcome.Missed => PhoneStrings.Phone_Call_Missed,
+        CallOutcome.Declined => PhoneStrings.Phone_Call_Declined,
+        CallOutcome.Outgoing => Call.Duration > TimeSpan.Zero
+            ? PhoneStrings.Phone_Call_OutgoingFor(PhoneFormat.Duration(Call.Duration)) : PhoneStrings.Phone_Call_Outgoing,
+        _ => Call.Duration > TimeSpan.Zero
+            ? PhoneStrings.Phone_Call_IncomingFor(PhoneFormat.Duration(Call.Duration)) : PhoneStrings.Phone_Call_Incoming,
     };
 }
 
@@ -274,9 +297,34 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
 
     private PhoneLinkStatus _status = PhoneLinkStatus.NotPaired;
     public PhoneLinkStatus Status { get => _status; private set => Set(ref _status, value); }
-    public string StatusTitle => Status.Title;
-    public string? StatusDetail => Status.Detail;
-    public bool HasStatusDetail => !string.IsNullOrEmpty(Status.Detail);
+    /// <summary>Localized from State/Issue (the library's Title/Detail are English diagnostics).</summary>
+    public string StatusTitle => Status.State switch
+    {
+        PhoneLinkState.NotPaired => PhoneStrings.Phone_Status_NotPaired,
+        PhoneLinkState.Pairing => PhoneStrings.Phone_Status_Pairing,
+        PhoneLinkState.Blocked => PhoneStrings.Phone_Status_Blocked,
+        PhoneLinkState.NoBluetooth => PhoneStrings.Phone_Status_BluetoothOff,
+        PhoneLinkState.Connecting => PhoneStrings.Phone_Status_Connecting(DeviceName),
+        PhoneLinkState.Reconnecting => PhoneStrings.Phone_Status_Reconnecting,
+        PhoneLinkState.Disconnected when Status.Issue == PhoneLinkIssue.NoLeLink => PhoneStrings.Phone_Status_NoLeLink,
+        PhoneLinkState.Disconnected => PhoneStrings.Phone_Status_Disconnected,
+        PhoneLinkState.Connected => PhoneStrings.Phone_Status_Connected(DeviceName),
+        _ => Status.Title,
+    };
+    public string? StatusDetail => Status.State switch
+    {
+        PhoneLinkState.NotPaired => PhoneStrings.Phone_Status_NotPairedDetail,
+        PhoneLinkState.Pairing => PhoneStrings.Phone_Status_PairingDetail,
+        PhoneLinkState.Blocked => PhoneStrings.Phone_Status_BlockedDetail,
+        PhoneLinkState.NoBluetooth => PhoneStrings.Phone_Status_BluetoothOffDetail,
+        PhoneLinkState.Connecting => PhoneStrings.Phone_Status_ConnectingDetail,
+        PhoneLinkState.Reconnecting => PhoneStrings.Phone_Status_ReconnectingDetail,
+        PhoneLinkState.Disconnected when Status.Issue == PhoneLinkIssue.NoLeLink => PhoneStrings.Phone_Status_NoLeLinkDetail,
+        PhoneLinkState.Connected when Status.Issue == PhoneLinkIssue.NotificationsNotShared => PhoneStrings.Phone_Status_NotificationsOff,
+        PhoneLinkState.Connected when Status.Issue == PhoneLinkIssue.MessagesNotShared => PhoneStrings.Phone_Status_MessagesOff,
+        _ => null,
+    };
+    public bool HasStatusDetail => !string.IsNullOrEmpty(StatusDetail);
     public string DeviceName => Status.DeviceName ?? _svc.Device?.Name ?? "iPhone";
     /// <summary>"iPhone 15 Pro" from the phone's Bluetooth model number; null until it was read.</summary>
     public string? PhoneModelName => DeviceModels.DescribeIdentifier(Status.ModelId);
@@ -324,10 +372,47 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
             Raise(nameof(HasCallCapabilityFix)); Raise(nameof(HasFullAudio));
         }
     }
-    public string CallCapabilityTitle => CallCapability.Title;
-    public string CallCapabilityReason => CallCapability.Reason;
-    public string? CallCapabilityFix => CallCapability.Fix;
-    public bool HasCallCapabilityFix => !string.IsNullOrEmpty(CallCapability.Fix);
+    public string CallCapabilityTitle => CallCapability.Capability switch
+    {
+        Nitro.Continuity.Runtime.CallCapability.FullAudio => PhoneStrings.Phone_Cap_FullAudio,
+        Nitro.Continuity.Runtime.CallCapability.ControlOnly => PhoneStrings.Phone_Cap_ControlOnly,
+        _ => PhoneStrings.Phone_Cap_None,
+    };
+    public string CallCapabilityReason => CapabilityReason(CallCapability);
+    public string? CallCapabilityFix => CapabilityFix(CallCapability.Blocker);
+    public bool HasCallCapabilityFix => CallCapabilityFix is not null;
+
+    /// <summary>Localized reason for a capability decision (blocker + what still works).</summary>
+    public static string CapabilityReason(CallCapabilityInfo c)
+    {
+        string reason = c.Blocker switch
+        {
+            CallBlocker.Ready => PhoneStrings.Phone_Cap_Ready,
+            CallBlocker.NotConnected => PhoneStrings.Phone_Cap_NotConnected,
+            CallBlocker.NoPackageIdentity => PhoneStrings.Phone_Cap_NoPackage,
+            CallBlocker.LineError => PhoneStrings.Phone_Cap_LineError(c.Error),
+            CallBlocker.NoHandsFreeTransport => PhoneStrings.Phone_Cap_NoHandsFree,
+            CallBlocker.DeniedBySystem => PhoneStrings.Phone_Cap_DeniedBySystem,
+            CallBlocker.DeniedByUser => PhoneStrings.Phone_Cap_DeniedByUser,
+            CallBlocker.AccessUnknown => PhoneStrings.Phone_Cap_AccessUnknown,
+            CallBlocker.NotRegistered => PhoneStrings.Phone_Cap_NotRegistered,
+            _ => PhoneStrings.Phone_Cap_ConnectFailed,
+        };
+        if (c.Blocker is CallBlocker.Ready or CallBlocker.NotConnected) return reason;
+        return reason + " " + (c.Capability == Nitro.Continuity.Runtime.CallCapability.ControlOnly
+            ? PhoneStrings.Phone_Cap_SuffixControlOnly : PhoneStrings.Phone_Cap_SuffixNoAncs);
+    }
+
+    /// <summary>What the user can do to get call audio on the PC; null when nothing.</summary>
+    public static string? CapabilityFix(CallBlocker b) => b switch
+    {
+        CallBlocker.NoPackageIdentity => PhoneStrings.Phone_Fix_Package,
+        CallBlocker.NoHandsFreeTransport => PhoneStrings.Phone_Fix_HandsFree,
+        CallBlocker.DeniedBySystem or CallBlocker.NotRegistered => PhoneStrings.Phone_Fix_PhoneLink,
+        CallBlocker.DeniedByUser => PhoneStrings.Phone_Fix_Privacy,
+        CallBlocker.ConnectFailed => PhoneStrings.Phone_Fix_Nearby,
+        _ => null,
+    };
     public bool HasFullAudio => CallCapability.Capability == Nitro.Continuity.Runtime.CallCapability.FullAudio;
 
     // ---- sections ------------------------------------------------------------------------------------------------
@@ -346,19 +431,24 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
 
     // ---- pairing -------------------------------------------------------------------------------------------------
 
-    public static IReadOnlyList<IosToggle> IosToggles { get; } =
+    /// <summary>The three iOS switches, in the current UI language (built on each read).</summary>
+    public static IReadOnlyList<IosToggle> IosToggles =>
     [
-        new("Sistem Bildirimlerini Paylaş", "Bildirimler ve gelen aramalar bu bilgisayarda görünür.", ""),
-        new("Bildirimleri Göster", "SMS ve iMessage mesajlarını okuyup buradan yanıtlarsınız.", ""),
-        new("Kişileri Eşitle", "Arayanların ve mesaj gönderenlerin adları ve fotoğrafları görünür.", ""),
+        new(PhoneStrings.Phone_Toggle1_Name, PhoneStrings.Phone_Toggle1_Explains, ""),
+        new(PhoneStrings.Phone_Toggle2_Name, PhoneStrings.Phone_Toggle2_Explains, ""),
+        new(PhoneStrings.Phone_Toggle3_Name, PhoneStrings.Phone_Toggle3_Explains, ""),
     ];
 
-    public static IReadOnlyList<GuideStep> GuideSteps { get; } =
+    public static IReadOnlyList<GuideStep> GuideSteps =>
     [
-        new(1, "iPhone'da Bluetooth ekranını açın", "Ayarlar → Bluetooth. Ekran açık kaldıkça iPhone bu bilgisayardan görünür."),
-        new(2, "\"iPhone'u bul\"a basın ve listeden seçin", "Her iki ekranda aynı 6 haneli kod çıkar; iPhone'da \"Eşleştir\"e, burada \"Kodlar aynı\"ya dokunun."),
-        new(3, "Üç anahtarı açın", "iPhone'da Ayarlar → Bluetooth → bu bilgisayarın yanındaki (i) simgesi."),
+        new(1, PhoneStrings.Phone_Guide1_Title, PhoneStrings.Phone_Guide1_Body),
+        new(2, PhoneStrings.Phone_Guide2_Title, PhoneStrings.Phone_Guide2_Body),
+        new(3, PhoneStrings.Phone_Guide3_Title, PhoneStrings.Phone_Guide3_Body),
     ];
+
+    /// <summary>Bindable (instance) views of <see cref="IosToggles"/> / <see cref="GuideSteps"/>, re-read on language change.</summary>
+    public IReadOnlyList<IosToggle> Toggles => IosToggles;
+    public IReadOnlyList<GuideStep> Guide => GuideSteps;
 
     private PairStep _pairStep = PairStep.Guide;
     public PairStep PairingStep
@@ -381,8 +471,10 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
     public bool IsErrorStep => PairingStep == PairStep.Error;
 
     public ObservableCollection<PhoneDevice> FoundPhones { get; } = new();
-    private string? _pairingMessage;
-    public string? PairingMessage { get => _pairingMessage; private set => Set(ref _pairingMessage, value); }
+    // Messages are kept as builders so a language switch re-renders them (Raise("") re-reads the getters).
+    private Func<string?>? _pairingMessage;
+    public string? PairingMessage => _pairingMessage?.Invoke();
+    private void SetPairingMessage(Func<string?>? text) { _pairingMessage = text; Raise(nameof(PairingMessage)); }
     private string? _pairingCode;
     public string? PairingCode { get => _pairingCode; private set => Set(ref _pairingCode, value); }
     private string _pinInput = "";
@@ -408,7 +500,7 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
         _pairCts = new CancellationTokenSource();
         var ct = _pairCts.Token;
         PairingStep = PairStep.Searching;
-        PairingMessage = "iPhone aranıyor… iPhone'da Ayarlar → Bluetooth açık kalsın.";
+        SetPairingMessage(() => PhoneStrings.Phone_Pair_Searching);
         try
         {
             var paired = await _svc.GetPairedPhonesAsync(ct);
@@ -418,11 +510,11 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
                 FoundPhones.Clear();
                 foreach (var p in found) FoundPhones.Add(p);
                 PairingStep = found.Count > 0 ? PairStep.Pick : PairStep.Error;
-                PairingMessage = found.Count > 0 ? null : "iPhone bulunamadı. iPhone'un kilidini açın, Ayarlar → Bluetooth ekranında bekleyin ve tekrar deneyin.";
+                SetPairingMessage(found.Count > 0 ? null : () => PhoneStrings.Phone_Pair_NotFound);
             });
         }
         catch (OperationCanceledException) { }
-        catch (Exception e) { _post(() => { PairingStep = PairStep.Error; PairingMessage = e.Message; }); }
+        catch (Exception e) { _post(() => { PairingStep = PairStep.Error; SetPairingMessage(() => PhoneStrings.Phone_Pair_FailedDetail(e.Message)); }); }
     }
 
     public async Task PairAsync(PhoneDevice device)
@@ -430,31 +522,56 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
         _pairCts ??= new CancellationTokenSource();
         PairingDeviceName = device.Name;
         PairingStep = PairStep.Busy;
-        PairingMessage = device.IsPaired ? $"{device.Name} bağlanıyor…" : $"{device.Name} ile eşleşiliyor…";
+        SetPairingMessage(device.IsPaired ? () => PhoneStrings.Phone_Status_Connecting(device.Name) : () => PhoneStrings.Phone_Pair_Pairing(device.Name));
         try
         {
             if (device.IsPaired)
             {
                 await _svc.UseDeviceAsync(device, _pairCts.Token);
-                _post(() => { PairingStep = PairStep.Success; PairingMessage = $"{device.Name} kullanılıyor."; });
+                _post(() => { PairingStep = PairStep.Success; SetPairingMessage(() => PhoneStrings.Phone_Pair_Using(device.Name)); });
                 return;
             }
             var r = await _svc.PairAsync(device, this, _pairCts.Token);
-            _post(() => { PairingStep = r.Success ? PairStep.Success : PairStep.Error; PairingMessage = r.Message; });
+            _post(() => { PairingStep = r.Success ? PairStep.Success : PairStep.Error; SetPairingMessage(() => PairingText(r, device.Name)); });
         }
         catch (OperationCanceledException) { }
-        catch (Exception e) { _post(() => { PairingStep = PairStep.Error; PairingMessage = e.Message; }); }
+        catch (Exception e) { _post(() => { PairingStep = PairStep.Error; SetPairingMessage(() => PhoneStrings.Phone_Pair_FailedDetail(e.Message)); }); }
     }
 
     private async Task EstablishLeAsync()
     {
-        PairingMessage = "iPhone'u bilgisayarın yanında tutun…";
+        SetPairingMessage(() => PhoneStrings.Phone_Pair_KeepClose);
         try
         {
             var r = await _svc.EstablishNotificationLinkAsync(this);
-            _post(() => PairingMessage = r.Message);
+            _post(() => SetPairingMessage(r.Success ? () => PhoneStrings.Phone_Pair_LinkEstablished : () => PairingText(r, DeviceName)));
         }
-        catch (Exception e) { _post(() => PairingMessage = e.Message); }
+        catch (Exception e) { _post(() => SetPairingMessage(() => PhoneStrings.Phone_Pair_FailedDetail(e.Message))); }
+    }
+
+    /// <summary>Localized text for a pairing result (the library's Message is an English diagnostic).</summary>
+    public static string PairingText(PairingResult r, string deviceName)
+    {
+        var name = r.Arg is { Length: > 0 } a && r.Outcome is PairingOutcome.Paired or PairingOutcome.AlreadyPaired ? a : deviceName;
+        return r.Detail switch
+        {
+            PairingDetail.NotificationLinkEstablished => PhoneStrings.Phone_Pair_LinkEstablished,
+            PairingDetail.LookupFailed => PhoneStrings.Phone_Pair_LookupFailed(r.Arg),
+            PairingDetail.WindowsCannotPair => PhoneStrings.Phone_Pair_WindowsCannotPair,
+            PairingDetail.NoResponse => PhoneStrings.Phone_Pair_NoResponse,
+            PairingDetail.NoAppleDeviceNearby => PhoneStrings.Phone_Pair_NoAppleNearby,
+            PairingDetail.LeRejected => PhoneStrings.Phone_Pair_LeRejected,
+            PairingDetail.HidBaitTimeout => PhoneStrings.Phone_Pair_HidTimeout,
+            _ => r.Outcome switch
+            {
+                PairingOutcome.Paired => PhoneStrings.Phone_Pair_Paired(name),
+                PairingOutcome.AlreadyPaired => PhoneStrings.Phone_Pair_AlreadyPaired(name),
+                PairingOutcome.Canceled => PhoneStrings.Phone_Pair_Canceled,
+                PairingOutcome.Rejected => PhoneStrings.Phone_Pair_Rejected,
+                PairingOutcome.NotFound => PhoneStrings.Phone_Pair_NotFound,
+                _ => r.Arg is { Length: > 0 } err ? PhoneStrings.Phone_Pair_FailedDetail(err) : PhoneStrings.Phone_Pair_Failed,
+            },
+        };
     }
 
     private async Task SyncContactsAsync()
@@ -462,13 +579,18 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
         try
         {
             int n = await _svc.SyncContactsAsync();
-            _post(() => { ContactsMessage = n > 0 ? $"{n} kişi eşitlendi." : "Kişi alınamadı: iPhone'da \"Kişileri Eşitle\" açık mı?"; RefreshNames(); });
+            _post(() =>
+            {
+                SetContactsMessage(n > 0 ? () => PhoneStrings.Phone_Contacts_Synced_Plural(n) : () => PhoneStrings.Phone_Contacts_None);
+                RefreshNames();
+            });
         }
-        catch (Exception e) { _post(() => ContactsMessage = $"Kişiler alınamadı ({e.Message})."); }
+        catch (Exception e) { _post(() => SetContactsMessage(() => PhoneStrings.Phone_Contacts_Failed(e.Message))); }
     }
 
-    private string? _contactsMessage;
-    public string? ContactsMessage { get => _contactsMessage; private set => Set(ref _contactsMessage, value); }
+    private Func<string>? _contactsMessage;
+    public string? ContactsMessage => _contactsMessage?.Invoke();
+    private void SetContactsMessage(Func<string>? text) { _contactsMessage = text; Raise(nameof(ContactsMessage)); }
 
     private void CancelPair()
     {
@@ -477,7 +599,7 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
         _confirm?.TrySetResult(false);
         _pin?.TrySetResult(null);
         PairingStep = PairStep.Guide;
-        PairingMessage = null;
+        SetPairingMessage(null);
         PairingCode = null;
     }
 
@@ -490,11 +612,11 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
             PairingCode = FormatCode(pin);
             if (kind == PairingKind.DisplayPin)
             {
-                PairingMessage = "Bu kodu iPhone'a girin.";
+                SetPairingMessage(() => PhoneStrings.Phone_Pair_EnterOnIphone);
                 tcs.TrySetResult(true);
                 return;
             }
-            PairingMessage = pin is null ? $"{deviceName} ile eşleşilsin mi?" : "iPhone'daki kod bununla aynı mı?";
+            SetPairingMessage(pin is null ? () => PhoneStrings.Phone_Pair_ConfirmDevice(deviceName) : () => PhoneStrings.Phone_Pair_CompareCode);
             _confirm?.TrySetResult(false);
             _confirm = tcs;
             PairingStep = PairStep.Confirm;
@@ -511,7 +633,7 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
         {
             PairingDeviceName = deviceName;
             PinInput = "";
-            PairingMessage = "iPhone'da görünen kodu yazın.";
+            SetPairingMessage(() => PhoneStrings.Phone_Pair_TypeCode);
             _pin = tcs;
             PairingStep = PairStep.EnterPin;
         });
@@ -544,8 +666,8 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
         item.Message = n.Message ?? "";
         item.Time = n.Date is { } d ? new DateTimeOffset(d) : _now();
         item.Category = n.Category;
-        item.PositiveLabel = n.HasPositiveAction ? n.PositiveActionLabel ?? "Tamam" : null;
-        item.NegativeLabel = n.HasNegativeAction ? n.NegativeActionLabel ?? "Sil" : null;
+        item.PositiveLabel = n.HasPositiveAction ? n.PositiveActionLabel ?? "" : null;
+        item.NegativeLabel = n.HasNegativeAction ? n.NegativeActionLabel ?? "" : null;
         item.IsPreExisting = n.IsPreExisting;
         item.Continuation = n.AppIdentifier == "com.apple.MobileSMS" ? null : ContinuationMap.Resolve(n.AppIdentifier, null);
         item.TimeText = PhoneFormat.When(item.Time, _now());
@@ -593,7 +715,7 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
             Section = PhoneSection.Messages;
             SelectedConversation = Conversations.FirstOrDefault(c => c.DisplayName == n.Title || c.Key == PhoneNumbers.Key(n.Title))
                                    ?? SelectedConversation;
-            return new ContinuationTarget("messages", "Mesajlar", "");
+            return new ContinuationTarget("messages", PhoneStrings.Phone_MessagesAppName, "");
         }
         if (n.Continuation is not { } t) return null;
         if (_opener is not null)
@@ -746,7 +868,7 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
         var item = new RecentCallItem
         {
             Call = c, Number = c.Number,
-            DisplayName = contact?.Name ?? c.Name ?? (c.Number is { Length: > 0 } n ? PhoneNumbers.Pretty(n) : "Bilinmeyen"),
+            Name = contact?.Name ?? c.Name,
             TimeText = PhoneFormat.When(c.At, _now()),
         };
         int at = 0;
@@ -787,7 +909,17 @@ public sealed class PhoneViewModel : PhoneObservable, IPairingPrompt, IAsyncDisp
         var now = _now();
         foreach (var n in Notifications) n.TimeText = PhoneFormat.When(n.Time, now);
         foreach (var c in Conversations) c.LastTimeText = PhoneFormat.When(c.LastTime, now);
+        foreach (var r in RecentCalls) r.TimeText = PhoneFormat.When(r.Call.At, now);
         foreach (var call in _calls.Values) call.Tick();
+    }
+
+    /// <summary>UI language changed: rebuild cached time texts, refresh message bubbles (not subscribed themselves).</summary>
+    public override void OnLanguageChanged()
+    {
+        Tick();
+        foreach (var c in Conversations)
+            foreach (var b in c.Messages) b.OnLanguageChanged();
+        base.OnLanguageChanged();
     }
 
     public void SaveSettings() => Settings.Save();
@@ -816,7 +948,7 @@ public sealed class CallViewModel : PhoneObservable
         _svc = svc;
         _now = clock ?? (() => DateTimeOffset.Now);
         Capability = capability;
-        DisplayName = contact?.Name ?? info.Name ?? (info.Number is { Length: > 0 } n ? PhoneNumbers.Pretty(n) : "Bilinmeyen arayan");
+        _name = contact?.Name ?? info.Name;
         Photo = contact?.Photo;
         Answer = new DelegateCommand(_ => _ = _svc.AnswerCallAsync(Id));
         Decline = new DelegateCommand(_ => _ = _svc.DeclineCallAsync(Id));
@@ -829,7 +961,8 @@ public sealed class CallViewModel : PhoneObservable
     public PhoneCallInfo Info => _info;
     public string Id => _info.Id;
     public CallCapabilityInfo Capability { get; }
-    public string DisplayName { get; }
+    private readonly string? _name;
+    public string DisplayName => _name ?? (_info.Number is { Length: > 0 } n ? PhoneNumbers.Pretty(n) : PhoneStrings.Phone_Call_UnknownCaller);
     public byte[]? Photo { get; }
     public bool HasPhoto => Photo is { Length: > 0 };
     public string Initials => PhoneFormat.Initials(DisplayName);
@@ -843,18 +976,24 @@ public sealed class CallViewModel : PhoneObservable
     public bool CanEnd => _info.CanEnd;
     public bool CanMute => _info.CanMute;
     public bool CanTransferAudio => _info.CanTransferAudio;
-    public string MuteLabel => Muted ? "Sesi aç" : "Sessiz";
+    public string MuteLabel => Muted ? PhoneStrings.Phone_Call_Unmute : PhoneStrings.Phone_Call_Mute;
     public string MuteGlyph => Muted ? "" : "";
-    public string TransferLabel => AudioOnPc ? "Sesi telefona aktar" : "Sesi bilgisayara al";
-    public string EndLabel => CanEnd ? "Kapat" : "Gizle";
+    public string TransferLabel => AudioOnPc ? PhoneStrings.Phone_Call_AudioToPhone : PhoneStrings.Phone_Call_AudioToPc;
+    public string EndLabel => CanEnd ? PhoneStrings.Phone_Call_End : PhoneStrings.Phone_Call_Hide;
     public string RingingCaption => Capability.Capability == Nitro.Continuity.Runtime.CallCapability.FullAudio
-        ? "iPhone · gelen arama" : "iPhone · ses telefonda";
+        ? PhoneStrings.Phone_Call_RingingCaption : PhoneStrings.Phone_Call_RingingAudioOnPhone;
     public string AudioNote => _info.Source == CallSource.Ancs
-        ? "Görüşme iPhone'da sürüyor. Bu bilgisayar yalnızca yanıtlayıp reddedebilir."
-        : AudioOnPc ? "Ses bu bilgisayarda" : "Ses iPhone'da";
+        ? PhoneStrings.Phone_Call_AncsNote
+        : AudioOnPc ? PhoneStrings.Phone_Call_AudioOnPc : PhoneStrings.Phone_Call_AudioOnIphone;
 
     private string _duration = "";
     public string DurationText { get => _duration; private set => Set(ref _duration, value); }
+
+    public override void OnLanguageChanged()
+    {
+        Tick();
+        base.OnLanguageChanged();
+    }
 
     public DelegateCommand Answer { get; }
     public DelegateCommand Decline { get; }
@@ -879,10 +1018,10 @@ public sealed class CallViewModel : PhoneObservable
     public void Tick() =>
         DurationText = _info.State switch
         {
-            CallState.Ringing => "Arıyor…",
-            CallState.Dialing => "Aranıyor…",
-            CallState.Ended => "Arama bitti",
-            CallState.Held => "Beklemede",
+            CallState.Ringing => PhoneStrings.Phone_Call_Ringing,
+            CallState.Dialing => PhoneStrings.Phone_Call_Dialing,
+            CallState.Ended => PhoneStrings.Phone_Call_Ended,
+            CallState.Held => PhoneStrings.Phone_Call_OnHold,
             _ => _info.ConnectedAt is { } t ? PhoneFormat.Duration(_now() - t) : "00:00",
         };
 }

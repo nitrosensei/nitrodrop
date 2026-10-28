@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Onboarding_WindowTitle" xml:space="preserve">
+    <value>NitroDrop · Добро пожаловать</value>
+  </data>
+  <data name="Onboarding_StepLabel" xml:space="preserve">
+    <value>ЗНАКОМСТВО · {0}/{1}</value>
+  </data>
+  <data name="Onboarding_SkipTip" xml:space="preserve">
+    <value>Закрыть знакомство (Esc)</value>
+  </data>
+  <data name="Onboarding_Welcome" xml:space="preserve">
+    <value>Файлы, буфер обмена, уведомления и вкладки между iPhone, Mac и ПК. Работает сразу в одной сети — ничего настраивать не нужно.</value>
+  </data>
+  <data name="Onboarding_SendTitle" xml:space="preserve">
+    <value>Перетащите и отпустите</value>
+  </data>
+  <data name="Onboarding_SendBody" xml:space="preserve">
+    <value>Перетащите файл на устройство во вкладке «Рядом». Или щелкните файл правой кнопкой мыши в Проводнике и выберите «Отправить через NitroDrop».</value>
+  </data>
+  <data name="Onboarding_HotkeyHint" xml:space="preserve">
+    <value>отправляет скопированное на последнее устройство</value>
+  </data>
+  <data name="Onboarding_ReceiveTitle" xml:space="preserve">
+    <value>Получайте с iPhone</value>
+  </data>
+  <data name="Onboarding_ReceiveBody" xml:space="preserve">
+    <value>На iPhone коснитесь «Поделиться» → AirDrop и выберите этот компьютер. Пока это работает в одной сети Wi-Fi, а после расширенной настройки iPhone подключается напрямую.</value>
+  </data>
+  <data name="Onboarding_ReceiveLater" xml:space="preserve">
+    <value>Расширенную настройку можно выполнить и позже: Параметры → Драйвер Wi-Fi.</value>
+  </data>
+  <data name="Onboarding_PhoneTitle" xml:space="preserve">
+    <value>Телефон прямо на рабочем столе</value>
+  </data>
+  <data name="Onboarding_PhoneBody" xml:space="preserve">
+    <value>Звонки, сообщения и уведомления с iPhone, связанного по Bluetooth, появляются на этом компьютере — отвечайте прямо здесь.</value>
+  </data>
+  <data name="Onboarding_PairIphone" xml:space="preserve">
+    <value>Связать iPhone</value>
+  </data>
+  <data name="Onboarding_DevicesTitle" xml:space="preserve">
+    <value>Продолжайте с того же места</value>
+  </data>
+  <data name="Onboarding_DevicesBody" xml:space="preserve">
+    <value>Связанные компьютеры видят открытые вкладки и приложения друг друга. Расширение браузера передает вкладки, а быстрая команда iPhone — то, что открыто на телефоне.</value>
+  </data>
+  <data name="Onboarding_FinalTitle" xml:space="preserve">
+    <value>Последние штрихи</value>
+  </data>
+  <data name="Onboarding_FinalBody" xml:space="preserve">
+    <value>Ничего не принимается без вашего согласия, а контакты и файлы остаются на этом компьютере.</value>
+  </data>
+  <data name="Onboarding_DeviceName" xml:space="preserve">
+    <value>Отображаемое имя</value>
+  </data>
+  <data name="Onboarding_WhoCanSee" xml:space="preserve">
+    <value>Кто меня видит</value>
+  </data>
+  <data name="Onboarding_ModeEveryone" xml:space="preserve">
+    <value>Все (10 мин)</value>
+  </data>
+  <data name="Onboarding_ModeOff" xml:space="preserve">
+    <value>Выкл.</value>
+  </data>
+  <data name="Onboarding_StartWithWindows" xml:space="preserve">
+    <value>Запускать вместе с Windows</value>
+  </data>
+  <data name="Onboarding_LetsGo" xml:space="preserve">
+    <value>Начнем</value>
+  </data>
+  <data name="Onboarding_Start" xml:space="preserve">
+    <value>Начать</value>
+  </data>
+</root>

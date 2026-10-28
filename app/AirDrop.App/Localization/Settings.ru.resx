@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Settings_SectionThisPc" xml:space="preserve">
+    <value>ЭТОТ КОМПЬЮТЕР</value>
+  </data>
+  <data name="Settings_DeviceName" xml:space="preserve">
+    <value>Отображаемое имя</value>
+  </data>
+  <data name="Settings_SaveReceivedTo" xml:space="preserve">
+    <value>Сохранять полученные файлы в</value>
+  </data>
+  <data name="Settings_ChangeFolder" xml:space="preserve">
+    <value>Изменить…</value>
+  </data>
+  <data name="Settings_StartWithWindows" xml:space="preserve">
+    <value>Запускать вместе с Windows</value>
+  </data>
+  <data name="Settings_SectionLanguage" xml:space="preserve">
+    <value>ЯЗЫК</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Язык приложения</value>
+  </data>
+  <data name="Settings_LanguageCaption" xml:space="preserve">
+    <value>Изменения применяются сразу.</value>
+  </data>
+  <data name="Settings_LanguageAutoWith" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="Settings_SectionReceiving" xml:space="preserve">
+    <value>ПОЛУЧЕНИЕ</value>
+  </data>
+  <data name="Settings_JpgPhotos" xml:space="preserve">
+    <value>Получать фото с iPhone в формате JPG</value>
+  </data>
+  <data name="Settings_JpgPhotosCaption" xml:space="preserve">
+    <value>Запрашивается JPG вместо HEIC и H.264 вместо видео HEVC — файлы откроются на любом ПК с Windows.</value>
+  </data>
+  <data name="Settings_OpenLinks" xml:space="preserve">
+    <value>Открывать полученные ссылки в браузере</value>
+  </data>
+  <data name="Settings_SectionClipboard" xml:space="preserve">
+    <value>ОБЩИЙ БУФЕР ОБМЕНА</value>
+  </data>
+  <data name="Settings_CopyIncoming" xml:space="preserve">
+    <value>Копировать полученное в буфер обмена</value>
+  </data>
+  <data name="Settings_CopyIncomingCaption" xml:space="preserve">
+    <value>Текст, ссылки и отдельные фото с iPhone можно сразу вставить с помощью Ctrl+V.</value>
+  </data>
+  <data name="Settings_SendClipboard" xml:space="preserve">
+    <value>Отправить буфер обмена на телефон</value>
+  </data>
+  <data name="Settings_SendClipboardCaption" xml:space="preserve">
+    <value>Отправляет скопированный текст, ссылку, изображение или файл на последнее использованное устройство.</value>
+  </data>
+  <data name="Settings_Hotkey" xml:space="preserve">
+    <value>Ctrl + Alt + A</value>
+  </data>
+  <data name="Settings_HotkeyInUse" xml:space="preserve">
+    <value>{0} (занято другим приложением)</value>
+  </data>
+  <data name="Settings_SectionContacts" xml:space="preserve">
+    <value>КОНТАКТЫ И ФОТО</value>
+  </data>
+  <data name="Settings_ContactsPrivacy" xml:space="preserve">
+    <value>Работает как на Mac: подтвержденные данные, которые отправляет iPhone, сверяются только с вашими контактами. Контакты никогда не покидают этот компьютер.</value>
+  </data>
+  <data name="Settings_ImportContacts" xml:space="preserve">
+    <value>Импортировать контакты (.vcf)</value>
+  </data>
+  <data name="Settings_ContactsNone" xml:space="preserve">
+    <value>Контакты не импортированы. Чтобы видеть фото контактов, выберите файл .vcf, экспортированный из iCloud или Google.</value>
+  </data>
+  <data name="Settings_ContactsImported_Plural" xml:space="preserve">
+    <value>Импортирован {0} контакт. Люди из ваших контактов отображаются с фото.|Импортировано {0} контакта. Люди из ваших контактов отображаются с фото.|Импортировано {0} контактов. Люди из ваших контактов отображаются с фото.</value>
+  </data>
+  <data name="Settings_ContactsImporting" xml:space="preserve">
+    <value>Импорт…</value>
+  </data>
+  <data name="Settings_ContactsNoneFound" xml:space="preserve">
+    <value>В файле не найдено контактов. {0}</value>
+  </data>
+  <data name="Settings_ContactsImportFailed" xml:space="preserve">
+    <value>Не удалось импортировать: {0}</value>
+  </data>
+  <data name="Settings_PickFolderTitle" xml:space="preserve">
+    <value>Папка для полученных файлов</value>
+  </data>
+  <data name="Settings_PickContactsTitle" xml:space="preserve">
+    <value>Файл контактов (.vcf)</value>
+  </data>
+  <data name="Settings_AllFiles" xml:space="preserve">
+    <value>Все файлы</value>
+  </data>
+  <data name="Settings_SectionTrusted" xml:space="preserve">
+    <value>ДОВЕРЕННЫЕ УСТРОЙСТВА</value>
+  </data>
+  <data name="Settings_TrustedHint" xml:space="preserve">
+    <value>В разделе «Рядом» щелкните устройство правой кнопкой мыши и выберите «Доверенное устройство» — все, что оно отправит, будет приниматься без вопросов.</value>
+  </data>
+  <data name="Settings_SectionSync" xml:space="preserve">
+    <value>СИНХРОНИЗАЦИЯ</value>
+  </data>
+  <data name="Settings_ShareTabs" xml:space="preserve">
+    <value>Делиться открытыми вкладками</value>
+  </data>
+  <data name="Settings_ShareTabsCaption" xml:space="preserve">
+    <value>Открытые вкладки Chrome и Edge видны на связанных компьютерах. Вкладки в режиме инкогнито и InPrivate не передаются.</value>
+  </data>
+  <data name="Settings_ShareApps" xml:space="preserve">
+    <value>Делиться открытыми приложениями</value>
+  </data>
+  <data name="Settings_ShareAppsCaption" xml:space="preserve">
+    <value>Передаются только название приложения, значок и заголовок окна; пути к файлам остаются на этом компьютере.</value>
+  </data>
+  <data name="Settings_ExcludedApps" xml:space="preserve">
+    <value>Не передавать эти приложения</value>
+  </data>
+  <data name="Settings_ExcludedAppsCaption" xml:space="preserve">
+    <value>Менеджеры паролей и системные процессы исключены всегда.</value>
+  </data>
+  <data name="Settings_RemoveFromList" xml:space="preserve">
+    <value>Убрать из списка</value>
+  </data>
+  <data name="Settings_ExcludePlaceholder" xml:space="preserve">
+    <value>Файл приложения, например Telegram.exe</value>
+  </data>
+  <data name="Settings_Add" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="Settings_SectionExtension" xml:space="preserve">
+    <value>РАСШИРЕНИЕ БРАУЗЕРА</value>
+  </data>
+  <data name="Settings_InstallExtension" xml:space="preserve">
+    <value>Установить расширение</value>
+  </data>
+  <data name="Settings_ExtStep1" xml:space="preserve">
+    <value>Откройте `chrome://extensions` в Chrome или `edge://extensions` в Edge и включите **Режим разработчика**.</value>
+  </data>
+  <data name="Settings_ExtStep2" xml:space="preserve">
+    <value>Нажмите **Загрузить распакованное расширение** и выберите эту папку:</value>
+  </data>
+  <data name="Settings_CopyPath" xml:space="preserve">
+    <value>Копировать путь</value>
+  </data>
+  <data name="Settings_ExtStep3" xml:space="preserve">
+    <value>Подключите браузер, чтобы расширение могло обмениваться данными с NitroDrop (только для этого пользователя, права администратора не нужны).</value>
+  </data>
+  <data name="Settings_ConnectBrowser" xml:space="preserve">
+    <value>Подключить браузер</value>
+  </data>
+  <data name="Settings_SectionPairedPcs" xml:space="preserve">
+    <value>СВЯЗАННЫЕ КОМПЬЮТЕРЫ</value>
+  </data>
+  <data name="Settings_NoPairedPcs" xml:space="preserve">
+    <value>Связанных компьютеров пока нет. Нажмите «Добавить компьютер» на вкладке «Устройства».</value>
+  </data>
+  <data name="Settings_SectionIphoneShortcut" xml:space="preserve">
+    <value>IPHONE (БЫСТРАЯ КОМАНДА)</value>
+  </data>
+  <data name="Settings_QrHint" xml:space="preserve">
+    <value>Отсканируйте код Камерой на iPhone и вставьте адрес в действие «Получить содержимое URL» быстрой команды.</value>
+  </data>
+  <data name="Settings_QrWarning" xml:space="preserve">
+    <value>Этот адрес показывается один раз и содержит ключ, уникальный для этого iPhone. Передавайте его только на свой телефон.</value>
+  </data>
+  <data name="Settings_CopyAddress" xml:space="preserve">
+    <value>Копировать адрес</value>
+  </data>
+  <data name="Settings_ShortcutHelp" xml:space="preserve">
+    <value>Как настроить команду</value>
+  </data>
+  <data name="Settings_IphoneShortcutCaption" xml:space="preserve">
+    <value>С помощью Быстрых команд открытое на iPhone приложение и ссылки, которыми вы делитесь, приходят на этот компьютер.</value>
+  </data>
+  <data name="Settings_AddIphone" xml:space="preserve">
+    <value>Добавить iPhone</value>
+  </data>
+  <data name="Settings_SectionPhone" xml:space="preserve">
+    <value>ТЕЛЕФОН</value>
+  </data>
+  <data name="Settings_ShowNotifications" xml:space="preserve">
+    <value>Показывать уведомления iPhone</value>
+  </data>
+  <data name="Settings_ShowCalls" xml:space="preserve">
+    <value>Показывать входящие звонки</value>
+  </data>
+  <data name="Settings_MessagePreview" xml:space="preserve">
+    <value>Текст сообщений в уведомлениях</value>
+  </data>
+  <data name="Settings_MessagePreviewCaption" xml:space="preserve">
+    <value>Если выключено, видны только отправитель и приложение.</value>
+  </data>
+  <data name="Settings_SectionDriver" xml:space="preserve">
+    <value>ДРАЙВЕР WI-FI</value>
+  </data>
+  <data name="Settings_DirectIphone" xml:space="preserve">
+    <value>Подключаться к iPhone напрямую (драйвер Wi-Fi)</value>
+  </data>
+  <data name="Settings_DriverInstall" xml:space="preserve">
+    <value>Настроить…</value>
+  </data>
+  <data name="Settings_DriverRollback" xml:space="preserve">
+    <value>Удалить и восстановить…</value>
+  </data>
+  <data name="Settings_DriverStateInstalled" xml:space="preserve">
+    <value>Установлен — карта Wi-Fi работает с драйвером NitroDrop</value>
+  </data>
+  <data name="Settings_DriverStateUnsupported" xml:space="preserve">
+    <value>Поддерживаемая карта Intel Wi-Fi не найдена</value>
+  </data>
+  <data name="Settings_DriverStateIncomplete" xml:space="preserve">
+    <value>Настройка не завершена</value>
+  </data>
+  <data name="Settings_DriverStateNotInstalled" xml:space="preserve">
+    <value>Не установлен</value>
+  </data>
+  <data name="Settings_DriverDetailInstalled" xml:space="preserve">
+    <value>Готово к прямому подключению (AirDrop) к iPhone, iPad и Mac. Пока карта Wi-Fi работает с этим драйвером, для выхода в интернет нужно другое подключение.</value>
+  </data>
+  <data name="Settings_DriverDetailUnsupported" xml:space="preserve">
+    <value>Сейчас работает обмен с устройствами в той же сети (режим LAN). Поддержка USB-адаптеров Wi-Fi планируется.</value>
+  </data>
+  <data name="Settings_DriverDetailFound" xml:space="preserve">
+    <value>Найдено: {0}. Для прямого подключения к iPhone нужна расширенная настройка.</value>
+  </data>
+  <data name="About_Section" xml:space="preserve">
+    <value>О ПРОГРАММЕ</value>
+  </data>
+  <data name="About_Tagline" xml:space="preserve">
+    <value>Обмен файлами, ссылками и буфером обмена с iPhone, iPad и Mac, а также вкладки и приложения между связанными компьютерами. Бесплатно и с открытым исходным кодом.</value>
+  </data>
+  <data name="About_ShowTour" xml:space="preserve">
+    <value>Показать знакомство снова</value>
+  </data>
+  <data name="About_SourceCode" xml:space="preserve">
+    <value>Исходный код</value>
+  </data>
+  <data name="About_OpenSource" xml:space="preserve">
+    <value>КОМПОНЕНТЫ С ОТКРЫТЫМ КОДОМ</value>
+  </data>
+  <data name="About_LicenseTexts" xml:space="preserve">
+    <value>Тексты лицензий</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>ВЕРСИЯ {0} · NITROBYTE</value>
+  </data>
+  <data name="About_UseIwx" xml:space="preserve">
+    <value>драйвер Intel Wi-Fi (OpenBSD)</value>
+  </data>
+  <data name="About_UseQr" xml:space="preserve">
+    <value>QR-коды</value>
+  </data>
+  <data name="About_UseFonts" xml:space="preserve">
+    <value>шрифты</value>
+  </data>
+  <data name="About_UseFirmware" xml:space="preserve">
+    <value>показывается при установке</value>
+  </data>
+  <data name="Explorer_MenuVerb" xml:space="preserve">
+    <value>Отправить через NitroDrop</value>
+  </data>
+  <data name="Explorer_SendToDescription" xml:space="preserve">
+    <value>Отправить выбранное через NitroDrop</value>
+  </data>
+  <data name="Explorer_Setting" xml:space="preserve">
+    <value>Контекстное меню Проводника</value>
+  </data>
+  <data name="Explorer_CaptionPortable" xml:space="preserve">
+    <value>Добавляет пункт «Отправить через NitroDrop» в меню файлов и папок (в Windows 11 — в разделе «Показать дополнительные параметры») и NitroDrop в меню «Отправить».</value>
+  </data>
+  <data name="Explorer_CaptionPackaged" xml:space="preserve">
+    <value>Управляется Windows: пункт «Отправить через NitroDrop» есть в контекстном меню, пока установлен NitroDrop.</value>
+  </data>
+  <data name="Explorer_Failed" xml:space="preserve">
+    <value>Не удалось добавить меню Проводника: {0}</value>
+  </data>
+</root>

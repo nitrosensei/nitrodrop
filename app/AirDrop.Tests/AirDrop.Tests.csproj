@@ -18,6 +18,12 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <!-- UI strings: Loc/Plural + every Localization/*.resx (same generated <Module>Strings classes as the app). -->
+  <PropertyGroup>
+    <NitroLocLinked>true</NitroLocLinked>
+  </PropertyGroup>
+  <Import Project="..\AirDrop.App\Localization\Localization.targets" />
+
   <ItemGroup>
     <ProjectReference Include="..\AirDrop.Core\AirDrop.Core.csproj" />
     <ProjectReference Include="..\Nitro.Continuity\Nitro.Continuity.csproj" />

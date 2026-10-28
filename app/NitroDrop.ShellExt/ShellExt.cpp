@@ -1,4 +1,7 @@
-// NitroDrop.ShellExt.dll: File Explorer "NitroDrop ile gönder" for the MSIX build (Windows 11 modern context menu).
+// NitroDrop.ShellExt.dll: File Explorer "Send with NitroDrop" for the MSIX build (Windows 11 modern context menu).
+// Title language: the app writes its UI language (two-letter code) to HKCU\Software\Nitrobyte\NitroDrop\UiLanguage on
+// every start and language change (Localization/Wpf/UiLanguage.cs); without it the Windows display language is used,
+// then English. Read on every GetTitle, so a switch shows on the next right-click.
 //
 // A tiny IExplorerCommand COM server, native so Explorer never loads a .NET runtime. Registered only through the
 // package manifest (packaging/AppxManifest.xml: desktop4:FileExplorerContextMenus + com:SurrogateServer, so it runs in
@@ -35,11 +38,66 @@ static HMODULE g_module = nullptr;
 
 namespace nd {
 
-// Same text as UiStrings.ExplorerMenuVerb (app/AirDrop.App/Services/UiStrings.cs); change both together.
-static const wchar_t kTitle[] = L"NitroDrop ile g\u00F6nder";
+// Same texts as Explorer_MenuVerb in app/AirDrop.App/Localization/Settings*.resx; change both together.
+struct TitleEntry
+{
+    const wchar_t* lang;
+    const wchar_t* title;
+};
+static const TitleEntry kTitles[] = {
+    {L"tr", L"NitroDrop ile g\u00F6nder"},
+    {L"en", L"Send with NitroDrop"},
+    {L"de", L"Mit NitroDrop senden"},
+    {L"fr", L"Envoyer avec NitroDrop"},
+    {L"ru", L"\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u0447\u0435\u0440\u0435\u0437 NitroDrop"},
+    {L"pl", L"Wy\u015Blij przez NitroDrop"},
+};
+static const wchar_t kLanguageKey[] = L"Software\\Nitrobyte\\NitroDrop";   // UiLanguage.RegistryKey
+static const wchar_t kLanguageValue[] = L"UiLanguage";                     // UiLanguage.RegistryValue
 static const wchar_t kExeName[] = L"NitroDrop.exe";
 static const wchar_t kListPrefix[] = L"NitroDrop-send-";   // SendListFile.Prefix
 static const size_t kMaxCommandLine = 30000;
+
+// Title for a two-letter code, or nullptr when we have no such language.
+const wchar_t* TitleFor(const std::wstring& lang)
+{
+    for (const auto& e : kTitles)
+        if (lang == e.lang) return e.title;
+    return nullptr;
+}
+
+// Two-letter code for a Windows LANGID (primary language only); empty when unsupported.
+std::wstring LangFromLangId(LANGID id)
+{
+    switch (PRIMARYLANGID(id))
+    {
+    case LANG_TURKISH: return L"tr";
+    case LANG_ENGLISH: return L"en";
+    case LANG_GERMAN: return L"de";
+    case LANG_FRENCH: return L"fr";
+    case LANG_RUSSIAN: return L"ru";
+    case LANG_POLISH: return L"pl";
+    default: return std::wstring();
+    }
+}
+
+// The app's UI language from HKCU (empty when the app never ran or the value is unusable).
+static std::wstring AppLanguage()
+{
+    wchar_t buf[16] = {};
+    DWORD size = sizeof(buf);
+    if (SHRegGetValueW(HKEY_CURRENT_USER, kLanguageKey, kLanguageValue, SRRF_RT_REG_SZ, nullptr, buf, &size) != ERROR_SUCCESS)
+        return std::wstring();
+    return std::wstring(buf);
+}
+
+// App language \u2192 Windows display language \u2192 English.
+const wchar_t* Title()
+{
+    if (const wchar_t* t = TitleFor(AppLanguage())) return t;
+    if (const wchar_t* t = TitleFor(LangFromLangId(GetUserDefaultUILanguage()))) return t;
+    return kTitles[1].title;
+}
 
 // CommandLineToArgvW / CRT rules: quote when needed, double backslashes that precede a quote or the closing quote
 // (a selected drive root "C:\" must not become C:"), escape embedded quotes.
@@ -234,7 +292,7 @@ public:
     }
 
     // IExplorerCommand
-    IFACEMETHODIMP GetTitle(IShellItemArray*, LPWSTR* name) override { return SHStrDupW(nd::kTitle, name); }
+    IFACEMETHODIMP GetTitle(IShellItemArray*, LPWSTR* name) override { return SHStrDupW(nd::Title(), name); }
 
     IFACEMETHODIMP GetIcon(IShellItemArray*, LPWSTR* icon) override
     {

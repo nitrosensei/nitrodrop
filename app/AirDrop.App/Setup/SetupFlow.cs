@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Setup;
 
@@ -20,7 +21,7 @@ public sealed record MachineInfo(string? Manufacturer, string? Product, string? 
             && model.StartsWith(Manufacturer, StringComparison.OrdinalIgnoreCase))
             return model.Trim();   // "Acer Nitro V 15", not "Acer Acer Nitro V 15"
         var name = string.Join(" ", new[] { Manufacturer, model }.Where(s => !string.IsNullOrWhiteSpace(s)));
-        return string.IsNullOrWhiteSpace(name) ? "Bu bilgisayar" : name;
+        return string.IsNullOrWhiteSpace(name) ? SetupStrings.Setup_ThisPc : name;
     }
 
     public static MachineInfo Unknown { get; } = new(null, null, null, null);

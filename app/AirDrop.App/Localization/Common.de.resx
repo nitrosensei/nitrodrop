@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Unit_Byte" xml:space="preserve">
+    <value>B</value>
+  </data>
+  <data name="Unit_KB" xml:space="preserve">
+    <value>KB</value>
+  </data>
+  <data name="Unit_MB" xml:space="preserve">
+    <value>MB</value>
+  </data>
+  <data name="Unit_GB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="Unit_TB" xml:space="preserve">
+    <value>TB</value>
+  </data>
+  <data name="Unit_Format" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="Time_YesterdayAt" xml:space="preserve">
+    <value>Gestern {0}</value>
+  </data>
+  <data name="Time_JustNow" xml:space="preserve">
+    <value>Gerade eben</value>
+  </data>
+  <data name="Time_Today" xml:space="preserve">
+    <value>Heute</value>
+  </data>
+  <data name="Time_Yesterday" xml:space="preserve">
+    <value>Gestern</value>
+  </data>
+  <data name="Time_MinutesAgo_Plural" xml:space="preserve">
+    <value>vor {0} Min.|vor {0} Min.</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Common_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Schließen</value>
+  </data>
+  <data name="Common_Open" xml:space="preserve">
+    <value>Öffnen</value>
+  </data>
+  <data name="Common_Remove" xml:space="preserve">
+    <value>Entfernen</value>
+  </data>
+  <data name="Common_Done" xml:space="preserve">
+    <value>Fertig</value>
+  </data>
+  <data name="Common_Back" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="Common_Next" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="Common_Skip" xml:space="preserve">
+    <value>Überspringen</value>
+  </data>
+  <data name="Common_Clear" xml:space="preserve">
+    <value>Leeren</value>
+  </data>
+  <data name="Common_Copy" xml:space="preserve">
+    <value>Kopieren</value>
+  </data>
+  <data name="Common_Settings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Common_Accept" xml:space="preserve">
+    <value>Annehmen</value>
+  </data>
+  <data name="Common_Decline" xml:space="preserve">
+    <value>Ablehnen</value>
+  </data>
+  <data name="Common_OpenFolder" xml:space="preserve">
+    <value>Ordner öffnen</value>
+  </data>
+  <data name="Common_ShowInFolder" xml:space="preserve">
+    <value>Im Ordner anzeigen</value>
+  </data>
+  <data name="Files_Plural" xml:space="preserve">
+    <value>{0} Datei|{0} Dateien</value>
+  </data>
+  <data name="Links_Plural" xml:space="preserve">
+    <value>{0} Link|{0} Links</value>
+  </data>
+  <data name="Items_Plural" xml:space="preserve">
+    <value>{0} Objekt|{0} Objekte</value>
+  </data>
+  <data name="Devices_Count_Plural" xml:space="preserve">
+    <value>{0} Gerät|{0} Geräte</value>
+  </data>
+  <data name="Language_Auto" xml:space="preserve">
+    <value>Wie Windows</value>
+  </data>
+</root>

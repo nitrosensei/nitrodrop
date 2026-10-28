@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Phone_Status_NotPaired" xml:space="preserve">
+    <value>iPhone bağlı değil</value>
+  </data>
+  <data name="Phone_Status_NotPairedDetail" xml:space="preserve">
+    <value>Başlamak için iPhone'unuzu eşleştirin.</value>
+  </data>
+  <data name="Phone_Status_Pairing" xml:space="preserve">
+    <value>Eşleştiriliyor…</value>
+  </data>
+  <data name="Phone_Status_PairingDetail" xml:space="preserve">
+    <value>iPhone'da çıkan isteğe “Eşleştir” ile yanıt verin.</value>
+    <comment>Quoted label = iOS pairing button in each language</comment>
+  </data>
+  <data name="Phone_Status_Blocked" xml:space="preserve">
+    <value>Phone Link bu iPhone'u kullanıyor</value>
+    <comment>Phone Link = Microsoft app; its localized Windows name per language</comment>
+  </data>
+  <data name="Phone_Status_BlockedDetail" xml:space="preserve">
+    <value>Bu iPhone şu an Phone Link (Telefon Bağlantısı) tarafından kullanılıyor. Phone Link'i açın → Ayarlar → Cihazlarım → iPhone'un yanındaki ⋯ → Kaldır. Sonra “Yeniden dene”ye basın.</value>
+  </data>
+  <data name="Phone_Status_BluetoothOff" xml:space="preserve">
+    <value>Bluetooth kapalı</value>
+  </data>
+  <data name="Phone_Status_BluetoothOffDetail" xml:space="preserve">
+    <value>Windows Ayarlar → Bluetooth ve cihazlar'dan Bluetooth'u açın.</value>
+  </data>
+  <data name="Phone_Status_Connecting" xml:space="preserve">
+    <value>{0} bağlanıyor…</value>
+    <comment>{0} = iPhone name</comment>
+  </data>
+  <data name="Phone_Status_ConnectingDetail" xml:space="preserve">
+    <value>iPhone'un kilidini açın ve yakında tutun.</value>
+  </data>
+  <data name="Phone_Status_Reconnecting" xml:space="preserve">
+    <value>Bağlantı koptu, yeniden deneniyor…</value>
+  </data>
+  <data name="Phone_Status_ReconnectingDetail" xml:space="preserve">
+    <value>iPhone menzil dışında ya da Bluetooth kapalı olabilir.</value>
+  </data>
+  <data name="Phone_Status_NoLeLink" xml:space="preserve">
+    <value>Bildirim bağlantısı kurulamadı</value>
+  </data>
+  <data name="Phone_Status_NoLeLinkDetail" xml:space="preserve">
+    <value>iPhone eşleşti ama bildirim (LE) bağlantısı açılmadı. “Bildirim bağlantısını kur”a basın ve iPhone'u yanınızda tutun.</value>
+    <comment>Quoted text = Phone_SetUpLeLink button</comment>
+  </data>
+  <data name="Phone_Status_Disconnected" xml:space="preserve">
+    <value>Bağlantı yok</value>
+  </data>
+  <data name="Phone_Status_Connected" xml:space="preserve">
+    <value>{0} bağlı</value>
+    <comment>{0} = iPhone name</comment>
+  </data>
+  <data name="Phone_Status_NotificationsOff" xml:space="preserve">
+    <value>Bildirimler kapalı: iPhone'da Ayarlar → Bluetooth → bu bilgisayarın yanındaki ⓘ → “Sistem Bildirimlerini Paylaş”ı açın.</value>
+    <comment>Quoted label = Phone_Toggle1_Name (iOS wording)</comment>
+  </data>
+  <data name="Phone_Status_MessagesOff" xml:space="preserve">
+    <value>Mesajlar kapalı: iPhone'da bu bilgisayarın ⓘ ekranında “Bildirimleri Göster”i açın.</value>
+    <comment>Quoted label = Phone_Toggle2_Name (iOS wording)</comment>
+  </data>
+  <data name="Phone_Notifications" xml:space="preserve">
+    <value>Bildirimler</value>
+    <comment>Feature chip and section tab</comment>
+  </data>
+  <data name="Phone_Messages" xml:space="preserve">
+    <value>Mesajlar</value>
+    <comment>Feature chip and section tab</comment>
+  </data>
+  <data name="Phone_Calls" xml:space="preserve">
+    <value>Aramalar</value>
+    <comment>Feature chip and section tab</comment>
+  </data>
+  <data name="Phone_Music" xml:space="preserve">
+    <value>Müzik</value>
+    <comment>Feature chip</comment>
+  </data>
+  <data name="Phone_MessagesAppName" xml:space="preserve">
+    <value>Mesajlar</value>
+    <comment>Apple's Messages app name in iOS of that language</comment>
+  </data>
+  <data name="Phone_SetUpLeLink" xml:space="preserve">
+    <value>Bildirim bağlantısını kur</value>
+  </data>
+  <data name="Phone_Retry" xml:space="preserve">
+    <value>Yeniden dene</value>
+  </data>
+  <data name="Phone_More" xml:space="preserve">
+    <value>Diğer</value>
+  </data>
+  <data name="Phone_Menu_SyncContacts" xml:space="preserve">
+    <value>Kişileri iPhone'dan eşitle</value>
+  </data>
+  <data name="Phone_Menu_ResetLeLink" xml:space="preserve">
+    <value>Bildirim bağlantısını yeniden kur</value>
+  </data>
+  <data name="Phone_Menu_Disconnect" xml:space="preserve">
+    <value>Bu iPhone'u kullanmayı bırak</value>
+  </data>
+  <data name="Phone_Media_Previous" xml:space="preserve">
+    <value>Önceki</value>
+  </data>
+  <data name="Phone_Media_PlayPause" xml:space="preserve">
+    <value>Oynat / Duraklat</value>
+  </data>
+  <data name="Phone_Media_Next" xml:space="preserve">
+    <value>Sonraki</value>
+  </data>
+  <data name="Phone_Setup_Title" xml:space="preserve">
+    <value>iPhone'unuzu bağlayın</value>
+  </data>
+  <data name="Phone_Setup_Intro" xml:space="preserve">
+    <value>Bildirimler, SMS / iMessage mesajları ve gelen aramalar bu bilgisayarda görünür. Sürücü ya da iPhone uygulaması gerekmez.</value>
+  </data>
+  <data name="Phone_Guide1_Title" xml:space="preserve">
+    <value>iPhone'da Bluetooth ekranını açın</value>
+  </data>
+  <data name="Phone_Guide1_Body" xml:space="preserve">
+    <value>Ayarlar → Bluetooth. Ekran açık kaldıkça iPhone bu bilgisayardan görünür.</value>
+  </data>
+  <data name="Phone_Guide2_Title" xml:space="preserve">
+    <value>“iPhone'u bul”a basın ve listeden seçin</value>
+    <comment>Quoted text = Phone_FindIphone button</comment>
+  </data>
+  <data name="Phone_Guide2_Body" xml:space="preserve">
+    <value>Her iki ekranda aynı 6 haneli kod çıkar; iPhone'da “Eşleştir”e, burada “Kodlar aynı”ya dokunun.</value>
+    <comment>First quote = iOS button, second = Phone_Pair_CodesMatch</comment>
+  </data>
+  <data name="Phone_Guide3_Title" xml:space="preserve">
+    <value>Üç anahtarı açın</value>
+  </data>
+  <data name="Phone_Guide3_Body" xml:space="preserve">
+    <value>iPhone'da Ayarlar → Bluetooth → bu bilgisayarın yanındaki ⓘ simgesi.</value>
+  </data>
+  <data name="Phone_Toggle1_Name" xml:space="preserve">
+    <value>Sistem Bildirimlerini Paylaş</value>
+    <comment>iOS switch label (Bluetooth device ⓘ screen), official iOS wording</comment>
+  </data>
+  <data name="Phone_Toggle1_Explains" xml:space="preserve">
+    <value>Bildirimler ve gelen aramalar bu bilgisayarda görünür.</value>
+  </data>
+  <data name="Phone_Toggle2_Name" xml:space="preserve">
+    <value>Bildirimleri Göster</value>
+    <comment>iOS switch label, official iOS wording</comment>
+  </data>
+  <data name="Phone_Toggle2_Explains" xml:space="preserve">
+    <value>SMS ve iMessage mesajlarını okuyup buradan yanıtlarsınız.</value>
+  </data>
+  <data name="Phone_Toggle3_Name" xml:space="preserve">
+    <value>Kişileri Eşitle</value>
+    <comment>iOS switch label, official iOS wording</comment>
+  </data>
+  <data name="Phone_Toggle3_Explains" xml:space="preserve">
+    <value>Arayanların ve mesaj gönderenlerin adları ve fotoğrafları görünür.</value>
+  </data>
+  <data name="Phone_IosSwitches_Header" xml:space="preserve">
+    <value>İPHONE'DA AÇILACAK ÜÇ ANAHTAR</value>
+  </data>
+  <data name="Phone_IosMock_Path" xml:space="preserve">
+    <value>Ayarlar → Bluetooth → bu bilgisayarın yanındaki ⓘ</value>
+    <comment>Tiny caption under the iPhone mock-up</comment>
+  </data>
+  <data name="Phone_PhoneLinkHint" xml:space="preserve">
+    <value>Phone Link (Telefon Bağlantısı) bu iPhone'a bağlıysa önce oradan kaldırın: bir iPhone aynı anda tek bir bilgisayar uygulamasına bildirim ve mesaj verir.</value>
+  </data>
+  <data name="Phone_FindIphone" xml:space="preserve">
+    <value>iPhone'u bul</value>
+  </data>
+  <data name="Phone_Pair_Found" xml:space="preserve">
+    <value>Bulunan cihazlar</value>
+  </data>
+  <data name="Phone_Pair_Select" xml:space="preserve">
+    <value>Seç</value>
+  </data>
+  <data name="Phone_Pair_SearchAgain" xml:space="preserve">
+    <value>Tekrar ara</value>
+  </data>
+  <data name="Phone_Pair_CodesDiffer" xml:space="preserve">
+    <value>Farklı</value>
+  </data>
+  <data name="Phone_Pair_CodesMatch" xml:space="preserve">
+    <value>Kodlar aynı</value>
+  </data>
+  <data name="Phone_Pair_Submit" xml:space="preserve">
+    <value>Gönder</value>
+    <comment>Sends the typed PIN</comment>
+  </data>
+  <data name="Phone_Pair_Cancel" xml:space="preserve">
+    <value>Vazgeç</value>
+  </data>
+  <data name="Phone_Pair_Searching" xml:space="preserve">
+    <value>iPhone aranıyor… iPhone'da Ayarlar → Bluetooth açık kalsın.</value>
+  </data>
+  <data name="Phone_Pair_NotFound" xml:space="preserve">
+    <value>iPhone bulunamadı. iPhone'un kilidini açın, Ayarlar → Bluetooth ekranında bekleyin ve tekrar deneyin.</value>
+  </data>
+  <data name="Phone_Pair_Pairing" xml:space="preserve">
+    <value>{0} ile eşleşiliyor…</value>
+  </data>
+  <data name="Phone_Pair_Using" xml:space="preserve">
+    <value>{0} kullanılıyor.</value>
+  </data>
+  <data name="Phone_Pair_KeepClose" xml:space="preserve">
+    <value>iPhone'u bilgisayarın yanında tutun…</value>
+  </data>
+  <data name="Phone_Pair_EnterOnIphone" xml:space="preserve">
+    <value>Bu kodu iPhone'a girin.</value>
+  </data>
+  <data name="Phone_Pair_ConfirmDevice" xml:space="preserve">
+    <value>{0} ile eşleşilsin mi?</value>
+  </data>
+  <data name="Phone_Pair_CompareCode" xml:space="preserve">
+    <value>iPhone'daki kod bununla aynı mı?</value>
+  </data>
+  <data name="Phone_Pair_TypeCode" xml:space="preserve">
+    <value>iPhone'da görünen kodu yazın.</value>
+  </data>
+  <data name="Phone_Pair_LinkEstablished" xml:space="preserve">
+    <value>Bildirim bağlantısı kuruldu.</value>
+  </data>
+  <data name="Phone_Pair_Paired" xml:space="preserve">
+    <value>{0} eşleşti.</value>
+  </data>
+  <data name="Phone_Pair_AlreadyPaired" xml:space="preserve">
+    <value>{0} zaten eşleşmiş.</value>
+  </data>
+  <data name="Phone_Pair_Canceled" xml:space="preserve">
+    <value>Eşleşme iptal edildi.</value>
+  </data>
+  <data name="Phone_Pair_Rejected" xml:space="preserve">
+    <value>Eşleşme reddedildi. iPhone'da “Eşleştir”e dokunup kodların aynı olduğunu doğrulayın.</value>
+  </data>
+  <data name="Phone_Pair_LookupFailed" xml:space="preserve">
+    <value>iPhone bulunamadı ({0}). Ayarlar → Bluetooth ekranı açık mı?</value>
+    <comment>{0} = system error text</comment>
+  </data>
+  <data name="Phone_Pair_WindowsCannotPair" xml:space="preserve">
+    <value>Windows bu cihazla eşleşmeye izin vermiyor.</value>
+  </data>
+  <data name="Phone_Pair_NoResponse" xml:space="preserve">
+    <value>iPhone yanıt vermedi. Ayarlar → Bluetooth ekranını açık tutup tekrar deneyin.</value>
+  </data>
+  <data name="Phone_Pair_NoAppleNearby" xml:space="preserve">
+    <value>Yakında bir Apple cihazı bulunamadı. iPhone'u bilgisayara yaklaştırıp ekranını açın.</value>
+  </data>
+  <data name="Phone_Pair_LeRejected" xml:space="preserve">
+    <value>iPhone LE eşleşmesini kabul etmedi.</value>
+  </data>
+  <data name="Phone_Pair_HidTimeout" xml:space="preserve">
+    <value>iPhone bağlanmadı. iPhone'da Ayarlar → Bluetooth → Diğer Aygıtlar'da bu bilgisayara dokunun.</value>
+  </data>
+  <data name="Phone_Pair_Failed" xml:space="preserve">
+    <value>Eşleşme başarısız.</value>
+  </data>
+  <data name="Phone_Pair_FailedDetail" xml:space="preserve">
+    <value>Eşleşme başarısız: {0}</value>
+    <comment>{0} = system error text or status code</comment>
+  </data>
+  <data name="Phone_Contacts_Synced_Plural" xml:space="preserve">
+    <value>{0} kişi eşitlendi.</value>
+  </data>
+  <data name="Phone_Contacts_None" xml:space="preserve">
+    <value>Kişi alınamadı: iPhone'da “Kişileri Eşitle” açık mı?</value>
+  </data>
+  <data name="Phone_Contacts_Failed" xml:space="preserve">
+    <value>Kişiler alınamadı ({0}).</value>
+    <comment>{0} = system error text</comment>
+  </data>
+  <data name="Phone_Messages_Empty" xml:space="preserve">
+    <value>Henüz mesaj yok.
+iPhone bağlıyken gelen SMS ve iMessage'lar burada görünür.</value>
+  </data>
+  <data name="Phone_Reply_Placeholder" xml:space="preserve">
+    <value>Mesaj</value>
+  </data>
+  <data name="Phone_Reply_Send" xml:space="preserve">
+    <value>Gönder (iPhone üzerinden)</value>
+  </data>
+  <data name="Phone_Messages_SelectConversation" xml:space="preserve">
+    <value>Bir konuşma seçin</value>
+  </data>
+  <data name="Phone_Message_Sending" xml:space="preserve">
+    <value>Gönderiliyor…</value>
+  </data>
+  <data name="Phone_Message_Failed" xml:space="preserve">
+    <value>Gönderilemedi</value>
+  </data>
+  <data name="Phone_Conversation_You" xml:space="preserve">
+    <value>Siz: {0}</value>
+    <comment>Conversation list preview of your own last message; {0} = message text</comment>
+  </data>
+  <data name="Phone_Notifs_Header" xml:space="preserve">
+    <value>iPhone bildirimleri</value>
+  </data>
+  <data name="Phone_Notifs_ClearAll" xml:space="preserve">
+    <value>Tümünü temizle</value>
+  </data>
+  <data name="Phone_Notifs_Empty" xml:space="preserve">
+    <value>Bildirim yok</value>
+  </data>
+  <data name="Phone_Notif_DefaultPositive" xml:space="preserve">
+    <value>Tamam</value>
+    <comment>Fallback label when the iPhone sends a positive action without a label</comment>
+  </data>
+  <data name="Phone_Notif_DefaultNegative" xml:space="preserve">
+    <value>Sil</value>
+    <comment>Fallback label when the iPhone sends a negative action without a label</comment>
+  </data>
+  <data name="Phone_Notif_OpenInMessages" xml:space="preserve">
+    <value>Mesajlarda aç</value>
+  </data>
+  <data name="Phone_Notif_OpenWith" xml:space="preserve">
+    <value>{0} ile aç</value>
+    <comment>{0} = app name (WhatsApp, Instagram…)</comment>
+  </data>
+  <data name="Phone_Toast_Title" xml:space="preserve">
+    <value>iPhone bildirimi</value>
+  </data>
+  <data name="Phone_Toast_PreviewHidden" xml:space="preserve">
+    <value>Önizleme gizli</value>
+  </data>
+  <data name="Phone_Calls_FixHeader" xml:space="preserve">
+    <value>Arama sesini bilgisayara almak için</value>
+  </data>
+  <data name="Phone_Calls_Empty" xml:space="preserve">
+    <value>Son arama yok</value>
+  </data>
+  <data name="Phone_Call_Missed" xml:space="preserve">
+    <value>Cevapsız arama</value>
+  </data>
+  <data name="Phone_Call_Declined" xml:space="preserve">
+    <value>Reddedildi</value>
+  </data>
+  <data name="Phone_Call_Outgoing" xml:space="preserve">
+    <value>Giden</value>
+  </data>
+  <data name="Phone_Call_OutgoingFor" xml:space="preserve">
+    <value>Giden · {0}</value>
+    <comment>{0} = duration 3:05</comment>
+  </data>
+  <data name="Phone_Call_Incoming" xml:space="preserve">
+    <value>Gelen</value>
+  </data>
+  <data name="Phone_Call_IncomingFor" xml:space="preserve">
+    <value>Gelen · {0}</value>
+    <comment>{0} = duration 3:05</comment>
+  </data>
+  <data name="Phone_Call_Unknown" xml:space="preserve">
+    <value>Bilinmeyen</value>
+  </data>
+  <data name="Phone_Call_UnknownCaller" xml:space="preserve">
+    <value>Bilinmeyen arayan</value>
+  </data>
+  <data name="Phone_Call_Unmute" xml:space="preserve">
+    <value>Sesi aç</value>
+  </data>
+  <data name="Phone_Call_Mute" xml:space="preserve">
+    <value>Sessiz</value>
+  </data>
+  <data name="Phone_Call_AudioToPhone" xml:space="preserve">
+    <value>Sesi telefona aktar</value>
+  </data>
+  <data name="Phone_Call_AudioToPc" xml:space="preserve">
+    <value>Sesi bilgisayara al</value>
+  </data>
+  <data name="Phone_Call_End" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="Phone_Call_Hide" xml:space="preserve">
+    <value>Gizle</value>
+  </data>
+  <data name="Phone_Call_RingingCaption" xml:space="preserve">
+    <value>iPhone · gelen arama</value>
+  </data>
+  <data name="Phone_Call_RingingAudioOnPhone" xml:space="preserve">
+    <value>iPhone · ses telefonda</value>
+  </data>
+  <data name="Phone_Call_AncsNote" xml:space="preserve">
+    <value>Görüşme iPhone'da sürüyor. Bu bilgisayar yalnızca yanıtlayıp reddedebilir.</value>
+  </data>
+  <data name="Phone_Call_AudioOnPc" xml:space="preserve">
+    <value>Ses bu bilgisayarda</value>
+  </data>
+  <data name="Phone_Call_AudioOnIphone" xml:space="preserve">
+    <value>Ses iPhone'da</value>
+  </data>
+  <data name="Phone_Call_Ringing" xml:space="preserve">
+    <value>Arıyor…</value>
+  </data>
+  <data name="Phone_Call_Dialing" xml:space="preserve">
+    <value>Aranıyor…</value>
+  </data>
+  <data name="Phone_Call_Ended" xml:space="preserve">
+    <value>Arama bitti</value>
+  </data>
+  <data name="Phone_Call_OnHold" xml:space="preserve">
+    <value>Beklemede</value>
+  </data>
+  <data name="Phone_Call_WindowTitle" xml:space="preserve">
+    <value>Gelen arama</value>
+  </data>
+  <data name="Phone_Call_Answer" xml:space="preserve">
+    <value>Yanıtla</value>
+  </data>
+  <data name="Phone_Call_Decline" xml:space="preserve">
+    <value>Reddet</value>
+  </data>
+  <data name="Phone_Cap_FullAudio" xml:space="preserve">
+    <value>Aramalar: ses bu bilgisayarda</value>
+  </data>
+  <data name="Phone_Cap_ControlOnly" xml:space="preserve">
+    <value>Aramalar: yanıtla / reddet (ses telefonda)</value>
+  </data>
+  <data name="Phone_Cap_None" xml:space="preserve">
+    <value>Aramalar kullanılamıyor</value>
+  </data>
+  <data name="Phone_Cap_Ready" xml:space="preserve">
+    <value>Windows Eller Serbest bağlantısı hazır: aramalar bu bilgisayarın hoparlör ve mikrofonuyla konuşulabilir.</value>
+  </data>
+  <data name="Phone_Cap_NotConnected" xml:space="preserve">
+    <value>iPhone bağlı değil.</value>
+  </data>
+  <data name="Phone_Cap_NoPackage" xml:space="preserve">
+    <value>NitroDrop paketsiz çalışıyor; Windows arama sesini yalnızca paket kimliği olan uygulamalara veriyor.</value>
+  </data>
+  <data name="Phone_Cap_LineError" xml:space="preserve">
+    <value>Windows arama hattı açılamadı ({0}).</value>
+    <comment>{0} = system error text</comment>
+  </data>
+  <data name="Phone_Cap_NoHandsFree" xml:space="preserve">
+    <value>iPhone Windows'ta “Eller Serbest” (HFP) cihazı olarak görünmüyor.</value>
+  </data>
+  <data name="Phone_Cap_DeniedBySystem" xml:space="preserve">
+    <value>Bu iPhone'un aramaları başka bir uygulamaya (büyük olasılıkla Phone Link) kayıtlı.</value>
+  </data>
+  <data name="Phone_Cap_DeniedByUser" xml:space="preserve">
+    <value>Telefon araması erişimine izin verilmedi.</value>
+  </data>
+  <data name="Phone_Cap_AccessUnknown" xml:space="preserve">
+    <value>Windows arama erişimi doğrulanamadı.</value>
+  </data>
+  <data name="Phone_Cap_NotRegistered" xml:space="preserve">
+    <value>Windows uygulama kaydını kabul etmedi (RegisterApp).</value>
+  </data>
+  <data name="Phone_Cap_ConnectFailed" xml:space="preserve">
+    <value>Windows Eller Serbest bağlantısını kuramadı (ConnectAsync).</value>
+  </data>
+  <data name="Phone_Cap_SuffixControlOnly" xml:space="preserve">
+    <value>Aramaları buradan yanıtlayıp reddedebilirsiniz; konuşma iPhone'da sürer.</value>
+    <comment>Appended after a Phone_Cap_* reason</comment>
+  </data>
+  <data name="Phone_Cap_SuffixNoAncs" xml:space="preserve">
+    <value>Bildirim bağlantısı (ANCS) da yok.</value>
+    <comment>Appended after a Phone_Cap_* reason</comment>
+  </data>
+  <data name="Phone_Fix_Package" xml:space="preserve">
+    <value>NitroDrop'u MSIX paketiyle kurun. Paket, Windows'un arama sesini uygulamaya vermesi için gerekli.</value>
+  </data>
+  <data name="Phone_Fix_PhoneLink" xml:space="preserve">
+    <value>Phone Link (Telefon Bağlantısı) uygulamasında bu iPhone'un bağlantısını kaldırın; ardından iPhone'u Windows Bluetooth ayarlarından kaldırıp NitroDrop ile yeniden eşleştirin.</value>
+  </data>
+  <data name="Phone_Fix_HandsFree" xml:space="preserve">
+    <value>iPhone'u Windows Bluetooth ayarlarından eşleştirin; eşleşme sırasında “Kişileri Eşitle”ye izin verin.</value>
+  </data>
+  <data name="Phone_Fix_Privacy" xml:space="preserve">
+    <value>Windows Ayarlar → Gizlilik ve güvenlik → Telefon aramaları'ndan NitroDrop'a izin verin.</value>
+  </data>
+  <data name="Phone_Fix_Nearby" xml:space="preserve">
+    <value>iPhone'un Bluetooth'unun açık ve yakında olduğundan emin olun.</value>
+  </data>
+</root>

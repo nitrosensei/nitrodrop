@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Tab_Nearby" xml:space="preserve">
+    <value>Рядом</value>
+  </data>
+  <data name="Tab_Devices" xml:space="preserve">
+    <value>Устройства</value>
+  </data>
+  <data name="Tab_Phone" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
+  <data name="Tab_History" xml:space="preserve">
+    <value>История</value>
+  </data>
+  <data name="Main_HotkeyBusy" xml:space="preserve">
+    <value>Ctrl + Alt + A (занято другим приложением)</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Открыть NitroDrop</value>
+  </data>
+  <data name="Tray_Quit" xml:space="preserve">
+    <value>Выход</value>
+  </data>
+  <data name="Nearby_PeerTip" xml:space="preserve">
+    <value>Нажмите или перетащите сюда файл · правый щелчок — параметры</value>
+  </data>
+  <data name="Nearby_MenuSendFiles" xml:space="preserve">
+    <value>Отправить файлы…</value>
+  </data>
+  <data name="Nearby_MenuSendClipboard" xml:space="preserve">
+    <value>Отправить буфер обмена</value>
+  </data>
+  <data name="Nearby_MenuSetPhoto" xml:space="preserve">
+    <value>Выбрать фото…</value>
+  </data>
+  <data name="Nearby_MenuClearPhoto" xml:space="preserve">
+    <value>Удалить фото</value>
+  </data>
+  <data name="Nearby_MenuRename" xml:space="preserve">
+    <value>Переименовать…</value>
+  </data>
+  <data name="Nearby_MenuTrusted" xml:space="preserve">
+    <value>Доверенное устройство (принимать без запроса)</value>
+  </data>
+  <data name="Nearby_TrustedTip" xml:space="preserve">
+    <value>Доверенное устройство: принимается без запроса</value>
+  </data>
+  <data name="Nearby_SetupBanner" xml:space="preserve">
+    <value>Остался один шаг настройки для прямой связи с iPhone</value>
+  </data>
+  <data name="Nearby_SetupButton" xml:space="preserve">
+    <value>Настроить</value>
+  </data>
+  <data name="Nearby_Searching" xml:space="preserve">
+    <value>Поиск iPhone, iPad и Mac поблизости…</value>
+  </data>
+  <data name="Nearby_SearchingHint" xml:space="preserve">
+    <value>На iPhone откройте Пункт управления, коснитесь AirDrop и выберите «Для всех на 10 минут».</value>
+  </data>
+  <data name="Nearby_ShowFolder" xml:space="preserve">
+    <value>Показать папку</value>
+  </data>
+  <data name="Nearby_DropHint" xml:space="preserve">
+    <value>Перетащите файл на устройство или нажмите на устройство, чтобы выбрать файлы.</value>
+  </data>
+  <data name="Nearby_WhoCanSeeMe" xml:space="preserve">
+    <value>Кто меня видит</value>
+  </data>
+  <data name="Nearby_PendingOne" xml:space="preserve">
+    <value>«{0}» готов к отправке — выберите устройство</value>
+  </data>
+  <data name="Nearby_PendingMany_Plural" xml:space="preserve">
+    <value>{0} объект готов к отправке — выберите устройство|{0} объекта готовы к отправке — выберите устройство|{0} объектов готовы к отправке — выберите устройство</value>
+  </data>
+  <data name="Nearby_PickFilesTitle" xml:space="preserve">
+    <value>Отправить на {0}</value>
+  </data>
+  <data name="Nearby_PhotoTitle" xml:space="preserve">
+    <value>Фото для {0}</value>
+  </data>
+  <data name="Nearby_ImageFilter" xml:space="preserve">
+    <value>Изображения</value>
+  </data>
+  <data name="Nearby_VisibleNobody" xml:space="preserve">
+    <value>Никто не может вас найти</value>
+  </data>
+  <data name="Nearby_VisibleEveryone" xml:space="preserve">
+    <value>Вас видят все · {0}</value>
+  </data>
+  <data name="Mode_Off" xml:space="preserve">
+    <value>Прием выключен</value>
+  </data>
+  <data name="Mode_ContactsOnly" xml:space="preserve">
+    <value>Только контакты</value>
+  </data>
+  <data name="Mode_Everyone" xml:space="preserve">
+    <value>Для всех на 10 минут</value>
+  </data>
+  <data name="Mode_NeedsAppleAccount" xml:space="preserve">
+    <value>Требуется Аккаунт Apple</value>
+  </data>
+  <data name="Main_ClipboardEmpty" xml:space="preserve">
+    <value>Буфер обмена пуст — сначала что-нибудь скопируйте.</value>
+  </data>
+  <data name="Main_ClipboardSending" xml:space="preserve">
+    <value>Отправка буфера обмена на {0}…</value>
+  </data>
+  <data name="Peer_Waiting" xml:space="preserve">
+    <value>Ожидание…</value>
+  </data>
+  <data name="Peer_Sending" xml:space="preserve">
+    <value>Отправка…</value>
+  </data>
+  <data name="Peer_Sent" xml:space="preserve">
+    <value>Отправлено</value>
+  </data>
+  <data name="Peer_Declined" xml:space="preserve">
+    <value>Отклонено</value>
+  </data>
+  <data name="Peer_Failed" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="Speed_MBps" xml:space="preserve">
+    <value>{0} МБ/с</value>
+  </data>
+  <data name="Speed_SecondsLeft" xml:space="preserve">
+    <value>осталось {0} с</value>
+  </data>
+  <data name="Speed_MinutesLeft" xml:space="preserve">
+    <value>осталось {0} мин</value>
+  </data>
+  <data name="Receive_FromTitle" xml:space="preserve">
+    <value>Получение от {0}</value>
+  </data>
+  <data name="Receive_FromNotify" xml:space="preserve">
+    <value>Получение от {0}…</value>
+  </data>
+  <data name="Receive_DetailUnknownTotal" xml:space="preserve">
+    <value>Получено {0} · {1}</value>
+  </data>
+  <data name="Receive_LinkShared" xml:space="preserve">
+    <value>{0} поделился ссылкой</value>
+  </data>
+  <data name="Receive_ItemsReceived_Plural" xml:space="preserve">
+    <value>Получен {0} объект|Получено {0} объекта|Получено {0} объектов</value>
+  </data>
+  <data name="Receive_DemoReceived" xml:space="preserve">
+    <value>Получено (демо — файл не сохранен)</value>
+  </data>
+  <data name="Receive_SavedTo" xml:space="preserve">
+    <value>Сохранено в папку «{0}»</value>
+  </data>
+  <data name="Receive_SheetLabel" xml:space="preserve">
+    <value>NITRODROP · ВХОДЯЩИЕ</value>
+  </data>
+  <data name="Receive_OneLink" xml:space="preserve">
+    <value>хочет поделиться с вами ссылкой.</value>
+  </data>
+  <data name="Receive_Links_Plural" xml:space="preserve">
+    <value>хочет поделиться с вами {0} ссылкой.|хочет поделиться с вами {0} ссылками.|хочет поделиться с вами {0} ссылками.</value>
+  </data>
+  <data name="Receive_OneFile" xml:space="preserve">
+    <value>хочет поделиться с вами файлом «{0}»</value>
+  </data>
+  <data name="Receive_Items_Plural" xml:space="preserve">
+    <value>хочет поделиться с вами {0} объектом|хочет поделиться с вами {0} объектами|хочет поделиться с вами {0} объектами</value>
+  </data>
+  <data name="Receive_Timeout" xml:space="preserve">
+    <value>Автоматически отклонится через {0} с</value>
+  </data>
+  <data name="History_Title" xml:space="preserve">
+    <value>Недавние передачи</value>
+  </data>
+  <data name="History_EmptyTitle" xml:space="preserve">
+    <value>Пока ничего не передано</value>
+  </data>
+  <data name="History_EmptyBody" xml:space="preserve">
+    <value>Здесь появятся отправленные и полученные файлы и ссылки.</value>
+  </data>
+  <data name="History_TitleMore_Plural" xml:space="preserve">
+    <value>{1} и еще {0}|{1} и еще {0}|{1} и еще {0}</value>
+  </data>
+  <data name="History_Transfer" xml:space="preserve">
+    <value>Передача</value>
+  </data>
+  <data name="History_FromDevice" xml:space="preserve">
+    <value>От: {0}</value>
+  </data>
+  <data name="History_ToDevice" xml:space="preserve">
+    <value>Кому: {0}</value>
+  </data>
+  <data name="History_NoteDeclined" xml:space="preserve">
+    <value>отклонено</value>
+  </data>
+  <data name="History_NoteFailed" xml:space="preserve">
+    <value>ошибка</value>
+  </data>
+  <data name="History_NoteDemo" xml:space="preserve">
+    <value>демо — файл не сохранен</value>
+  </data>
+  <data name="Prompt_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Prompt_RenameTitle" xml:space="preserve">
+    <value>Переименовать</value>
+  </data>
+  <data name="Prompt_RenameLabel" xml:space="preserve">
+    <value>Отображаемое имя для {0}:</value>
+  </data>
+  <data name="Prompt_AddIphoneTitle" xml:space="preserve">
+    <value>Добавить iPhone</value>
+  </data>
+  <data name="Prompt_AddIphoneLabel" xml:space="preserve">
+    <value>Дайте этому iPhone имя:</value>
+  </data>
+  <data name="Prompt_AddIphoneDefault" xml:space="preserve">
+    <value>Мой iPhone</value>
+  </data>
+  <data name="Status_LanOnly" xml:space="preserve">
+    <value>Драйвер Wi-Fi не установлен · режим локальной сети: компьютеры с NitroDrop в одной сети видят друг друга</value>
+  </data>
+  <data name="Status_Disabled" xml:space="preserve">
+    <value>Прямое подключение к iPhone выключено · режим локальной сети</value>
+  </data>
+  <data name="Status_Launching" xml:space="preserve">
+    <value>Ожидание разрешения администратора для подключения iPhone…</value>
+  </data>
+  <data name="Status_Cancelled" xml:space="preserve">
+    <value>Разрешение администратора не получено · подключение к iPhone выключено, режим локальной сети</value>
+  </data>
+  <data name="Status_LaunchFailed" xml:space="preserve">
+    <value>Не удалось запустить помощник Wi-Fi ({0}) · режим локальной сети</value>
+  </data>
+  <data name="Status_Starting" xml:space="preserve">
+    <value>Запуск подключения к iPhone…</value>
+  </data>
+  <data name="Status_Ready_Plural" xml:space="preserve">
+    <value>Подключение к iPhone готово · канал {1} · {0} устройство|Подключение к iPhone готово · канал {1} · {0} устройства|Подключение к iPhone готово · канал {1} · {0} устройств</value>
+  </data>
+  <data name="Status_Failed" xml:space="preserve">
+    <value>Не удалось подключиться к iPhone: {0} · режим локальной сети</value>
+  </data>
+  <data name="Status_BindFailed" xml:space="preserve">
+    <value>Не удалось подключиться к iPhone: сетевой адаптер AWDL недоступен · режим локальной сети</value>
+  </data>
+  <data name="Status_HostExited" xml:space="preserve">
+    <value>Помощник Wi-Fi закрылся · режим локальной сети</value>
+  </data>
+  <data name="Status_Demo" xml:space="preserve">
+    <value>Драйвер Wi-Fi еще не установлен · демо-режим</value>
+  </data>
+  <data name="Failure_DriverMissing" xml:space="preserve">
+    <value>драйвер Wi-Fi не найден</value>
+  </data>
+  <data name="Failure_AccessDenied" xml:space="preserve">
+    <value>нет доступа к адаптеру Wi-Fi (возможно, его использует другое приложение)</value>
+  </data>
+  <data name="Failure_WintunMissing" xml:space="preserve">
+    <value>отсутствует wintun.dll</value>
+  </data>
+  <data name="Failure_RfKill" xml:space="preserve">
+    <value>Wi-Fi выключен (режим «в самолете» или аппаратный переключатель)</value>
+  </data>
+  <data name="Failure_Radio" xml:space="preserve">
+    <value>не удалось запустить адаптер Wi-Fi</value>
+  </data>
+  <data name="Failure_Network" xml:space="preserve">
+    <value>не удалось подготовить сетевой адаптер AWDL</value>
+  </data>
+  <data name="Failure_Other" xml:space="preserve">
+    <value>непредвиденная ошибка</value>
+  </data>
+  <data name="Clip_Image" xml:space="preserve">
+    <value>Изображение из буфера обмена</value>
+  </data>
+  <data name="Clip_LinkCopied" xml:space="preserve">
+    <value>Ссылка скопирована в буфер обмена</value>
+  </data>
+  <data name="Clip_TextCopied" xml:space="preserve">
+    <value>Текст скопирован в буфер обмена</value>
+  </data>
+  <data name="Clip_ImageCopied" xml:space="preserve">
+    <value>Изображение скопировано в буфер обмена</value>
+  </data>
+  <data name="Device_WindowsPc" xml:space="preserve">
+    <value>ПК с Windows</value>
+  </data>
+  <data name="Device_WindowsLaptop" xml:space="preserve">
+    <value>Ноутбук с Windows</value>
+  </data>
+  <data name="Device_WindowsDesktop" xml:space="preserve">
+    <value>Настольный ПК с Windows</value>
+  </data>
+  <data name="Device_WindowsTablet" xml:space="preserve">
+    <value>Планшет с Windows</value>
+  </data>
+  <data name="Device_AndroidPhone" xml:space="preserve">
+    <value>Телефон Android</value>
+  </data>
+  <data name="Device_Generic" xml:space="preserve">
+    <value>Устройство</value>
+  </data>
+  <data name="Launcher_NotFound" xml:space="preserve">
+    <value>{0} не найден</value>
+  </data>
+  <data name="Launcher_NoSid" xml:space="preserve">
+    <value>не удалось прочитать идентификатор пользователя (SID)</value>
+  </data>
+  <data name="Launcher_StartFailed" xml:space="preserve">
+    <value>не удалось запустить {0}</value>
+  </data>
+  <data name="Launcher_Exited" xml:space="preserve">
+    <value>{0} завершился (код {1})</value>
+  </data>
+</root>

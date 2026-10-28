@@ -83,4 +83,7 @@
     <PackageReference Include="QRCoder" Version="1.6.0" />
   </ItemGroup>
 
+  <!-- UI strings: Localization/*.resx → strongly-typed <Module>Strings + satellite assemblies (see the targets file). -->
+  <Import Project="Localization\Localization.targets" />
+
 </Project>

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using AirDrop.App.Localization;
 using AirDrop.App.Services;
 using Nitro.Sync;
 
@@ -101,7 +102,7 @@ public sealed class MainViewModel : Observable
     public bool IsNearby { get => Tab == MainTab.Nearby; set { if (value) Tab = MainTab.Nearby; } }
     public bool IsDevices { get => Tab == MainTab.Devices; set { if (value) Tab = MainTab.Devices; } }
     public bool IsHistory { get => Tab == MainTab.History; set { if (value) Tab = MainTab.History; } }
-    public bool IsSettings => Tab == MainTab.Settings;
+    public bool IsSettings { get => Tab == MainTab.Settings; set { if (value) Tab = MainTab.Settings; } }
     public bool IsPhone { get => Tab == MainTab.Phone; set { if (value) Tab = MainTab.Phone; } }
 
     /// <summary>"Telefon" tab (iPhone continuity); set by App from ContinuityHost.</summary>
@@ -119,14 +120,14 @@ public sealed class MainViewModel : Observable
     }
     public bool HasPending => PendingFiles.Count > 0;
     public string PendingText => PendingFiles.Count == 1
-        ? $"“{Path.GetFileName(PendingFiles[0])}” göndermeye hazır — bir cihaz seçin"
-        : $"{PendingFiles.Count} öge göndermeye hazır — bir cihaz seçin";
+        ? MainStrings.Nearby_PendingOne(Path.GetFileName(PendingFiles[0]))
+        : MainStrings.Nearby_PendingMany_Plural(PendingFiles.Count);
 
     public IReadOnlyList<ModeOption> Modes { get; } = new[]
     {
-        new ModeOption(ReceiveMode.Off, "Alma Kapalı", true),
-        new ModeOption(ReceiveMode.ContactsOnly, "Yalnızca Kişiler", false),
-        new ModeOption(ReceiveMode.Everyone, "Herkes (10 dakika)", true),
+        new ModeOption(ReceiveMode.Off, true),
+        new ModeOption(ReceiveMode.ContactsOnly, false),
+        new ModeOption(ReceiveMode.Everyone, true),
     };
 
     public ModeOption SelectedMode
@@ -147,8 +148,8 @@ public sealed class MainViewModel : Observable
 
     public string VisibilityText => _mode switch
     {
-        ReceiveMode.Off => "Kimse sizi bulamaz",
-        ReceiveMode.Everyone => $"Herkes sizi bulabilir · {Remaining():m\\:ss}",
+        ReceiveMode.Off => MainStrings.Nearby_VisibleNobody,
+        ReceiveMode.Everyone => MainStrings.Nearby_VisibleEveryone(Remaining().ToString(@"m\:ss", Loc.Culture)),
         _ => "",
     };
 
@@ -245,7 +246,7 @@ public sealed class MainViewModel : Observable
         var payload = ClipboardBridge.Read();
         if (payload is null)
         {
-            Notify?.Invoke("NitroDrop", "Pano boş — önce bir şey kopyalayın.", null);
+            Notify?.Invoke("NitroDrop", MainStrings.Main_ClipboardEmpty, null);
             return;
         }
         _settings.ClipboardTargetKey = peer.StableKey;
@@ -266,7 +267,7 @@ public sealed class MainViewModel : Observable
             if (payload is { Files.Count: > 0 }) PendingFiles = payload.Files;
             return false;   // caller shows the window so the user can pick
         }
-        Notify?.Invoke("NitroDrop", $"Pano {target.DisplayName} cihazına gönderiliyor…", null);
+        Notify?.Invoke("NitroDrop", MainStrings.Main_ClipboardSending(target.DisplayName), null);
         await SendClipboardAsync(target);
         return true;
     }
@@ -304,7 +305,7 @@ public sealed class MainViewModel : Observable
                 Links = link is null ? new() : new() { link.ToString() },
                 TotalBytes = files.Sum(SafeSize),
                 Succeeded = result == SendOutcome.Delivered,
-                Note = result == SendOutcome.Declined ? "reddedildi" : result == SendOutcome.Failed ? "başarısız" : null,
+                Note = result == SendOutcome.Declined ? HistoryNotes.Declined : result == SendOutcome.Failed ? HistoryNotes.Failed : null,
             });
         }
         await Task.Delay(TimeSpan.FromSeconds(3));
@@ -328,7 +329,7 @@ public sealed class MainViewModel : Observable
         if (prefs?.Trusted == true)
         {
             ok = true;   // trusted device: accept silently, like your own devices on Apple
-            if (!linksOnly) Notify?.Invoke("NitroDrop", $"{who} cihazından alınıyor…", null);
+            if (!linksOnly) Notify?.Invoke("NitroDrop", MainStrings.Receive_FromNotify(who), null);
         }
         else
         {
@@ -339,7 +340,9 @@ public sealed class MainViewModel : Observable
 
         if (ok && !linksOnly)
         {
-            ReceiveTitle = $"{who} cihazından alınıyor";
+            _receiveFrom = who;
+            _receiveTitleKind = ReceiveTitleKind.From;
+            ReceiveTitle = MainStrings.Receive_FromTitle(who);
             ReceiveDetail = "";
             ReceiveProgress = 0;
             IsReceiving = true;
@@ -353,13 +356,13 @@ public sealed class MainViewModel : Observable
         if (p.BytesTotal > 0)
         {
             ReceiveProgress = p.Fraction;
-            ReceiveDetail = $"{Format.Size(p.BytesDone)} / {Format.Size(p.BytesTotal)} · {Format.Speed(p)}";
+            ReceiveDetail = $"{Loc.Bytes(p.BytesDone)} / {Loc.Bytes(p.BytesTotal)} · {Format.Speed(p)}";
         }
         else
         {
             // Total unknown (iOS doesn't announce sizes): show amount + speed, keep the bar moving gently.
             ReceiveProgress = Math.Min(0.95, ReceiveProgress + 0.01);
-            ReceiveDetail = $"{Format.Size(p.BytesDone)} alındı · {(p.BytesPerSecond / 1048576.0).ToString("0.0", new System.Globalization.CultureInfo("tr-TR"))} MB/sn";
+            ReceiveDetail = MainStrings.Receive_DetailUnknownTotal(Loc.Bytes(p.BytesDone), Format.Rate(p.BytesPerSecond));
         }
     }
 
@@ -386,20 +389,23 @@ public sealed class MainViewModel : Observable
             Paths = b.Paths.ToList(),
             Links = b.Links.Select(l => l.ToString()).ToList(),
             TotalBytes = b.TotalBytes,
-            Note = b.Paths.Count == 0 && b.Links.Count == 0 ? "demo — dosya yazılmadı" : null,
+            Note = b.Paths.Count == 0 && b.Links.Count == 0 ? HistoryNotes.Demo : null,
         });
 
         if (b.Paths.Count == 0 && b.Links.Count > 0)
         {
-            var msg = clip is null ? $"{who} bir bağlantı paylaştı" : $"{who}: {clip}";
+            var msg = clip is null ? MainStrings.Receive_LinkShared(who) : $"{who}: {clip}";
             Notify?.Invoke("NitroDrop", msg, () => Shell(b.Links[0].ToString()));
             return;
         }
 
         ReceiveProgress = 1;
-        ReceiveTitle = clip is not null ? clip   // text / single image: the clipboard is the destination
-            : b.Paths.Count > 0 ? $"{b.Paths.Count} öge alındı" : "Alındı (demo — dosya yazılmadı)";
-        ReceiveDetail = b.Paths.Count > 0 ? Path.GetFileName(_settings.ReceiveFolder) + " klasörüne kaydedildi" : "";
+        // text / single image: the clipboard is the destination
+        _receiveTitleKind = clip is not null ? ReceiveTitleKind.Clipboard : ReceiveTitleKind.Done;
+        _receiveClip = clip;
+        _receiveCount = b.Paths.Count;
+        ReceiveTitle = DoneTitle();
+        ReceiveDetail = b.Paths.Count > 0 ? MainStrings.Receive_SavedTo(Path.GetFileName(_settings.ReceiveFolder)) : "";
         Notify?.Invoke("NitroDrop", $"{who}: {ReceiveTitle}", () =>
         {
             var first = b.Paths.FirstOrDefault();
@@ -523,6 +529,25 @@ public sealed class MainViewModel : Observable
         Raise(nameof(VisibilityText));
     }
 
+    // Receive card text is set from events; remember what it says so a language switch can rebuild it.
+    private enum ReceiveTitleKind { None, From, Clipboard, Done }
+    private ReceiveTitleKind _receiveTitleKind;
+    private string _receiveFrom = "";
+    private string? _receiveClip;
+    private int _receiveCount;
+
+    private string DoneTitle() => _receiveTitleKind == ReceiveTitleKind.Clipboard && _receiveClip is not null ? _receiveClip
+        : _receiveCount > 0 ? MainStrings.Receive_ItemsReceived_Plural(_receiveCount) : MainStrings.Receive_DemoReceived;
+
+    public override void OnLanguageChanged()
+    {
+        if (_receiveTitleKind == ReceiveTitleKind.From) ReceiveTitle = MainStrings.Receive_FromTitle(_receiveFrom);
+        else if (_receiveTitleKind == ReceiveTitleKind.Done) ReceiveTitle = DoneTitle();
+        if (_receiveTitleKind == ReceiveTitleKind.Done && _receiveCount > 0)
+            ReceiveDetail = MainStrings.Receive_SavedTo(Path.GetFileName(_settings.ReceiveFolder));
+        base.OnLanguageChanged();
+    }
+
     private TimeSpan Remaining()
     {
         var r = _everyoneUntil - DateTime.UtcNow;
@@ -540,7 +565,18 @@ public sealed class MainViewModel : Observable
     }
 }
 
-public sealed record ModeOption(ReceiveMode Mode, string Title, bool Enabled)
+/// <summary>"Beni görebilecekler" choice; texts are read live so the combo follows the UI language.</summary>
+public sealed class ModeOption(ReceiveMode mode, bool enabled) : Observable
 {
-    public string Hint => Enabled ? "" : "Apple hesabı gerektirir";
+    public ReceiveMode Mode { get; } = mode;
+    public bool Enabled { get; } = enabled;
+
+    public string Title => Mode switch
+    {
+        ReceiveMode.Off => MainStrings.Mode_Off,
+        ReceiveMode.ContactsOnly => MainStrings.Mode_ContactsOnly,
+        _ => MainStrings.Mode_Everyone,
+    };
+
+    public string Hint => Enabled ? "" : MainStrings.Mode_NeedsAppleAccount;
 }

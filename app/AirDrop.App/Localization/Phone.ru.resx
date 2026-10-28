@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Phone_Status_NotPaired" xml:space="preserve">
+    <value>iPhone не подключен</value>
+  </data>
+  <data name="Phone_Status_NotPairedDetail" xml:space="preserve">
+    <value>Чтобы начать, свяжите свой iPhone.</value>
+  </data>
+  <data name="Phone_Status_Pairing" xml:space="preserve">
+    <value>Связывание…</value>
+  </data>
+  <data name="Phone_Status_PairingDetail" xml:space="preserve">
+    <value>На iPhone нажмите «Создать пару» в появившемся запросе.</value>
+  </data>
+  <data name="Phone_Status_Blocked" xml:space="preserve">
+    <value>iPhone используется приложением «Связь с телефоном»</value>
+  </data>
+  <data name="Phone_Status_BlockedDetail" xml:space="preserve">
+    <value>Этот iPhone сейчас использует приложение «Связь с телефоном». Откройте его → Параметры → Мои устройства → ⋯ рядом с iPhone → Удалить. Затем нажмите «Повторить».</value>
+  </data>
+  <data name="Phone_Status_BluetoothOff" xml:space="preserve">
+    <value>Bluetooth выключен</value>
+  </data>
+  <data name="Phone_Status_BluetoothOffDetail" xml:space="preserve">
+    <value>Включите Bluetooth в Параметрах Windows → Bluetooth и устройства.</value>
+  </data>
+  <data name="Phone_Status_Connecting" xml:space="preserve">
+    <value>Подключение к {0}…</value>
+  </data>
+  <data name="Phone_Status_ConnectingDetail" xml:space="preserve">
+    <value>Разблокируйте iPhone и держите его рядом.</value>
+  </data>
+  <data name="Phone_Status_Reconnecting" xml:space="preserve">
+    <value>Связь потеряна. Повторное подключение…</value>
+  </data>
+  <data name="Phone_Status_ReconnectingDetail" xml:space="preserve">
+    <value>Возможно, iPhone вне зоны действия или на нем выключен Bluetooth.</value>
+  </data>
+  <data name="Phone_Status_NoLeLink" xml:space="preserve">
+    <value>Не удалось установить канал уведомлений</value>
+  </data>
+  <data name="Phone_Status_NoLeLinkDetail" xml:space="preserve">
+    <value>iPhone связан, но канал уведомлений (LE) не открылся. Нажмите «Настроить канал уведомлений» и держите iPhone рядом.</value>
+  </data>
+  <data name="Phone_Status_Disconnected" xml:space="preserve">
+    <value>Нет подключения</value>
+  </data>
+  <data name="Phone_Status_Connected" xml:space="preserve">
+    <value>Подключено: {0}</value>
+  </data>
+  <data name="Phone_Status_NotificationsOff" xml:space="preserve">
+    <value>Уведомления выключены: на iPhone откройте Настройки → Bluetooth → ⓘ рядом с этим компьютером и включите «Делиться системными уведомлениями».</value>
+  </data>
+  <data name="Phone_Status_MessagesOff" xml:space="preserve">
+    <value>Сообщения выключены: на iPhone откройте экран ⓘ этого компьютера и включите «Показывать уведомления».</value>
+  </data>
+  <data name="Phone_Notifications" xml:space="preserve">
+    <value>Уведомления</value>
+  </data>
+  <data name="Phone_Messages" xml:space="preserve">
+    <value>Сообщения</value>
+  </data>
+  <data name="Phone_Calls" xml:space="preserve">
+    <value>Звонки</value>
+  </data>
+  <data name="Phone_Music" xml:space="preserve">
+    <value>Музыка</value>
+  </data>
+  <data name="Phone_MessagesAppName" xml:space="preserve">
+    <value>Сообщения</value>
+  </data>
+  <data name="Phone_SetUpLeLink" xml:space="preserve">
+    <value>Настроить канал уведомлений</value>
+  </data>
+  <data name="Phone_Retry" xml:space="preserve">
+    <value>Повторить</value>
+  </data>
+  <data name="Phone_More" xml:space="preserve">
+    <value>Ещё</value>
+  </data>
+  <data name="Phone_Menu_SyncContacts" xml:space="preserve">
+    <value>Синхронизировать контакты с iPhone</value>
+  </data>
+  <data name="Phone_Menu_ResetLeLink" xml:space="preserve">
+    <value>Заново настроить канал уведомлений</value>
+  </data>
+  <data name="Phone_Menu_Disconnect" xml:space="preserve">
+    <value>Больше не использовать этот iPhone</value>
+  </data>
+  <data name="Phone_Media_Previous" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="Phone_Media_PlayPause" xml:space="preserve">
+    <value>Воспроизвести / пауза</value>
+  </data>
+  <data name="Phone_Media_Next" xml:space="preserve">
+    <value>Далее</value>
+  </data>
+  <data name="Phone_Setup_Title" xml:space="preserve">
+    <value>Подключите iPhone</value>
+  </data>
+  <data name="Phone_Setup_Intro" xml:space="preserve">
+    <value>Уведомления, SMS и iMessage, а также входящие звонки появятся на этом компьютере. Драйверы и приложение для iPhone не нужны.</value>
+  </data>
+  <data name="Phone_Guide1_Title" xml:space="preserve">
+    <value>Откройте на iPhone экран Bluetooth</value>
+  </data>
+  <data name="Phone_Guide1_Body" xml:space="preserve">
+    <value>Настройки → Bluetooth. Пока этот экран открыт, компьютер видит iPhone.</value>
+  </data>
+  <data name="Phone_Guide2_Title" xml:space="preserve">
+    <value>Нажмите «Найти iPhone» и выберите его в списке</value>
+  </data>
+  <data name="Phone_Guide2_Body" xml:space="preserve">
+    <value>На обоих экранах появится одинаковый 6-значный код: нажмите «Создать пару» на iPhone и «Коды совпадают» здесь.</value>
+  </data>
+  <data name="Phone_Guide3_Title" xml:space="preserve">
+    <value>Включите три переключателя</value>
+  </data>
+  <data name="Phone_Guide3_Body" xml:space="preserve">
+    <value>На iPhone: Настройки → Bluetooth → значок ⓘ рядом с этим компьютером.</value>
+  </data>
+  <data name="Phone_Toggle1_Name" xml:space="preserve">
+    <value>Делиться системными уведомлениями</value>
+  </data>
+  <data name="Phone_Toggle1_Explains" xml:space="preserve">
+    <value>Уведомления и входящие звонки появляются на этом компьютере.</value>
+  </data>
+  <data name="Phone_Toggle2_Name" xml:space="preserve">
+    <value>Показывать уведомления</value>
+  </data>
+  <data name="Phone_Toggle2_Explains" xml:space="preserve">
+    <value>Читайте SMS и iMessage и отвечайте прямо отсюда.</value>
+  </data>
+  <data name="Phone_Toggle3_Name" xml:space="preserve">
+    <value>Синхронизировать контакты</value>
+  </data>
+  <data name="Phone_Toggle3_Explains" xml:space="preserve">
+    <value>Отображаются имена и фото звонящих и отправителей сообщений.</value>
+  </data>
+  <data name="Phone_IosSwitches_Header" xml:space="preserve">
+    <value>ТРИ ПЕРЕКЛЮЧАТЕЛЯ НА IPHONE</value>
+  </data>
+  <data name="Phone_IosMock_Path" xml:space="preserve">
+    <value>Настройки → Bluetooth → ⓘ рядом с этим ПК</value>
+  </data>
+  <data name="Phone_PhoneLinkHint" xml:space="preserve">
+    <value>Если iPhone подключен к приложению «Связь с телефоном», сначала удалите его там: iPhone передает уведомления и сообщения только одному приложению на компьютере.</value>
+  </data>
+  <data name="Phone_FindIphone" xml:space="preserve">
+    <value>Найти iPhone</value>
+  </data>
+  <data name="Phone_Pair_Found" xml:space="preserve">
+    <value>Найденные устройства</value>
+  </data>
+  <data name="Phone_Pair_Select" xml:space="preserve">
+    <value>Выбрать</value>
+  </data>
+  <data name="Phone_Pair_SearchAgain" xml:space="preserve">
+    <value>Искать снова</value>
+  </data>
+  <data name="Phone_Pair_CodesDiffer" xml:space="preserve">
+    <value>Не совпадают</value>
+  </data>
+  <data name="Phone_Pair_CodesMatch" xml:space="preserve">
+    <value>Коды совпадают</value>
+  </data>
+  <data name="Phone_Pair_Submit" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="Phone_Pair_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Phone_Pair_Searching" xml:space="preserve">
+    <value>Поиск iPhone… Не закрывайте на нем Настройки → Bluetooth.</value>
+  </data>
+  <data name="Phone_Pair_NotFound" xml:space="preserve">
+    <value>iPhone не найден. Разблокируйте iPhone, оставайтесь на экране Настройки → Bluetooth и повторите попытку.</value>
+  </data>
+  <data name="Phone_Pair_Pairing" xml:space="preserve">
+    <value>Связывание с {0}…</value>
+  </data>
+  <data name="Phone_Pair_Using" xml:space="preserve">
+    <value>Используется {0}.</value>
+  </data>
+  <data name="Phone_Pair_KeepClose" xml:space="preserve">
+    <value>Держите iPhone рядом с компьютером…</value>
+  </data>
+  <data name="Phone_Pair_EnterOnIphone" xml:space="preserve">
+    <value>Введите этот код на iPhone.</value>
+  </data>
+  <data name="Phone_Pair_ConfirmDevice" xml:space="preserve">
+    <value>Связать с {0}?</value>
+  </data>
+  <data name="Phone_Pair_CompareCode" xml:space="preserve">
+    <value>Код на iPhone совпадает с этим?</value>
+  </data>
+  <data name="Phone_Pair_TypeCode" xml:space="preserve">
+    <value>Введите код, показанный на iPhone.</value>
+  </data>
+  <data name="Phone_Pair_LinkEstablished" xml:space="preserve">
+    <value>Канал уведомлений установлен.</value>
+  </data>
+  <data name="Phone_Pair_Paired" xml:space="preserve">
+    <value>Связь с {0} установлена.</value>
+  </data>
+  <data name="Phone_Pair_AlreadyPaired" xml:space="preserve">
+    <value>{0} уже связан.</value>
+  </data>
+  <data name="Phone_Pair_Canceled" xml:space="preserve">
+    <value>Связывание отменено.</value>
+  </data>
+  <data name="Phone_Pair_Rejected" xml:space="preserve">
+    <value>Связывание отклонено. Нажмите «Создать пару» на iPhone и убедитесь, что коды совпадают.</value>
+  </data>
+  <data name="Phone_Pair_LookupFailed" xml:space="preserve">
+    <value>iPhone не найден ({0}). Открыт ли экран Настройки → Bluetooth?</value>
+  </data>
+  <data name="Phone_Pair_WindowsCannotPair" xml:space="preserve">
+    <value>Windows не разрешает связывание с этим устройством.</value>
+  </data>
+  <data name="Phone_Pair_NoResponse" xml:space="preserve">
+    <value>iPhone не ответил. Не закрывайте экран Настройки → Bluetooth и повторите попытку.</value>
+  </data>
+  <data name="Phone_Pair_NoAppleNearby" xml:space="preserve">
+    <value>Рядом нет устройств Apple. Поднесите iPhone к компьютеру и включите его экран.</value>
+  </data>
+  <data name="Phone_Pair_LeRejected" xml:space="preserve">
+    <value>iPhone не принял LE-связывание.</value>
+  </data>
+  <data name="Phone_Pair_HidTimeout" xml:space="preserve">
+    <value>iPhone не подключился. На iPhone откройте Настройки → Bluetooth → Другие устройства и нажмите на этот компьютер.</value>
+  </data>
+  <data name="Phone_Pair_Failed" xml:space="preserve">
+    <value>Не удалось выполнить связывание.</value>
+  </data>
+  <data name="Phone_Pair_FailedDetail" xml:space="preserve">
+    <value>Ошибка связывания: {0}</value>
+  </data>
+  <data name="Phone_Contacts_Synced_Plural" xml:space="preserve">
+    <value>Синхронизирован {0} контакт.|Синхронизировано {0} контакта.|Синхронизировано {0} контактов.</value>
+  </data>
+  <data name="Phone_Contacts_None" xml:space="preserve">
+    <value>Контакты не получены. Включен ли на iPhone параметр «Синхронизировать контакты»?</value>
+  </data>
+  <data name="Phone_Contacts_Failed" xml:space="preserve">
+    <value>Не удалось получить контакты ({0}).</value>
+  </data>
+  <data name="Phone_Messages_Empty" xml:space="preserve">
+    <value>Сообщений пока нет.
+SMS и iMessage, полученные при подключенном iPhone, появятся здесь.</value>
+  </data>
+  <data name="Phone_Reply_Placeholder" xml:space="preserve">
+    <value>Сообщение</value>
+  </data>
+  <data name="Phone_Reply_Send" xml:space="preserve">
+    <value>Отправить (через iPhone)</value>
+  </data>
+  <data name="Phone_Messages_SelectConversation" xml:space="preserve">
+    <value>Выберите разговор</value>
+  </data>
+  <data name="Phone_Message_Sending" xml:space="preserve">
+    <value>Отправка…</value>
+  </data>
+  <data name="Phone_Message_Failed" xml:space="preserve">
+    <value>Не отправлено</value>
+  </data>
+  <data name="Phone_Conversation_You" xml:space="preserve">
+    <value>Вы: {0}</value>
+  </data>
+  <data name="Phone_Notifs_Header" xml:space="preserve">
+    <value>Уведомления iPhone</value>
+  </data>
+  <data name="Phone_Notifs_ClearAll" xml:space="preserve">
+    <value>Очистить все</value>
+  </data>
+  <data name="Phone_Notifs_Empty" xml:space="preserve">
+    <value>Нет уведомлений</value>
+  </data>
+  <data name="Phone_Notif_DefaultPositive" xml:space="preserve">
+    <value>ОК</value>
+  </data>
+  <data name="Phone_Notif_DefaultNegative" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Phone_Notif_OpenInMessages" xml:space="preserve">
+    <value>Открыть в Сообщениях</value>
+  </data>
+  <data name="Phone_Notif_OpenWith" xml:space="preserve">
+    <value>Открыть в {0}</value>
+  </data>
+  <data name="Phone_Toast_Title" xml:space="preserve">
+    <value>Уведомление iPhone</value>
+  </data>
+  <data name="Phone_Toast_PreviewHidden" xml:space="preserve">
+    <value>Предпросмотр скрыт</value>
+  </data>
+  <data name="Phone_Calls_FixHeader" xml:space="preserve">
+    <value>Чтобы звук звонков шел через компьютер</value>
+  </data>
+  <data name="Phone_Calls_Empty" xml:space="preserve">
+    <value>Нет недавних звонков</value>
+  </data>
+  <data name="Phone_Call_Missed" xml:space="preserve">
+    <value>Пропущенный звонок</value>
+  </data>
+  <data name="Phone_Call_Declined" xml:space="preserve">
+    <value>Отклонен</value>
+  </data>
+  <data name="Phone_Call_Outgoing" xml:space="preserve">
+    <value>Исходящий</value>
+  </data>
+  <data name="Phone_Call_OutgoingFor" xml:space="preserve">
+    <value>Исходящий · {0}</value>
+  </data>
+  <data name="Phone_Call_Incoming" xml:space="preserve">
+    <value>Входящий</value>
+  </data>
+  <data name="Phone_Call_IncomingFor" xml:space="preserve">
+    <value>Входящий · {0}</value>
+  </data>
+  <data name="Phone_Call_Unknown" xml:space="preserve">
+    <value>Неизвестный</value>
+  </data>
+  <data name="Phone_Call_UnknownCaller" xml:space="preserve">
+    <value>Неизвестный абонент</value>
+  </data>
+  <data name="Phone_Call_Unmute" xml:space="preserve">
+    <value>Вкл. звук</value>
+  </data>
+  <data name="Phone_Call_Mute" xml:space="preserve">
+    <value>Без звука</value>
+  </data>
+  <data name="Phone_Call_AudioToPhone" xml:space="preserve">
+    <value>Звук на телефон</value>
+  </data>
+  <data name="Phone_Call_AudioToPc" xml:space="preserve">
+    <value>Звук на компьютер</value>
+  </data>
+  <data name="Phone_Call_End" xml:space="preserve">
+    <value>Завершить</value>
+  </data>
+  <data name="Phone_Call_Hide" xml:space="preserve">
+    <value>Скрыть</value>
+  </data>
+  <data name="Phone_Call_RingingCaption" xml:space="preserve">
+    <value>iPhone · входящий звонок</value>
+  </data>
+  <data name="Phone_Call_RingingAudioOnPhone" xml:space="preserve">
+    <value>iPhone · звук на телефоне</value>
+  </data>
+  <data name="Phone_Call_AncsNote" xml:space="preserve">
+    <value>Разговор идет на iPhone. Этот компьютер может только ответить или отклонить звонок.</value>
+  </data>
+  <data name="Phone_Call_AudioOnPc" xml:space="preserve">
+    <value>Звук на этом компьютере</value>
+  </data>
+  <data name="Phone_Call_AudioOnIphone" xml:space="preserve">
+    <value>Звук на iPhone</value>
+  </data>
+  <data name="Phone_Call_Ringing" xml:space="preserve">
+    <value>Звонит…</value>
+  </data>
+  <data name="Phone_Call_Dialing" xml:space="preserve">
+    <value>Вызов…</value>
+  </data>
+  <data name="Phone_Call_Ended" xml:space="preserve">
+    <value>Звонок завершен</value>
+  </data>
+  <data name="Phone_Call_OnHold" xml:space="preserve">
+    <value>На удержании</value>
+  </data>
+  <data name="Phone_Call_WindowTitle" xml:space="preserve">
+    <value>Входящий звонок</value>
+  </data>
+  <data name="Phone_Call_Answer" xml:space="preserve">
+    <value>Ответить</value>
+  </data>
+  <data name="Phone_Call_Decline" xml:space="preserve">
+    <value>Отклонить</value>
+  </data>
+  <data name="Phone_Cap_FullAudio" xml:space="preserve">
+    <value>Звонки: звук на компьютере</value>
+  </data>
+  <data name="Phone_Cap_ControlOnly" xml:space="preserve">
+    <value>Звонки: ответ и отклонение (звук на телефоне)</value>
+  </data>
+  <data name="Phone_Cap_None" xml:space="preserve">
+    <value>Звонки недоступны</value>
+  </data>
+  <data name="Phone_Cap_Ready" xml:space="preserve">
+    <value>Канал громкой связи Windows готов: разговаривайте через динамики и микрофон этого компьютера.</value>
+  </data>
+  <data name="Phone_Cap_NotConnected" xml:space="preserve">
+    <value>iPhone не подключен.</value>
+  </data>
+  <data name="Phone_Cap_NoPackage" xml:space="preserve">
+    <value>NitroDrop запущен без пакета, а Windows передает звук звонков только приложениям с удостоверением пакета.</value>
+  </data>
+  <data name="Phone_Cap_LineError" xml:space="preserve">
+    <value>Не удалось открыть телефонную линию Windows ({0}).</value>
+  </data>
+  <data name="Phone_Cap_NoHandsFree" xml:space="preserve">
+    <value>Windows не видит iPhone как устройство громкой связи (HFP).</value>
+  </data>
+  <data name="Phone_Cap_DeniedBySystem" xml:space="preserve">
+    <value>Звонки этого iPhone закреплены за другим приложением (скорее всего, «Связь с телефоном»).</value>
+  </data>
+  <data name="Phone_Cap_DeniedByUser" xml:space="preserve">
+    <value>Доступ к телефонным звонкам не разрешен.</value>
+  </data>
+  <data name="Phone_Cap_AccessUnknown" xml:space="preserve">
+    <value>Не удалось проверить доступ Windows к звонкам.</value>
+  </data>
+  <data name="Phone_Cap_NotRegistered" xml:space="preserve">
+    <value>Windows не принял регистрацию приложения (RegisterApp).</value>
+  </data>
+  <data name="Phone_Cap_ConnectFailed" xml:space="preserve">
+    <value>Windows не удалось установить канал громкой связи (ConnectAsync).</value>
+  </data>
+  <data name="Phone_Cap_SuffixControlOnly" xml:space="preserve">
+    <value>Отвечать на звонки и отклонять их можно и здесь, но разговор идет на iPhone.</value>
+  </data>
+  <data name="Phone_Cap_SuffixNoAncs" xml:space="preserve">
+    <value>Канал уведомлений (ANCS) тоже недоступен.</value>
+  </data>
+  <data name="Phone_Fix_Package" xml:space="preserve">
+    <value>Установите NitroDrop из пакета MSIX: без него Windows не передает приложению звук звонков.</value>
+  </data>
+  <data name="Phone_Fix_PhoneLink" xml:space="preserve">
+    <value>Удалите этот iPhone в приложении «Связь с телефоном», затем в параметрах Bluetooth Windows и снова свяжите его с NitroDrop.</value>
+  </data>
+  <data name="Phone_Fix_HandsFree" xml:space="preserve">
+    <value>Свяжите iPhone в параметрах Bluetooth Windows и во время связывания разрешите «Синхронизировать контакты».</value>
+  </data>
+  <data name="Phone_Fix_Privacy" xml:space="preserve">
+    <value>Разрешите доступ NitroDrop в Параметрах Windows → Конфиденциальность и защита → Телефонные звонки.</value>
+  </data>
+  <data name="Phone_Fix_Nearby" xml:space="preserve">
+    <value>Убедитесь, что iPhone рядом и на нем включен Bluetooth.</value>
+  </data>
+</root>

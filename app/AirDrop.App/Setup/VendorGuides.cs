@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AirDrop.App.Localization;
+using static AirDrop.App.Localization.SetupStrings;
 
 namespace AirDrop.App.Setup;
 
 /// <summary>
 /// How to turn Secure Boot off (and back on) in one vendor's firmware setup.
-/// <see cref="BiosKeys"/> is only the fallback: "BIOS'a yeniden başlat" (shutdown /r /fw) opens setup directly.
+/// <see cref="BiosKeys"/> is only the fallback: "Restart to BIOS" (shutdown /r /fw) opens setup directly.
+/// Firmware menu item names stay in English (that is what the firmware shows); the prose around them is localized.
 /// </summary>
 public sealed record VendorGuide(
     string Id,
@@ -19,175 +22,87 @@ public sealed record VendorGuide(
     string? Note = null)
 {
     /// <summary>Rollback: the same menu, set back to Enabled.</summary>
-    public string[] EnableSteps => new[]
-    {
-        $"BIOS ayarlarında {MenuPath} bölümüne gidin.",
-        "Secure Boot'u yeniden \"Enabled\" (Açık) yapın. Daha önce \"Restore Factory Keys\" / \"Install default keys\" istenirse onaylayın.",
-        "F10 ile kaydedip çıkın (Save & Exit). Windows normal açılır, \"Test Modu\" yazısı kaybolur.",
-    };
+    public string[] EnableSteps => new[] { Vendor_Enable1(MenuPath), Vendor_Enable2, Vendor_Enable3 };
 }
 
 /// <summary>Vendor-specific Secure Boot instructions as data, looked up by SMBIOS strings. WPF-free.</summary>
 public static class VendorGuides
 {
-    private const string Save = "F10'a basıp \"Save & Exit\" / \"Kaydet ve Çık\"ı onaylayın (Yes). Bilgisayar Windows'a döner.";
+    private sealed record Table(string Lang, IReadOnlyList<VendorGuide> All, VendorGuide Generic);
+    private static Table? _cache;
 
-    public static IReadOnlyList<VendorGuide> All { get; } = new VendorGuide[]
+    /// <summary>Rows in the current UI language (rebuilt when the language changes).</summary>
+    public static IReadOnlyList<VendorGuide> All => Current().All;
+    public static VendorGuide Generic => Current().Generic;
+
+    private static Table Current()
     {
-        // Model-specific rows come before their vendor's generic row.
-        new("lenovo-thinkpad", "Lenovo ThinkPad", new[] { "LENOVO" }, new[] { "THINKPAD", "THINKBOOK" },
-            "Açılışta F1 (ThinkBook: F2); ya da Enter → F1",
-            "Security → Secure Boot",
-            new[]
-            {
-                "Ok tuşlarıyla \"Security\" sekmesine geçin.",
-                "\"Secure Boot\" satırına girin (Enter).",
-                "\"Secure Boot\" değerini \"Off\" / \"Disabled\" yapın.",
-                Save,
-            },
-            "Supervisor şifresi soruyorsa önce o girilmelidir."),
-        new("lenovo", "Lenovo (IdeaPad, Legion, Yoga, LOQ)", new[] { "LENOVO" }, Array.Empty<string>(),
-            "Açılışta F2 ya da Fn+F2; olmazsa kapalıyken yan taraftaki Novo deliğine iğneyle basıp \"BIOS Setup\"",
-            "Security → Secure Boot",
-            new[]
-            {
-                "Üstteki \"Security\" sekmesine geçin (Legion'da gerekirse önce \"More Settings\").",
-                "\"Secure Boot\" satırını \"Disabled\" yapın.",
-                Save,
-            }),
-        new("hp", "HP (Pavilion, Victus, Omen, EliteBook, ProBook)", new[] { "HP", "HEWLETT" }, Array.Empty<string>(),
-            "Açılışta art arda Esc, menüde F10 (BIOS Setup)",
-            "System Configuration (ya da Advanced) → Boot Options / Secure Boot Configuration",
-            new[]
-            {
-                "\"System Configuration\" sekmesinde \"Boot Options\"a girin (iş modellerinde: \"Advanced\" → \"Secure Boot Configuration\").",
-                "\"Secure Boot\" kutusunun işaretini kaldırın / \"Disable\" seçin. \"Legacy Support\" kapalı kalsın.",
-                Save,
-                "Açılışta HP 4 haneli bir doğrulama kodu gösterip yazmanızı ister: ekrandaki kodu yazıp Enter'a basın. Bu normaldir.",
-            }),
-        new("dell", "Dell / Alienware", new[] { "DELL", "ALIENWARE" }, Array.Empty<string>(),
-            "Dell logosunda F2",
-            "Boot Configuration → Secure Boot (eski BIOS: Secure Boot → Secure Boot Enable)",
-            new[]
-            {
-                "Soldaki menüden \"Boot Configuration\"ı açın (eski görünümde \"Secure Boot\" → \"Secure Boot Enable\").",
-                "\"Enable Secure Boot\" anahtarını kapatın; uyarıya \"Yes\" deyin.",
-                "\"Apply Changes\" (ya da \"Apply\"), sonra \"Exit\". Bilgisayar yeniden başlar.",
-            }),
-        new("asus", "ASUS (ROG, TUF, Zenbook, Vivobook, anakartlar)", new[] { "ASUS" }, Array.Empty<string>(),
-            "Açılışta F2 (masaüstü anakart: Del)",
-            "Advanced Mode (F7) → Boot (ya da Security) → Secure Boot",
-            new[]
-            {
-                "EZ Mode açılırsa F7 ile \"Advanced Mode\"a geçin.",
-                "Dizüstü: \"Security\" → \"Secure Boot\" → \"Secure Boot Control\" = Disabled.",
-                "Masaüstü anakart: \"Boot\" → \"Secure Boot\" → \"OS Type\" = \"Other OS\".",
-                Save,
-            }),
-        new("acer", "Acer (Nitro, Predator, Aspire, Swift)", new[] { "ACER" }, Array.Empty<string>(),
-            "Acer logosunda F2",
-            "Boot → Secure Boot",
-            new[]
-            {
-                "Secure Boot satırı gri ise önce \"Security\" → \"Set Supervisor Password\" ile bir BIOS şifresi belirleyin ve bir yere not edin (Acer bu şifre olmadan Secure Boot'u değiştirtmez).",
-                "\"Boot\" sekmesine geçip \"Secure Boot\" değerini \"Disabled\" yapın.",
-                Save,
-                "İsterseniz sonra aynı menüden şifreyi boş bırakarak kaldırabilirsiniz.",
-            }),
-        new("msi", "MSI (dizüstü ve anakartlar)", new[] { "MICRO-STAR", "MSI" }, Array.Empty<string>(),
-            "Açılışta Del (bazı dizüstülerde F2)",
-            "Settings → Advanced → Windows OS Configuration → Secure Boot (dizüstü: Security → Secure Boot)",
-            new[]
-            {
-                "Dizüstü: \"Security\" → \"Secure Boot\" → \"Secure Boot\" = Disabled.",
-                "Anakart (Click BIOS): F7 ile Advanced → \"Settings\" → \"Advanced\" → \"Windows OS Configuration\" → \"Secure Boot\" = Disabled.",
-                Save,
-            }),
-        new("gigabyte", "Gigabyte / AORUS", new[] { "GIGABYTE", "AORUS" }, Array.Empty<string>(),
-            "Açılışta Del (dizüstü: F2)",
-            "Boot → Secure Boot",
-            new[]
-            {
-                "Easy Mode açılırsa F2 ile Advanced Mode'a geçin.",
-                "\"Boot\" sekmesinde \"Secure Boot\"a girip \"Secure Boot Enable\" = Disabled yapın.",
-                Save,
-            }),
-        new("samsung", "Samsung Galaxy Book", new[] { "SAMSUNG" }, Array.Empty<string>(),
-            "Açılışta F2",
-            "Boot → Secure Boot Control",
-            new[]
-            {
-                "\"Boot\" (ya da \"Advanced\") sekmesine geçin.",
-                "\"Secure Boot Control\" = Off. \"OS Mode Selection\" sorulursa \"UEFI OS\" seçili kalsın.",
-                Save,
-            }),
-        new("huawei", "Huawei / Honor MateBook", new[] { "HUAWEI", "HONOR" }, Array.Empty<string>(),
-            "Açılışta F2",
-            "Secure Boot",
-            new[]
-            {
-                "BIOS ana menüsünde \"Secure Boot\" (bazı modellerde \"Security\" altında) satırını bulun.",
-                "\"Disabled\" yapın; şifre soruyorsa BIOS şifrenizi girin.",
-                Save,
-            }),
-        new("casper", "Casper (Excalibur, Nirvana)", new[] { "CASPER" }, Array.Empty<string>(),
-            "Açılışta F2 (bazı modellerde Del)",
-            "Security → Secure Boot",
-            new[]
-            {
-                "\"Security\" sekmesine geçin. Secure Boot gri ise önce \"Set Supervisor Password\" ile şifre belirleyin.",
-                "\"Secure Boot\" (ya da \"Secure Boot Control\") = Disabled.",
-                Save,
-            },
-            "Excalibur modellerinde menü \"Boot\" sekmesinde de olabilir."),
-        new("monster", "Monster (Abra, Tulpar, Semruk)", new[] { "MONSTER" }, Array.Empty<string>(),
-            "Açılışta F2",
-            "Security → Secure Boot",
-            new[]
-            {
-                "\"Security\" sekmesine geçin.",
-                "\"Secure Boot\" = Disabled (bazı modellerde \"Secure Boot Control\").",
-                "F10 (bazı modellerde F4) ile kaydedip çıkın.",
-            }),
-        new("clevo", "Clevo / Tongfang tabanlı dizüstü", new[] { "CLEVO", "TONGFANG", "NOTEBOOK" }, Array.Empty<string>(),
-            "Açılışta F2",
-            "Security → Secure Boot",
-            new[]
-            {
-                "\"Security\" sekmesine geçin.",
-                "\"Secure Boot\" = Disabled.",
-                "F10 (bazı modellerde F4) ile kaydedip çıkın.",
-            }),
-        new("surface", "Microsoft Surface", new[] { "MICROSOFT" }, new[] { "SURFACE" },
-            "Kapalıyken ses açma tuşunu basılı tutup güç tuşuna basın",
-            "Security → Secure Boot",
-            new[]
-            {
-                "Soldaki \"Security\"ye dokunun.",
-                "\"Secure Boot\" altında \"Change configuration\" → \"None\" seçin.",
-                "\"Exit\" → \"Restart now\".",
-            }),
-        new("asrock", "ASRock anakart", new[] { "ASROCK" }, Array.Empty<string>(),
-            "Açılışta F2 ya da Del",
-            "Security → Secure Boot",
-            new[]
-            {
-                "F6 ile Advanced Mode'a geçin, \"Security\" sekmesini açın.",
-                "\"Secure Boot\" = Disabled.",
-                Save,
-            }),
-    };
+        var c = _cache;
+        if (c is not null && c.Lang == Loc.Language) return c;
+        return _cache = new Table(Loc.Language, Build(), BuildGeneric());
+    }
 
-    public static VendorGuide Generic { get; } = new("generic", "Diğer üreticiler", Array.Empty<string>(), Array.Empty<string>(),
-        "Açılışta F2, Del, F10 ya da Esc (üretici logosunun altında yazar)",
-        "Security ya da Boot → Secure Boot",
-        new[]
+    private static VendorGuide[] Build()
+    {
+        string save = Vendor_Save;
+        const string SecurityMenu = "Security → Secure Boot";
+        return new VendorGuide[]
         {
-            "\"Security\", \"Boot\" ya da \"Authentication\" sekmelerinde \"Secure Boot\" satırını arayın.",
-            "Değerini \"Disabled\" / \"Off\" yapın. Gri ise önce \"Supervisor/Administrator Password\" belirleyin.",
-            Save,
-        },
-        "Emin olamazsanız üreticinin destek sitesinde \"<model> disable secure boot\" diye aratın.");
+            // Model-specific rows come before their vendor's generic row.
+            new("lenovo-thinkpad", "Lenovo ThinkPad", new[] { "LENOVO" }, new[] { "THINKPAD", "THINKBOOK" },
+                Vendor_ThinkPad_Keys, SecurityMenu,
+                new[] { Vendor_ThinkPad_Step1, Vendor_ThinkPad_Step2, Vendor_ThinkPad_Step3, save },
+                Vendor_ThinkPad_Note),
+            new("lenovo", "Lenovo (IdeaPad, Legion, Yoga, LOQ)", new[] { "LENOVO" }, Array.Empty<string>(),
+                Vendor_Lenovo_Keys, SecurityMenu,
+                new[] { Vendor_Lenovo_Step1, Vendor_Lenovo_Step2, save }),
+            new("hp", "HP (Pavilion, Victus, Omen, EliteBook, ProBook)", new[] { "HP", "HEWLETT" }, Array.Empty<string>(),
+                Vendor_Hp_Keys, Vendor_Hp_Menu,
+                new[] { Vendor_Hp_Step1, Vendor_Hp_Step2, save, Vendor_Hp_Step4 }),
+            new("dell", "Dell / Alienware", new[] { "DELL", "ALIENWARE" }, Array.Empty<string>(),
+                Vendor_Dell_Keys, Vendor_Dell_Menu,
+                new[] { Vendor_Dell_Step1, Vendor_Dell_Step2, Vendor_Dell_Step3 }),
+            new("asus", Vendor_Asus_Name, new[] { "ASUS" }, Array.Empty<string>(),
+                Vendor_Asus_Keys, Vendor_Asus_Menu,
+                new[] { Vendor_Asus_Step1, Vendor_Asus_Step2, Vendor_Asus_Step3, save }),
+            new("acer", "Acer (Nitro, Predator, Aspire, Swift)", new[] { "ACER" }, Array.Empty<string>(),
+                Vendor_Acer_Keys, "Boot → Secure Boot",
+                new[] { Vendor_Acer_Step1, Vendor_Acer_Step2, save, Vendor_Acer_Step4 }),
+            new("msi", Vendor_Msi_Name, new[] { "MICRO-STAR", "MSI" }, Array.Empty<string>(),
+                Vendor_Msi_Keys, Vendor_Msi_Menu,
+                new[] { Vendor_Msi_Step1, Vendor_Msi_Step2, save }),
+            new("gigabyte", "Gigabyte / AORUS", new[] { "GIGABYTE", "AORUS" }, Array.Empty<string>(),
+                Vendor_Gigabyte_Keys, "Boot → Secure Boot",
+                new[] { Vendor_Gigabyte_Step1, Vendor_Gigabyte_Step2, save }),
+            new("samsung", "Samsung Galaxy Book", new[] { "SAMSUNG" }, Array.Empty<string>(),
+                Vendor_KeysF2, "Boot → Secure Boot Control",
+                new[] { Vendor_Samsung_Step1, Vendor_Samsung_Step2, save }),
+            new("huawei", "Huawei / Honor MateBook", new[] { "HUAWEI", "HONOR" }, Array.Empty<string>(),
+                Vendor_KeysF2, "Secure Boot",
+                new[] { Vendor_Huawei_Step1, Vendor_Huawei_Step2, save }),
+            new("casper", "Casper (Excalibur, Nirvana)", new[] { "CASPER" }, Array.Empty<string>(),
+                Vendor_Casper_Keys, SecurityMenu,
+                new[] { Vendor_Casper_Step1, Vendor_Casper_Step2, save },
+                Vendor_Casper_Note),
+            new("monster", "Monster (Abra, Tulpar, Semruk)", new[] { "MONSTER" }, Array.Empty<string>(),
+                Vendor_KeysF2, SecurityMenu,
+                new[] { Vendor_Monster_Step1, Vendor_Monster_Step2, Vendor_SaveF10F4 }),
+            new("clevo", Vendor_Clevo_Name, new[] { "CLEVO", "TONGFANG", "NOTEBOOK" }, Array.Empty<string>(),
+                Vendor_KeysF2, SecurityMenu,
+                new[] { Vendor_Monster_Step1, Vendor_SecureBootDisabled, Vendor_SaveF10F4 }),
+            new("surface", "Microsoft Surface", new[] { "MICROSOFT" }, new[] { "SURFACE" },
+                Vendor_Surface_Keys, SecurityMenu,
+                new[] { Vendor_Surface_Step1, Vendor_Surface_Step2, Vendor_Surface_Step3 }),
+            new("asrock", Vendor_Asrock_Name, new[] { "ASROCK" }, Array.Empty<string>(),
+                Vendor_Asrock_Keys, SecurityMenu,
+                new[] { Vendor_Asrock_Step1, Vendor_SecureBootDisabled, save }),
+        };
+    }
+
+    private static VendorGuide BuildGeneric() => new("generic", Vendor_Generic_Name, Array.Empty<string>(), Array.Empty<string>(),
+        Vendor_Generic_Keys, Vendor_Generic_Menu,
+        new[] { Vendor_Generic_Step1, Vendor_Generic_Step2, Vendor_Save },
+        Vendor_Generic_Note);
 
     /// <summary>Best guide for this machine: vendor + model keyword first, vendor only next, generic last.</summary>
     public static VendorGuide Find(string? manufacturer, string? product = null, string? family = null)

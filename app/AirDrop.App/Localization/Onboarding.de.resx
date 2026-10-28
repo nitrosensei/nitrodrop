@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Onboarding_WindowTitle" xml:space="preserve">
+    <value>NitroDrop · Willkommen</value>
+  </data>
+  <data name="Onboarding_StepLabel" xml:space="preserve">
+    <value>ERSTE SCHRITTE · {0}/{1}</value>
+  </data>
+  <data name="Onboarding_SkipTip" xml:space="preserve">
+    <value>Einführung schließen (Esc)</value>
+  </data>
+  <data name="Onboarding_Welcome" xml:space="preserve">
+    <value>Dateien, Zwischenablage, Mitteilungen und Tabs zwischen iPhone, Mac und PC. Funktioniert sofort im selben Netzwerk – ganz ohne Einrichtung.</value>
+  </data>
+  <data name="Onboarding_SendTitle" xml:space="preserve">
+    <value>Ziehen und ablegen</value>
+  </data>
+  <data name="Onboarding_SendBody" xml:space="preserve">
+    <value>Legen Sie eine Datei auf einem Gerät unter „In der Nähe“ ab. Oder klicken Sie im Datei-Explorer mit der rechten Maustaste darauf und wählen Sie „Mit NitroDrop senden“.</value>
+  </data>
+  <data name="Onboarding_HotkeyHint" xml:space="preserve">
+    <value>sendet Kopiertes an das zuletzt verwendete Gerät</value>
+  </data>
+  <data name="Onboarding_ReceiveTitle" xml:space="preserve">
+    <value>Vom iPhone empfangen</value>
+  </data>
+  <data name="Onboarding_ReceiveBody" xml:space="preserve">
+    <value>Tippen Sie auf dem iPhone auf Teilen → AirDrop und wählen Sie diesen PC. Vorerst funktioniert das im selben WLAN; nach der erweiterten Einrichtung verbindet sich das iPhone direkt.</value>
+  </data>
+  <data name="Onboarding_ReceiveLater" xml:space="preserve">
+    <value>Die erweiterte Einrichtung können Sie auch später starten: Einstellungen → WLAN-Treiber.</value>
+  </data>
+  <data name="Onboarding_PhoneTitle" xml:space="preserve">
+    <value>Ihr Telefon auf dem Schreibtisch</value>
+  </data>
+  <data name="Onboarding_PhoneBody" xml:space="preserve">
+    <value>Anrufe, Nachrichten und Mitteilungen eines per Bluetooth gekoppelten iPhone erscheinen auf diesem PC – und Sie antworten direkt hier.</value>
+  </data>
+  <data name="Onboarding_PairIphone" xml:space="preserve">
+    <value>iPhone koppeln</value>
+  </data>
+  <data name="Onboarding_DevicesTitle" xml:space="preserve">
+    <value>Weitermachen, wo Sie aufgehört haben</value>
+  </data>
+  <data name="Onboarding_DevicesBody" xml:space="preserve">
+    <value>Gekoppelte PCs sehen gegenseitig ihre geöffneten Tabs und Apps. Die Browsererweiterung bringt die Tabs mit, der iPhone-Kurzbefehl das, was gerade auf dem Telefon geöffnet ist.</value>
+  </data>
+  <data name="Onboarding_FinalTitle" xml:space="preserve">
+    <value>Letzte Handgriffe</value>
+  </data>
+  <data name="Onboarding_FinalBody" xml:space="preserve">
+    <value>Nichts wird ohne Ihre Zustimmung empfangen; Ihre Kontakte und Dateien bleiben auf diesem PC.</value>
+  </data>
+  <data name="Onboarding_DeviceName" xml:space="preserve">
+    <value>Anzeigename</value>
+  </data>
+  <data name="Onboarding_WhoCanSee" xml:space="preserve">
+    <value>Wer mich sehen kann</value>
+  </data>
+  <data name="Onboarding_ModeEveryone" xml:space="preserve">
+    <value>Jeder (10 Min.)</value>
+  </data>
+  <data name="Onboarding_ModeOff" xml:space="preserve">
+    <value>Aus</value>
+  </data>
+  <data name="Onboarding_StartWithWindows" xml:space="preserve">
+    <value>Mit Windows starten</value>
+  </data>
+  <data name="Onboarding_LetsGo" xml:space="preserve">
+    <value>Los geht's</value>
+  </data>
+  <data name="Onboarding_Start" xml:space="preserve">
+    <value>Loslegen</value>
+  </data>
+</root>

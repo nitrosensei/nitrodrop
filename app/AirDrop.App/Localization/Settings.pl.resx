@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Settings_SectionThisPc" xml:space="preserve">
+    <value>TEN KOMPUTER</value>
+  </data>
+  <data name="Settings_DeviceName" xml:space="preserve">
+    <value>Nazwa wyświetlana</value>
+  </data>
+  <data name="Settings_SaveReceivedTo" xml:space="preserve">
+    <value>Zapisuj odebrane pliki w</value>
+  </data>
+  <data name="Settings_ChangeFolder" xml:space="preserve">
+    <value>Zmień…</value>
+  </data>
+  <data name="Settings_StartWithWindows" xml:space="preserve">
+    <value>Uruchamiaj razem z systemem Windows</value>
+  </data>
+  <data name="Settings_SectionLanguage" xml:space="preserve">
+    <value>JĘZYK</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Język aplikacji</value>
+  </data>
+  <data name="Settings_LanguageCaption" xml:space="preserve">
+    <value>Zmiana jest stosowana od razu.</value>
+  </data>
+  <data name="Settings_LanguageAutoWith" xml:space="preserve">
+    <value>{0} ({1})</value>
+  </data>
+  <data name="Settings_SectionReceiving" xml:space="preserve">
+    <value>ODBIERANIE</value>
+  </data>
+  <data name="Settings_JpgPhotos" xml:space="preserve">
+    <value>Odbieraj zdjęcia z iPhone'a jako JPG</value>
+  </data>
+  <data name="Settings_JpgPhotosCaption" xml:space="preserve">
+    <value>Zamiast HEIC przesyłany jest JPG, a zamiast filmów HEVC – H.264, więc pliki otworzą się na każdym komputerze z Windows.</value>
+  </data>
+  <data name="Settings_OpenLinks" xml:space="preserve">
+    <value>Otwieraj odebrane linki w przeglądarce</value>
+  </data>
+  <data name="Settings_SectionClipboard" xml:space="preserve">
+    <value>WSPÓLNY SCHOWEK</value>
+  </data>
+  <data name="Settings_CopyIncoming" xml:space="preserve">
+    <value>Kopiuj odebrane elementy do schowka</value>
+  </data>
+  <data name="Settings_CopyIncomingCaption" xml:space="preserve">
+    <value>Tekst, linki i pojedyncze zdjęcia z iPhone'a są od razu gotowe do wklejenia skrótem Ctrl+V.</value>
+  </data>
+  <data name="Settings_SendClipboard" xml:space="preserve">
+    <value>Wyślij schowek na telefon</value>
+  </data>
+  <data name="Settings_SendClipboardCaption" xml:space="preserve">
+    <value>Wysyła skopiowany tekst, link, obraz lub plik na ostatnio używane urządzenie.</value>
+  </data>
+  <data name="Settings_Hotkey" xml:space="preserve">
+    <value>Ctrl + Alt + A</value>
+  </data>
+  <data name="Settings_HotkeyInUse" xml:space="preserve">
+    <value>{0} (używany przez inną aplikację)</value>
+  </data>
+  <data name="Settings_SectionContacts" xml:space="preserve">
+    <value>KONTAKTY I ZDJĘCIA</value>
+  </data>
+  <data name="Settings_ContactsPrivacy" xml:space="preserve">
+    <value>Działa tak jak na Macu: zweryfikowana tożsamość przesłana przez iPhone'a jest porównywana wyłącznie z Twoimi kontaktami. Kontakty nigdy nie opuszczają tego komputera.</value>
+  </data>
+  <data name="Settings_ImportContacts" xml:space="preserve">
+    <value>Importuj kontakty (.vcf)</value>
+  </data>
+  <data name="Settings_ContactsNone" xml:space="preserve">
+    <value>Nie zaimportowano kontaktów. Aby widzieć zdjęcia kontaktów, wybierz plik .vcf wyeksportowany z iCloud lub Google.</value>
+  </data>
+  <data name="Settings_ContactsImported_Plural" xml:space="preserve">
+    <value>Zaimportowano {0} kontakt. Osoby z Twoich kontaktów są widoczne ze zdjęciami.|Zaimportowano {0} kontakty. Osoby z Twoich kontaktów są widoczne ze zdjęciami.|Zaimportowano {0} kontaktów. Osoby z Twoich kontaktów są widoczne ze zdjęciami.</value>
+  </data>
+  <data name="Settings_ContactsImporting" xml:space="preserve">
+    <value>Importowanie…</value>
+  </data>
+  <data name="Settings_ContactsNoneFound" xml:space="preserve">
+    <value>Nie znaleziono kontaktów w pliku. {0}</value>
+  </data>
+  <data name="Settings_ContactsImportFailed" xml:space="preserve">
+    <value>Nie udało się zaimportować: {0}</value>
+  </data>
+  <data name="Settings_PickFolderTitle" xml:space="preserve">
+    <value>Folder na odebrane pliki</value>
+  </data>
+  <data name="Settings_PickContactsTitle" xml:space="preserve">
+    <value>Plik kontaktów (.vcf)</value>
+  </data>
+  <data name="Settings_AllFiles" xml:space="preserve">
+    <value>Wszystkie pliki</value>
+  </data>
+  <data name="Settings_SectionTrusted" xml:space="preserve">
+    <value>ZAUFANE URZĄDZENIA</value>
+  </data>
+  <data name="Settings_TrustedHint" xml:space="preserve">
+    <value>W sekcji „W pobliżu” kliknij urządzenie prawym przyciskiem myszy i wybierz „Zaufane urządzenie” – wszystko, co wyśle, będzie przyjmowane bez pytania.</value>
+  </data>
+  <data name="Settings_SectionSync" xml:space="preserve">
+    <value>SYNCHRONIZACJA</value>
+  </data>
+  <data name="Settings_ShareTabs" xml:space="preserve">
+    <value>Udostępniaj moje karty</value>
+  </data>
+  <data name="Settings_ShareTabsCaption" xml:space="preserve">
+    <value>Otwarte karty z Chrome i Edge są widoczne na sparowanych komputerach. Karty incognito i InPrivate nigdy nie są udostępniane.</value>
+  </data>
+  <data name="Settings_ShareApps" xml:space="preserve">
+    <value>Udostępniaj otwarte aplikacje</value>
+  </data>
+  <data name="Settings_ShareAppsCaption" xml:space="preserve">
+    <value>Wysyłane są tylko nazwa aplikacji, ikona i tytuł okna; ścieżki plików zostają na tym komputerze.</value>
+  </data>
+  <data name="Settings_ExcludedApps" xml:space="preserve">
+    <value>Aplikacje, których nie udostępniać</value>
+  </data>
+  <data name="Settings_ExcludedAppsCaption" xml:space="preserve">
+    <value>Menedżery haseł i procesy systemowe są zawsze wykluczone.</value>
+  </data>
+  <data name="Settings_RemoveFromList" xml:space="preserve">
+    <value>Usuń z listy</value>
+  </data>
+  <data name="Settings_ExcludePlaceholder" xml:space="preserve">
+    <value>Plik aplikacji, np. Telegram.exe</value>
+  </data>
+  <data name="Settings_Add" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="Settings_SectionExtension" xml:space="preserve">
+    <value>ROZSZERZENIE PRZEGLĄDARKI</value>
+  </data>
+  <data name="Settings_InstallExtension" xml:space="preserve">
+    <value>Zainstaluj rozszerzenie</value>
+  </data>
+  <data name="Settings_ExtStep1" xml:space="preserve">
+    <value>Otwórz `chrome://extensions` w Chrome lub `edge://extensions` w Edge i włącz **Tryb dewelopera**.</value>
+  </data>
+  <data name="Settings_ExtStep2" xml:space="preserve">
+    <value>Kliknij **Załaduj rozpakowane** i wybierz ten folder:</value>
+  </data>
+  <data name="Settings_CopyPath" xml:space="preserve">
+    <value>Kopiuj ścieżkę</value>
+  </data>
+  <data name="Settings_ExtStep3" xml:space="preserve">
+    <value>Połącz przeglądarkę, aby rozszerzenie mogło komunikować się z NitroDrop (tylko dla tego użytkownika, bez uprawnień administratora).</value>
+  </data>
+  <data name="Settings_ConnectBrowser" xml:space="preserve">
+    <value>Połącz przeglądarkę</value>
+  </data>
+  <data name="Settings_SectionPairedPcs" xml:space="preserve">
+    <value>SPAROWANE KOMPUTERY</value>
+  </data>
+  <data name="Settings_NoPairedPcs" xml:space="preserve">
+    <value>Brak sparowanych komputerów. Użyj opcji „Dodaj komputer” na karcie Urządzenia.</value>
+  </data>
+  <data name="Settings_SectionIphoneShortcut" xml:space="preserve">
+    <value>IPHONE (SKRÓT)</value>
+  </data>
+  <data name="Settings_QrHint" xml:space="preserve">
+    <value>Zeskanuj kod aparatem w iPhonie i wklej adres do czynności „Pobierz zawartość URL” w skrócie.</value>
+  </data>
+  <data name="Settings_QrWarning" xml:space="preserve">
+    <value>Ten adres jest wyświetlany tylko raz i zawiera klucz przypisany do tego iPhone'a. Przenieś go wyłącznie na własny telefon.</value>
+  </data>
+  <data name="Settings_CopyAddress" xml:space="preserve">
+    <value>Kopiuj adres</value>
+  </data>
+  <data name="Settings_ShortcutHelp" xml:space="preserve">
+    <value>Instrukcja skrótu</value>
+  </data>
+  <data name="Settings_IphoneShortcutCaption" xml:space="preserve">
+    <value>Dzięki Skrótom aplikacja otwarta na iPhonie i udostępniane linki trafiają na ten komputer.</value>
+  </data>
+  <data name="Settings_AddIphone" xml:space="preserve">
+    <value>Dodaj iPhone'a</value>
+  </data>
+  <data name="Settings_SectionPhone" xml:space="preserve">
+    <value>TELEFON</value>
+  </data>
+  <data name="Settings_ShowNotifications" xml:space="preserve">
+    <value>Pokazuj powiadomienia z iPhone'a</value>
+  </data>
+  <data name="Settings_ShowCalls" xml:space="preserve">
+    <value>Pokazuj połączenia przychodzące</value>
+  </data>
+  <data name="Settings_MessagePreview" xml:space="preserve">
+    <value>Podgląd wiadomości w powiadomieniach</value>
+  </data>
+  <data name="Settings_MessagePreviewCaption" xml:space="preserve">
+    <value>Po wyłączeniu widać tylko nadawcę i aplikację.</value>
+  </data>
+  <data name="Settings_SectionDriver" xml:space="preserve">
+    <value>STEROWNIK WI-FI</value>
+  </data>
+  <data name="Settings_DirectIphone" xml:space="preserve">
+    <value>Łącz się bezpośrednio z iPhone'ami (sterownik Wi-Fi)</value>
+  </data>
+  <data name="Settings_DriverInstall" xml:space="preserve">
+    <value>Skonfiguruj…</value>
+  </data>
+  <data name="Settings_DriverRollback" xml:space="preserve">
+    <value>Usuń i przywróć…</value>
+  </data>
+  <data name="Settings_DriverStateInstalled" xml:space="preserve">
+    <value>Zainstalowany – karta Wi-Fi używa sterownika NitroDrop</value>
+  </data>
+  <data name="Settings_DriverStateUnsupported" xml:space="preserve">
+    <value>Nie znaleziono obsługiwanej karty Intel Wi-Fi</value>
+  </data>
+  <data name="Settings_DriverStateIncomplete" xml:space="preserve">
+    <value>Konfiguracja nie została ukończona</value>
+  </data>
+  <data name="Settings_DriverStateNotInstalled" xml:space="preserve">
+    <value>Nie zainstalowano</value>
+  </data>
+  <data name="Settings_DriverDetailInstalled" xml:space="preserve">
+    <value>Gotowe do bezpośrednich połączeń (AirDrop) z iPhone'em, iPadem i Makiem. Gdy karta Wi-Fi używa tego sterownika, z internetem łącz się w inny sposób.</value>
+  </data>
+  <data name="Settings_DriverDetailUnsupported" xml:space="preserve">
+    <value>Udostępnianie urządzeniom w tej samej sieci (tryb LAN) już działa. Obsługa adapterów USB Wi-Fi jest planowana.</value>
+  </data>
+  <data name="Settings_DriverDetailFound" xml:space="preserve">
+    <value>Wykryto: {0}. Do bezpośrednich połączeń z iPhone'ami potrzebna jest konfiguracja zaawansowana.</value>
+  </data>
+  <data name="About_Section" xml:space="preserve">
+    <value>INFORMACJE</value>
+  </data>
+  <data name="About_Tagline" xml:space="preserve">
+    <value>Udostępnianie plików, linków i schowka z iPhone'em, iPadem i Makiem oraz kart i aplikacji między sparowanymi komputerami. Bezpłatnie i open source.</value>
+  </data>
+  <data name="About_ShowTour" xml:space="preserve">
+    <value>Pokaż wprowadzenie ponownie</value>
+  </data>
+  <data name="About_SourceCode" xml:space="preserve">
+    <value>Kod źródłowy</value>
+  </data>
+  <data name="About_OpenSource" xml:space="preserve">
+    <value>KOMPONENTY OPEN SOURCE</value>
+  </data>
+  <data name="About_LicenseTexts" xml:space="preserve">
+    <value>Teksty licencji</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>WERSJA {0} · NITROBYTE</value>
+  </data>
+  <data name="About_UseIwx" xml:space="preserve">
+    <value>sterownik Intel Wi-Fi (OpenBSD)</value>
+  </data>
+  <data name="About_UseQr" xml:space="preserve">
+    <value>kody QR</value>
+  </data>
+  <data name="About_UseFonts" xml:space="preserve">
+    <value>czcionki</value>
+  </data>
+  <data name="About_UseFirmware" xml:space="preserve">
+    <value>wyświetlana podczas konfiguracji</value>
+  </data>
+  <data name="Explorer_MenuVerb" xml:space="preserve">
+    <value>Wyślij przez NitroDrop</value>
+  </data>
+  <data name="Explorer_SendToDescription" xml:space="preserve">
+    <value>Wyślij zaznaczone elementy przez NitroDrop</value>
+  </data>
+  <data name="Explorer_Setting" xml:space="preserve">
+    <value>Menu kontekstowe Eksploratora plików</value>
+  </data>
+  <data name="Explorer_CaptionPortable" xml:space="preserve">
+    <value>Dodaje „Wyślij przez NitroDrop” do menu plików i folderów (w Windows 11 pod „Pokaż więcej opcji”) oraz NitroDrop do menu „Wyślij do”.</value>
+  </data>
+  <data name="Explorer_CaptionPackaged" xml:space="preserve">
+    <value>Zarządzane przez system Windows: opcja „Wyślij przez NitroDrop” jest w menu kontekstowym, dopóki NitroDrop jest zainstalowany.</value>
+  </data>
+  <data name="Explorer_Failed" xml:space="preserve">
+    <value>Nie udało się dodać menu Eksploratora: {0}</value>
+  </data>
+</root>

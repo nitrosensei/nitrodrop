@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "NitroDrop Sekmeler",
+  "name": "__MSG_extName__",
   "short_name": "NitroDrop",
   "version": "0.1.0",
-  "description": "Açık sekmelerini NitroDrop ile diğer bilgisayarlarına eşitler; bağlantıları telefona veya PC'ye gönderir.",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu6rriieeJPV2bxGoBrTJnb6DAWO3aqcdbbScIbf49Ys3aRgaYgqWhB84qeAJlQrPpAtITfxKNSJGXT9wCKn/ghVt5A+6ZV8XlnrsJBFC5rWATZw3XRuHnfcXJ4GrwlvbRMwfEAAFe1Z50OB00WQN1hRoXCaD7AOMxJJ10WbNNgxR5EB2nU2b5lK8wwXsz84j/8sBaFMFUui+0snQLhxR+hUqR7LJj2fmCTioJNnyzQYHSEKoL2m7ECZnDF7QlgrBUxByLQyhRRbx9lD3QlOsAtGvjJIysYY8uyLh0hy//wii/1RUqWIOjSCVbGVGUrkLEUOebACy5PStAK0VeldzoQIDAQAB",
   "permissions": ["tabs", "nativeMessaging"],
   "incognito": "not_allowed",

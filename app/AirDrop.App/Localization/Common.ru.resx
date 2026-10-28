@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Unit_Byte" xml:space="preserve">
+    <value>Б</value>
+  </data>
+  <data name="Unit_KB" xml:space="preserve">
+    <value>КБ</value>
+  </data>
+  <data name="Unit_MB" xml:space="preserve">
+    <value>МБ</value>
+  </data>
+  <data name="Unit_GB" xml:space="preserve">
+    <value>ГБ</value>
+  </data>
+  <data name="Unit_TB" xml:space="preserve">
+    <value>ТБ</value>
+  </data>
+  <data name="Unit_Format" xml:space="preserve">
+    <value>{0} {1}</value>
+  </data>
+  <data name="Time_YesterdayAt" xml:space="preserve">
+    <value>Вчера {0}</value>
+  </data>
+  <data name="Time_JustNow" xml:space="preserve">
+    <value>Только что</value>
+  </data>
+  <data name="Time_Today" xml:space="preserve">
+    <value>Сегодня</value>
+  </data>
+  <data name="Time_Yesterday" xml:space="preserve">
+    <value>Вчера</value>
+  </data>
+  <data name="Time_MinutesAgo_Plural" xml:space="preserve">
+    <value>{0} мин назад|{0} мин назад|{0} мин назад</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Common_OK" xml:space="preserve">
+    <value>ОК</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Common_Open" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="Common_Remove" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Common_Done" xml:space="preserve">
+    <value>Готово</value>
+  </data>
+  <data name="Common_Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="Common_Next" xml:space="preserve">
+    <value>Далее</value>
+  </data>
+  <data name="Common_Skip" xml:space="preserve">
+    <value>Пропустить</value>
+  </data>
+  <data name="Common_Clear" xml:space="preserve">
+    <value>Очистить</value>
+  </data>
+  <data name="Common_Copy" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
+  <data name="Common_Settings" xml:space="preserve">
+    <value>Параметры</value>
+  </data>
+  <data name="Common_Accept" xml:space="preserve">
+    <value>Принять</value>
+  </data>
+  <data name="Common_Decline" xml:space="preserve">
+    <value>Отклонить</value>
+  </data>
+  <data name="Common_OpenFolder" xml:space="preserve">
+    <value>Открыть папку</value>
+  </data>
+  <data name="Common_ShowInFolder" xml:space="preserve">
+    <value>Показать в папке</value>
+  </data>
+  <data name="Files_Plural" xml:space="preserve">
+    <value>{0} файл|{0} файла|{0} файлов</value>
+  </data>
+  <data name="Links_Plural" xml:space="preserve">
+    <value>{0} ссылка|{0} ссылки|{0} ссылок</value>
+  </data>
+  <data name="Items_Plural" xml:space="preserve">
+    <value>{0} объект|{0} объекта|{0} объектов</value>
+  </data>
+  <data name="Devices_Count_Plural" xml:space="preserve">
+    <value>{0} устройство|{0} устройства|{0} устройств</value>
+  </data>
+  <data name="Language_Auto" xml:space="preserve">
+    <value>Как в Windows</value>
+  </data>
+</root>

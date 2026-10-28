@@ -7,16 +7,17 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
+using AirDrop.App.Localization;
 using AirDrop.App.ViewModels;
 
 namespace AirDrop.App.Setup;
 
 public enum WizardPage { Compatibility, Consent, BitLocker, SecureBoot, TestSigning, Install, Done, Rollback, RollbackDone }
 
-public sealed class StepDot(string title) : Observable
+public sealed class StepDot(Func<string> title) : Observable
 {
     private bool _done, _current;
-    public string Title { get; } = title;
+    public string Title => title();
     public bool IsDone { get => _done; set => Set(ref _done, value); }
     public bool IsCurrent { get => _current; set => Set(ref _current, value); }
 }
@@ -24,7 +25,7 @@ public sealed class StepDot(string title) : Observable
 public sealed record ConsentItem(string Glyph, string Title, string Body);
 
 /// <summary>
-/// "Gelişmiş Kurulum" wizard. Detection on open, one page per step, every system change behind an explicit
+/// "Advanced Setup" wizard. Detection on open, one page per step, every system change behind an explicit
 /// button (and a confirmation for reboots/rollback), all elevated work through <see cref="ElevatedHelper"/>.
 /// </summary>
 public sealed class SetupWizardViewModel : Observable
@@ -55,7 +56,7 @@ public sealed class SetupWizardViewModel : Observable
         _state = statePath is null ? new SetupState() : SetupState.Load(statePath);
         _consentChecked = _state.ConsentGiven;
 
-        Dots = new ObservableCollection<StepDot>(SetupFlow.Steps.Select(s => new StepDot(StepTitle(s))));
+        Dots = new ObservableCollection<StepDot>(SetupFlow.Steps.Select(s => new StepDot(() => StepTitle(s))));
         Primary = new RelayCommand(_ => Run(PrimaryAsync));
         Secondary = new RelayCommand(_ => Run(SecondaryAsync));
         CheckBitLocker = new RelayCommand(_ => Run(CheckBitLockerAsync));
@@ -91,7 +92,7 @@ public sealed class SetupWizardViewModel : Observable
             if (!Set(ref _page, value)) return;
             Error = "";
             Status = "";
-            SetupLog.Write($"sayfa: {value}");
+            SetupLog.Write($"page: {value}");
             RaiseAll();
         }
     }
@@ -138,75 +139,65 @@ public sealed class SetupWizardViewModel : Observable
 
     public string Title => Page switch
     {
-        WizardPage.Compatibility => IsSupported ? "iPhone'larla doğrudan bağlantı" : "Bu bilgisayarda henüz desteklenmiyor",
-        WizardPage.Consent => "Neler değişecek?",
-        WizardPage.BitLocker => BitLockerNeedsBackup ? "Kurtarma anahtarınızı yedekleyin" : "BitLocker",
+        WizardPage.Compatibility => IsSupported ? SetupStrings.Setup_Title_Compat : SetupStrings.Setup_Title_Unsupported,
+        WizardPage.Consent => SetupStrings.Setup_Title_Consent,
+        WizardPage.BitLocker => BitLockerNeedsBackup ? SetupStrings.Setup_Title_BitLockerBackup : "BitLocker",
         WizardPage.SecureBoot => _snap.SecureBootOn switch
         {
-            true => "Secure Boot'u kapatın",
-            false => "Secure Boot kapalı",
-            null => "Secure Boot kullanılmıyor",
+            true => SetupStrings.Setup_Title_SecureBootOn,
+            false => SetupStrings.Setup_Title_SecureBootOff,
+            null => SetupStrings.Setup_Title_SecureBootNone,
         },
-        WizardPage.TestSigning => _snap.TestSigningActive ? "Test modu açık"
-            : SetupFlow.TestSigningPendingReboot(_snap, _state) ? "Yeniden başlatma gerekiyor"
-            : "Windows test modunu açın",
-        WizardPage.Install => "Sürücüyü kurun",
-        WizardPage.Done => "Hazır!",
-        WizardPage.Rollback => "Kaldır ve eski haline getir",
-        _ => !_rollbackOk ? "Bazı adımlar tamamlanamadı"
-            : _snap.SecureBootOn == true ? "Eski haline getirildi" : "Neredeyse bitti",
+        WizardPage.TestSigning => _snap.TestSigningActive ? SetupStrings.Setup_Title_TestModeOn
+            : SetupFlow.TestSigningPendingReboot(_snap, _state) ? SetupStrings.Setup_Title_RebootNeeded
+            : SetupStrings.Setup_Title_TestModeEnable,
+        WizardPage.Install => SetupStrings.Setup_Title_Install,
+        WizardPage.Done => SetupStrings.Setup_Title_Done,
+        WizardPage.Rollback => SetupStrings.Setup_Title_Rollback,
+        _ => !_rollbackOk ? SetupStrings.Setup_Title_RollbackFailed
+            : _snap.SecureBootOn == true ? SetupStrings.Setup_Title_RollbackRestored : SetupStrings.Setup_Title_RollbackAlmost,
     };
 
     public string Subtitle => Page switch
     {
-        WizardPage.Compatibility => IsSupported
-            ? "NitroDrop, Wi-Fi kartınızı AirDrop'un kullandığı doğrudan bağlantıya hazırlayabilir. Birkaç adım ve iki yeniden başlatma sürer. Her adımda ne olacağını önce anlatırız; siz onaylamadan hiçbir şey değişmez."
-            : "NitroDrop'un Wi-Fi sürücüsü şimdilik yalnızca Intel Wi-Fi 6 AX203 kartıyla çalışıyor ve bu bilgisayarda bu kart bulunamadı. Aynı ağdaki cihazlarla paylaşım yine çalışır. Kurulum gerektirmeyen USB Wi-Fi adaptörü desteği üzerinde çalışıyoruz.",
-        WizardPage.Consent => "Hepsi geçicidir; Ayarlar → Wi-Fi Sürücüsü → \"Kaldır\" ile tek tıkla geri alırsınız.",
+        WizardPage.Compatibility => IsSupported ? SetupStrings.Setup_Sub_Compat : SetupStrings.Setup_Sub_Unsupported,
+        WizardPage.Consent => SetupStrings.Setup_Sub_Consent,
         WizardPage.BitLocker => _snap.BitLocker switch
         {
-            BitLockerQuickState.On or BitLockerQuickState.Suspended or BitLockerQuickState.InProgress =>
-                "Diskiniz BitLocker ile şifreli. Secure Boot ayarını değiştirmek, açılışta 48 haneli kurtarma anahtarının sorulmasına yol açabilir. Anahtar elinizde değilse dosyalarınıza ulaşamazsınız — devam etmeden önce yedekleyin.",
-            BitLockerQuickState.Unknown =>
-                "BitLocker durumu okunamadı. Emin olmak için ayrıntılı kontrol yapın (yönetici izni istenir).",
-            _ => "Diskiniz BitLocker ile korunmuyor; bu adımda yapmanız gereken bir şey yok.",
+            BitLockerQuickState.On or BitLockerQuickState.Suspended or BitLockerQuickState.InProgress => SetupStrings.Setup_Sub_BitLockerOn,
+            BitLockerQuickState.Unknown => SetupStrings.Setup_Sub_BitLockerUnknown,
+            _ => SetupStrings.Setup_Sub_BitLockerNone,
         },
         WizardPage.SecureBoot => _snap.SecureBootOn switch
         {
-            true => $"{_snap.Machine.Describe()} için adımlar aşağıda. \"BIOS'a yeniden başlat\"a bastığınızda bilgisayar doğrudan BIOS ayarlarını açar; adımları telefonla fotoğraflamanız işinizi kolaylaştırır. Windows açılınca kurulum kaldığı yerden devam eder.",
-            false => "Bu adım tamam.",
-            null => "Bilgisayar eski (Legacy/CSM) modda açılıyor olabilir; bu durumda Secure Boot zaten devre dışıdır.",
+            true => SetupStrings.Setup_Sub_SecureBootOn(_snap.Machine.Describe()),
+            false => SetupStrings.Setup_Sub_SecureBootOff,
+            null => SetupStrings.Setup_Sub_SecureBootNone,
         },
-        WizardPage.TestSigning => _snap.TestSigningActive ? "Windows kendi imzaladığımız sürücüleri yükleyebiliyor."
-            : SetupFlow.TestSigningPendingReboot(_snap, _state)
-                ? "Test modu açıldı; etkin olması için bilgisayarı yeniden başlatın. Windows açılınca kurulum kaldığı yerden sürer."
-                : "Test modu, Windows'un bu bilgisayarda imzaladığımız sürücüyü yüklemesine izin verir. Bir kez yönetici izni istenir, ardından yeniden başlatılır.",
-        WizardPage.Install => "Intel'in Wi-Fi firmware'i (linux-firmware deposundan) indirilip SHA-256 ile doğrulanır, sürücü yalnızca bu bilgisayara özel bir sertifikayla imzalanır ve Wi-Fi kartına kurulur.",
-        WizardPage.Done => "Wi-Fi kartınız artık NitroDrop sürücüsünde. Yakındaki iPhone, iPad ve Mac'ler göründüğünde doğrudan paylaşabilirsiniz. Bu sürücü deneyseldir; sorun yaşarsanız tek tıkla geri alabilirsiniz.",
-        WizardPage.Rollback => "NitroDrop sürücüsünü kaldırır ve her şeyi kurulumdan önceki haline döndürür. Bir kez yönetici izni istenir.",
-        _ => !_rollbackOk ? "Ayrıntılar kurulum günlüğünde. Tekrar deneyebilir ya da Aygıt Yöneticisi'nden Intel sürücüsünü elle seçebilirsiniz."
-            : _snap.SecureBootOn == true ? "Sürücü kaldırıldı, test modu kapatıldı. Filigranın kaybolması için bilgisayarı yeniden başlatın."
-            : "Son adım: Secure Boot'u yeniden açın. \"BIOS'a yeniden başlat\"a basın ve aşağıdaki adımları izleyin.",
+        WizardPage.TestSigning => _snap.TestSigningActive ? SetupStrings.Setup_Sub_TestModeOn
+            : SetupFlow.TestSigningPendingReboot(_snap, _state) ? SetupStrings.Setup_Sub_TestModePending
+            : SetupStrings.Setup_Sub_TestModeEnable,
+        WizardPage.Install => SetupStrings.Setup_Sub_Install,
+        WizardPage.Done => SetupStrings.Setup_Sub_Done,
+        WizardPage.Rollback => SetupStrings.Setup_Sub_Rollback,
+        _ => !_rollbackOk ? SetupStrings.Setup_Sub_RollbackFailed
+            : _snap.SecureBootOn == true ? SetupStrings.Setup_Sub_RollbackRestored
+            : SetupStrings.Setup_Sub_RollbackAlmost,
     };
 
     // ---------------- page data ----------------
 
     public bool IsSupported => _snap.Device is not null;
-    public string CardText => _snap.Device is { } d ? $"{d.Card.Name} bulundu" : "Desteklenen Wi-Fi kartı yok";
+    public string CardText => _snap.Device is { } d ? SetupStrings.Setup_CardFound(d.Card.Name) : SetupStrings.Setup_NoCard;
     public string MachineText => _snap.Machine.Describe();
 
-    public IReadOnlyList<ConsentItem> ConsentItems { get; } = new[]
+    public IReadOnlyList<ConsentItem> ConsentItems => new[]
     {
-        new ConsentItem("", "Secure Boot kapanır",
-            "Sürücümüz henüz Microsoft imzalı değil; BIOS'tan kapatmanız gerekiyor. Adım adım göstereceğiz."),
-        new ConsentItem("", "Ekranda \"Test Modu\" yazısı",
-            "Windows sağ alt köşede filigran gösterir. Zararsızdır; geri alınca kaybolur."),
-        new ConsentItem("", "Bazı oyunlar açılmaz",
-            "Valorant (Vanguard), FACEIT ve benzeri hile korumalı oyunlar çalışmaz. Oynamak için kurulumu geri alıp Secure Boot'u açın."),
-        new ConsentItem("", "Koruma bir miktar azalır",
-            "Secure Boot'un açılıştaki zararlı yazılım koruması devre dışı kalır. Windows Güvenliği çalışmaya devam eder."),
-        new ConsentItem("", "Intel Wi-Fi kartı NitroDrop'a geçer",
-            "Sürücü etkinken kart iPhone bağlantısına ayrılır; internete Ethernet, telefon paylaşımı ya da ikinci bir Wi-Fi adaptörüyle çıkılır."),
+        new ConsentItem("", SetupStrings.Setup_Consent1_Title, SetupStrings.Setup_Consent1_Body),
+        new ConsentItem("", SetupStrings.Setup_Consent2_Title, SetupStrings.Setup_Consent2_Body),
+        new ConsentItem("", SetupStrings.Setup_Consent3_Title, SetupStrings.Setup_Consent3_Body),
+        new ConsentItem("", SetupStrings.Setup_Consent4_Title, SetupStrings.Setup_Consent4_Body),
+        new ConsentItem("", SetupStrings.Setup_Consent5_Title, SetupStrings.Setup_Consent5_Body),
     };
 
     public bool ConsentChecked { get => _consentChecked; set { if (Set(ref _consentChecked, value)) RaiseFooter(); } }
@@ -214,17 +205,17 @@ public sealed class SetupWizardViewModel : Observable
     public bool BitLockerNeedsBackup => _snap.BitLocker is not (BitLockerQuickState.NotEncrypted or BitLockerQuickState.Off);
     public string BitLockerStateText => _snap.BitLocker switch
     {
-        BitLockerQuickState.On => "BitLocker: açık",
-        BitLockerQuickState.Suspended => "BitLocker: askıda (disk şifreli)",
-        BitLockerQuickState.InProgress => "BitLocker: şifreleme sürüyor",
-        BitLockerQuickState.Off => "BitLocker: kapalı",
-        BitLockerQuickState.NotEncrypted => "BitLocker: kullanılmıyor",
-        _ => "BitLocker: bilinmiyor",
+        BitLockerQuickState.On => SetupStrings.Setup_BitLocker_On,
+        BitLockerQuickState.Suspended => SetupStrings.Setup_BitLocker_Suspended,
+        BitLockerQuickState.InProgress => SetupStrings.Setup_BitLocker_InProgress,
+        BitLockerQuickState.Off => SetupStrings.Setup_BitLocker_Off,
+        BitLockerQuickState.NotEncrypted => SetupStrings.Setup_BitLocker_NotUsed,
+        _ => SetupStrings.Setup_BitLocker_Unknown,
     };
     public bool HasRecoveryDetails => _bitLockerDetails is { Recovery.Count: > 0 };
     public string RecoveryKeyIds => _bitLockerDetails is null ? ""
-        : _bitLockerDetails.Recovery.Count == 0 ? "Bu diskte kurtarma parolası koruyucusu bulunamadı. Microsoft hesabınızı kontrol edin."
-        : "Anahtar kimliği: " + string.Join(", ", _bitLockerDetails.Recovery.Select(k => k.Id.Trim('{', '}')));
+        : _bitLockerDetails.Recovery.Count == 0 ? SetupStrings.Setup_NoRecoveryProtector
+        : SetupStrings.Setup_KeyId(string.Join(", ", _bitLockerDetails.Recovery.Select(k => k.Id.Trim('{', '}'))));
     public bool HasRecoveryText => RecoveryKeyIds.Length > 0;
 
     public bool BackupConfirmed
@@ -242,7 +233,7 @@ public sealed class SetupWizardViewModel : Observable
     public VendorGuide Guide => VendorGuides.Find(_snap.Machine);
     public IReadOnlyList<string> GuideSteps => (Page == WizardPage.RollbackDone ? Guide.EnableSteps : Guide.DisableSteps)
         .Select((s, i) => $"{i + 1}.  {s}").ToList();
-    public string GuideKeys => $"BIOS kendiliğinden açılmazsa: {Guide.BiosKeys}.";
+    public string GuideKeys => SetupStrings.Setup_GuideKeys(Guide.BiosKeys);
     public bool ShowGuide => (Page == WizardPage.SecureBoot && _snap.SecureBootOn == true)
                              || (Page == WizardPage.RollbackDone && _rollbackOk && _snap.SecureBootOn != true);
     public bool SecureBootStillOn => _snap.SecureBootOn == true;
@@ -254,11 +245,11 @@ public sealed class SetupWizardViewModel : Observable
 
     public IReadOnlyList<string> RollbackItems => new[]
     {
-        "NitroDrop Wi-Fi sürücüsü kaldırılır, Intel sürücüsü geri gelir",
-        "Bu bilgisayara özel imza sertifikası silinir",
-        "Windows test modu kapatılır (filigran yeniden başlatınca kaybolur)",
-        "BitLocker koruması askıdaysa sürdürülür",
-        "Secure Boot'u yeniden açmanız için adımları gösteririz",
+        SetupStrings.Setup_RollbackItem1,
+        SetupStrings.Setup_RollbackItem2,
+        SetupStrings.Setup_RollbackItem3,
+        SetupStrings.Setup_RollbackItem4,
+        SetupStrings.Setup_RollbackItem5,
     };
 
     // ---------------- footer ----------------
@@ -275,16 +266,17 @@ public sealed class SetupWizardViewModel : Observable
 
     public string PrimaryText => Page switch
     {
-        WizardPage.Compatibility => IsSupported ? "Başla" : "Kapat",
-        WizardPage.Consent => "Devam",
-        WizardPage.BitLocker => "Devam",
-        WizardPage.SecureBoot => _snap.SecureBootOn == true ? "BIOS'a yeniden başlat" : "Devam",
-        WizardPage.TestSigning => _snap.TestSigningActive ? "Devam"
-            : SetupFlow.TestSigningPendingReboot(_snap, _state) ? "Yeniden başlat" : "Test modunu aç",
-        WizardPage.Install => FirmwareReady ? "Sürücüyü kur" : "Firmware'i indir",
-        WizardPage.Done => "Bitti",
-        WizardPage.Rollback => "Kaldır ve eski haline getir",
-        _ => _rollbackOk && ShowGuide ? "BIOS'a yeniden başlat" : _rollbackOk ? "Yeniden başlat" : "Tekrar dene",
+        WizardPage.Compatibility => IsSupported ? SetupStrings.Setup_Btn_Start : CommonStrings.Common_Close,
+        WizardPage.Consent => SetupStrings.Setup_Btn_Continue,
+        WizardPage.BitLocker => SetupStrings.Setup_Btn_Continue,
+        WizardPage.SecureBoot => _snap.SecureBootOn == true ? SetupStrings.Setup_Btn_RebootToBios : SetupStrings.Setup_Btn_Continue,
+        WizardPage.TestSigning => _snap.TestSigningActive ? SetupStrings.Setup_Btn_Continue
+            : SetupFlow.TestSigningPendingReboot(_snap, _state) ? SetupStrings.Setup_Btn_Restart : SetupStrings.Setup_Btn_EnableTestMode,
+        WizardPage.Install => FirmwareReady ? SetupStrings.Setup_Btn_InstallDriver : SetupStrings.Setup_Btn_DownloadFirmware,
+        WizardPage.Done => CommonStrings.Common_Done,
+        WizardPage.Rollback => SetupStrings.Setup_Title_Rollback,
+        _ => _rollbackOk && ShowGuide ? SetupStrings.Setup_Btn_RebootToBios
+            : _rollbackOk ? SetupStrings.Setup_Btn_Restart : SetupStrings.Setup_Btn_Retry,
     };
 
     public bool PrimaryEnabled => !IsBusy && Page switch
@@ -297,11 +289,11 @@ public sealed class SetupWizardViewModel : Observable
 
     public string SecondaryText => Page switch
     {
-        WizardPage.Compatibility => "Vazgeç",
+        WizardPage.Compatibility => CommonStrings.Common_Cancel,
         WizardPage.Done => "",
-        WizardPage.Rollback => "Vazgeç",
-        WizardPage.RollbackDone => "Daha sonra",
-        _ => "Geri",
+        WizardPage.Rollback => CommonStrings.Common_Cancel,
+        WizardPage.RollbackDone => SetupStrings.Setup_Btn_Later,
+        _ => CommonStrings.Common_Back,
     };
     public bool SecondaryVisible => SecondaryText.Length > 0 && (Page != WizardPage.Compatibility || IsSupported);
     public bool SecondaryEnabled => !IsBusy;
@@ -311,13 +303,13 @@ public sealed class SetupWizardViewModel : Observable
     public async Task InitializeAsync()
     {
         IsBusy = true;
-        Status = "Bilgisayarınız kontrol ediliyor…";
+        Status = SetupStrings.Setup_Status_Checking;
         try
         {
             await RefreshAsync();
-            SetupLog.Write($"sihirbaz açıldı{(IsDryRun ? " (dry-run)" : "")}: kart={_snap.Device?.Card.Name ?? "yok"} " +
+            SetupLog.Write($"wizard opened{(IsDryRun ? " (dry-run)" : "")}: card={_snap.Device?.Card.Name ?? "none"} " +
                            $"secureboot={_snap.SecureBootOn?.ToString() ?? "?"} testsigning={_snap.TestSigningActive} " +
-                           $"bitlocker={_snap.BitLocker} bağlı={_snap.OurDriverBound} makine={_snap.Machine.Describe()}");
+                           $"bitlocker={_snap.BitLocker} bound={_snap.OurDriverBound} machine={_snap.Machine.Describe()}");
             if (!_rollbackMode) Page = PageFor(SetupFlow.Start(_snap, _state));
             ResumeRegistration.Unregister();
         }
@@ -365,12 +357,12 @@ public sealed class SetupWizardViewModel : Observable
 
     private static string StepTitle(SetupStep s) => s switch
     {
-        SetupStep.Compatibility => "Uyumluluk",
-        SetupStep.Consent => "Onay",
+        SetupStep.Compatibility => SetupStrings.Setup_Step_Compat,
+        SetupStep.Consent => SetupStrings.Setup_Step_Consent,
         SetupStep.BitLocker => "BitLocker",
         SetupStep.SecureBoot => "Secure Boot",
-        SetupStep.TestSigning => "Test modu",
-        _ => "Kurulum",
+        SetupStep.TestSigning => SetupStrings.Setup_Step_TestMode,
+        _ => SetupStrings.Setup_Step_Install,
     };
 
     private void GoNextIncomplete() => Page = PageFor(SetupFlow.Next(_snap, _state));
@@ -383,7 +375,7 @@ public sealed class SetupWizardViewModel : Observable
         try { await action(); }
         catch (Exception ex)
         {
-            SetupLog.Write($"hata: {ex}");
+            SetupLog.Write($"error: {ex}");
             Status = "";
             Error = ex.Message;
         }
@@ -462,13 +454,13 @@ public sealed class SetupWizardViewModel : Observable
         _state.ConsentGiven = true;
         _state.ConsentAtUtc = DateTime.UtcNow;
         SaveState();
-        SetupLog.Write("kullanıcı değişiklikleri onayladı");
+        SetupLog.Write("user accepted the changes");
         await NextAsync();
     }
 
     private async Task CheckBitLockerAsync()
     {
-        Status = "BitLocker ayrıntıları okunuyor (yönetici izni)…";
+        Status = SetupStrings.Setup_Status_ReadingBitLocker;
         var r = await ElevatedHelper.RunAsync(new HelperRequest { Action = HelperAction.BitLockerStatus, Drive = SystemDrive });
         Status = "";
         if (r.Cancelled || !r.Ok) { Error = r.Message; return; }
@@ -481,40 +473,38 @@ public sealed class SetupWizardViewModel : Observable
     private void SaveKey(bool print)
     {
         if (_bitLockerDetails is not { Recovery.Count: > 0 } d) return;
-        var path = PickSaveFile?.Invoke($"BitLocker Kurtarma Anahtarı {Environment.MachineName}.txt");
+        var path = PickSaveFile?.Invoke(SetupStrings.Setup_RecoveryFileName(Environment.MachineName));
         if (path is null) return;
         try
         {
             File.WriteAllText(path, d.FormatBackup(Environment.MachineName, DateTime.Now));
-            SetupLog.Write("kurtarma anahtarı kullanıcının seçtiği dosyaya kaydedildi (anahtar günlüğe yazılmaz)");
-            Status = $"Kaydedildi: {path}. Bu dosyayı bilgisayarın dışında (USB bellek, telefon) saklayın.";
+            SetupLog.Write("recovery key saved to the user's chosen file (the key is never logged)");
+            Status = SetupStrings.Setup_Status_Saved(path);
             if (print) Process.Start(new ProcessStartInfo(path) { UseShellExecute = true, Verb = "print" });
         }
-        catch (Exception ex) { Error = "Kaydedilemedi: " + ex.Message; }
+        catch (Exception ex) { Error = SetupStrings.Setup_Error_SaveFailed(ex.Message); }
     }
 
     private async Task RebootToFirmwareAsync()
     {
-        if (Confirm?.Invoke("BIOS'a yeniden başlatılsın mı?",
-                "Bilgisayar 5 saniye içinde yeniden başlayıp BIOS ayarlarını açacak. Açık dosyalarınızı kaydedin. " +
-                "BIOS'ta işiniz bitince kaydedip çıkın; Windows açılınca NitroDrop kurulumu kaldığı yerden sürdürür.",
-                "Yeniden başlat") != true)
+        if (Confirm?.Invoke(SetupStrings.Setup_ConfirmBiosTitle, SetupStrings.Setup_ConfirmBiosBody,
+                SetupStrings.Setup_Btn_Restart) != true)
             return;
         bool suspend = _state.SuspendBitLockerOnReboot && _snap.BitLocker is BitLockerQuickState.On or BitLockerQuickState.Unknown;
         SaveState();
         ResumeRegistration.Register();
-        Status = "Yeniden başlatılıyor…";
+        Status = SetupStrings.Setup_Status_Restarting;
         var r = await ElevatedHelper.RunAsync(new HelperRequest { Action = HelperAction.RebootToFirmware, SuspendBitLocker = suspend, Drive = SystemDrive });
         if (r.BitLockerSuspended) _state.BitLockerSuspendedByUs = true;
         if (r.Ok) _state.FirmwareRebootRequested = true;
         SaveState();
         if (!r.Ok) { ResumeRegistration.Unregister(); Status = ""; Error = r.Message; return; }
-        Status = r.DryRun ? "[dry-run] Gerçekte bilgisayar şimdi BIOS'a yeniden başlardı." : r.Message;
+        Status = r.DryRun ? SetupStrings.Setup_DryRun_Bios : r.Message;
     }
 
     private async Task TestSigningAsync()
     {
-        Status = "Test modu açılıyor (yönetici izni)…";
+        Status = SetupStrings.Setup_Status_EnablingTestMode;
         bool suspend = _state.SuspendBitLockerOnReboot && _snap.BitLocker is BitLockerQuickState.On or BitLockerQuickState.Unknown;
         var r = await ElevatedHelper.RunAsync(new HelperRequest { Action = HelperAction.TestSigningOn, SuspendBitLocker = suspend, Drive = SystemDrive });
         Status = "";
@@ -523,21 +513,21 @@ public sealed class SetupWizardViewModel : Observable
         _state.TestSigningEnabledByUs = true;
         _state.TestSigningSetUtc = DateTime.UtcNow;
         SaveState();
-        Status = r.DryRun ? "[dry-run] bcdedit çalıştırılmadı. Gerçekte şimdi yeniden başlatmanız istenirdi." : r.Message;
+        Status = r.DryRun ? SetupStrings.Setup_DryRun_Bcdedit : r.Message;
         RaiseAll();
     }
 
     private Task RebootAsync()
     {
-        if (Confirm?.Invoke("Yeniden başlatılsın mı?",
-                "Bilgisayar 5 saniye içinde yeniden başlayacak. Açık dosyalarınızı kaydedin.", "Yeniden başlat") != true)
+        if (Confirm?.Invoke(SetupStrings.Setup_ConfirmRestartTitle, SetupStrings.Setup_ConfirmRestartBody,
+                SetupStrings.Setup_Btn_Restart) != true)
             return Task.CompletedTask;
         SaveState();
         if (Page != WizardPage.RollbackDone) ResumeRegistration.Register();
         ICommandRunner runner = IsDryRun ? new DryRunCommandRunner() : new ProcessCommandRunner();
         var res = runner.Run(SetupCommands.Reboot(5));   // a plain restart needs no admin
-        if (res.ExitCode != 0) { ResumeRegistration.Unregister(); Error = "Yeniden başlatılamadı. Başlat menüsünden yeniden başlatın."; }
-        else Status = res.DryRun ? "[dry-run] Gerçekte bilgisayar şimdi yeniden başlardı." : "Yeniden başlatılıyor…";
+        if (res.ExitCode != 0) { ResumeRegistration.Unregister(); Error = SetupStrings.Setup_Error_RestartFailed; }
+        else Status = res.DryRun ? SetupStrings.Setup_DryRun_Restart : SetupStrings.Setup_Status_Restarting;
         return Task.CompletedTask;
     }
 
@@ -549,7 +539,7 @@ public sealed class SetupWizardViewModel : Observable
         {
             var src = Path.Combine(SetupPaths.BundledDriverDir, f);
             if (!File.Exists(src))
-                throw new InvalidOperationException($"Sürücü dosyası bu NitroDrop sürümünde yok: {f}. (Geliştirici derlemesi: driver\\build.ps1 ve driver\\package.ps1 çalıştırın.)");
+                throw new InvalidOperationException(SetupStrings.Setup_Error_DriverFileMissing(f));
             File.Copy(src, Path.Combine(dir, f), overwrite: true);
         }
         var fetcher = new FirmwareFetcher(Http);
@@ -558,7 +548,7 @@ public sealed class SetupWizardViewModel : Observable
         var lic = await fetcher.EnsureAsync(FirmwareSpec.License, dir, local, progress);
         await fetcher.EnsureAsync(FirmwareSpec.Firmware, dir, local, progress);
         LicenseText = File.ReadAllText(lic);
-        Status = "Firmware indirildi ve doğrulandı. Lisansı okuyup kabul edin.";
+        Status = SetupStrings.Setup_Status_FirmwareReady;
         FirmwareReady = true;
         RaiseAll();
     }
@@ -577,15 +567,15 @@ public sealed class SetupWizardViewModel : Observable
 
     private async Task InstallAsync()
     {
-        if (_snap.Device is not { } dev) { Error = "Wi-Fi kartı bulunamadı."; return; }
+        if (_snap.Device is not { } dev) { Error = SetupStrings.Setup_Error_NoCard; return; }
         var dir = SetupPaths.PackageCache;
-        Status = "Paket doğrulanıyor…";
+        Status = SetupStrings.Setup_Status_Verifying;
         var bad = await Task.Run(() => CodeSigner.VerifyPackageAgainstCatalog(dir));
-        if (bad.Count > 0) { Status = ""; Error = "Sürücü paketi kataloğuyla uyuşmuyor: " + string.Join(", ", bad); return; }
+        if (bad.Count > 0) { Status = ""; Error = SetupStrings.Setup_Error_CatalogMismatch(string.Join(", ", bad)); return; }
         _state.FirmwareLicenseAccepted = true;
         SaveState();
         LogLines.Clear();
-        Status = "Sürücü imzalanıp kuruluyor (yönetici izni)…";
+        Status = SetupStrings.Setup_Status_Installing;
         var r = await ElevatedHelper.RunAsync(new HelperRequest { Action = HelperAction.InstallDriver, PackageDir = dir, HardwareId = dev.Card.HardwareId });
         Status = "";
         if (r.CertThumbprint is { } t && !r.DryRun) _state.CertThumbprint = t;
@@ -599,16 +589,15 @@ public sealed class SetupWizardViewModel : Observable
         if (!r.Ok) { Error = r.Message; return; }
         await RefreshAsync();
         Page = WizardPage.Done;
-        Status = r.DryRun ? "[dry-run] Hiçbir şey kurulmadı; komutlar günlüğe yazıldı." : r.Message;
+        Status = r.DryRun ? SetupStrings.Setup_DryRun_Install : r.Message;
     }
 
     private async Task RollbackAsync()
     {
-        if (Confirm?.Invoke("Eski haline getirilsin mi?",
-                "NitroDrop sürücüsü kaldırılacak, Intel sürücüsü geri gelecek, imza sertifikası silinecek ve test modu kapatılacak.",
-                "Kaldır") != true)
+        if (Confirm?.Invoke(SetupStrings.Setup_ConfirmRollbackTitle, SetupStrings.Setup_ConfirmRollbackBody,
+                SetupStrings.Setup_Btn_Uninstall) != true)
             return;
-        Status = "Kaldırılıyor (yönetici izni)…";
+        Status = SetupStrings.Setup_Status_Removing;
         var r = await ElevatedHelper.RunAsync(new HelperRequest
         {
             Action = HelperAction.UninstallDriver,
@@ -630,7 +619,7 @@ public sealed class SetupWizardViewModel : Observable
         await RefreshAsync();
         Page = WizardPage.RollbackDone;
         if (!r.Ok) Error = r.Message;
-        else Status = r.DryRun ? "[dry-run] Hiçbir şey kaldırılmadı; komutlar günlüğe yazıldı." : r.Message;
+        else Status = r.DryRun ? SetupStrings.Setup_DryRun_Rollback : r.Message;
     }
 
     // ---------------- helpers ----------------
@@ -641,7 +630,7 @@ public sealed class SetupWizardViewModel : Observable
     {
         if (_statePath is null) return;
         try { _state.Save(_statePath); }
-        catch (Exception ex) { SetupLog.Write($"setup.json yazılamadı: {ex.Message}"); }
+        catch (Exception ex) { SetupLog.Write($"couldn't write setup.json: {ex.Message}"); }
     }
 
     private void OnLogLine(string line)
@@ -694,6 +683,6 @@ public sealed class SetupWizardViewModel : Observable
     private static void Shell(string target)
     {
         try { Process.Start(new ProcessStartInfo(target) { UseShellExecute = true }); }
-        catch (Exception ex) { SetupLog.Write($"açılamadı: {target}: {ex.Message}"); }
+        catch (Exception ex) { SetupLog.Write($"couldn't open {target}: {ex.Message}"); }
     }
 }

@@ -7,6 +7,7 @@ using System.Windows.Media;
 using AirDrop.App.Interop;
 using Nitro.Sync;
 using Nitro.Sync.Security;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Views;
 
@@ -40,18 +41,16 @@ public partial class ConfirmSheet : Window
     {
         var w = new ConfirmSheet();
         w.Who.Text = p.PeerName;
-        w.Eyebrow.Text = "NITRODROP · EŞLEŞTİRME";
+        w.Eyebrow.Text = DevicesStrings.Pair_Eyebrow;
         w.Badge.Text = "";   // link
-        w.Message.Text = p.IsInitiator
-            ? "ile eşleştiriliyor. Eşleşen bilgisayarlar açık sekmelerini ve uygulamalarını birbirine gösterir."
-            : "bu bilgisayarla eşleşmek istiyor. Eşleşen bilgisayarlar açık sekmelerini ve uygulamalarını birbirine gösterir.";
+        w.Message.Text = p.IsInitiator ? DevicesStrings.Pair_MessageInitiator : DevicesStrings.Pair_MessageResponder;
         w.Code.Text = FormatCode(p.Code);
         w.CodeBox.Visibility = Visibility.Visible;
-        w.Question.Text = "Diğer bilgisayarda da aynı kodu görüyor musunuz?";
+        w.Question.Text = DevicesStrings.Pair_Question;
         w.Question.Visibility = Visibility.Visible;
-        w.AcceptButton.Content = "Onayla";
-        w.CancelButton.Content = "İptal";
-        w.Footnote.Text = "Kodlar farklıysa İptal'e basın.";
+        w.AcceptButton.Content = DevicesStrings.Pair_Confirm;
+        w.CancelButton.Content = DevicesStrings.Pair_Cancel;
+        w.Footnote.Text = DevicesStrings.Pair_Footnote;
         return w;
     }
 
@@ -59,12 +58,12 @@ public partial class ConfirmSheet : Window
     {
         var w = new ConfirmSheet();
         w.Who.Text = r.FromName;
-        w.Eyebrow.Text = "NITRODROP · UYGULAMA AÇ";
+        w.Eyebrow.Text = DevicesStrings.Launch_Eyebrow;
         w.Badge.Text = "";   // open in new window
-        w.Message.Text = $"“{r.AppName}” uygulamasını bu bilgisayarda açmak istiyor.";
-        w.AcceptButton.Content = "Aç";
-        w.CancelButton.Content = "Reddet";
-        w.Footnote.Text = "Yalnızca bu bilgisayarda zaten paylaşılan uygulamalar açılabilir.";
+        w.Message.Text = DevicesStrings.Launch_Message(r.AppName);
+        w.AcceptButton.Content = CommonStrings.Common_Open;
+        w.CancelButton.Content = CommonStrings.Common_Decline;
+        w.Footnote.Text = DevicesStrings.Launch_Footnote;
         return w;
     }
 

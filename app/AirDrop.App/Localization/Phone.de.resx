@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Phone_Status_NotPaired" xml:space="preserve">
+    <value>Kein iPhone verbunden</value>
+  </data>
+  <data name="Phone_Status_NotPairedDetail" xml:space="preserve">
+    <value>Koppeln Sie Ihr iPhone, um loszulegen.</value>
+  </data>
+  <data name="Phone_Status_Pairing" xml:space="preserve">
+    <value>Wird gekoppelt…</value>
+  </data>
+  <data name="Phone_Status_PairingDetail" xml:space="preserve">
+    <value>Tippen Sie auf dem iPhone bei der Anfrage auf „Koppeln“.</value>
+  </data>
+  <data name="Phone_Status_Blocked" xml:space="preserve">
+    <value>Smartphone-Link verwendet dieses iPhone</value>
+  </data>
+  <data name="Phone_Status_BlockedDetail" xml:space="preserve">
+    <value>Dieses iPhone wird gerade von Smartphone-Link verwendet. Öffnen Sie Smartphone-Link → Einstellungen → Meine Geräte → ⋯ neben dem iPhone → Entfernen. Klicken Sie dann auf „Erneut versuchen“.</value>
+  </data>
+  <data name="Phone_Status_BluetoothOff" xml:space="preserve">
+    <value>Bluetooth ist aus</value>
+  </data>
+  <data name="Phone_Status_BluetoothOffDetail" xml:space="preserve">
+    <value>Aktivieren Sie Bluetooth unter Windows-Einstellungen → Bluetooth und Geräte.</value>
+  </data>
+  <data name="Phone_Status_Connecting" xml:space="preserve">
+    <value>Verbindung mit {0} wird hergestellt…</value>
+  </data>
+  <data name="Phone_Status_ConnectingDetail" xml:space="preserve">
+    <value>Entsperren Sie das iPhone und halten Sie es in der Nähe.</value>
+  </data>
+  <data name="Phone_Status_Reconnecting" xml:space="preserve">
+    <value>Verbindung unterbrochen. Neuer Versuch…</value>
+  </data>
+  <data name="Phone_Status_ReconnectingDetail" xml:space="preserve">
+    <value>Das iPhone ist möglicherweise außer Reichweite oder Bluetooth ist ausgeschaltet.</value>
+  </data>
+  <data name="Phone_Status_NoLeLink" xml:space="preserve">
+    <value>Mitteilungsverbindung konnte nicht hergestellt werden</value>
+  </data>
+  <data name="Phone_Status_NoLeLinkDetail" xml:space="preserve">
+    <value>Das iPhone ist gekoppelt, aber die Mitteilungsverbindung (LE) wurde nicht geöffnet. Klicken Sie auf „Mitteilungsverbindung herstellen“ und halten Sie das iPhone in der Nähe.</value>
+  </data>
+  <data name="Phone_Status_Disconnected" xml:space="preserve">
+    <value>Nicht verbunden</value>
+  </data>
+  <data name="Phone_Status_Connected" xml:space="preserve">
+    <value>{0} verbunden</value>
+  </data>
+  <data name="Phone_Status_NotificationsOff" xml:space="preserve">
+    <value>Mitteilungen sind aus: Öffnen Sie auf dem iPhone Einstellungen → Bluetooth → ⓘ neben diesem PC und aktivieren Sie „Systemmitteilungen teilen“.</value>
+  </data>
+  <data name="Phone_Status_MessagesOff" xml:space="preserve">
+    <value>Nachrichten sind aus: Aktivieren Sie auf dem iPhone im ⓘ-Bildschirm dieses PCs „Mitteilungen anzeigen“.</value>
+  </data>
+  <data name="Phone_Notifications" xml:space="preserve">
+    <value>Mitteilungen</value>
+  </data>
+  <data name="Phone_Messages" xml:space="preserve">
+    <value>Nachrichten</value>
+  </data>
+  <data name="Phone_Calls" xml:space="preserve">
+    <value>Anrufe</value>
+  </data>
+  <data name="Phone_Music" xml:space="preserve">
+    <value>Musik</value>
+  </data>
+  <data name="Phone_MessagesAppName" xml:space="preserve">
+    <value>Nachrichten</value>
+  </data>
+  <data name="Phone_SetUpLeLink" xml:space="preserve">
+    <value>Mitteilungsverbindung herstellen</value>
+  </data>
+  <data name="Phone_Retry" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="Phone_More" xml:space="preserve">
+    <value>Mehr</value>
+  </data>
+  <data name="Phone_Menu_SyncContacts" xml:space="preserve">
+    <value>Kontakte vom iPhone synchronisieren</value>
+  </data>
+  <data name="Phone_Menu_ResetLeLink" xml:space="preserve">
+    <value>Mitteilungsverbindung neu herstellen</value>
+  </data>
+  <data name="Phone_Menu_Disconnect" xml:space="preserve">
+    <value>Dieses iPhone nicht mehr verwenden</value>
+  </data>
+  <data name="Phone_Media_Previous" xml:space="preserve">
+    <value>Zurück</value>
+  </data>
+  <data name="Phone_Media_PlayPause" xml:space="preserve">
+    <value>Wiedergabe / Pause</value>
+  </data>
+  <data name="Phone_Media_Next" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="Phone_Setup_Title" xml:space="preserve">
+    <value>Ihr iPhone verbinden</value>
+  </data>
+  <data name="Phone_Setup_Intro" xml:space="preserve">
+    <value>Mitteilungen, SMS/iMessage-Nachrichten und eingehende Anrufe erscheinen auf diesem PC. Weder Treiber noch iPhone-App erforderlich.</value>
+  </data>
+  <data name="Phone_Guide1_Title" xml:space="preserve">
+    <value>Öffnen Sie auf dem iPhone die Bluetooth-Einstellungen</value>
+  </data>
+  <data name="Phone_Guide1_Body" xml:space="preserve">
+    <value>Einstellungen → Bluetooth. Solange dieser Bildschirm geöffnet ist, ist das iPhone für diesen PC sichtbar.</value>
+  </data>
+  <data name="Phone_Guide2_Title" xml:space="preserve">
+    <value>Klicken Sie auf „iPhone suchen“ und wählen Sie es aus</value>
+  </data>
+  <data name="Phone_Guide2_Body" xml:space="preserve">
+    <value>Beide Bildschirme zeigen denselben 6-stelligen Code: Tippen Sie auf dem iPhone auf „Koppeln“ und hier auf „Codes stimmen überein“.</value>
+  </data>
+  <data name="Phone_Guide3_Title" xml:space="preserve">
+    <value>Aktivieren Sie die drei Schalter</value>
+  </data>
+  <data name="Phone_Guide3_Body" xml:space="preserve">
+    <value>Auf dem iPhone: Einstellungen → Bluetooth → ⓘ neben diesem PC.</value>
+  </data>
+  <data name="Phone_Toggle1_Name" xml:space="preserve">
+    <value>Systemmitteilungen teilen</value>
+  </data>
+  <data name="Phone_Toggle1_Explains" xml:space="preserve">
+    <value>Mitteilungen und eingehende Anrufe erscheinen auf diesem PC.</value>
+  </data>
+  <data name="Phone_Toggle2_Name" xml:space="preserve">
+    <value>Mitteilungen anzeigen</value>
+  </data>
+  <data name="Phone_Toggle2_Explains" xml:space="preserve">
+    <value>Sie lesen und beantworten SMS- und iMessage-Nachrichten hier.</value>
+  </data>
+  <data name="Phone_Toggle3_Name" xml:space="preserve">
+    <value>Kontakte synchronisieren</value>
+  </data>
+  <data name="Phone_Toggle3_Explains" xml:space="preserve">
+    <value>Namen und Fotos von Anrufern und Absendern werden angezeigt.</value>
+  </data>
+  <data name="Phone_IosSwitches_Header" xml:space="preserve">
+    <value>DREI SCHALTER AUF DEM IPHONE</value>
+  </data>
+  <data name="Phone_IosMock_Path" xml:space="preserve">
+    <value>Einstellungen → Bluetooth → ⓘ neben diesem PC</value>
+  </data>
+  <data name="Phone_PhoneLinkHint" xml:space="preserve">
+    <value>Wenn Smartphone-Link mit diesem iPhone verbunden ist, entfernen Sie es dort zuerst: Ein iPhone teilt Mitteilungen und Nachrichten jeweils nur mit einer PC-App.</value>
+  </data>
+  <data name="Phone_FindIphone" xml:space="preserve">
+    <value>iPhone suchen</value>
+  </data>
+  <data name="Phone_Pair_Found" xml:space="preserve">
+    <value>Gefundene Geräte</value>
+  </data>
+  <data name="Phone_Pair_Select" xml:space="preserve">
+    <value>Auswählen</value>
+  </data>
+  <data name="Phone_Pair_SearchAgain" xml:space="preserve">
+    <value>Erneut suchen</value>
+  </data>
+  <data name="Phone_Pair_CodesDiffer" xml:space="preserve">
+    <value>Stimmen nicht überein</value>
+  </data>
+  <data name="Phone_Pair_CodesMatch" xml:space="preserve">
+    <value>Codes stimmen überein</value>
+  </data>
+  <data name="Phone_Pair_Submit" xml:space="preserve">
+    <value>Senden</value>
+  </data>
+  <data name="Phone_Pair_Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
+  <data name="Phone_Pair_Searching" xml:space="preserve">
+    <value>iPhone wird gesucht… Lassen Sie auf dem iPhone Einstellungen → Bluetooth geöffnet.</value>
+  </data>
+  <data name="Phone_Pair_NotFound" xml:space="preserve">
+    <value>Kein iPhone gefunden. Entsperren Sie das iPhone, bleiben Sie in Einstellungen → Bluetooth und versuchen Sie es erneut.</value>
+  </data>
+  <data name="Phone_Pair_Pairing" xml:space="preserve">
+    <value>Kopplung mit {0}…</value>
+  </data>
+  <data name="Phone_Pair_Using" xml:space="preserve">
+    <value>{0} wird verwendet.</value>
+  </data>
+  <data name="Phone_Pair_KeepClose" xml:space="preserve">
+    <value>Halten Sie das iPhone in der Nähe des PCs…</value>
+  </data>
+  <data name="Phone_Pair_EnterOnIphone" xml:space="preserve">
+    <value>Geben Sie diesen Code auf dem iPhone ein.</value>
+  </data>
+  <data name="Phone_Pair_ConfirmDevice" xml:space="preserve">
+    <value>Mit {0} koppeln?</value>
+  </data>
+  <data name="Phone_Pair_CompareCode" xml:space="preserve">
+    <value>Stimmt der Code auf dem iPhone überein?</value>
+  </data>
+  <data name="Phone_Pair_TypeCode" xml:space="preserve">
+    <value>Geben Sie den auf dem iPhone angezeigten Code ein.</value>
+  </data>
+  <data name="Phone_Pair_LinkEstablished" xml:space="preserve">
+    <value>Mitteilungsverbindung hergestellt.</value>
+  </data>
+  <data name="Phone_Pair_Paired" xml:space="preserve">
+    <value>{0} gekoppelt.</value>
+  </data>
+  <data name="Phone_Pair_AlreadyPaired" xml:space="preserve">
+    <value>{0} ist bereits gekoppelt.</value>
+  </data>
+  <data name="Phone_Pair_Canceled" xml:space="preserve">
+    <value>Kopplung abgebrochen.</value>
+  </data>
+  <data name="Phone_Pair_Rejected" xml:space="preserve">
+    <value>Kopplung abgelehnt. Tippen Sie auf dem iPhone auf „Koppeln“ und prüfen Sie, ob die Codes übereinstimmen.</value>
+  </data>
+  <data name="Phone_Pair_LookupFailed" xml:space="preserve">
+    <value>iPhone nicht gefunden ({0}). Ist Einstellungen → Bluetooth geöffnet?</value>
+  </data>
+  <data name="Phone_Pair_WindowsCannotPair" xml:space="preserve">
+    <value>Windows lässt die Kopplung mit diesem Gerät nicht zu.</value>
+  </data>
+  <data name="Phone_Pair_NoResponse" xml:space="preserve">
+    <value>Das iPhone hat nicht reagiert. Lassen Sie Einstellungen → Bluetooth geöffnet und versuchen Sie es erneut.</value>
+  </data>
+  <data name="Phone_Pair_NoAppleNearby" xml:space="preserve">
+    <value>Kein Apple-Gerät in der Nähe. Bringen Sie das iPhone näher an den PC und schalten Sie das Display ein.</value>
+  </data>
+  <data name="Phone_Pair_LeRejected" xml:space="preserve">
+    <value>Das iPhone hat die LE-Kopplung nicht angenommen.</value>
+  </data>
+  <data name="Phone_Pair_HidTimeout" xml:space="preserve">
+    <value>Das iPhone hat sich nicht verbunden. Tippen Sie auf dem iPhone unter Einstellungen → Bluetooth → Andere Geräte auf diesen PC.</value>
+  </data>
+  <data name="Phone_Pair_Failed" xml:space="preserve">
+    <value>Kopplung fehlgeschlagen.</value>
+  </data>
+  <data name="Phone_Pair_FailedDetail" xml:space="preserve">
+    <value>Kopplung fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Phone_Contacts_Synced_Plural" xml:space="preserve">
+    <value>{0} Kontakt synchronisiert.|{0} Kontakte synchronisiert.</value>
+  </data>
+  <data name="Phone_Contacts_None" xml:space="preserve">
+    <value>Keine Kontakte empfangen. Ist „Kontakte synchronisieren“ auf dem iPhone aktiviert?</value>
+  </data>
+  <data name="Phone_Contacts_Failed" xml:space="preserve">
+    <value>Kontakte konnten nicht abgerufen werden ({0}).</value>
+  </data>
+  <data name="Phone_Messages_Empty" xml:space="preserve">
+    <value>Noch keine Nachrichten.
+SMS und iMessages, die eingehen, während das iPhone verbunden ist, erscheinen hier.</value>
+  </data>
+  <data name="Phone_Reply_Placeholder" xml:space="preserve">
+    <value>Nachricht</value>
+  </data>
+  <data name="Phone_Reply_Send" xml:space="preserve">
+    <value>Senden (über iPhone)</value>
+  </data>
+  <data name="Phone_Messages_SelectConversation" xml:space="preserve">
+    <value>Wählen Sie eine Unterhaltung</value>
+  </data>
+  <data name="Phone_Message_Sending" xml:space="preserve">
+    <value>Wird gesendet…</value>
+  </data>
+  <data name="Phone_Message_Failed" xml:space="preserve">
+    <value>Senden fehlgeschlagen</value>
+  </data>
+  <data name="Phone_Conversation_You" xml:space="preserve">
+    <value>Sie: {0}</value>
+  </data>
+  <data name="Phone_Notifs_Header" xml:space="preserve">
+    <value>iPhone-Mitteilungen</value>
+  </data>
+  <data name="Phone_Notifs_ClearAll" xml:space="preserve">
+    <value>Alle löschen</value>
+  </data>
+  <data name="Phone_Notifs_Empty" xml:space="preserve">
+    <value>Keine Mitteilungen</value>
+  </data>
+  <data name="Phone_Notif_DefaultPositive" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Phone_Notif_DefaultNegative" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
+  <data name="Phone_Notif_OpenInMessages" xml:space="preserve">
+    <value>In Nachrichten öffnen</value>
+  </data>
+  <data name="Phone_Notif_OpenWith" xml:space="preserve">
+    <value>In {0} öffnen</value>
+  </data>
+  <data name="Phone_Toast_Title" xml:space="preserve">
+    <value>iPhone-Mitteilung</value>
+  </data>
+  <data name="Phone_Toast_PreviewHidden" xml:space="preserve">
+    <value>Vorschau ausgeblendet</value>
+  </data>
+  <data name="Phone_Calls_FixHeader" xml:space="preserve">
+    <value>So nutzen Sie Anrufaudio auf diesem PC</value>
+  </data>
+  <data name="Phone_Calls_Empty" xml:space="preserve">
+    <value>Keine letzten Anrufe</value>
+  </data>
+  <data name="Phone_Call_Missed" xml:space="preserve">
+    <value>Verpasster Anruf</value>
+  </data>
+  <data name="Phone_Call_Declined" xml:space="preserve">
+    <value>Abgelehnt</value>
+  </data>
+  <data name="Phone_Call_Outgoing" xml:space="preserve">
+    <value>Ausgehend</value>
+  </data>
+  <data name="Phone_Call_OutgoingFor" xml:space="preserve">
+    <value>Ausgehend · {0}</value>
+  </data>
+  <data name="Phone_Call_Incoming" xml:space="preserve">
+    <value>Eingehend</value>
+  </data>
+  <data name="Phone_Call_IncomingFor" xml:space="preserve">
+    <value>Eingehend · {0}</value>
+  </data>
+  <data name="Phone_Call_Unknown" xml:space="preserve">
+    <value>Unbekannt</value>
+  </data>
+  <data name="Phone_Call_UnknownCaller" xml:space="preserve">
+    <value>Unbekannter Anrufer</value>
+  </data>
+  <data name="Phone_Call_Unmute" xml:space="preserve">
+    <value>Ton ein</value>
+  </data>
+  <data name="Phone_Call_Mute" xml:space="preserve">
+    <value>Stumm</value>
+  </data>
+  <data name="Phone_Call_AudioToPhone" xml:space="preserve">
+    <value>Audio aufs Telefon</value>
+  </data>
+  <data name="Phone_Call_AudioToPc" xml:space="preserve">
+    <value>Audio auf den PC</value>
+  </data>
+  <data name="Phone_Call_End" xml:space="preserve">
+    <value>Beenden</value>
+  </data>
+  <data name="Phone_Call_Hide" xml:space="preserve">
+    <value>Ausblenden</value>
+  </data>
+  <data name="Phone_Call_RingingCaption" xml:space="preserve">
+    <value>iPhone · eingehender Anruf</value>
+  </data>
+  <data name="Phone_Call_RingingAudioOnPhone" xml:space="preserve">
+    <value>iPhone · Audio am Telefon</value>
+  </data>
+  <data name="Phone_Call_AncsNote" xml:space="preserve">
+    <value>Das Gespräch läuft auf dem iPhone weiter. Dieser PC kann nur annehmen oder ablehnen.</value>
+  </data>
+  <data name="Phone_Call_AudioOnPc" xml:space="preserve">
+    <value>Audio auf diesem PC</value>
+  </data>
+  <data name="Phone_Call_AudioOnIphone" xml:space="preserve">
+    <value>Audio auf dem iPhone</value>
+  </data>
+  <data name="Phone_Call_Ringing" xml:space="preserve">
+    <value>Ruft an…</value>
+  </data>
+  <data name="Phone_Call_Dialing" xml:space="preserve">
+    <value>Wählt…</value>
+  </data>
+  <data name="Phone_Call_Ended" xml:space="preserve">
+    <value>Anruf beendet</value>
+  </data>
+  <data name="Phone_Call_OnHold" xml:space="preserve">
+    <value>Gehalten</value>
+  </data>
+  <data name="Phone_Call_WindowTitle" xml:space="preserve">
+    <value>Eingehender Anruf</value>
+  </data>
+  <data name="Phone_Call_Answer" xml:space="preserve">
+    <value>Annehmen</value>
+  </data>
+  <data name="Phone_Call_Decline" xml:space="preserve">
+    <value>Ablehnen</value>
+  </data>
+  <data name="Phone_Cap_FullAudio" xml:space="preserve">
+    <value>Anrufe: Audio auf diesem PC</value>
+  </data>
+  <data name="Phone_Cap_ControlOnly" xml:space="preserve">
+    <value>Anrufe: annehmen / ablehnen (Audio am Telefon)</value>
+  </data>
+  <data name="Phone_Cap_None" xml:space="preserve">
+    <value>Anrufe nicht verfügbar</value>
+  </data>
+  <data name="Phone_Cap_Ready" xml:space="preserve">
+    <value>Die Windows-Freisprechverbindung ist bereit: Telefonieren Sie über Lautsprecher und Mikrofon dieses PCs.</value>
+  </data>
+  <data name="Phone_Cap_NotConnected" xml:space="preserve">
+    <value>Kein iPhone verbunden.</value>
+  </data>
+  <data name="Phone_Cap_NoPackage" xml:space="preserve">
+    <value>NitroDrop läuft ohne Paket, und Windows gibt Anrufaudio nur an Apps mit Paketidentität weiter.</value>
+  </data>
+  <data name="Phone_Cap_LineError" xml:space="preserve">
+    <value>Die Windows-Telefonleitung konnte nicht geöffnet werden ({0}).</value>
+  </data>
+  <data name="Phone_Cap_NoHandsFree" xml:space="preserve">
+    <value>Windows zeigt das iPhone nicht als Freisprechgerät (HFP) an.</value>
+  </data>
+  <data name="Phone_Cap_DeniedBySystem" xml:space="preserve">
+    <value>Die Anrufe dieses iPhones sind einer anderen App zugeordnet (wahrscheinlich Smartphone-Link).</value>
+  </data>
+  <data name="Phone_Cap_DeniedByUser" xml:space="preserve">
+    <value>Der Zugriff auf Telefonanrufe wurde nicht erlaubt.</value>
+  </data>
+  <data name="Phone_Cap_AccessUnknown" xml:space="preserve">
+    <value>Der Anrufzugriff unter Windows konnte nicht überprüft werden.</value>
+  </data>
+  <data name="Phone_Cap_NotRegistered" xml:space="preserve">
+    <value>Windows hat die App-Registrierung nicht akzeptiert (RegisterApp).</value>
+  </data>
+  <data name="Phone_Cap_ConnectFailed" xml:space="preserve">
+    <value>Windows konnte die Freisprechverbindung nicht herstellen (ConnectAsync).</value>
+  </data>
+  <data name="Phone_Cap_SuffixControlOnly" xml:space="preserve">
+    <value>Sie können Anrufe hier trotzdem annehmen oder ablehnen; das Gespräch läuft auf dem iPhone.</value>
+  </data>
+  <data name="Phone_Cap_SuffixNoAncs" xml:space="preserve">
+    <value>Auch die Mitteilungsverbindung (ANCS) fehlt.</value>
+  </data>
+  <data name="Phone_Fix_Package" xml:space="preserve">
+    <value>Installieren Sie NitroDrop über das MSIX-Paket. Windows benötigt das Paket, um Anrufaudio an die App zu übergeben.</value>
+  </data>
+  <data name="Phone_Fix_PhoneLink" xml:space="preserve">
+    <value>Entfernen Sie dieses iPhone in Smartphone-Link, dann aus den Bluetooth-Einstellungen von Windows, und koppeln Sie es erneut mit NitroDrop.</value>
+  </data>
+  <data name="Phone_Fix_HandsFree" xml:space="preserve">
+    <value>Koppeln Sie das iPhone in den Bluetooth-Einstellungen von Windows und erlauben Sie dabei „Kontakte synchronisieren“.</value>
+  </data>
+  <data name="Phone_Fix_Privacy" xml:space="preserve">
+    <value>Erlauben Sie NitroDrop unter Windows-Einstellungen → Datenschutz und Sicherheit → Telefonanrufe.</value>
+  </data>
+  <data name="Phone_Fix_Nearby" xml:space="preserve">
+    <value>Stellen Sie sicher, dass das iPhone in der Nähe ist und Bluetooth aktiviert hat.</value>
+  </data>
+</root>

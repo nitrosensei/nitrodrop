@@ -326,6 +326,7 @@ public class SetupTests
             PackageDir = @"C:\Users\Emre Can Temur\AppData\Local\airdrop-win\driver-pkg",
             HardwareId = Ax203.HardwareId,
             SuspendBitLocker = true,
+            Language = "de",
         };
         var cmd = HelperProtocol.BuildArguments("NitroDrop.Setup.0123abcd", req);
         var argv = SplitWindows("NitroDrop.exe " + cmd).Skip(1).ToArray();
@@ -336,6 +337,8 @@ public class SetupTests
         Assert.Equal(req.PackageDir, back.PackageDir);
         Assert.Equal(req.HardwareId, back.HardwareId);
         Assert.True(back.SuspendBitLocker);
+        Assert.Equal("de", back.Language);   // the elevated helper answers in the wizard's UI language
+        Assert.Equal("tr", new HelperRequest().Language);
 
         Assert.False(HelperProtocol.TryParse(new[] { "--send", "x" }, out _, out _));
         Assert.False(HelperProtocol.TryParse(new[] { "--setup-helper", "--pipe", "evil", "--request", HelperProtocol.Encode(req) }, out _, out _));

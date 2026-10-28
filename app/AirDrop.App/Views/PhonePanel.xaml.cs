@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows;
@@ -21,7 +21,18 @@ public partial class PhonePanel : UserControl
         InitializeComponent();
         PcNameText.Text = Environment.MachineName;
         DataContextChanged += (_, _) => Attach(DataContext as PhoneViewModel);
+        // Conversation list width follows the main window layout (Views/Responsive.cs).
+        DependencyPropertyDescriptor.FromProperty(AirDrop.App.Views.Responsive.ModeProperty, typeof(PhonePanel))
+            .AddValueChanged(this, (_, _) => ApplyMode());
+        Loaded += (_, _) => ApplyMode();
     }
+
+    private void ApplyMode() => ConversationColumn.Width = new GridLength(Responsive.GetMode(this) switch
+    {
+        LayoutMode.Wide => 300,
+        LayoutMode.Regular => 240,
+        _ => 188,
+    });
 
     private void Attach(PhoneViewModel? vm)
     {

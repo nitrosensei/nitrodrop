@@ -44,7 +44,7 @@
     <DisplayName>NitroDrop</DisplayName>
     <PublisherDisplayName>Nitrobyte</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
-    <Description>iPhone, iPad ve Mac ile AirDrop uyumlu dosya paylasimi; bildirimler, mesajlar ve aramalar.</Description>
+    <Description>ms-resource:AppDescription</Description>
     <desktop6:FileSystemWriteVirtualization>disabled</desktop6:FileSystemWriteVirtualization>
     <desktop6:RegistryWriteVirtualization>disabled</desktop6:RegistryWriteVirtualization>
   </Properties>
@@ -54,14 +54,22 @@
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0"/>
   </Dependencies>
 
+  <!-- UI languages (app/AirDrop.App/Localization). The first is the package default. Localized manifest strings
+       (ms-resource:...) live in packaging/Strings/<lang>/Resources.resw, indexed into resources.pri by build-release.ps1.
+       DisplayName stays "NitroDrop" (brand) in every language. -->
   <Resources>
     <Resource Language="tr-TR"/>
+    <Resource Language="en-US"/>
+    <Resource Language="de-DE"/>
+    <Resource Language="fr-FR"/>
+    <Resource Language="ru-RU"/>
+    <Resource Language="pl-PL"/>
   </Resources>
 
   <Applications>
     <Application Id="NitroDrop" Executable="NitroDrop.exe" EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements DisplayName="NitroDrop"
-                          Description="AirDrop uyumlu dosya paylasimi ve iPhone surekliligi"
+                          Description="ms-resource:AppTileDescription"
                           BackgroundColor="transparent"
                           Square150x150Logo="Assets\Square150x150Logo.png"
                           Square44x44Logo="Assets\Square44x44Logo.png">

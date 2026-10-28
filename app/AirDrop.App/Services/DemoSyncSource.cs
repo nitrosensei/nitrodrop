@@ -143,12 +143,12 @@ public sealed class DemoSyncSource : ISyncSource
     {
         SyncPeerInfo? p;
         lock (_gate) _peers.TryGetValue(deviceId, out p);
-        if (p is null) return new PairResult(false, null, "Cihaz ağda bulunamadı");
+        if (p is null) return new PairResult(false, null, SyncErrors.NotFound);
         await Task.Delay(400);
         const string code = "482913";
         if (ConfirmPairing is not { } confirm ||
             !await confirm(new PairingPrompt(deviceId, p.Name, code, IsInitiator: true), CancellationToken.None))
-            return new PairResult(false, code, "Eşleştirme reddedildi");
+            return new PairResult(false, code, SyncErrors.Declined);
         Put(p with { IsPaired = true, State = new DeviceState { DeviceId = deviceId, DeviceName = p.Name } });
         return new PairResult(true, code, null);
     }

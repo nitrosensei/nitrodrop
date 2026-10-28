@@ -1,0 +1,112 @@
+{
+  "extName": {
+    "message": "NitroDrop Tabs"
+  },
+  "extDescription": {
+    "message": "Syncs your open tabs to your other PCs with NitroDrop and sends links to your phone or PC."
+  },
+  "sendToLabel": {
+    "message": "Send to phone or PC"
+  },
+  "otherDevices": {
+    "message": "Other devices"
+  },
+  "statusOk": {
+    "message": "Connected"
+  },
+  "statusConnecting": {
+    "message": "Connecting…"
+  },
+  "statusNotRunning": {
+    "message": "NitroDrop isn't running"
+  },
+  "statusNotInstalled": {
+    "message": "Browser link not set up"
+  },
+  "cannotSend": {
+    "message": "This page can't be sent"
+  },
+  "onlyWebPages": {
+    "message": "Only http and https pages"
+  },
+  "noTargets": {
+    "message": "No devices nearby. Set AirDrop on your iPhone to “Everyone for 10 Minutes” or open NitroDrop on your other PC."
+  },
+  "sending": {
+    "message": "Sending…"
+  },
+  "sentTo": {
+    "message": "Sent to $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "sendFailed": {
+    "message": "Couldn't send"
+  },
+  "sendFailedReason": {
+    "message": "Couldn't send: $REASON$",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "noDevices": {
+    "message": "No other devices yet. Open NitroDrop on your other PC and pair it."
+  },
+  "offline": {
+    "message": "offline"
+  },
+  "appOpen": {
+    "message": "$APP$ is open",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "sharedLink": {
+    "message": "Shared link"
+  },
+  "continueOnPc": {
+    "message": "Continue on PC"
+  },
+  "noTabs": {
+    "message": "No open tabs"
+  },
+  "moreTabs_one": {
+    "message": "$COUNT$ more tab",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_few": {
+    "message": "$COUNT$ more tabs",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_many": {
+    "message": "$COUNT$ more tabs",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_other": {
+    "message": "$COUNT$ more tabs",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  }
+}

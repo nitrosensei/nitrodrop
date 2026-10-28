@@ -82,11 +82,25 @@ açılırsa kendini kapatıp açık olanı öne getirir. Karşılaştırmak içi
       "Beni görebilecekler"i ve **"Windows açılınca başlat"**ı ayarla.
 - [ ] **Windows Güvenlik Duvarı** izin sorarsa **Özel ağlar**'ı işaretle → İzin ver. Bu izin olmadan diğer cihazlar
       seni göremez.
-- [ ] Beklenen: tepside NitroDrop simgesi, pencerede Yakındakiler · Cihazlar · Telefon · Geçmiş sekmeleri.
+- [ ] Beklenen: tepside NitroDrop simgesi; pencere geniş açılır, solda Yakındakiler · Cihazlar · Telefon · Geçmiş
+      (dar pencerede bunlar üstte sekme olur).
 - [ ] (MSIX) "Windows açılınca başlat" açıkken Görev Yöneticisi → **Başlangıç uygulamaları**'nda NitroDrop
       "Etkin" görünmeli. Bir kez oturumu kapatıp aç: NitroDrop pencere açmadan tepsiye gelmeli.
 - **Olmazsa:** ekran görüntüsü + Olay Görüntüleyicisi → Windows Günlükleri → **Uygulama** → Kaynak ".NET Runtime" ya
   da "Application Error" olan son kayıtlar (Ayrıntılar sekmesinin metni).
+
+### A2b. Dil ve pencere boyutu
+
+- [ ] Windows dilin Türkçe ise arayüz Türkçe açılır. **Ayarlar → DİL** → "Deutsch" seç: tüm pencere (kenar çubuğu,
+      sekmeler, tepsi menüsü dahil) hemen Almancaya döner, yeniden başlatma gerekmez. Sırayla "Русский" ve
+      "Polski"yi de dene: Kiril harfler düzgün (kutucuk ya da soru işareti yok), yazılar taşmıyor, kesik değil.
+- [ ] Dosya Gezgini'nde bir dosyaya sağ tıkla (Windows 11'de "Daha fazla seçenek göster"): menü öğesi seçili dilde
+      ("Mit NitroDrop senden", "Отправить через NitroDrop"…).
+- [ ] "Windows ile aynı" seçeneğine dön → Türkçe. NitroDrop'u kapatıp açınca seçim korunur.
+- [ ] Pencereyi daralt/genişlet: ~720 px altında üstte sekmeler, üstünde solda kenar çubuğu, ~1100 px üstünde
+      Cihazlar/Geçmiş/Ayarlar iki bölmeli; radar alana göre büyüyüp küçülür. Büyüt (□) çalışır; kapatıp açınca
+      boyut ve konum hatırlanır.
+- **Olmazsa:** hangi dilde ve ekranda olduğu, ekran görüntüsü.
 
 ### A3. PC ↔ PC dosya (w0fly ile)
 

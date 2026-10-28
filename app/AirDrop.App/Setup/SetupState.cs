@@ -59,7 +59,7 @@ public sealed class SetupState
         }
         catch (Exception ex)
         {
-            SetupLog.Write($"setup.json okunamadı, varsayılanlar kullanılıyor: {ex.Message}");
+            SetupLog.Write($"couldn't read setup.json, using defaults: {ex.Message}");
         }
         return new SetupState();
     }

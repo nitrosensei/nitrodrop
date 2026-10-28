@@ -49,7 +49,7 @@ public sealed class DemoPhoneContacts : IPhoneContacts
     [
         ("Annem", "+905321112233", null),
         ("Zeynep Kaya", "+905554443322", null),
-        ("Ahmet Yılmaz", "+905069998877", null),
+        ("Ahmet Yılmaz", "+905069998877", null),   // l10n-allow: sample contact name
         ("Mert Demir", "+905427776655", null),
     ];
 

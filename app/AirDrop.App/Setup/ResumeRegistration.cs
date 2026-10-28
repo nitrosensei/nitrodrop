@@ -21,16 +21,16 @@ public static class ResumeRegistration
     {
         if (ElevatedHelper.DryRun)
         {
-            SetupLog.Write($@"[dry-run] HKCU\{RunOnceKey}\{ValueName} = {CommandLine} yazılacaktı");
+            SetupLog.Write($@"[dry-run] HKCU\{RunOnceKey}\{ValueName} = {CommandLine} would be written");
             return;
         }
         try
         {
             using var k = Registry.CurrentUser.CreateSubKey(RunOnceKey);
             k.SetValue(ValueName, CommandLine);
-            SetupLog.Write("yeniden başlatma sonrası devam kaydı eklendi (RunOnce)");
+            SetupLog.Write("resume-after-restart entry added (RunOnce)");
         }
-        catch (Exception ex) { SetupLog.Write($"RunOnce yazılamadı: {ex.Message}"); }
+        catch (Exception ex) { SetupLog.Write($"couldn't write RunOnce: {ex.Message}"); }
     }
 
     public static void Unregister()

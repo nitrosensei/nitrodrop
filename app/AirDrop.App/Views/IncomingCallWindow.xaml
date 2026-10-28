@@ -2,7 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:v="clr-namespace:AirDrop.App.Views"
-        Title="Gelen arama" Width="360" SizeToContent="Height" ResizeMode="NoResize" Topmost="True"
+        xmlns:l="clr-namespace:AirDrop.App.Localization"
+        Title="{l:Loc Phone_Call_WindowTitle}" Width="360" SizeToContent="Height" ResizeMode="NoResize" Topmost="True"
         ShowInTaskbar="False" ShowActivated="False" WindowStartupLocation="Manual"
         FontFamily="{StaticResource UiFont}" Foreground="{DynamicResource TextPrimary}"
         UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
@@ -98,12 +99,12 @@
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center"
                             Visibility="{Binding IsRinging, Converter={StaticResource Vis}}">
                     <StackPanel>
-                        <Button Style="{StaticResource RoundAction}" Background="{DynamicResource Danger}" Content="&#xE778;" Command="{Binding Decline}" ToolTip="Reddet"/>
-                        <TextBlock Text="Reddet" Style="{StaticResource RoundCaption}"/>
+                        <Button Style="{StaticResource RoundAction}" Background="{DynamicResource Danger}" Content="&#xE778;" Command="{Binding Decline}" ToolTip="{l:Loc Phone_Call_Decline}"/>
+                        <TextBlock Text="{l:Loc Phone_Call_Decline}" Style="{StaticResource RoundCaption}"/>
                     </StackPanel>
                     <StackPanel Margin="12,0,0,0">
-                        <Button Style="{StaticResource RoundAction}" Background="{DynamicResource Success}" Content="&#xE717;" Command="{Binding Answer}" ToolTip="Yanıtla"/>
-                        <TextBlock Text="Yanıtla" Style="{StaticResource RoundCaption}"/>
+                        <Button Style="{StaticResource RoundAction}" Background="{DynamicResource Success}" Content="&#xE717;" Command="{Binding Answer}" ToolTip="{l:Loc Phone_Call_Answer}"/>
+                        <TextBlock Text="{l:Loc Phone_Call_Answer}" Style="{StaticResource RoundCaption}"/>
                     </StackPanel>
                 </StackPanel>
             </Grid>

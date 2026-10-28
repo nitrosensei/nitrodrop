@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using AirDrop.App.Localization;
 using AirDrop.App.ViewModels;
 
 namespace AirDrop.App.Setup;
@@ -32,15 +33,15 @@ public sealed class DriverSetupStatus : Observable
     public bool CanInstall => IsSupported && !IsInstalled;
 
     public string StateText =>
-        IsInstalled ? "Kurulu — Wi-Fi kartı NitroDrop sürücüsünde"
-        : !IsSupported ? "Desteklenen Intel Wi-Fi kartı bulunamadı"
-        : _state.HasChanges || _state.ConsentGiven ? "Kurulum yarım kaldı"
-        : "Kurulu değil";
+        IsInstalled ? SettingsStrings.Settings_DriverStateInstalled
+        : !IsSupported ? SettingsStrings.Settings_DriverStateUnsupported
+        : _state.HasChanges || _state.ConsentGiven ? SettingsStrings.Settings_DriverStateIncomplete
+        : SettingsStrings.Settings_DriverStateNotInstalled;
 
     public string DetailText =>
-        IsInstalled ? "iPhone, iPad ve Mac'lerle doğrudan (AirDrop) bağlantı için hazır. Wi-Fi kartı bu sürücüdeyken internete başka bir bağlantıyla çıkılır."
-        : !IsSupported ? "Şu an aynı ağdaki cihazlarla paylaşım (LAN modu) çalışır. USB Wi-Fi adaptörü desteği planlanıyor."
-        : $"{_snap.Device!.Card.Name} bulundu. iPhone'larla doğrudan bağlantı için Gelişmiş Kurulum gerekli.";
+        IsInstalled ? SettingsStrings.Settings_DriverDetailInstalled
+        : !IsSupported ? SettingsStrings.Settings_DriverDetailUnsupported
+        : SettingsStrings.Settings_DriverDetailFound(_snap.Device!.Card.Name);
 
     public Task RefreshAsync() => Task.Run(() =>
     {
@@ -50,7 +51,7 @@ public sealed class DriverSetupStatus : Observable
             var state = SetupState.Load(SetupPaths.StateFile);
             System.Windows.Application.Current?.Dispatcher.Invoke(() => Apply(snap, state));
         }
-        catch (Exception ex) { SetupLog.Write($"sürücü durumu okunamadı: {ex.Message}"); }
+        catch (Exception ex) { SetupLog.Write($"driver status unreadable: {ex.Message}"); }
     });
 
     private void Apply(SystemSnapshot snap, SetupState state)

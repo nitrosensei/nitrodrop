@@ -4,6 +4,7 @@
              xmlns:v="clr-namespace:AirDrop.App.Views"
              xmlns:vm="clr-namespace:AirDrop.App.ViewModels"
              xmlns:ctl="clr-namespace:AirDrop.App.Controls"
+             xmlns:l="clr-namespace:AirDrop.App.Localization"
              FontFamily="{StaticResource UiFont}" Foreground="{DynamicResource TextPrimary}"
              UseLayoutRounding="True" TextOptions.TextFormattingMode="Display">
 
@@ -164,25 +165,25 @@
                                     <Setter Property="FontWeight" Value="Medium"/>
                                 </Style>
                             </WrapPanel.Resources>
-                            <Border Visibility="{Binding HasNotificationsFeature, Converter={StaticResource Vis}}"><TextBlock Text="Bildirimler"/></Border>
-                            <Border Visibility="{Binding HasMessagesFeature, Converter={StaticResource Vis}}"><TextBlock Text="Mesajlar"/></Border>
-                            <Border Visibility="{Binding HasCallsFeature, Converter={StaticResource Vis}}"><TextBlock Text="Aramalar"/></Border>
-                            <Border Visibility="{Binding HasMediaFeature, Converter={StaticResource Vis}}"><TextBlock Text="Müzik"/></Border>
+                            <Border Visibility="{Binding HasNotificationsFeature, Converter={StaticResource Vis}}"><TextBlock Text="{l:Loc Phone_Notifications}"/></Border>
+                            <Border Visibility="{Binding HasMessagesFeature, Converter={StaticResource Vis}}"><TextBlock Text="{l:Loc Phone_Messages}"/></Border>
+                            <Border Visibility="{Binding HasCallsFeature, Converter={StaticResource Vis}}"><TextBlock Text="{l:Loc Phone_Calls}"/></Border>
+                            <Border Visibility="{Binding HasMediaFeature, Converter={StaticResource Vis}}"><TextBlock Text="{l:Loc Phone_Music}"/></Border>
                         </WrapPanel>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Top">
-                        <Button Style="{StaticResource SmallAccentPill}" Content="Bildirim bağlantısını kur" Command="{Binding EstablishLe}"
+                        <Button Style="{StaticResource SmallAccentPill}" Content="{l:Loc Phone_SetUpLeLink}" Command="{Binding EstablishLe}"
                                 Visibility="{Binding NeedsLeLink, Converter={StaticResource Vis}}"/>
-                        <Button Style="{StaticResource SmallPill}" Content="Yeniden dene" Command="{Binding Retry}" Margin="6,0,0,0"
+                        <Button Style="{StaticResource SmallPill}" Content="{l:Loc Phone_Retry}" Command="{Binding Retry}" Margin="6,0,0,0"
                                 Visibility="{Binding IsBlocked, Converter={StaticResource Vis}}"/>
-                        <Button x:Name="MoreButton" Style="{StaticResource IconButton}" Content="&#xE712;" ToolTip="Diğer" Margin="4,0,0,0"
+                        <Button x:Name="MoreButton" Style="{StaticResource IconButton}" Content="&#xE712;" ToolTip="{l:Loc Phone_More}" Margin="4,0,0,0"
                                 Click="More_Click" Visibility="{Binding IsPaired, Converter={StaticResource Vis}}">
                             <Button.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Header="Kişileri iPhone'dan eşitle" Command="{Binding SyncContacts}"/>
-                                    <MenuItem Header="Bildirim bağlantısını yeniden kur" Command="{Binding EstablishLe}"/>
+                                    <MenuItem Header="{l:Loc Phone_Menu_SyncContacts}" Command="{Binding SyncContacts}"/>
+                                    <MenuItem Header="{l:Loc Phone_Menu_ResetLeLink}" Command="{Binding EstablishLe}"/>
                                     <Separator/>
-                                    <MenuItem Header="Bu iPhone'u kullanmayı bırak" Command="{Binding Disconnect}"/>
+                                    <MenuItem Header="{l:Loc Phone_Menu_Disconnect}" Command="{Binding Disconnect}"/>
                                 </ContextMenu>
                             </Button.ContextMenu>
                         </Button>
@@ -239,10 +240,10 @@
                         </ProgressBar>
                     </StackPanel>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Style="{StaticResource IconButton}" Content="&#xE892;" ToolTip="Önceki" Command="{Binding PreviousTrack}"/>
-                        <Button Style="{StaticResource IconButton}" Content="{Binding PlayPauseGlyph}" FontSize="17" ToolTip="Oynat / Duraklat"
+                        <Button Style="{StaticResource IconButton}" Content="&#xE892;" ToolTip="{l:Loc Phone_Media_Previous}" Command="{Binding PreviousTrack}"/>
+                        <Button Style="{StaticResource IconButton}" Content="{Binding PlayPauseGlyph}" FontSize="17" ToolTip="{l:Loc Phone_Media_PlayPause}"
                                 Command="{Binding PlayPause}"/>
-                        <Button Style="{StaticResource IconButton}" Content="&#xE893;" ToolTip="Sonraki" Command="{Binding NextTrack}"/>
+                        <Button Style="{StaticResource IconButton}" Content="&#xE893;" ToolTip="{l:Loc Phone_Media_Next}" Command="{Binding NextTrack}"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -251,7 +252,7 @@
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Style="{StaticResource Segment}" GroupName="phoneSections" IsChecked="{Binding IsMessages, Mode=TwoWay}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Mesajlar"/>
+                            <TextBlock Text="{l:Loc Phone_Messages}"/>
                             <Border CornerRadius="7" Background="{DynamicResource Accent}" Padding="5,0" Margin="6,0,0,0" MinWidth="16"
                                     Visibility="{Binding UnreadMessages, Converter={StaticResource Vis}}">
                                 <TextBlock Text="{Binding UnreadMessages}" Foreground="{DynamicResource OnAccent}" FontSize="10.5" FontWeight="SemiBold"
@@ -259,11 +260,11 @@
                             </Border>
                         </StackPanel>
                     </RadioButton>
-                    <RadioButton Style="{StaticResource Segment}" Content="Bildirimler" GroupName="phoneSections"
+                    <RadioButton Style="{StaticResource Segment}" Content="{l:Loc Phone_Notifications}" GroupName="phoneSections"
                                  IsChecked="{Binding IsNotifications, Mode=TwoWay}"/>
                     <RadioButton Style="{StaticResource Segment}" GroupName="phoneSections" IsChecked="{Binding IsCalls, Mode=TwoWay}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Aramalar"/>
+                            <TextBlock Text="{l:Loc Phone_Calls}"/>
                             <Border CornerRadius="7" Background="{DynamicResource Danger}" Padding="5,0" Margin="6,0,0,0" MinWidth="16"
                                     Visibility="{Binding MissedCalls, Converter={StaticResource Vis}}">
                                 <TextBlock Text="{Binding MissedCalls}" Foreground="{DynamicResource OnStatus}" FontSize="10.5" FontWeight="SemiBold"
@@ -282,13 +283,13 @@
                 <!-- pairing flow card -->
                 <Border Style="{StaticResource PCard}" Padding="18,16">
                     <StackPanel>
-                        <TextBlock Text="iPhone'unuzu bağlayın" FontSize="17" FontWeight="SemiBold" FontFamily="{StaticResource DisplayFont}"/>
+                        <TextBlock Text="{l:Loc Phone_Setup_Title}" FontSize="17" FontWeight="SemiBold" FontFamily="{StaticResource DisplayFont}"/>
                         <TextBlock Style="{StaticResource PCaption}" FontSize="12.5" Margin="0,4,0,12"
-                                   Text="Bildirimler, SMS / iMessage mesajları ve gelen aramalar bu bilgisayarda görünür. Sürücü ya da iPhone uygulaması gerekmez."/>
+                                   Text="{l:Loc Phone_Setup_Intro}"/>
 
                         <!-- Guide -->
                         <StackPanel Visibility="{Binding IsGuideStep, Converter={StaticResource Vis}}">
-                            <ItemsControl ItemsSource="{x:Static vm:PhoneViewModel.GuideSteps}">
+                            <ItemsControl ItemsSource="{Binding Guide}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Grid Margin="0,0,0,10">
@@ -308,7 +309,7 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <Button Style="{StaticResource AccentPill}" Content="iPhone'u bul" HorizontalAlignment="Left" Margin="32,4,0,0"
+                            <Button Style="{StaticResource AccentPill}" Content="{l:Loc Phone_FindIphone}" HorizontalAlignment="Left" Margin="32,4,0,0"
                                     Command="{Binding StartPairing}"/>
                         </StackPanel>
 
@@ -330,7 +331,7 @@
 
                         <!-- Pick -->
                         <StackPanel Visibility="{Binding IsPickStep, Converter={StaticResource Vis}}">
-                            <TextBlock Text="Bulunan cihazlar" FontSize="12" Foreground="{DynamicResource TextSecondary}" Margin="0,0,0,6"/>
+                            <TextBlock Text="{l:Loc Phone_Pair_Found}" FontSize="12" Foreground="{DynamicResource TextSecondary}" Margin="0,0,0,6"/>
                             <ItemsControl ItemsSource="{Binding FoundPhones}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -346,7 +347,7 @@
                                                     <TextBlock Text="{Binding Name}" FontSize="13" FontWeight="Medium"/>
                                                     <TextBlock Text="{Binding AddressText}" FontSize="11" Foreground="{DynamicResource TextSecondary}"/>
                                                 </StackPanel>
-                                                <Button Grid.Column="2" Style="{StaticResource SmallAccentPill}" Content="Seç"
+                                                <Button Grid.Column="2" Style="{StaticResource SmallAccentPill}" Content="{l:Loc Phone_Pair_Select}"
                                                         Command="{Binding DataContext.PairDevice, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}"/>
                                             </Grid>
@@ -354,7 +355,7 @@
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <Button Style="{StaticResource LinkButton}" Content="Tekrar ara" Command="{Binding StartPairing}" Margin="2,4,0,0"
+                            <Button Style="{StaticResource LinkButton}" Content="{l:Loc Phone_Pair_SearchAgain}" Command="{Binding StartPairing}" Margin="2,4,0,0"
                                     HorizontalAlignment="Left"/>
                         </StackPanel>
 
@@ -365,8 +366,8 @@
                                        HorizontalAlignment="Center" Margin="0,8,0,4"/>
                             <TextBlock Text="{Binding PairingDeviceName}" Style="{StaticResource PCaption}" HorizontalAlignment="Center"/>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,14,0,0">
-                                <Button Style="{StaticResource PillButton}" Content="Farklı" Command="{Binding RejectCode}"/>
-                                <Button Style="{StaticResource AccentPill}" Content="Kodlar aynı" Margin="10,0,0,0" Command="{Binding ConfirmCode}"/>
+                                <Button Style="{StaticResource PillButton}" Content="{l:Loc Phone_Pair_CodesDiffer}" Command="{Binding RejectCode}"/>
+                                <Button Style="{StaticResource AccentPill}" Content="{l:Loc Phone_Pair_CodesMatch}" Margin="10,0,0,0" Command="{Binding ConfirmCode}"/>
                             </StackPanel>
                         </StackPanel>
 
@@ -378,7 +379,7 @@
                                     <TextBox Text="{Binding PinInput, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FlatText}"
                                              HorizontalContentAlignment="Left" FontSize="16" MaxLength="16"/>
                                 </Border>
-                                <Button Style="{StaticResource AccentPill}" Content="Gönder" Margin="10,0,0,0" Command="{Binding SubmitPin}"/>
+                                <Button Style="{StaticResource AccentPill}" Content="{l:Loc Phone_Pair_Submit}" Margin="10,0,0,0" Command="{Binding SubmitPin}"/>
                             </StackPanel>
                         </StackPanel>
 
@@ -388,18 +389,18 @@
                                 <TextBlock Text="&#xE7BA;" FontFamily="{StaticResource IconFont}" Foreground="{DynamicResource Warning}" FontSize="14" Margin="0,1,8,0"/>
                                 <TextBlock Text="{Binding PairingMessage}" FontSize="12.5" TextWrapping="Wrap" MaxWidth="420"/>
                             </StackPanel>
-                            <Button Style="{StaticResource SmallAccentPill}" Content="Tekrar dene" HorizontalAlignment="Left" Margin="22,10,0,0"
+                            <Button Style="{StaticResource SmallAccentPill}" Content="{l:Loc Phone_Retry}" HorizontalAlignment="Left" Margin="22,10,0,0"
                                     Command="{Binding StartPairing}"/>
                         </StackPanel>
 
-                        <Button Style="{StaticResource LinkButton}" Content="Vazgeç" HorizontalAlignment="Right" Margin="0,6,0,0"
+                        <Button Style="{StaticResource LinkButton}" Content="{l:Loc Phone_Pair_Cancel}" HorizontalAlignment="Right" Margin="0,6,0,0"
                                 Command="{Binding CancelPairing}"
                                 Visibility="{Binding IsGuideStep, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- iOS settings illustration: the three toggles -->
-                <TextBlock Text="İPHONE'DA AÇILACAK ÜÇ ANAHTAR" Style="{StaticResource SectionTitle}" Margin="4,20,0,8"/>
+                <TextBlock Text="{l:Loc Phone_IosSwitches_Header}" Style="{StaticResource SectionTitle}" Margin="4,20,0,8"/>
                 <Border Style="{StaticResource PCard}" Padding="0" ClipToBounds="True">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -413,10 +414,10 @@
                                 <Grid Margin="2,10,2,8">
                                     <TextBlock Text="‹ Bluetooth" FontFamily="{StaticResource UiFont}" FontSize="10" Foreground="#007AFF"/>
                                 </Grid>
-                                <TextBlock x:Name="PcNameText" Text="Bu bilgisayar" FontSize="15" FontWeight="Bold" Foreground="#1C1C1E" Margin="2,0,0,8"
+                                <TextBlock x:Name="PcNameText" FontSize="15" FontWeight="Bold" Foreground="#1C1C1E" Margin="2,0,0,8"
                                            TextTrimming="CharacterEllipsis"/>
                                 <Border CornerRadius="9" Background="White">
-                                    <ItemsControl ItemsSource="{x:Static vm:PhoneViewModel.IosToggles}">
+                                    <ItemsControl ItemsSource="{Binding Toggles}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Grid Margin="8,6">
@@ -436,12 +437,12 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </Border>
-                                <TextBlock Text="Ayarlar → Bluetooth → bu bilgisayarın yanındaki ⓘ" FontSize="8.5" Foreground="#8A8A8E"
+                                <TextBlock Text="{l:Loc Phone_IosMock_Path}" FontSize="8.5" Foreground="#8A8A8E"
                                            TextWrapping="Wrap" Margin="4,8,0,0"/>
                             </StackPanel>
                         </Border>
                         <!-- explanations -->
-                        <ItemsControl Grid.Column="1" ItemsSource="{x:Static vm:PhoneViewModel.IosToggles}" Margin="8,18,16,12">
+                        <ItemsControl Grid.Column="1" ItemsSource="{Binding Toggles}" Margin="8,18,16,12">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Grid Margin="0,0,0,14">
@@ -464,7 +465,7 @@
                     </Grid>
                 </Border>
                 <TextBlock Style="{StaticResource PCaption}" Margin="14,10,14,0"
-                           Text="Phone Link (Telefon Bağlantısı) bu iPhone'a bağlıysa önce oradan kaldırın: bir iPhone aynı anda tek bir bilgisayar uygulamasına bildirim ve mesaj verir."/>
+                           Text="{l:Loc Phone_PhoneLinkHint}"/>
             </StackPanel>
         </ScrollViewer>
 
@@ -475,7 +476,7 @@
             <Border Style="{StaticResource PCard}" Visibility="{Binding IsMessages, Converter={StaticResource Vis}}" ClipToBounds="True">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="188"/>
+                        <ColumnDefinition x:Name="ConversationColumn" Width="188"/>
                         <ColumnDefinition Width="1"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
@@ -536,7 +537,7 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <TextBlock Text="Henüz mesaj yok.&#x0a;iPhone bağlıyken gelen SMS ve iMessage'lar burada görünür."
+                    <TextBlock Text="{l:Loc Phone_Messages_Empty}"
                                Style="{StaticResource PCaption}" TextAlignment="Center" Margin="14,40,14,0"
                                Visibility="{Binding HasConversations, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
 
@@ -604,12 +605,12 @@
                                     <TextBox x:Name="ReplyBox" Text="{Binding ReplyText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource FlatText}"
                                              HorizontalContentAlignment="Left" FontSize="12.5" AcceptsReturn="False" KeyDown="Reply_KeyDown"
                                              IsEnabled="{Binding SelectedConversation.CanReply}"/>
-                                    <TextBlock Text="Mesaj" FontSize="12.5" Foreground="{DynamicResource TextSecondary}" IsHitTestVisible="False"
+                                    <TextBlock Text="{l:Loc Phone_Reply_Placeholder}" FontSize="12.5" Foreground="{DynamicResource TextSecondary}" IsHitTestVisible="False"
                                                Margin="2,0,0,0" Visibility="{Binding ReplyText, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
                                 </Grid>
                             </Border>
                             <Button Grid.Column="1" Width="30" Height="30" Margin="6,0,0,0" Cursor="Hand" Command="{Binding SendReply}"
-                                    ToolTip="Gönder (iPhone üzerinden)">
+                                    ToolTip="{l:Loc Phone_Reply_Send}">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
                                         <Grid>
@@ -627,7 +628,7 @@
                             </Button>
                         </Grid>
                     </Grid>
-                    <TextBlock Grid.Column="2" Text="Bir konuşma seçin" Style="{StaticResource PCaption}" FontSize="12.5"
+                    <TextBlock Grid.Column="2" Text="{l:Loc Phone_Messages_SelectConversation}" Style="{StaticResource PCaption}" FontSize="12.5"
                                HorizontalAlignment="Center" VerticalAlignment="Center"
                                Visibility="{Binding HasSelectedConversation, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
                 </Grid>
@@ -640,8 +641,8 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid Margin="4,0,4,8">
-                    <TextBlock Text="iPhone bildirimleri" FontSize="12" Foreground="{DynamicResource TextSecondary}"/>
-                    <Button Style="{StaticResource LinkButton}" Content="Tümünü temizle" HorizontalAlignment="Right" Command="{Binding ClearNotifications}"
+                    <TextBlock Text="{l:Loc Phone_Notifs_Header}" FontSize="12" Foreground="{DynamicResource TextSecondary}"/>
+                    <Button Style="{StaticResource LinkButton}" Content="{l:Loc Phone_Notifs_ClearAll}" HorizontalAlignment="Right" Command="{Binding ClearNotifications}"
                             Visibility="{Binding HasNotifications, Converter={StaticResource Vis}}"/>
                 </Grid>
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
@@ -687,7 +688,7 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </ScrollViewer>
-                <TextBlock Grid.Row="1" Text="Bildirim yok" Style="{StaticResource PCaption}" FontSize="12.5" HorizontalAlignment="Center"
+                <TextBlock Grid.Row="1" Text="{l:Loc Phone_Notifs_Empty}" Style="{StaticResource PCaption}" FontSize="12.5" HorizontalAlignment="Center"
                            Margin="0,60,0,0" Visibility="{Binding HasNotifications, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
             </Grid>
 
@@ -707,7 +708,7 @@
                         <TextBlock Text="&#xE946;" FontFamily="{StaticResource IconFont}" FontSize="14" Foreground="{DynamicResource Accent}"
                                    Margin="0,1,10,0"/>
                         <StackPanel Grid.Column="1">
-                            <TextBlock Text="Arama sesini bilgisayara almak için" FontSize="12.5" FontWeight="SemiBold"/>
+                            <TextBlock Text="{l:Loc Phone_Calls_FixHeader}" FontSize="12.5" FontWeight="SemiBold"/>
                             <TextBlock Text="{Binding CallCapabilityFix}" Style="{StaticResource PCaption}" Margin="0,2,0,0"/>
                         </StackPanel>
                     </Grid>
@@ -746,7 +747,7 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </ScrollViewer>
-                        <TextBlock Text="Son arama yok" Style="{StaticResource PCaption}" FontSize="12.5" HorizontalAlignment="Center"
+                        <TextBlock Text="{l:Loc Phone_Calls_Empty}" Style="{StaticResource PCaption}" FontSize="12.5" HorizontalAlignment="Center"
                                    Margin="0,50,0,0" Visibility="{Binding HasRecentCalls, Converter={StaticResource Vis}, ConverterParameter=invert}"/>
                     </Grid>
                 </Border>

@@ -1,0 +1,8 @@
+<Project>
+  <!-- Side-by-side builds (-p:BaseOutputPath=bin-x/ -p:BaseIntermediateOutputPath=obj-x/, e.g. while bin\Debug is
+       locked by a running NitroDrop.exe): keep every such folder (and the default bin/obj, which are no longer the "current" ones then) out of the default Compile/Page/Resource globs, or a
+       second output's generated *.g.cs would be compiled twice. -->
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin/**;obj/**;bin-*/**;obj-*/**</DefaultItemExcludes>
+  </PropertyGroup>
+</Project>

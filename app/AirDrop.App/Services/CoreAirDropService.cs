@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
+using AirDrop.App.Localization;
 using AirDrop.Core;
 using AirDrop.Core.Contacts;
 using AirDrop.Core.Net;
@@ -121,33 +122,33 @@ public sealed class CoreAirDropService : IAirDropService
     public NetworkBinding? AwdlBinding { get; private set; }
     public bool BleAdvertising { get { lock (_bleLock) return _bleOn; } }
 
-    public const string LanOnlyText =
-        "Wi-Fi sürücüsü kurulu değil · yerel ağ modu: aynı ağdaki NitroDrop bilgisayarları birbirini görür";
+    /// <summary>Status without our Wi-Fi driver (LAN only), in the UI language.</summary>
+    public static string LanOnlyText => MainStrings.Status_LanOnly;
 
     public string HardwareStatus => _phase switch
     {
-        RadioPhase.Disabled => "iPhone'lara doğrudan bağlantı kapalı · yerel ağ modu",
-        RadioPhase.Launching => "iPhone bağlantısı için yönetici izni bekleniyor…",
-        RadioPhase.Cancelled => "Yönetici izni verilmedi · iPhone bağlantısı kapalı, yerel ağ modu",
-        RadioPhase.LaunchFailed => $"Wi-Fi yardımcısı başlatılamadı ({_error}) · yerel ağ modu",
-        RadioPhase.Starting => "iPhone bağlantısı başlatılıyor…",
-        RadioPhase.Ready => $"iPhone bağlantısı hazır · kanal {_radio?.Channel ?? 6} · {_radio?.Peers.Count ?? 0} cihaz",
-        RadioPhase.Failed => $"iPhone bağlantısı kurulamadı: {DescribeFailure(_radio?.FailureKind ?? RadioFailureKind.Other)} · yerel ağ modu",
-        RadioPhase.BindFailed => "iPhone bağlantısı kurulamadı: AWDL ağ arayüzüne bağlanılamadı · yerel ağ modu",
-        RadioPhase.HostExited => "Wi-Fi yardımcısı kapandı · yerel ağ modu",
+        RadioPhase.Disabled => MainStrings.Status_Disabled,
+        RadioPhase.Launching => MainStrings.Status_Launching,
+        RadioPhase.Cancelled => MainStrings.Status_Cancelled,
+        RadioPhase.LaunchFailed => MainStrings.Status_LaunchFailed(_error),
+        RadioPhase.Starting => MainStrings.Status_Starting,
+        RadioPhase.Ready => MainStrings.Status_Ready_Plural(_radio?.Peers.Count ?? 0, _radio?.Channel ?? 6),
+        RadioPhase.Failed => MainStrings.Status_Failed(DescribeFailure(_radio?.FailureKind ?? RadioFailureKind.Other)),
+        RadioPhase.BindFailed => MainStrings.Status_BindFailed,
+        RadioPhase.HostExited => MainStrings.Status_HostExited,
         _ => LanOnlyText,
     };
 
-    /// <summary>Turkish, short (it sits in the status chip); the technical detail goes to the log.</summary>
+    /// <summary>Short, in the UI language (it sits in the status chip); the technical detail goes to the log.</summary>
     public static string DescribeFailure(RadioFailureKind kind) => kind switch
     {
-        RadioFailureKind.DriverMissing => "Wi-Fi sürücüsü bulunamadı",
-        RadioFailureKind.AccessDenied => "Wi-Fi kartına erişilemedi (başka bir uygulama kullanıyor olabilir)",
-        RadioFailureKind.WintunMissing => "wintun.dll eksik",
-        RadioFailureKind.RfKill => "Wi-Fi kapalı (uçak modu ya da donanım anahtarı)",
-        RadioFailureKind.Radio => "Wi-Fi kartı başlatılamadı",
-        RadioFailureKind.Network => "AWDL ağ arayüzü hazırlanamadı",
-        _ => "beklenmeyen hata",
+        RadioFailureKind.DriverMissing => MainStrings.Failure_DriverMissing,
+        RadioFailureKind.AccessDenied => MainStrings.Failure_AccessDenied,
+        RadioFailureKind.WintunMissing => MainStrings.Failure_WintunMissing,
+        RadioFailureKind.RfKill => MainStrings.Failure_RfKill,
+        RadioFailureKind.Radio => MainStrings.Failure_Radio,
+        RadioFailureKind.Network => MainStrings.Failure_Network,
+        _ => MainStrings.Failure_Other,
     };
 
     public event EventHandler? HardwareStatusChanged;

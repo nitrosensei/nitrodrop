@@ -76,7 +76,7 @@ public sealed class DemoContinuityService : IContinuityService
     private void Connect()
     {
         Device = DemoPhone;
-        SetStatus(new PhoneLinkStatus(PhoneLinkState.Connected, $"{DemoPhone.Name} bağlı", null, DemoPhone.Name, PhoneLinkIssue.None,
+        SetStatus(new PhoneLinkStatus(PhoneLinkState.Connected, $"{DemoPhone.Name} connected", null, DemoPhone.Name, PhoneLinkIssue.None,
             PhoneFeatures.Notifications | PhoneFeatures.Messages | PhoneFeatures.Media | PhoneFeatures.Calls | PhoneFeatures.Contacts,
             DemoModelId));
         CallCapability = CallCapabilityPolicy.Decide(Capability == Nitro.Continuity.Runtime.CallCapability.FullAudio
@@ -211,16 +211,16 @@ public sealed class DemoContinuityService : IContinuityService
 
     public async Task<PairingResult> PairAsync(PhoneDevice device, IPairingPrompt prompt, CancellationToken ct = default)
     {
-        SetStatus(new PhoneLinkStatus(PhoneLinkState.Pairing, "Eşleştiriliyor…", "iPhone'da çıkan isteğe \"Eşleştir\" ile yanıt verin.", device.Name));
+        SetStatus(new PhoneLinkStatus(PhoneLinkState.Pairing, "Pairing…", "Accept the request on the iPhone.", device.Name));
         bool ok = await prompt.ConfirmAsync(PairingKind.ConfirmPinMatch, device.Name, "482 913", ct);
         if (!ok)
         {
             SetStatus(PhoneLinkStatus.NotPaired);
-            return new PairingResult(PairingOutcome.Rejected, "Eşleşme reddedildi.");
+            return new PairingResult(PairingOutcome.Rejected, "Pairing rejected.");
         }
         Paired = true;
         await UseDeviceAsync(device, ct);
-        return new PairingResult(PairingOutcome.Paired, $"{device.Name} eşleşti.");
+        return new PairingResult(PairingOutcome.Paired, $"{device.Name} paired.", Arg: device.Name);
     }
 
     public Task UseDeviceAsync(PhoneDevice device, CancellationToken ct = default)
@@ -231,7 +231,7 @@ public sealed class DemoContinuityService : IContinuityService
     }
 
     public Task<PairingResult> EstablishNotificationLinkAsync(IPairingPrompt prompt, CancellationToken ct = default) =>
-        Task.FromResult(new PairingResult(PairingOutcome.Paired, "Bildirim bağlantısı kuruldu."));
+        Task.FromResult(new PairingResult(PairingOutcome.Paired, "Notification link established.", PairingDetail.NotificationLinkEstablished));
 
     public Task DisconnectAsync()
     {

@@ -87,15 +87,15 @@ public static class IphonePairing
         try { info = await DeviceInformation.CreateFromIdAsync(device.Id).AsTask(ct); }
         catch (Exception e) when (e is not OperationCanceledException)
         {
-            return new(PairingOutcome.NotFound, $"iPhone bulunamadı ({e.Message.Trim()}). Ayarlar → Bluetooth ekranı açık mı?");
+            return new(PairingOutcome.NotFound, $"iPhone not found ({e.Message.Trim()}). Is Settings → Bluetooth open?", PairingDetail.LookupFailed, e.Message.Trim());
         }
         return await PairAsync(info, device.Name, prompt, ct);
     }
 
     internal static async Task<PairingResult> PairAsync(DeviceInformation info, string name, IPairingPrompt prompt, CancellationToken ct)
     {
-        if (info.Pairing.IsPaired) return new(PairingOutcome.AlreadyPaired, $"{name} zaten eşleşmiş.");
-        if (!info.Pairing.CanPair) return new(PairingOutcome.Failed, "Windows bu cihazla eşleşmeye izin vermiyor.");
+        if (info.Pairing.IsPaired) return new(PairingOutcome.AlreadyPaired, $"{name} is already paired.", Arg: name);
+        if (!info.Pairing.CanPair) return new(PairingOutcome.Failed, "Windows does not allow pairing with this device.", PairingDetail.WindowsCannotPair);
 
         var custom = info.Pairing.Custom;
         async void OnRequested(DeviceInformationCustomPairing sender, DevicePairingRequestedEventArgs args)
@@ -131,22 +131,22 @@ public static class IphonePairing
             var r = await custom.PairAsync(kinds, DevicePairingProtectionLevel.Encryption).AsTask(ct);
             return Map(r.Status, name);
         }
-        catch (OperationCanceledException) { return new(PairingOutcome.Canceled, "Eşleşme iptal edildi."); }
-        catch (Exception e) { return new(PairingOutcome.Failed, $"Eşleşme başarısız: {e.Message.Trim()}"); }
+        catch (OperationCanceledException) { return new(PairingOutcome.Canceled, "Pairing canceled."); }
+        catch (Exception e) { return new(PairingOutcome.Failed, $"Pairing failed: {e.Message.Trim()}", Arg: e.Message.Trim()); }
         finally { custom.PairingRequested -= OnRequested; }
     }
 
     internal static PairingResult Map(DevicePairingResultStatus s, string name) => s switch
     {
-        DevicePairingResultStatus.Paired => new(PairingOutcome.Paired, $"{name} eşleşti."),
-        DevicePairingResultStatus.AlreadyPaired => new(PairingOutcome.AlreadyPaired, $"{name} zaten eşleşmiş."),
-        DevicePairingResultStatus.PairingCanceled => new(PairingOutcome.Canceled, "Eşleşme iptal edildi."),
+        DevicePairingResultStatus.Paired => new(PairingOutcome.Paired, $"{name} paired.", Arg: name),
+        DevicePairingResultStatus.AlreadyPaired => new(PairingOutcome.AlreadyPaired, $"{name} is already paired.", Arg: name),
+        DevicePairingResultStatus.PairingCanceled => new(PairingOutcome.Canceled, "Pairing canceled."),
         DevicePairingResultStatus.RejectedByHandler or DevicePairingResultStatus.AuthenticationFailure
             or DevicePairingResultStatus.ConnectionRejected or DevicePairingResultStatus.Failed =>
-            new(PairingOutcome.Rejected, "Eşleşme reddedildi. iPhone'da \"Eşleştir\"e dokunup kodların aynı olduğunu doğrulayın."),
+            new(PairingOutcome.Rejected, "Pairing rejected. Tap \"Pair\" on the iPhone and check that the codes match."),
         DevicePairingResultStatus.AuthenticationTimeout or DevicePairingResultStatus.NotReadyToPair or DevicePairingResultStatus.NoSupportedProfiles =>
-            new(PairingOutcome.Failed, "iPhone yanıt vermedi. Ayarlar → Bluetooth ekranını açık tutup tekrar deneyin."),
-        _ => new(PairingOutcome.Failed, $"Eşleşme başarısız ({s})."),
+            new(PairingOutcome.Failed, "The iPhone did not respond. Keep Settings → Bluetooth open and try again.", PairingDetail.NoResponse),
+        _ => new(PairingOutcome.Failed, $"Pairing failed ({s}).", Arg: s.ToString()),
     };
 
     /// <summary>
@@ -194,7 +194,7 @@ public static class IphonePairing
         KeyValuePair<ulong, (short Rssi, BluetoothAddressType Type)>[] candidates;
         lock (best) candidates = best.Where(kv => kv.Value.Rssi >= -65).OrderByDescending(kv => kv.Value.Rssi).Take(3).ToArray();
         if (candidates.Length == 0)
-            return (null, new(PairingOutcome.NotFound, "Yakında bir Apple cihazı bulunamadı. iPhone'u bilgisayara yaklaştırıp ekranını açın."));
+            return (null, new(PairingOutcome.NotFound, "No Apple device nearby. Bring the iPhone close to the PC and turn its screen on.", PairingDetail.NoAppleDeviceNearby));
 
         foreach (var c in candidates)
         {
@@ -206,7 +206,7 @@ public static class IphonePairing
             if (r.Success) return (le, r);
             le.Dispose();
         }
-        return (null, new(PairingOutcome.Failed, "iPhone LE eşleşmesini kabul etmedi."));
+        return (null, new(PairingOutcome.Failed, "The iPhone did not accept LE pairing.", PairingDetail.LeRejected));
     }
 
     public static bool LooksLikeIphone(string? name) =>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Settings_SectionThisPc" xml:space="preserve">
+    <value>BU BİLGİSAYAR</value>
+  </data>
+  <data name="Settings_DeviceName" xml:space="preserve">
+    <value>Görünen ad</value>
+    <comment>name other devices see for this PC</comment>
+  </data>
+  <data name="Settings_SaveReceivedTo" xml:space="preserve">
+    <value>Alınanları kaydet</value>
+    <comment>the folder path is shown below</comment>
+  </data>
+  <data name="Settings_ChangeFolder" xml:space="preserve">
+    <value>Değiştir…</value>
+  </data>
+  <data name="Settings_StartWithWindows" xml:space="preserve">
+    <value>Windows açılınca başlat</value>
+  </data>
+  <data name="Settings_SectionLanguage" xml:space="preserve">
+    <value>DİL</value>
+  </data>
+  <data name="Settings_Language" xml:space="preserve">
+    <value>Uygulama dili</value>
+  </data>
+  <data name="Settings_LanguageCaption" xml:space="preserve">
+    <value>Değişiklik hemen uygulanır.</value>
+  </data>
+  <data name="Settings_LanguageAutoWith" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>{0} = 'Same as Windows', {1} = native name of the language Windows resolves to</comment>
+  </data>
+  <data name="Settings_SectionReceiving" xml:space="preserve">
+    <value>ALMA</value>
+  </data>
+  <data name="Settings_JpgPhotos" xml:space="preserve">
+    <value>iPhone fotoğrafları JPG olarak gelsin</value>
+  </data>
+  <data name="Settings_JpgPhotosCaption" xml:space="preserve">
+    <value>HEIC yerine JPG, HEVC videolar yerine H.264 istenir; her Windows'ta açılır.</value>
+  </data>
+  <data name="Settings_OpenLinks" xml:space="preserve">
+    <value>Gelen bağlantıları tarayıcıda aç</value>
+  </data>
+  <data name="Settings_SectionClipboard" xml:space="preserve">
+    <value>ORTAK PANO</value>
+  </data>
+  <data name="Settings_CopyIncoming" xml:space="preserve">
+    <value>Gelenleri panoya kopyala</value>
+  </data>
+  <data name="Settings_CopyIncomingCaption" xml:space="preserve">
+    <value>iPhone'dan gelen metin, bağlantı ve tek fotoğraf Ctrl+V ile yapıştırılmaya hazır olur.</value>
+  </data>
+  <data name="Settings_SendClipboard" xml:space="preserve">
+    <value>Panoyu telefona gönder</value>
+  </data>
+  <data name="Settings_SendClipboardCaption" xml:space="preserve">
+    <value>Kopyaladığınız metni, bağlantıyı, görseli ya da dosyayı son kullandığınız cihaza yollar.</value>
+  </data>
+  <data name="Settings_Hotkey" xml:space="preserve">
+    <value>Ctrl + Alt + A</value>
+    <comment>key names as printed on keyboards of the language (German: Strg)</comment>
+  </data>
+  <data name="Settings_HotkeyInUse" xml:space="preserve">
+    <value>{0} (başka uygulama kullanıyor)</value>
+  </data>
+  <data name="Settings_SectionContacts" xml:space="preserve">
+    <value>KİŞİLER VE FOTOĞRAFLAR</value>
+  </data>
+  <data name="Settings_ContactsPrivacy" xml:space="preserve">
+    <value>Mac'teki gibi çalışır: iPhone'un gönderdiği doğrulanmış kimlik yalnızca sizin rehberinizle eşleştirilir. Rehber bu bilgisayardan dışarı çıkmaz.</value>
+  </data>
+  <data name="Settings_ImportContacts" xml:space="preserve">
+    <value>Rehberi içe aktar (.vcf)</value>
+  </data>
+  <data name="Settings_ContactsNone" xml:space="preserve">
+    <value>Rehber içe aktarılmadı. Kişilerin fotoğrafları için iCloud ya da Google'dan dışa aktardığınız .vcf dosyasını seçin.</value>
+  </data>
+  <data name="Settings_ContactsImported_Plural" xml:space="preserve">
+    <value>{0} kişi içe aktarıldı. Rehberinizdeki kişiler fotoğraflarıyla görünür.</value>
+  </data>
+  <data name="Settings_ContactsImporting" xml:space="preserve">
+    <value>İçe aktarılıyor…</value>
+  </data>
+  <data name="Settings_ContactsNoneFound" xml:space="preserve">
+    <value>Dosyada kişi bulunamadı. {0}</value>
+    <comment>{0} = the current contacts status sentence</comment>
+  </data>
+  <data name="Settings_ContactsImportFailed" xml:space="preserve">
+    <value>İçe aktarılamadı: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="Settings_PickFolderTitle" xml:space="preserve">
+    <value>Alınan dosyaların kaydedileceği klasör</value>
+  </data>
+  <data name="Settings_PickContactsTitle" xml:space="preserve">
+    <value>Rehber dosyası (.vcf)</value>
+  </data>
+  <data name="Settings_AllFiles" xml:space="preserve">
+    <value>Tüm dosyalar</value>
+  </data>
+  <data name="Settings_SectionTrusted" xml:space="preserve">
+    <value>GÜVENİLİR CİHAZLAR</value>
+  </data>
+  <data name="Settings_TrustedHint" xml:space="preserve">
+    <value>Yakındakiler'de bir cihaza sağ tıklayıp “Güvenilir cihaz”ı seçin; ondan gelenler sormadan kabul edilir.</value>
+  </data>
+  <data name="Settings_SectionSync" xml:space="preserve">
+    <value>SENKRON</value>
+  </data>
+  <data name="Settings_ShareTabs" xml:space="preserve">
+    <value>Sekmelerimi paylaş</value>
+  </data>
+  <data name="Settings_ShareTabsCaption" xml:space="preserve">
+    <value>Chrome ve Edge'deki açık sekmeleriniz eşleşen bilgisayarlarda görünür. Gizli sekmeler hiç paylaşılmaz.</value>
+  </data>
+  <data name="Settings_ShareApps" xml:space="preserve">
+    <value>Açık uygulamalarımı paylaş</value>
+  </data>
+  <data name="Settings_ShareAppsCaption" xml:space="preserve">
+    <value>Yalnızca uygulama adı, simgesi ve pencere başlığı gider; dosya yolları bu bilgisayarda kalır.</value>
+  </data>
+  <data name="Settings_ExcludedApps" xml:space="preserve">
+    <value>Paylaşılmayacak uygulamalar</value>
+  </data>
+  <data name="Settings_ExcludedAppsCaption" xml:space="preserve">
+    <value>Parola yöneticileri ve sistem süreçleri zaten hariç.</value>
+  </data>
+  <data name="Settings_RemoveFromList" xml:space="preserve">
+    <value>Listeden çıkar</value>
+  </data>
+  <data name="Settings_ExcludePlaceholder" xml:space="preserve">
+    <value>Uygulama dosyası, ör. Telegram.exe</value>
+  </data>
+  <data name="Settings_Add" xml:space="preserve">
+    <value>Ekle</value>
+  </data>
+  <data name="Settings_SectionExtension" xml:space="preserve">
+    <value>TARAYICI EKLENTİSİ</value>
+  </data>
+  <data name="Settings_InstallExtension" xml:space="preserve">
+    <value>Eklentiyi kur</value>
+  </data>
+  <data name="Settings_ExtStep1" xml:space="preserve">
+    <value>Chrome'da `chrome://extensions`, Edge'de `edge://extensions` adresini açın ve **Geliştirici modu**'nu açın.</value>
+    <comment>rich text: **bold** = UI label in the browser, `mono` = address</comment>
+  </data>
+  <data name="Settings_ExtStep2" xml:space="preserve">
+    <value>**Paketlenmemiş öğe yükle**'ye basıp bu klasörü seçin:</value>
+    <comment>rich text; **bold** = Chrome button label in that language</comment>
+  </data>
+  <data name="Settings_CopyPath" xml:space="preserve">
+    <value>Yolu kopyala</value>
+  </data>
+  <data name="Settings_ExtStep3" xml:space="preserve">
+    <value>Eklentinin NitroDrop ile konuşabilmesi için tarayıcıya bağlayın (yalnızca bu kullanıcı için, yönetici izni gerekmez).</value>
+  </data>
+  <data name="Settings_ConnectBrowser" xml:space="preserve">
+    <value>Tarayıcıya bağla</value>
+  </data>
+  <data name="Settings_SectionPairedPcs" xml:space="preserve">
+    <value>EŞLEŞTİRİLMİŞ BİLGİSAYARLAR</value>
+  </data>
+  <data name="Settings_NoPairedPcs" xml:space="preserve">
+    <value>Henüz eşleştirilmiş bilgisayar yok. Cihazlar sekmesinden “Bilgisayar ekle”yi kullanın.</value>
+  </data>
+  <data name="Settings_SectionIphoneShortcut" xml:space="preserve">
+    <value>IPHONE (KESTİRME)</value>
+  </data>
+  <data name="Settings_QrHint" xml:space="preserve">
+    <value>iPhone'da Kamera ile okutun ve adresi kestirmedeki “URL'nin İçeriğini Al” eylemine yapıştırın.</value>
+  </data>
+  <data name="Settings_QrWarning" xml:space="preserve">
+    <value>Bu adres bir kez gösterilir ve bu iPhone'a özel bir anahtar içerir; yalnızca kendi telefonunuza aktarın.</value>
+  </data>
+  <data name="Settings_CopyAddress" xml:space="preserve">
+    <value>Adresi kopyala</value>
+  </data>
+  <data name="Settings_ShortcutHelp" xml:space="preserve">
+    <value>Kestirme talimatları</value>
+  </data>
+  <data name="Settings_IphoneShortcutCaption" xml:space="preserve">
+    <value>iPhone'da açılan uygulama ve paylaştığınız bağlantılar Kestirmeler ile bu bilgisayara gelir.</value>
+  </data>
+  <data name="Settings_AddIphone" xml:space="preserve">
+    <value>iPhone ekle</value>
+  </data>
+  <data name="Settings_SectionPhone" xml:space="preserve">
+    <value>TELEFON</value>
+  </data>
+  <data name="Settings_ShowNotifications" xml:space="preserve">
+    <value>iPhone bildirimlerini göster</value>
+  </data>
+  <data name="Settings_ShowCalls" xml:space="preserve">
+    <value>Gelen aramaları göster</value>
+  </data>
+  <data name="Settings_MessagePreview" xml:space="preserve">
+    <value>Bildirimde mesaj önizlemesi</value>
+  </data>
+  <data name="Settings_MessagePreviewCaption" xml:space="preserve">
+    <value>Kapalıyken yalnızca gönderen ve uygulama görünür.</value>
+  </data>
+  <data name="Settings_SectionDriver" xml:space="preserve">
+    <value>WI-FI SÜRÜCÜSÜ</value>
+  </data>
+  <data name="Settings_DirectIphone" xml:space="preserve">
+    <value>iPhone'lara doğrudan bağlan (Wi-Fi sürücüsü)</value>
+  </data>
+  <data name="Settings_DriverInstall" xml:space="preserve">
+    <value>Kur…</value>
+  </data>
+  <data name="Settings_DriverRollback" xml:space="preserve">
+    <value>Kaldır ve eski haline getir…</value>
+    <comment>removes our driver and restores the original Windows state</comment>
+  </data>
+  <data name="Settings_DriverStateInstalled" xml:space="preserve">
+    <value>Kurulu — Wi-Fi kartı NitroDrop sürücüsünde</value>
+  </data>
+  <data name="Settings_DriverStateUnsupported" xml:space="preserve">
+    <value>Desteklenen Intel Wi-Fi kartı bulunamadı</value>
+  </data>
+  <data name="Settings_DriverStateIncomplete" xml:space="preserve">
+    <value>Kurulum yarım kaldı</value>
+  </data>
+  <data name="Settings_DriverStateNotInstalled" xml:space="preserve">
+    <value>Kurulu değil</value>
+  </data>
+  <data name="Settings_DriverDetailInstalled" xml:space="preserve">
+    <value>iPhone, iPad ve Mac'lerle doğrudan (AirDrop) bağlantı için hazır. Wi-Fi kartı bu sürücüdeyken internete başka bir bağlantıyla çıkılır.</value>
+  </data>
+  <data name="Settings_DriverDetailUnsupported" xml:space="preserve">
+    <value>Şu an aynı ağdaki cihazlarla paylaşım (LAN modu) çalışır. USB Wi-Fi adaptörü desteği planlanıyor.</value>
+  </data>
+  <data name="Settings_DriverDetailFound" xml:space="preserve">
+    <value>{0} bulundu. iPhone'larla doğrudan bağlantı için Gelişmiş Kurulum gerekli.</value>
+    <comment>{0} = Wi-Fi card name, e.g. Intel Wi-Fi 6 AX203</comment>
+  </data>
+  <data name="About_Section" xml:space="preserve">
+    <value>HAKKINDA</value>
+  </data>
+  <data name="About_Tagline" xml:space="preserve">
+    <value>iPhone, iPad ve Mac ile dosya, bağlantı ve pano paylaşımı; eşleşen bilgisayarlar arasında sekmeler ve uygulamalar. Ücretsiz ve açık kaynak.</value>
+  </data>
+  <data name="About_ShowTour" xml:space="preserve">
+    <value>Tanıtımı tekrar göster</value>
+  </data>
+  <data name="About_SourceCode" xml:space="preserve">
+    <value>Kaynak kodu</value>
+  </data>
+  <data name="About_OpenSource" xml:space="preserve">
+    <value>AÇIK KAYNAK BİLEŞENLER</value>
+  </data>
+  <data name="About_LicenseTexts" xml:space="preserve">
+    <value>Lisans metinleri</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>SÜRÜM {0} · NITROBYTE</value>
+  </data>
+  <data name="About_UseIwx" xml:space="preserve">
+    <value>Intel Wi-Fi sürücüsü (OpenBSD)</value>
+  </data>
+  <data name="About_UseQr" xml:space="preserve">
+    <value>QR kod</value>
+  </data>
+  <data name="About_UseFonts" xml:space="preserve">
+    <value>yazı tipleri</value>
+  </data>
+  <data name="About_UseFirmware" xml:space="preserve">
+    <value>kurulumda gösterilir</value>
+  </data>
+  <data name="Explorer_MenuVerb" xml:space="preserve">
+    <value>NitroDrop ile gönder</value>
+    <comment>Explorer context menu entry; keep in sync with app/NitroDrop.ShellExt/ShellExt.cpp (Titles table)</comment>
+  </data>
+  <data name="Explorer_SendToDescription" xml:space="preserve">
+    <value>Seçilenleri NitroDrop ile gönder</value>
+    <comment>description (tooltip) of the SendTo shortcut</comment>
+  </data>
+  <data name="Explorer_Setting" xml:space="preserve">
+    <value>Gezgin sağ tık menüsü</value>
+  </data>
+  <data name="Explorer_CaptionPortable" xml:space="preserve">
+    <value>Dosya ve klasörlere sağ tıklayınca “NitroDrop ile gönder” (Windows 11'de “Diğer seçenekleri göster” altında) ve Gönder menüsünde NitroDrop.</value>
+  </data>
+  <data name="Explorer_CaptionPackaged" xml:space="preserve">
+    <value>Windows tarafından yönetiliyor: NitroDrop kurulu olduğu sürece sağ tık menüsünde “NitroDrop ile gönder” var.</value>
+  </data>
+  <data name="Explorer_Failed" xml:space="preserve">
+    <value>Gezgin menüsü kaydedilemedi: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+</root>

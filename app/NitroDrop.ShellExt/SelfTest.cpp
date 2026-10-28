@@ -99,11 +99,22 @@ int wmain()
     Check(cmd != nullptr, "CreateInstance(IExplorerCommand)");
     Check(DllCanUnloadNow() == S_FALSE, "DllCanUnloadNow = S_FALSE while an object lives");
 
+    Check(std::wstring(nd::TitleFor(L"tr")) == L"NitroDrop ile gönder", "TitleFor(tr)");
+    Check(std::wstring(nd::TitleFor(L"de")) == L"Mit NitroDrop senden", "TitleFor(de)");
+    Check(std::wstring(nd::TitleFor(L"pl")) == L"Wyślij przez NitroDrop", "TitleFor(pl)");
+    Check(nd::TitleFor(L"xx") == nullptr && nd::TitleFor(L"") == nullptr, "TitleFor(unknown) = null");
+    Check(nd::LangFromLangId(MAKELANGID(LANG_RUSSIAN, SUBLANG_DEFAULT)) == L"ru", "LangFromLangId(ru-RU) = ru");
+    Check(nd::LangFromLangId(MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_UK)) == L"en", "LangFromLangId(en-GB) = en");
+    Check(nd::LangFromLangId(MAKELANGID(LANG_JAPANESE, SUBLANG_DEFAULT)).empty(), "LangFromLangId(ja) = unsupported");
+
     if (cmd && items)
     {
         LPWSTR title = nullptr;
         cmd->GetTitle(items, &title);
-        Check(title && std::wstring(title) == L"NitroDrop ile g\u00F6nder", "GetTitle = NitroDrop ile gönder");
+        Check(title && std::wstring(title) == nd::Title(), "GetTitle = title in the app / Windows language");
+        bool known = false;
+        for (const auto& e : nd::kTitles) known = known || (title && std::wstring(title) == e.title);
+        Check(known, "GetTitle is one of the six localized titles");
         CoTaskMemFree(title);
 
         LPWSTR icon = nullptr;

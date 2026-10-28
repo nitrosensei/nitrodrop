@@ -88,7 +88,7 @@ public sealed class ContinuityRuntime : IContinuityService
 
     public async Task<PairingResult> PairAsync(PhoneDevice device, IPairingPrompt prompt, CancellationToken ct = default)
     {
-        Status = new PhoneLinkStatus(PhoneLinkState.Pairing, "Eşleştiriliyor…", "iPhone'da çıkan isteğe \"Eşleştir\" ile yanıt verin.", device.Name);
+        Status = new PhoneLinkStatus(PhoneLinkState.Pairing, "Pairing…", "Accept the request on the iPhone with \"Pair\".", device.Name);
         StatusChanged?.Invoke(Status);
         var r = await IphonePairing.PairClassicAsync(device, prompt, ct);
         if (r.Success)
@@ -120,8 +120,9 @@ public sealed class ContinuityRuntime : IContinuityService
             await using var bait = new HidBait();
             le = await bait.WaitForPhoneAsync(TimeSpan.FromSeconds(90), ct);
             r = le is null
-                ? new PairingResult(PairingOutcome.Failed, "iPhone bağlanmadı. iPhone'da Ayarlar → Bluetooth → Diğer Aygıtlar'da bu bilgisayara dokunun.")
-                : new PairingResult(PairingOutcome.Paired, "Bildirim bağlantısı kuruldu.");
+                ? new PairingResult(PairingOutcome.Failed, "The iPhone did not connect: tap this PC in Settings → Bluetooth → Other Devices.",
+                    PairingDetail.HidBaitTimeout)
+                : new PairingResult(PairingOutcome.Paired, "Notification link established.", PairingDetail.NotificationLinkEstablished, name);
         }
         if (le is not null) await _link.AdoptLeAsync(le);
         if (le is not null) _ = AttachAsync(le);
@@ -245,25 +246,25 @@ public sealed class ContinuityRuntime : IContinuityService
 
         PhoneLinkStatus s;
         if (_conflict.ConflictDetected)
-            s = new(PhoneLinkState.Blocked, "Phone Link bu iPhone'u kullanıyor", PhoneLinkConflictDetector.Guidance, name, PhoneLinkIssue.PhoneLinkHoldsDevice, features);
+            s = new(PhoneLinkState.Blocked, "Phone Link is using this iPhone", PhoneLinkConflictDetector.Guidance, name, PhoneLinkIssue.PhoneLinkHoldsDevice, features);
         else if (Device is null)
             s = _link.Phase == LinkPhase.NoBluetooth
-                ? new(PhoneLinkState.NoBluetooth, "Bluetooth kapalı", "Windows Ayarlar → Bluetooth ve cihazlar'dan Bluetooth'u açın.", null, PhoneLinkIssue.BluetoothOff)
+                ? new(PhoneLinkState.NoBluetooth, "Bluetooth is off", "Turn on Bluetooth in Windows Settings → Bluetooth & devices.", null, PhoneLinkIssue.BluetoothOff)
                 : PhoneLinkStatus.NotPaired;
         else s = _link.Phase switch
         {
-            LinkPhase.NoBluetooth => new(PhoneLinkState.NoBluetooth, "Bluetooth kapalı", "Windows Ayarlar → Bluetooth ve cihazlar'dan Bluetooth'u açın.", name, PhoneLinkIssue.BluetoothOff),
-            LinkPhase.Connecting or LinkPhase.Idle => new(PhoneLinkState.Connecting, $"{name} bağlanıyor…", "iPhone'un kilidini açın ve yakında tutun.", name),
-            LinkPhase.Lost => new(PhoneLinkState.Reconnecting, "Bağlantı koptu, yeniden deneniyor…", "iPhone menzil dışında ya da Bluetooth kapalı olabilir.", name, Features: features),
-            LinkPhase.NoLeLink => new(PhoneLinkState.Disconnected, "Bildirim bağlantısı kurulamadı",
-                "iPhone eşleşti ama bildirim (LE) bağlantısı açılmadı. \"Bildirim bağlantısını kur\"a basın ve iPhone'u yanınızda tutun.",
+            LinkPhase.NoBluetooth => new(PhoneLinkState.NoBluetooth, "Bluetooth is off", "Turn on Bluetooth in Windows Settings → Bluetooth & devices.", name, PhoneLinkIssue.BluetoothOff),
+            LinkPhase.Connecting or LinkPhase.Idle => new(PhoneLinkState.Connecting, $"Connecting to {name}…", "Unlock the iPhone and keep it nearby.", name),
+            LinkPhase.Lost => new(PhoneLinkState.Reconnecting, "Connection lost, reconnecting…", "The iPhone may be out of range or have Bluetooth off.", name, Features: features),
+            LinkPhase.NoLeLink => new(PhoneLinkState.Disconnected, "Notification link could not be set up",
+                "The iPhone is paired but the notification (LE) link did not open. Press \"Set up notification link\" and keep the iPhone close.",
                 name, PhoneLinkIssue.NoLeLink, features),
-            _ when _ancsResult == GattStartResult.ServiceMissing => new(PhoneLinkState.Connected, $"{name} bağlı",
-                "Bildirimler kapalı: iPhone'da Ayarlar → Bluetooth → bu bilgisayarın yanındaki (i) → \"Sistem Bildirimlerini Paylaş\"ı açın.",
+            _ when _ancsResult == GattStartResult.ServiceMissing => new(PhoneLinkState.Connected, $"{name} connected",
+                "Notifications are off: on the iPhone, Settings → Bluetooth → (i) next to this PC → turn on \"Share System Notifications\".",
                 name, PhoneLinkIssue.NotificationsNotShared, features),
-            _ when _mapIssue == PhoneLinkIssue.MessagesNotShared => new(PhoneLinkState.Connected, $"{name} bağlı",
-                "Mesajlar kapalı: iPhone'da bu bilgisayarın (i) ekranında \"Bildirimleri Göster\"i açın.", name, PhoneLinkIssue.MessagesNotShared, features),
-            _ => new(PhoneLinkState.Connected, $"{name} bağlı", null, name, PhoneLinkIssue.None, features),
+            _ when _mapIssue == PhoneLinkIssue.MessagesNotShared => new(PhoneLinkState.Connected, $"{name} connected",
+                "Messages are off: on the iPhone, open this PC's (i) screen and turn on \"Show Notifications\".", name, PhoneLinkIssue.MessagesNotShared, features),
+            _ => new(PhoneLinkState.Connected, $"{name} connected", null, name, PhoneLinkIssue.None, features),
         };
         s = s with { ModelId = Device is null ? null : _modelId };
         if (s == Status) return;

@@ -33,8 +33,8 @@ public sealed class PhoneLinkConflictDetector(TimeSpan? window = null, int thres
     public string? Evidence { get; private set; }
 
     public const string Guidance =
-        "Bu iPhone şu an Phone Link (Telefon Bağlantısı) tarafından kullanılıyor. Phone Link'i açın → Ayarlar → Cihazlarım → " +
-        "iPhone'un yanındaki ⋯ → Kaldır. Sonra NitroDrop'ta \"Yeniden dene\"ye basın.";
+        "This iPhone is in use by Phone Link. Open Phone Link → Settings → My devices → ⋯ next to the iPhone → Remove. " +
+        "Then press \"Try again\" in NitroDrop.";
 
     /// <summary>Returns true when this error tips the detector into the conflict state.</summary>
     public bool ReportAncsStreamError(DateTimeOffset now)
@@ -42,16 +42,16 @@ public sealed class PhoneLinkConflictDetector(TimeSpan? window = null, int thres
         _ancsErrors.Enqueue(now);
         while (_ancsErrors.Count > 0 && now - _ancsErrors.Peek() > _window) _ancsErrors.Dequeue();
         if (_ancsErrors.Count >= threshold && !ConflictDetected)
-            return Flag("ANCS Data Source akışı isteklerimizle uyuşmuyor (başka bir uygulama da bildirim istiyor).");
+            return Flag("ANCS Data Source stream does not match our requests (another app is requesting notifications too).");
         return false;
     }
 
     public bool ReportPhoneLineAccess(PhoneLineAccess access) =>
-        access == PhoneLineAccess.DeniedBySystem && !ConflictDetected && Flag("Windows arama hattı başka bir uygulamaya kayıtlı (DeniedBySystem).");
+        access == PhoneLineAccess.DeniedBySystem && !ConflictDetected && Flag("The Windows phone line is registered to another app (DeniedBySystem).");
 
     /// <summary>OBEX response code of a MAP/PBAP Connect (0xD3 ServiceUnavailable / 0xC3 Forbidden mean "busy with another client").</summary>
     public bool ReportObexConnectRefused(byte responseCode) =>
-        (responseCode | 0x80) is 0xD3 && !ConflictDetected && Flag("iPhone mesaj hizmeti başka bir bağlantıya hizmet veriyor (OBEX ServiceUnavailable).");
+        (responseCode | 0x80) is 0xD3 && !ConflictDetected && Flag("The iPhone message service is serving another connection (OBEX ServiceUnavailable).");
 
     public void Reset()
     {

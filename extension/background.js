@@ -169,7 +169,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         return { targets: r.targets || [] };
       }
       case 'sendLink': {
-        if (!isShareable(msg.url)) return { ok: false, error: 'Bu sayfa gönderilemez' };
+        if (!isShareable(msg.url)) return { ok: false, error: chrome.i18n.getMessage('cannotSend') };
         const r = await request({ type: 'sendLink', targetId: msg.targetId, url: msg.url, title: msg.title });
         return { ok: !!r.ok, error: r.error };
       }

@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Tab_Nearby" xml:space="preserve">
+    <value>Yakındakiler</value>
+  </data>
+  <data name="Tab_Devices" xml:space="preserve">
+    <value>Cihazlar</value>
+  </data>
+  <data name="Tab_Phone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="Tab_History" xml:space="preserve">
+    <value>Geçmiş</value>
+  </data>
+  <data name="Main_HotkeyBusy" xml:space="preserve">
+    <value>Ctrl + Alt + A (başka uygulama kullanıyor)</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>NitroDrop'u aç</value>
+  </data>
+  <data name="Tray_Quit" xml:space="preserve">
+    <value>Çıkış</value>
+  </data>
+  <data name="Nearby_PeerTip" xml:space="preserve">
+    <value>Tıklayın ya da dosyayı üzerine bırakın · sağ tık: seçenekler</value>
+  </data>
+  <data name="Nearby_MenuSendFiles" xml:space="preserve">
+    <value>Dosya gönder…</value>
+  </data>
+  <data name="Nearby_MenuSendClipboard" xml:space="preserve">
+    <value>Panoyu gönder</value>
+  </data>
+  <data name="Nearby_MenuSetPhoto" xml:space="preserve">
+    <value>Fotoğraf ata…</value>
+  </data>
+  <data name="Nearby_MenuClearPhoto" xml:space="preserve">
+    <value>Fotoğrafı kaldır</value>
+  </data>
+  <data name="Nearby_MenuRename" xml:space="preserve">
+    <value>Yeniden adlandır…</value>
+  </data>
+  <data name="Nearby_MenuTrusted" xml:space="preserve">
+    <value>Güvenilir cihaz (sormadan kabul et)</value>
+  </data>
+  <data name="Nearby_TrustedTip" xml:space="preserve">
+    <value>Güvenilir cihaz: sormadan kabul edilir</value>
+  </data>
+  <data name="Nearby_SetupBanner" xml:space="preserve">
+    <value>iPhone'larla doğrudan bağlantı için bir kurulum adımı kaldı</value>
+  </data>
+  <data name="Nearby_SetupButton" xml:space="preserve">
+    <value>Kur</value>
+  </data>
+  <data name="Nearby_Searching" xml:space="preserve">
+    <value>Yakındaki iPhone, iPad ve Mac'ler aranıyor…</value>
+  </data>
+  <data name="Nearby_SearchingHint" xml:space="preserve">
+    <value>iPhone'da Denetim Merkezi'ni açın, AirDrop'a dokunun ve “Herkes (10 dakika)”yı seçin.</value>
+  </data>
+  <data name="Nearby_ShowFolder" xml:space="preserve">
+    <value>Klasörü göster</value>
+  </data>
+  <data name="Nearby_DropHint" xml:space="preserve">
+    <value>Bir dosyayı cihazın üzerine bırakın ya da cihaza tıklayıp dosya seçin.</value>
+  </data>
+  <data name="Nearby_WhoCanSeeMe" xml:space="preserve">
+    <value>Beni görebilecekler</value>
+  </data>
+  <data name="Nearby_PendingOne" xml:space="preserve">
+    <value>“{0}” göndermeye hazır — bir cihaz seçin</value>
+  </data>
+  <data name="Nearby_PendingMany_Plural" xml:space="preserve">
+    <value>{0} öge göndermeye hazır — bir cihaz seçin</value>
+  </data>
+  <data name="Nearby_PickFilesTitle" xml:space="preserve">
+    <value>{0} cihazına gönder</value>
+  </data>
+  <data name="Nearby_PhotoTitle" xml:space="preserve">
+    <value>{0} için fotoğraf</value>
+  </data>
+  <data name="Nearby_ImageFilter" xml:space="preserve">
+    <value>Resimler</value>
+  </data>
+  <data name="Nearby_VisibleNobody" xml:space="preserve">
+    <value>Kimse sizi bulamaz</value>
+  </data>
+  <data name="Nearby_VisibleEveryone" xml:space="preserve">
+    <value>Herkes sizi bulabilir · {0}</value>
+    <comment>{0} = remaining time m:ss</comment>
+  </data>
+  <data name="Mode_Off" xml:space="preserve">
+    <value>Alma Kapalı</value>
+  </data>
+  <data name="Mode_ContactsOnly" xml:space="preserve">
+    <value>Yalnızca Kişiler</value>
+  </data>
+  <data name="Mode_Everyone" xml:space="preserve">
+    <value>Herkes (10 dakika)</value>
+  </data>
+  <data name="Mode_NeedsAppleAccount" xml:space="preserve">
+    <value>Apple hesabı gerektirir</value>
+  </data>
+  <data name="Main_ClipboardEmpty" xml:space="preserve">
+    <value>Pano boş — önce bir şey kopyalayın.</value>
+  </data>
+  <data name="Main_ClipboardSending" xml:space="preserve">
+    <value>Pano {0} cihazına gönderiliyor…</value>
+  </data>
+  <data name="Peer_Waiting" xml:space="preserve">
+    <value>Bekleniyor…</value>
+  </data>
+  <data name="Peer_Sending" xml:space="preserve">
+    <value>Gönderiliyor…</value>
+  </data>
+  <data name="Peer_Sent" xml:space="preserve">
+    <value>Gönderildi</value>
+  </data>
+  <data name="Peer_Declined" xml:space="preserve">
+    <value>Reddedildi</value>
+  </data>
+  <data name="Peer_Failed" xml:space="preserve">
+    <value>Başarısız</value>
+  </data>
+  <data name="Speed_MBps" xml:space="preserve">
+    <value>{0} MB/sn</value>
+  </data>
+  <data name="Speed_SecondsLeft" xml:space="preserve">
+    <value>{0} sn</value>
+  </data>
+  <data name="Speed_MinutesLeft" xml:space="preserve">
+    <value>{0} dk</value>
+  </data>
+  <data name="Receive_FromTitle" xml:space="preserve">
+    <value>{0} cihazından alınıyor</value>
+  </data>
+  <data name="Receive_FromNotify" xml:space="preserve">
+    <value>{0} cihazından alınıyor…</value>
+  </data>
+  <data name="Receive_DetailUnknownTotal" xml:space="preserve">
+    <value>{0} alındı · {1}</value>
+    <comment>{0} size so far, {1} speed</comment>
+  </data>
+  <data name="Receive_LinkShared" xml:space="preserve">
+    <value>{0} bir bağlantı paylaştı</value>
+  </data>
+  <data name="Receive_ItemsReceived_Plural" xml:space="preserve">
+    <value>{0} öge alındı</value>
+  </data>
+  <data name="Receive_DemoReceived" xml:space="preserve">
+    <value>Alındı (demo — dosya yazılmadı)</value>
+  </data>
+  <data name="Receive_SavedTo" xml:space="preserve">
+    <value>{0} klasörüne kaydedildi</value>
+  </data>
+  <data name="Receive_SheetLabel" xml:space="preserve">
+    <value>NITRODROP · GELEN</value>
+  </data>
+  <data name="Receive_OneLink" xml:space="preserve">
+    <value>sizinle bir bağlantı paylaşmak istiyor.</value>
+    <comment>follows the sender's name shown on the line above</comment>
+  </data>
+  <data name="Receive_Links_Plural" xml:space="preserve">
+    <value>sizinle {0} bağlantı paylaşmak istiyor.</value>
+  </data>
+  <data name="Receive_OneFile" xml:space="preserve">
+    <value>sizinle “{0}” paylaşmak istiyor</value>
+    <comment>the size in parentheses and a full stop are appended</comment>
+  </data>
+  <data name="Receive_Items_Plural" xml:space="preserve">
+    <value>sizinle {0} öge paylaşmak istiyor</value>
+  </data>
+  <data name="Receive_Timeout" xml:space="preserve">
+    <value>{0} sn içinde yanıt verilmezse reddedilir</value>
+  </data>
+  <data name="History_Title" xml:space="preserve">
+    <value>Son aktarımlar</value>
+  </data>
+  <data name="History_EmptyTitle" xml:space="preserve">
+    <value>Henüz bir şey paylaşılmadı</value>
+  </data>
+  <data name="History_EmptyBody" xml:space="preserve">
+    <value>Gönderdiğiniz ve aldığınız dosyalar, bağlantılar burada listelenir.</value>
+  </data>
+  <data name="History_TitleMore_Plural" xml:space="preserve">
+    <value>{1} ve {0} öge daha</value>
+    <comment>{1} first file name, {0} number of other items</comment>
+  </data>
+  <data name="History_Transfer" xml:space="preserve">
+    <value>Aktarım</value>
+  </data>
+  <data name="History_FromDevice" xml:space="preserve">
+    <value>{0} cihazından</value>
+  </data>
+  <data name="History_ToDevice" xml:space="preserve">
+    <value>{0} cihazına</value>
+  </data>
+  <data name="History_NoteDeclined" xml:space="preserve">
+    <value>reddedildi</value>
+  </data>
+  <data name="History_NoteFailed" xml:space="preserve">
+    <value>başarısız</value>
+  </data>
+  <data name="History_NoteDemo" xml:space="preserve">
+    <value>demo — dosya yazılmadı</value>
+  </data>
+  <data name="Prompt_Save" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="Prompt_RenameTitle" xml:space="preserve">
+    <value>Yeniden adlandır</value>
+  </data>
+  <data name="Prompt_RenameLabel" xml:space="preserve">
+    <value>{0} için görünen ad:</value>
+  </data>
+  <data name="Prompt_AddIphoneTitle" xml:space="preserve">
+    <value>iPhone ekle</value>
+  </data>
+  <data name="Prompt_AddIphoneLabel" xml:space="preserve">
+    <value>Bu iPhone'a bir ad verin:</value>
+  </data>
+  <data name="Prompt_AddIphoneDefault" xml:space="preserve">
+    <value>iPhone'um</value>
+  </data>
+  <data name="Status_LanOnly" xml:space="preserve">
+    <value>Wi-Fi sürücüsü kurulu değil · yerel ağ modu: aynı ağdaki NitroDrop bilgisayarları birbirini görür</value>
+  </data>
+  <data name="Status_Disabled" xml:space="preserve">
+    <value>iPhone'lara doğrudan bağlantı kapalı · yerel ağ modu</value>
+  </data>
+  <data name="Status_Launching" xml:space="preserve">
+    <value>iPhone bağlantısı için yönetici izni bekleniyor…</value>
+  </data>
+  <data name="Status_Cancelled" xml:space="preserve">
+    <value>Yönetici izni verilmedi · iPhone bağlantısı kapalı, yerel ağ modu</value>
+  </data>
+  <data name="Status_LaunchFailed" xml:space="preserve">
+    <value>Wi-Fi yardımcısı başlatılamadı ({0}) · yerel ağ modu</value>
+  </data>
+  <data name="Status_Starting" xml:space="preserve">
+    <value>iPhone bağlantısı başlatılıyor…</value>
+  </data>
+  <data name="Status_Ready_Plural" xml:space="preserve">
+    <value>iPhone bağlantısı hazır · kanal {1} · {0} cihaz</value>
+    <comment>{0} device count, {1} Wi-Fi channel</comment>
+  </data>
+  <data name="Status_Failed" xml:space="preserve">
+    <value>iPhone bağlantısı kurulamadı: {0} · yerel ağ modu</value>
+  </data>
+  <data name="Status_BindFailed" xml:space="preserve">
+    <value>iPhone bağlantısı kurulamadı: AWDL ağ arayüzüne bağlanılamadı · yerel ağ modu</value>
+  </data>
+  <data name="Status_HostExited" xml:space="preserve">
+    <value>Wi-Fi yardımcısı kapandı · yerel ağ modu</value>
+  </data>
+  <data name="Status_Demo" xml:space="preserve">
+    <value>Wi-Fi sürücüsü henüz kurulu değil · demo modu</value>
+  </data>
+  <data name="Failure_DriverMissing" xml:space="preserve">
+    <value>Wi-Fi sürücüsü bulunamadı</value>
+  </data>
+  <data name="Failure_AccessDenied" xml:space="preserve">
+    <value>Wi-Fi kartına erişilemedi (başka bir uygulama kullanıyor olabilir)</value>
+  </data>
+  <data name="Failure_WintunMissing" xml:space="preserve">
+    <value>wintun.dll eksik</value>
+  </data>
+  <data name="Failure_RfKill" xml:space="preserve">
+    <value>Wi-Fi kapalı (uçak modu ya da donanım anahtarı)</value>
+  </data>
+  <data name="Failure_Radio" xml:space="preserve">
+    <value>Wi-Fi kartı başlatılamadı</value>
+  </data>
+  <data name="Failure_Network" xml:space="preserve">
+    <value>AWDL ağ arayüzü hazırlanamadı</value>
+  </data>
+  <data name="Failure_Other" xml:space="preserve">
+    <value>beklenmeyen hata</value>
+  </data>
+  <data name="Clip_Image" xml:space="preserve">
+    <value>Panodaki görsel</value>
+  </data>
+  <data name="Clip_LinkCopied" xml:space="preserve">
+    <value>Bağlantı panoya kopyalandı</value>
+  </data>
+  <data name="Clip_TextCopied" xml:space="preserve">
+    <value>Metin panoya kopyalandı</value>
+  </data>
+  <data name="Clip_ImageCopied" xml:space="preserve">
+    <value>Görsel panoya kopyalandı</value>
+  </data>
+  <data name="Device_WindowsPc" xml:space="preserve">
+    <value>Windows PC</value>
+  </data>
+  <data name="Device_WindowsLaptop" xml:space="preserve">
+    <value>Windows dizüstü</value>
+  </data>
+  <data name="Device_WindowsDesktop" xml:space="preserve">
+    <value>Windows masaüstü</value>
+  </data>
+  <data name="Device_WindowsTablet" xml:space="preserve">
+    <value>Windows tablet</value>
+  </data>
+  <data name="Device_AndroidPhone" xml:space="preserve">
+    <value>Android telefon</value>
+  </data>
+  <data name="Device_Generic" xml:space="preserve">
+    <value>Cihaz</value>
+  </data>
+  <data name="Launcher_NotFound" xml:space="preserve">
+    <value>{0} bulunamadı</value>
+    <comment>{0} = NitroDrop.Radio.exe; shown inside the Wi-Fi helper status</comment>
+  </data>
+  <data name="Launcher_NoSid" xml:space="preserve">
+    <value>kullanıcı kimliği (SID) okunamadı</value>
+  </data>
+  <data name="Launcher_StartFailed" xml:space="preserve">
+    <value>{0} başlatılamadı</value>
+  </data>
+  <data name="Launcher_Exited" xml:space="preserve">
+    <value>{0} kapandı (kod {1})</value>
+  </data>
+</root>

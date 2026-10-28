@@ -1,4 +1,4 @@
-#if DEBUG
+﻿#if DEBUG
 using System;
 using System.IO;
 using System.Linq;
@@ -33,6 +33,12 @@ internal static class Snapshot
         await vm.StartAsync();
 
         await Task.Delay(6500);                 // demo peers appear
+        if (SnapshotMatrix.Requested)
+        {
+            // --matrix: breakpoints × themes × languages only (SnapshotMatrix.cs).
+            await SnapshotMatrix.RunAsync(w, vm, dir);
+            return;
+        }
         await BrandAsync(w, vm, dir);
         Save(w, Path.Combine(dir, "nearby.png"));
         vm.Tab = MainTab.History;
@@ -41,7 +47,7 @@ internal static class Snapshot
         vm.Tab = MainTab.Settings;
         await Task.Delay(400);
         Save(w, Path.Combine(dir, "settings.png"));
-        if (FindChild<System.Windows.Controls.ScrollViewer>(w.SettingsPage) is { } sv)
+        if (w.SettingsScroll is { } sv)
         {
             sv.ScrollToEnd();
             await Task.Delay(400);
@@ -72,15 +78,7 @@ internal static class Snapshot
             vm.Tab = MainTab.History;
             await Task.Delay(300);
             Save(w, Path.Combine(dir, $"history-{t}.png"));
-            vm.PreviewHistory(new[]
-            {
-                new Services.HistoryEntry { Direction = Services.TransferDirection.Received, DeviceName = "Mert", DeviceKind = Services.DeviceKind.Windows,
-                    ModelName = "MacBookPro18,3", Host = Services.DemoAirDropService.DemoPc, Links = new() { "https://nitrobyte.com.tr" } },
-                new Services.HistoryEntry { Direction = Services.TransferDirection.Sent, DeviceName = "Ayşe", DeviceKind = Services.DeviceKind.Mac,
-                    ModelName = "Mac14,2", Paths = new() { @"C:\yok\Sunum.pdf" }, TotalBytes = 2_400_000 },
-                new Services.HistoryEntry { Direction = Services.TransferDirection.Received, DeviceName = "Emre", DeviceKind = Services.DeviceKind.iPhone,
-                    ModelName = "iPhone16,1", Paths = new() { @"C:\yok\IMG_4821.HEIC", @"C:\yok\IMG_4822.HEIC" }, TotalBytes = 6_391_000 },
-            });
+            vm.PreviewHistory(SampleHistory());
             await Task.Delay(300);
             Save(w, Path.Combine(dir, $"history-models-{t}.png"));
             vm.PreviewHistory(null);
@@ -89,7 +87,7 @@ internal static class Snapshot
             Save(w, Path.Combine(dir, $"phone-main-{t}.png"));
             vm.Tab = MainTab.Settings;
             await Task.Delay(300);
-            if (FindChild<System.Windows.Controls.ScrollViewer>(w.SettingsPage) is { } sv) sv.ScrollToHome();
+            if (w.SettingsScroll is { } sv) sv.ScrollToHome();
             await Task.Delay(200);
             Save(w, Path.Combine(dir, $"settings-{t}.png"));
             await ScrollToAsync(w, w.AboutSection);
@@ -326,7 +324,7 @@ internal static class Snapshot
     /// <summary>Scrolls the settings page so <paramref name="target"/> (plus an offset) is at the top.</summary>
     private static async Task ScrollToAsync(MainWindow w, FrameworkElement target, double extra = 0)
     {
-        if (FindChild<System.Windows.Controls.ScrollViewer>(w.SettingsPage) is not { } sv) return;
+        if (w.SettingsScroll is not { } sv) return;
         sv.ScrollToHome();
         await Task.Delay(100);
         var y = target.TransformToAncestor(sv).Transform(new Point(0, 0)).Y;
@@ -345,7 +343,7 @@ internal static class Snapshot
         return null;
     }
 
-    private sealed class FixedProbe(SystemSnapshot s) : ISystemProbe
+    internal sealed class FixedProbe(SystemSnapshot s) : ISystemProbe
     {
         public SystemSnapshot Read(bool includeBitLocker = true) => s;
     }
@@ -409,6 +407,19 @@ internal static class Snapshot
         }
         app.ApplyTheme(wasDark);
     }
+
+    /// <summary>Three sample transfers (link, PDF, two photos) for the history screens.</summary>
+    internal static Services.HistoryEntry[] SampleHistory() => new[]
+        {
+            new Services.HistoryEntry { Direction = Services.TransferDirection.Received, DeviceName = "Mert", DeviceKind = Services.DeviceKind.Windows,
+                ModelName = "MacBookPro18,3", Host = Services.DemoAirDropService.DemoPc, Links = new() { "https://nitrobyte.com.tr" } },
+            new Services.HistoryEntry { Direction = Services.TransferDirection.Sent, DeviceName = "Ayşe", DeviceKind = Services.DeviceKind.Mac,
+                ModelName = "Mac14,2", Paths = new() { @"C:\yok\Sunum.pdf" }, TotalBytes = 2_400_000 },
+            new Services.HistoryEntry { Direction = Services.TransferDirection.Received, DeviceName = "Emre", DeviceKind = Services.DeviceKind.iPhone,
+                ModelName = "iPhone16,1", Paths = new() { @"C:\yok\IMG_4821.HEIC", @"C:\yok\IMG_4822.HEIC" }, TotalBytes = 6_391_000 },
+        };
+
+    internal static void SaveWindow(Window root, string path) => Save(root, path);
 
     private static void Save(FrameworkElement root, string path)
     {

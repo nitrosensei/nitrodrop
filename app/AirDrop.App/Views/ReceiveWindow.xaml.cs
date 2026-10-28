@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
+using AirDrop.App.Localization;
 using AirDrop.App.Interop;
 using AirDrop.App.Services;
 using AirDrop.App.ViewModels;
@@ -40,17 +41,17 @@ public partial class ReceiveWindow : Window
         int files = req.Files.Count, links = req.Links.Count;
         if (files == 0 && links > 0)
         {
-            Message.Text = links == 1 ? "sizinle bir bağlantı paylaşmak istiyor." : $"sizinle {links} bağlantı paylaşmak istiyor.";
-            AcceptButton.Content = "Aç";
+            Message.Text = links == 1 ? MainStrings.Receive_OneLink : MainStrings.Receive_Links_Plural(links);
+            AcceptButton.Content = CommonStrings.Common_Open;
         }
         else
         {
-            string what = files == 1 ? $"“{req.Files[0].Name}”" : $"{files} öge";
+            string what = files == 1 ? MainStrings.Receive_OneFile(req.Files[0].Name) : MainStrings.Receive_Items_Plural(files);
             long total = req.Files.Sum(f => f.Size);
-            Message.Text = $"sizinle {what} paylaşmak istiyor" + (total > 0 ? $" ({Format.Size(total)})." : ".");
+            Message.Text = what + (total > 0 ? $" ({Loc.Bytes(total)})." : ".");
         }
 
-        Items.ItemsSource = req.Files.Select(f => new { Glyph = GlyphFor(f.Name), f.Name, SizeText = f.Size > 0 ? Format.Size(f.Size) : "" })   // /Ask carries no sizes from iOS
+        Items.ItemsSource = req.Files.Select(f => new { Glyph = GlyphFor(f.Name), f.Name, SizeText = f.Size > 0 ? Loc.Bytes(f.Size) : "" })   // /Ask carries no sizes from iOS
             .Concat(req.Links.Select(l => new { Glyph = "", Name = l.ToString(), SizeText = "" }))
             .ToList();
 
@@ -71,7 +72,7 @@ public partial class ReceiveWindow : Window
         _timer.Tick += (_, _) =>
         {
             _left--;
-            TimeoutText.Text = _left <= 15 ? $"{_left} sn içinde yanıt verilmezse reddedilir" : "";
+            TimeoutText.Text = _left <= 15 ? MainStrings.Receive_Timeout(_left) : "";
             if (_left <= 0) Finish(false);
         };
         _timer.Start();

@@ -1,22 +1,23 @@
 using System.Collections.Generic;
+using AirDrop.App.Localization;
 using AirDrop.Core.Devices;
 
 namespace AirDrop.App.Services;
 
 // No WPF types in this file: it is linked into AirDrop.Tests (and used by PhoneViewModel, which is linked too).
 
-/// <summary>User-facing device strings in one place (for the localisation pass).</summary>
+/// <summary>User-facing device kind names (Apple product names are never translated; the rest from Main.resx).</summary>
 public static class DeviceStrings
 {
     public static string iPhone => "iPhone";
     public static string iPad => "iPad";
     public static string Mac => "Mac";
-    public static string WindowsPc => "Windows PC";
-    public static string WindowsLaptop => "Windows dizüstü";
-    public static string WindowsDesktop => "Windows masaüstü";
-    public static string WindowsTablet => "Windows tablet";
-    public static string AndroidPhone => "Android telefon";
-    public static string Generic => "Cihaz";
+    public static string WindowsPc => MainStrings.Device_WindowsPc;
+    public static string WindowsLaptop => MainStrings.Device_WindowsLaptop;
+    public static string WindowsDesktop => MainStrings.Device_WindowsDesktop;
+    public static string WindowsTablet => MainStrings.Device_WindowsTablet;
+    public static string AndroidPhone => MainStrings.Device_AndroidPhone;
+    public static string Generic => MainStrings.Device_Generic;
 }
 
 /// <summary>Keys of the vector art in Themes/DeviceArt.xaml (resource key = "DeviceArt." + key).</summary>

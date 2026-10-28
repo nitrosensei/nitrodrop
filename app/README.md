@@ -225,15 +225,29 @@ Kaynak: `brand/final/` (salt okunur). Uygulamadaki karşılıkları:
   dizilmez). `Themes/Controls.xaml`: pill butonlar (`AccentPill`, `PillButton`, `SubtlePill`, `Small*`),
   segment, switch, satır/bölüm, ince scrollbar, tooltip, menü, odak görselleri.
 - **Yazı tipleri:** Schibsted Grotesk (arayüz) ve JetBrains Mono (teknik etiketler), statik kesimler
-  `Assets/Fonts/` içinde gömülü (OFL; lisans metinleri çıktıda `licenses/`).
+  `Assets/Fonts/` içinde gömülü (OFL; lisans metinleri çıktıda `licenses/`). Schibsted'de Kiril yok:
+  `UiFont`/`DisplayFont` = `Schibsted Grotesk, Golos Text, Segoe UI` listesi; Kiril harfler karakter bazında
+  **Golos Text**'e (OFL, Paratype; x-yüksekliği ve büyük harf oranı Schibsted'e çok yakın) düşer. `FontFamilyMap`
+  hedefleri pack URI ile uygulamada çözülmediği için düz liste kullanılıyor; snapshot `fonts.txt` bunu ölçer.
 - **Simgeler:** pencere/görev çubuğu `Assets/NitroDrop.ico` (ApplicationIcon); tepsi simgesi
   `tray-light.ico`/`tray-dark.ico`, Windows görev çubuğu temasına (`SystemUsesLightTheme`) göre canlı değişir.
 - **Mica:** `WindowEffects.ApplyThemed` — backdrop varsa yarı saydam `WindowTint`, yoksa opak `WindowFallback`.
 - **Ayarlar → Hakkında:** sürüm, nitrobyte.com.tr ve depo bağlantısı (GitHub adresi yer tutucu), açık kaynak
   bileşenler (Owly MIT, iwx ISC, QRCoder MIT, yazı tipleri OFL), "Tanıtımı tekrar göster",
   "by Nitrobyte · Made in Türkiye" (kırmızı `#E30A17` çizgi yalnızca burada).
-- **Pencere:** varsayılan 680×760, en az 600×660, yeniden boyutlanır; konum/boyut `AppSettings.Window*`
-  alanlarında saklanır ve açılışta çalışma alanına sıkıştırılır.
+- **Pencere ve kırılma noktaları:** varsayılan 1040×720 (çalışma alanından büyükse sığdırılır), en az 420×540,
+  büyütülebilir (WindowChrome taşmasına karşı içerik içeri alınır); normal konum/boyut `AppSettings.Window*`
+  alanlarında saklanır ve açılışta çalışma alanına sıkıştırılır. Düzen genişliğe göre değişir
+  (`Views/Responsive.cs`, miras alınan `Responsive.Mode`, 12 px histerezis; sürüklerken her pikselde yeniden dizilmez):
+  - **compact < 720:** başlık çubuğunda segmentli sekmeler + dişli, tek sütun; 600'ün altında sekmeler kendi
+    satırına iner.
+  - **regular ≥ 720:** solda 212 px kenar çubuğu (logo, simge + etiketli `NavItem`: Yakındakiler, Cihazlar,
+    Telefon, Geçmiş; altta Ayarlar), tek içerik sütunu; Ayarlar'daki geri butonu gizlenir.
+  - **wide ≥ 1100:** iki bölme. Cihazlar: PC listesi + seçili PC'nin sekme/uygulamaları. Geçmiş: liste +
+    önizleme (görsel, dosyalar, cihaz, tam tarih, Aç / Klasörde göster). Ayarlar: bölüm başlıklarından üretilen
+    kategori listesi (tıklayınca kaydırır, kaydırınca işaretlenir). Telefon: konuşma sütunu 188 → 240 → 300 px.
+  - Radar 480'lik tasarım ölçüsünde çizilip `Viewbox` ile alana ölçeklenir (kısa pencerede küçülür, geniş
+    pencerede ×1.4'e kadar büyür); ölçek bir render dönüşümü olduğu için yeniden boyutlandırma akıcıdır.
 - **Telefon sekmesi:** "Cihazlar" ile "Geçmiş" arasında, `Views/PhonePanel` (ContinuityHost); Ayarlar →
   TELEFON bölümünde bildirim/arama/önizleme anahtarları.
 - **İlk kullanım:** `Views/OnboardingWindow` — 6 adım (hoş geldin, gönder, iPhone'dan al, telefon, cihazlar,
@@ -243,6 +257,51 @@ Kaynak: `brand/final/` (salt okunur). Uygulamadaki karşılıkları:
 - **Snapshot:** `NitroDrop.exe --snapshot <klasör>` ekranı açmadan (−20000 konumunda) tüm ekranları açık+koyu
   çıkarır: `nearby-*`, `devices-*`, `phone-main-*`, `history-*`, `settings-*`, `settings-about-*`,
   `sheet-receive-*`, `menu-*`, `onboarding-1..6-*`, `setup-*`. Çalışan tek örneği atlar.
+  `--matrix [--langs tr,en,de,ru]` (`SnapshotMatrix.cs`) yalnızca dil/düzen incelemesi yapar: her kırılma noktası
+  (compact 560, regular 920, wide 1280) × açık/koyu × dil için Yakındakiler, Cihazlar, Telefon, Geçmiş, Ayarlar,
+  tanıtım 1 ve 4, sihirbazın Secure Boot ve Onay sayfaları ve alma penceresi → `matrix/*.png`; ayrıca `board.png`
+  (kontakt tablosu) ve `fonts.txt` (UiFont'un dil başına hangi yüze çözüldüğü). Dili canlı değiştirir (Ayarlar →
+  Dil ile aynı yol). `--fonts-only` yalnızca `fonts.txt` yazar.
+
+## Diller (yerelleştirme)
+
+Arayüz 6 dilde: **Türkçe (kaynak), English, Deutsch, Français, Русский, Polski**.
+
+- **Kaynaklar:** `AirDrop.App/Localization/<Modül>.resx` (nötr = Türkçe, `NeutralLanguage=tr`) ve
+  `<Modül>.<dil>.resx` uydu derlemeleri. Modüller: Common, Main, Settings, Devices, Onboarding, Phone, Setup.
+  Anahtarlar modüller arası tekildir; `Common` birimleri, zamanları, ortak butonları ve çoğulları taşır.
+- **Erişim:** `Localization/Generated/<Modül>Strings.g.cs`, `tools/l10n.py gen` ile üretilir ve depoya girer
+  (WPF'in `wpftmp` işaretleme derlemesi MSBuild'in StronglyTyped çıktısını görmüyor). Düz anahtar → özellik,
+  yer tutuculu → `(object? p0, …)` metodu, `_Plural` → `(long n, …)` metodu.
+- **XAML:** `{l:Loc Anahtar}` (canlı: `LocSource` indeksleyicisi `Item[]` yayar); kalın/mono parçalı metin için
+  `l:Rich.Key` (`**kalın**`, ters tırnaklı mono). View model'ler `Observable : ILanguageAware`: dil değişince boş
+  özellik adı yayınlanır, hesaplanan metinler yeniden okunur (zayıf abonelik, `Loc.Subscribe`).
+- **Çoğullar:** CLDR tamsayı kuralları (`Localization/Plural.cs`): tr 1 biçim, en/de/fr 2 (fr'de 0 ve 1 tekil),
+  ru/pl 3 (one|few|many). `_Plural` anahtarları biçimleri `|` ile ayırır, `{0}` = sayı.
+- **Biçimler:** `Loc.Bytes` (kültüre göre ondalık + çevrilmiş birimler), `Loc.Time`, `Loc.When` (bugün saat,
+  "Dün 09:30", hafta günü, "d MMM", kısa tarih). Biçim kültürü kullanıcının bölgesel varyantını korur (en-GB
+  Windows'ta İngilizce seçilirse en-GB tarihleri).
+- **Varsayılan dil:** Windows arayüz dili destekleniyorsa o, değilse İngilizce. Ayarlar → **DİL** listesinde yerel
+  adlar ve "Windows ile aynı (…)" seçeneği; seçim `AppSettings.Language` (null = Windows) ve hemen uygulanır.
+  Komut satırı: `--lang de`. Dil değişince `HKCU/Software/Nitrobyte/NitroDrop` altına `UiLanguage` yazılır; Gezgin
+  sağ tık eklentisi (`NitroDrop.ShellExt/ShellExt.cpp`, 6 dillik tablo; `Explorer_MenuVerb` ile aynı tutulmalı)
+  ve klasik HKCU fiili bu değeri izler. Yönetici yardımcısı dili `HelperRequest.Language` ile alır.
+- **Çevrilmeyenler:** marka adları (NitroDrop, Nitrobyte, iPhone; Phone Link Windows'taki resmî yerel adıyla),
+  "AirDrop" yalnızca Apple'ın özelliği anlamında, BIOS menü adları (İngilizce), "MADE IN TÜRKİYE". setup.log ve
+  geliştirici istisnaları İngilizce. Nitro.Sync'in sabit Türkçe hata metinleri `Services/SyncErrors.cs`'te değere
+  göre çevrilir (uzun vadede kütüphane kod döndürmeli).
+- **Araç:** `tools/l10n.py import <json>` (tr/en/de/fr/ru/pl + yorum içeren JSON → 6 resx + erişimci),
+  `export`, `remove`, `check` (eksik/boş, yer tutucu, çoğul biçim sayısı, yinelenen), `gen`.
+- **Tarayıcı eklentisi:** `extension/_locales/{tr,en,de,fr,ru,pl}/messages.json`, `manifest.json` `__MSG_…__` +
+  `default_locale: en`; `popup.js` `chrome.i18n`, `Intl.PluralRules`, `Intl.RelativeTimeFormat` kullanır.
+- **MSIX:** `AppxManifest.xml` 6 `Resource Language`; açıklamalar `ms-resource:AppDescription` /
+  `AppTileDescription` (`packaging/Strings/<kültür>/Resources.resw`, makepri `/dq tr-TR_en-US_de-DE_fr-FR_ru-RU_pl-PL`);
+  `build-release.ps1` `SatelliteResourceLanguages=tr;en;de;fr;ru;pl`.
+- **Testler:** `AirDrop.Tests/LocalizationTests.cs`: her anahtar her dilde dolu, yer tutucular eşleşir, çoğul
+  biçim sayıları, modüller arası tekillik, erişimciler resx ile senkron, XAML/kodda kullanılan her anahtar var,
+  ru/pl/tr/en/fr çoğul kuralları, varsayılan dil seçimi, eklenti `_locales` ve MSIX dilleri; ayrıca kaynaklarda
+  (yorumlar hariç) Türkçe harf taraması. İzinli olanlar: demo/snapshot verisi, `SyncErrors.cs`, `l10n-allow`
+  satırları.
 
 ## Paketleme: MSIX + portable (`packaging/`)
 

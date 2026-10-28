@@ -10,7 +10,7 @@ public static class SetupLog
 
     public static string FilePath { get; set; } = SetupPaths.LogFile;
 
-    /// <summary>"[yönetici] " in the elevated helper so both processes can share one file.</summary>
+    /// <summary>"[admin] " in the elevated helper so both processes can share one file.</summary>
     public static string Prefix { get; set; } = "";
 
     /// <summary>Raised for every line (the wizard shows the tail during install).</summary>

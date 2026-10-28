@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Setup;
 
@@ -32,6 +33,8 @@ public sealed class HelperRequest
     public string? CertThumbprint { get; set; }
     public bool DisableTestSigning { get; set; }
     public bool ResumeBitLocker { get; set; }
+    /// <summary>UI language of the wizard, so the helper's messages come back in the same language.</summary>
+    public string? Language { get; set; } = Loc.Language;
 }
 
 public sealed class RecoveryKey
@@ -104,22 +107,22 @@ public sealed class BitLockerInfo
     public string FormatBackup(string computerName, DateTime now)
     {
         var sb = new StringBuilder();
-        sb.AppendLine("BitLocker Kurtarma Anahtarı / BitLocker Recovery Key");
+        const string MsUrl = "https://aka.ms/myrecoverykey";
+        sb.AppendLine(SetupStrings.Setup_Backup_Title);
         sb.AppendLine();
-        sb.AppendLine($"Bilgisayar: {computerName}");
-        sb.AppendLine($"Tarih: {now.ToString("d MMMM yyyy HH:mm", new CultureInfo("tr-TR"))}");
+        sb.AppendLine(SetupStrings.Setup_Backup_Computer(computerName));
+        sb.AppendLine(SetupStrings.Setup_Backup_Date(now.ToString("d MMMM yyyy HH:mm", Loc.Culture)));
         sb.AppendLine();
-        sb.AppendLine("Bilgisayarınız açılışta kurtarma anahtarı isterse, ekrandaki \"Anahtar Kimliği\"nin ilk karakterlerini");
-        sb.AppendLine("aşağıdakiyle karşılaştırın ve aynıysa 48 haneli anahtarı yazın.");
+        sb.AppendLine(SetupStrings.Setup_Backup_Intro);
         sb.AppendLine();
         foreach (var k in Recovery)
         {
-            sb.AppendLine($"Anahtar Kimliği (Key ID): {k.Id.Trim('{', '}')}");
-            sb.AppendLine($"Kurtarma Anahtarı: {k.Password ?? "(okunamadı — https://aka.ms/myrecoverykey adresine bakın)"}");
+            sb.AppendLine(SetupStrings.Setup_Backup_KeyId(k.Id.Trim('{', '}')));
+            sb.AppendLine(SetupStrings.Setup_Backup_Key(k.Password ?? SetupStrings.Setup_Backup_Unreadable(MsUrl)));
             sb.AppendLine();
         }
-        sb.AppendLine("Bu dosyayı bu bilgisayarın dışında saklayın (USB bellek, telefon fotoğrafı, çıktı).");
-        sb.AppendLine("Microsoft hesabınıza yedeklendiyse: https://aka.ms/myrecoverykey");
+        sb.AppendLine(SetupStrings.Setup_Backup_StoreOutside);
+        sb.AppendLine(SetupStrings.Setup_Backup_MsAccount(MsUrl));
         return sb.ToString();
     }
 }

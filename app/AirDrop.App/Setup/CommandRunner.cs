@@ -23,7 +23,7 @@ public sealed class ProcessCommandRunner : ICommandRunner
 
     public CommandResult Run(CommandSpec c, bool logOutput = true)
     {
-        SetupLog.Write($"çalıştırılıyor: {c}  ({c.Purpose})");
+        SetupLog.Write($"running: {c}  ({c.Purpose})");
         Encoding enc;
         try
         {
@@ -49,16 +49,16 @@ public sealed class ProcessCommandRunner : ICommandRunner
             if (!p.WaitForExit(Timeout))
             {
                 try { p.Kill(true); } catch (Exception) { }
-                SetupLog.Write("zaman aşımı");
+                SetupLog.Write("timed out");
                 return new CommandResult(-1, "timeout");
             }
             string output = (stdout.Result + stderr.Result).Trim();
-            SetupLog.Write($"çıkış kodu {p.ExitCode}" + (logOutput && output.Length > 0 ? $": {OneLine(output)}" : ""));
+            SetupLog.Write($"exit code {p.ExitCode}" + (logOutput && output.Length > 0 ? $": {OneLine(output)}" : ""));
             return new CommandResult(p.ExitCode, output);
         }
         catch (Exception ex)
         {
-            SetupLog.Write($"başlatılamadı: {ex.Message}");
+            SetupLog.Write($"couldn't start: {ex.Message}");
             return new CommandResult(-1, ex.Message);
         }
     }
@@ -79,7 +79,7 @@ public sealed class DryRunCommandRunner : ICommandRunner
     public CommandResult Run(CommandSpec c, bool logOutput = true)
     {
         Commands.Add(c);
-        SetupLog.Write($"[dry-run] çalıştırılacaktı: {c}  ({c.Purpose})");
+        SetupLog.Write($"[dry-run] would run: {c}  ({c.Purpose})");
         return new CommandResult(0, "", DryRun: true);
     }
 }

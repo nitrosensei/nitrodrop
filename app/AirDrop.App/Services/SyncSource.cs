@@ -8,6 +8,7 @@ using Nitro.Sync;
 using Nitro.Sync.Model;
 using Nitro.Sync.Security;
 using Nitro.Sync.Windows;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Services;
 
@@ -151,7 +152,7 @@ public sealed class NitroSyncSource : ISyncSource
     public IReadOnlyList<SyncPeerInfo> GetPeers() => _svc?.GetPeers() ?? Array.Empty<SyncPeerInfo>();
 
     public Task<PairResult> PairAsync(string deviceId) =>
-        _svc?.PairAsync(deviceId) ?? Task.FromResult(new PairResult(false, null, "Senkron çalışmıyor"));
+        _svc?.PairAsync(deviceId) ?? Task.FromResult(new PairResult(false, null, DevicesStrings.Pair_ErrNoSync));
 
     public Task UnpairAsync(string deviceId) => _svc?.UnpairAsync(deviceId) ?? Task.CompletedTask;
 
@@ -159,7 +160,7 @@ public sealed class NitroSyncSource : ISyncSource
         _svc?.ContinueOnPcAsync(activity) ?? Task.FromResult(false);
 
     public IosSetup AddIosDevice(string name) =>
-        (_svc ?? throw new InvalidOperationException("Senkron çalışmıyor")).AddIosDevice(name);
+        (_svc ?? throw new InvalidOperationException(DevicesStrings.Pair_ErrNoSync)).AddIosDevice(name);
 
     public bool RemoveIosDevice(string id) => _svc?.RemoveIosDevice(id) ?? false;
 

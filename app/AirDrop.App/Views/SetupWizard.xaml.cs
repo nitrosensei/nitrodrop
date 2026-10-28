@@ -2,11 +2,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using AirDrop.App.Interop;
+using AirDrop.App.Localization;
 using AirDrop.App.Setup;
 
 namespace AirDrop.App.Views;
 
-/// <summary>"Gelişmiş Kurulum" window. All logic is in <see cref="SetupWizardViewModel"/>.</summary>
+/// <summary>"Advanced Setup" window. All logic is in <see cref="SetupWizardViewModel"/>.</summary>
 public partial class SetupWizard : Window
 {
     public SetupWizardViewModel ViewModel { get; }
@@ -41,10 +42,10 @@ public partial class SetupWizard : Window
     {
         var dlg = new Microsoft.Win32.SaveFileDialog
         {
-            Title = "Kurtarma anahtarını kaydet",
+            Title = SetupStrings.Setup_SaveDialogTitle,
             FileName = suggested,
             DefaultExt = ".txt",
-            Filter = "Metin dosyası (*.txt)|*.txt",
+            Filter = SetupStrings.Setup_SaveDialogFilter,
         };
         return dlg.ShowDialog(this) == true ? dlg.FileName : null;
     }
@@ -56,7 +57,7 @@ public partial class SetupWizard : Window
         var text = new TextBlock { Text = body, FontSize = 13, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 8, 0, 20) };
         text.SetResourceReference(TextBlock.ForegroundProperty, "TextSecondary");
 
-        var cancel = new Button { Content = "Vazgeç", IsCancel = true, IsDefault = true };
+        var cancel = new Button { Content = CommonStrings.Common_Cancel, IsCancel = true, IsDefault = true };
         cancel.SetResourceReference(StyleProperty, "PillButton");
         var ok = new Button { Content = okText, Margin = new Thickness(10, 0, 0, 0) };
         ok.SetResourceReference(StyleProperty, "AccentPill");

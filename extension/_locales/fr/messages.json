@@ -1,0 +1,112 @@
+{
+  "extName": {
+    "message": "Onglets NitroDrop"
+  },
+  "extDescription": {
+    "message": "Synchronise vos onglets ouverts avec vos autres PC grâce à NitroDrop et envoie des liens vers votre téléphone ou votre PC."
+  },
+  "sendToLabel": {
+    "message": "Envoyer au téléphone ou au PC"
+  },
+  "otherDevices": {
+    "message": "Autres appareils"
+  },
+  "statusOk": {
+    "message": "Connecté"
+  },
+  "statusConnecting": {
+    "message": "Connexion…"
+  },
+  "statusNotRunning": {
+    "message": "NitroDrop n'est pas lancé"
+  },
+  "statusNotInstalled": {
+    "message": "Liaison avec le navigateur non configurée"
+  },
+  "cannotSend": {
+    "message": "Impossible d'envoyer cette page"
+  },
+  "onlyWebPages": {
+    "message": "Pages http et https uniquement"
+  },
+  "noTargets": {
+    "message": "Aucun appareil à proximité. Réglez AirDrop sur « Tout le monde pendant 10 minutes » sur votre iPhone ou ouvrez NitroDrop sur votre autre PC."
+  },
+  "sending": {
+    "message": "Envoi…"
+  },
+  "sentTo": {
+    "message": "Envoyé à $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "sendFailed": {
+    "message": "Échec de l'envoi"
+  },
+  "sendFailedReason": {
+    "message": "Échec de l'envoi : $REASON$",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "noDevices": {
+    "message": "Aucun autre appareil pour l'instant. Ouvrez NitroDrop sur votre autre PC et associez-le."
+  },
+  "offline": {
+    "message": "hors ligne"
+  },
+  "appOpen": {
+    "message": "$APP$ est ouvert",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "sharedLink": {
+    "message": "Lien partagé"
+  },
+  "continueOnPc": {
+    "message": "Continuer sur le PC"
+  },
+  "noTabs": {
+    "message": "Aucun onglet ouvert"
+  },
+  "moreTabs_one": {
+    "message": "$COUNT$ autre onglet",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_few": {
+    "message": "$COUNT$ autres onglets",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_many": {
+    "message": "$COUNT$ autres onglets",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_other": {
+    "message": "$COUNT$ autres onglets",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  }
+}

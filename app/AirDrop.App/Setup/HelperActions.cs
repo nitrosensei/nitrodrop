@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Setup;
 
@@ -19,7 +20,7 @@ public sealed class HelperActions(ICommandRunner runner)
 
     public HelperResult Execute(HelperRequest r)
     {
-        SetupLog.Write($"eylem: {r.Action}{(Dry ? " (dry-run)" : "")}");
+        SetupLog.Write($"action: {r.Action}{(Dry ? " (dry-run)" : "")}");
         try
         {
             var result = r.Action switch
@@ -29,17 +30,17 @@ public sealed class HelperActions(ICommandRunner runner)
                 HelperAction.TestSigningOn => TestSigningOn(r),
                 HelperAction.InstallDriver => InstallDriver(r),
                 HelperAction.UninstallDriver => UninstallDriver(r),
-                _ => HelperResult.Fail("bilinmeyen eylem"),
+                _ => HelperResult.Fail(SetupStrings.Helper_UnknownAction),
             };
             result.DryRun = Dry;
             if (Dry && !result.Message.StartsWith("[dry-run]", StringComparison.Ordinal))
                 result.Message = "[dry-run] " + result.Message;
-            SetupLog.Write($"eylem sonucu: {r.Action} ok={result.Ok} {result.Message}");
+            SetupLog.Write($"action result: {r.Action} ok={result.Ok} {result.Message}");
             return result;
         }
         catch (Exception ex)
         {
-            SetupLog.Write($"eylem hatası: {r.Action}: {ex}");
+            SetupLog.Write($"action failed: {r.Action}: {ex}");
             return HelperResult.Fail(ex.Message);
         }
     }
@@ -49,12 +50,12 @@ public sealed class HelperActions(ICommandRunner runner)
     private HelperResult BitLockerStatus(HelperRequest r)
     {
         var res = runner.Run(SetupCommands.BitLockerQuery(r.Drive), logOutput: false);   // output holds recovery passwords
-        if (res.DryRun) return new HelperResult { Ok = true, Message = "[dry-run] BitLocker sorgusu çalıştırılmadı." };
-        if (res.ExitCode != 0) return HelperResult.Fail("BitLocker durumu okunamadı.", res.ExitCode);
+        if (res.DryRun) return new HelperResult { Ok = true, Message = SetupStrings.Helper_DryRunBitLocker };
+        if (res.ExitCode != 0) return HelperResult.Fail(SetupStrings.Helper_BitLockerReadFailed, res.ExitCode);
         var json = res.Output.Split('\n').Select(l => l.Trim()).LastOrDefault(l => l.StartsWith('{')) ?? "{}";
         var info = BitLockerInfo.Parse(json);
         SetupLog.Write($"BitLocker: present={info.Present} protection={info.ProtectionStatus} conversion={info.ConversionStatus} " +
-                       $"anahtar kimlikleri={string.Join(",", info.Recovery.Select(k => k.Id))}");
+                       $"key ids={string.Join(",", info.Recovery.Select(k => k.Id))}");
         return new HelperResult { Ok = true, BitLocker = info };
     }
 
@@ -78,8 +79,8 @@ public sealed class HelperActions(ICommandRunner runner)
             ExitCode = res.ExitCode,
             BitLockerSuspended = suspended,
             Message = res.ExitCode == 0
-                ? "Bilgisayar 5 saniye içinde BIOS ayarlarına yeniden başlıyor."
-                : "BIOS'a yeniden başlatılamadı (bu bilgisayar UEFI ile açılmamış olabilir). Elle yeniden başlatıp açılışta BIOS tuşuna basın.",
+                ? SetupStrings.Helper_RebootingToBios
+                : SetupStrings.Helper_RebootToBiosFailed,
         };
     }
 
@@ -106,31 +107,31 @@ public sealed class HelperActions(ICommandRunner runner)
     private HelperResult InstallDriver(HelperRequest r)
     {
         if (string.IsNullOrEmpty(r.PackageDir) || string.IsNullOrEmpty(r.HardwareId))
-            return HelperResult.Fail("paket klasörü ya da donanım kimliği eksik");
+            return HelperResult.Fail(SetupStrings.Helper_PackageArgsMissing);
         if (SupportedDevices.All.All(c => !c.HardwareId.Equals(r.HardwareId, StringComparison.OrdinalIgnoreCase)))
-            return HelperResult.Fail($"desteklenmeyen donanım kimliği: {r.HardwareId}");
+            return HelperResult.Fail(SetupStrings.Helper_UnsupportedHwId(r.HardwareId));
 
         // 1. Copy into an admin-only folder, then check everything there (no swap between check and use).
         string dir = SetupPaths.ProtectedPackageDir;
         var missing = DriverPackage.Missing(r.PackageDir);
-        if (missing.Count > 0) return HelperResult.Fail("Sürücü paketi eksik: " + string.Join(", ", missing));
-        if (Dry) SetupLog.Write($"[dry-run] {r.PackageDir} → {dir} kopyalanacaktı (yalnızca Yöneticiler/SYSTEM yazabilir)");
+        if (missing.Count > 0) return HelperResult.Fail(SetupStrings.Helper_PackageIncomplete(string.Join(", ", missing)));
+        if (Dry) SetupLog.Write($"[dry-run] would copy {r.PackageDir} → {dir} (writable by Administrators/SYSTEM only)");
         else CopyToProtectedDir(r.PackageDir, dir);
         string src = Dry ? r.PackageDir : dir;
 
         if (!FirmwareFetcher.Verify(Path.Combine(src, FirmwareSpec.Firmware.Name), FirmwareSpec.Firmware))
-            return HelperResult.Fail("Firmware dosyası doğrulanamadı (SHA-256).");
+            return HelperResult.Fail(SetupStrings.Helper_FirmwareVerifyFailed);
         var notInCatalog = CodeSigner.VerifyPackageAgainstCatalog(src);
         if (notInCatalog.Count > 0)
-            return HelperResult.Fail("Sürücü kataloğu paketle uyuşmuyor: " + string.Join(", ", notInCatalog));
-        SetupLog.Write("paket kataloğa göre doğrulandı (inf, sys, ucode)");
+            return HelperResult.Fail(SetupStrings.Setup_Error_CatalogMismatch(string.Join(", ", notInCatalog)));
+        SetupLog.Write("package verified against the catalog (inf, sys, ucode)");
 
         // 2. Per-install certificate; private key only in memory, gone after this block.
         string thumb;
         if (Dry)
         {
-            SetupLog.Write("[dry-run] RSA-3072 kod imzalama sertifikası oluşturulacak, .sys ve .cat SignerSignEx ile imzalanacaktı");
-            SetupLog.Write(@"[dry-run] açık sertifika LocalMachine\Root ve LocalMachine\TrustedPublisher'a eklenecekti");
+            SetupLog.Write("[dry-run] would create an RSA-3072 code-signing certificate and sign .sys and .cat with SignerSignEx");
+            SetupLog.Write(@"[dry-run] would add the public certificate to LocalMachine\Root and LocalMachine\TrustedPublisher");
             thumb = "DRYRUN";
         }
         else
@@ -138,21 +139,21 @@ public sealed class HelperActions(ICommandRunner runner)
             using (var cert = CodeSigner.CreatePerInstallCertificate(Environment.MachineName))
             {
                 thumb = cert.Thumbprint;
-                SetupLog.Write($"sertifika oluşturuldu: {cert.Subject} {thumb}");
+                SetupLog.Write($"certificate created: {cert.Subject} {thumb}");
                 foreach (var f in new[] { DriverPackage.SysName, DriverPackage.CatName })
                 {
                     var path = Path.Combine(dir, f);
                     CodeSigner.SignFile(path, cert);
                     var signer = f.EndsWith(".cat", StringComparison.OrdinalIgnoreCase) ? CodeSigner.GetCatalogSigner(path) : CodeSigner.GetPeSigner(path);
                     if (!string.Equals(signer, thumb, StringComparison.OrdinalIgnoreCase))
-                        return HelperResult.Fail($"{f} imzası doğrulanamadı.");
-                    SetupLog.Write($"imzalandı: {f}");
+                        return HelperResult.Fail(SetupStrings.Helper_SignatureVerifyFailed(f));
+                    SetupLog.Write($"signed: {f}");
                 }
                 AddPublicCert(cert);
             }
-            SetupLog.Write("özel anahtar bellekten silindi (hiç diske yazılmadı)");
+            SetupLog.Write("private key discarded from memory (never written to disk)");
             // The catalog was re-signed in place; make sure its hashes still match (they must).
-            if (CodeSigner.VerifyPackageAgainstCatalog(dir).Count > 0) return HelperResult.Fail("İmzadan sonra katalog doğrulanamadı.");
+            if (CodeSigner.VerifyPackageAgainstCatalog(dir).Count > 0) return HelperResult.Fail(SetupStrings.Helper_CatalogAfterSignFailed);
         }
 
         // 3. Stage + install. pnputil installs only where we're the best match, which the WHQL Intel driver
@@ -161,22 +162,22 @@ public sealed class HelperActions(ICommandRunner runner)
         var add = runner.Run(SetupCommands.AddDriver(inf));
         var addOutcome = SetupCommands.ClassifyPnputil(add.ExitCode);
         if (addOutcome == PnpOutcome.Failed)
-            return new HelperResult { Ok = false, ExitCode = add.ExitCode, CertThumbprint = thumb, Message = "Sürücü paketi Windows'a eklenemedi. Ayrıntılar kurulum günlüğünde." };
+            return new HelperResult { Ok = false, ExitCode = add.ExitCode, CertThumbprint = thumb, Message = SetupStrings.Helper_AddDriverFailed };
 
         bool reboot = addOutcome == PnpOutcome.RebootRequired;
         if (Dry)
         {
-            SetupLog.Write($"[dry-run] UpdateDriverForPlugAndPlayDevices(\"{r.HardwareId}\", \"{inf}\", INSTALLFLAG_FORCE) çağrılacaktı");
+            SetupLog.Write($"[dry-run] would call UpdateDriverForPlugAndPlayDevices(\"{r.HardwareId}\", \"{inf}\", INSTALLFLAG_FORCE)");
         }
         else if (!UpdateDriverForPlugAndPlayDevices(IntPtr.Zero, r.HardwareId, inf, INSTALLFLAG_FORCE | INSTALLFLAG_NONINTERACTIVE, out bool rb))
         {
             int err = Marshal.GetLastWin32Error();
-            SetupLog.Write($"UpdateDriverForPlugAndPlayDevices başarısız: {err} (0x{err:X8})");
+            SetupLog.Write($"UpdateDriverForPlugAndPlayDevices failed: {err} (0x{err:X8})");
             return new HelperResult
             {
                 Ok = false, ExitCode = err, CertThumbprint = thumb,
                 PublishedInfs = DriverPackage.FindPublishedInfs(InfDir).ToList(),
-                Message = "Sürücü karta atanamadı. \"Kaldır ve eski haline getir\" ile geri alabilirsiniz.",
+                Message = SetupStrings.Helper_AssignFailed,
             };
         }
         else reboot |= rb;
@@ -186,7 +187,7 @@ public sealed class HelperActions(ICommandRunner runner)
         var dev = SystemProbe.FindDevice();
         bool bound = Dry || (dev?.Service?.Equals(DriverPackage.ServiceName, StringComparison.OrdinalIgnoreCase) ?? false);
         uint? problem = dev is null ? null : SystemProbe.ProblemCode(dev.InstanceId);
-        SetupLog.Write($"doğrulama: servis={dev?.Service} sorun kodu={problem?.ToString() ?? "-"} yayımlanan={string.Join(",", published)}");
+        SetupLog.Write($"verify: service={dev?.Service} problem code={problem?.ToString() ?? "-"} published={string.Join(",", published)}");
         return new HelperResult
         {
             Ok = bound,
@@ -194,10 +195,10 @@ public sealed class HelperActions(ICommandRunner runner)
             RebootRequired = reboot,
             CertThumbprint = thumb,
             PublishedInfs = published,
-            Message = !bound ? "Sürücü kuruldu ama kart hâlâ Intel sürücüsünde görünüyor. Yeniden başlatıp tekrar kontrol edin."
-                : problem is > 0 ? $"Sürücü bağlandı ama aygıt sorun kodu {problem} bildiriyor (donanımda henüz denenmedi)."
-                : reboot ? "Sürücü kuruldu. Etkin olması için yeniden başlatın."
-                : "Sürücü kuruldu ve Wi-Fi kartına bağlandı.",
+            Message = !bound ? SetupStrings.Helper_NotBound
+                : problem is > 0 ? SetupStrings.Helper_ProblemCode(problem)
+                : reboot ? SetupStrings.Helper_InstalledReboot
+                : SetupStrings.Helper_Installed,
         };
     }
 
@@ -215,7 +216,7 @@ public sealed class HelperActions(ICommandRunner runner)
         sec.AddAccessRule(new FileSystemAccessRule(new SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, null), FileSystemRights.ReadAndExecute, inherit, PropagationFlags.None, AccessControlType.Allow));
         di.SetAccessControl(sec);
         foreach (var f in DriverPackage.AllFiles) File.Copy(Path.Combine(from, f), Path.Combine(to, f), overwrite: true);
-        SetupLog.Write($"paket korumalı klasöre kopyalandı: {to}");
+        SetupLog.Write($"package copied to the protected folder: {to}");
     }
 
     private static void AddPublicCert(X509Certificate2 cert)
@@ -226,7 +227,7 @@ public sealed class HelperActions(ICommandRunner runner)
             using var store = new X509Store(name, StoreLocation.LocalMachine);
             store.Open(OpenFlags.ReadWrite);
             store.Add(pub);
-            SetupLog.Write($@"sertifika eklendi: LocalMachine\{name}");
+            SetupLog.Write($@"certificate added: LocalMachine\{name}");
         }
     }
 
@@ -238,23 +239,23 @@ public sealed class HelperActions(ICommandRunner runner)
 
         // 1. Remove our package(s); the device falls back to the Intel inbox driver on rescan.
         var infs = DriverPackage.FindPublishedInfs(InfDir);
-        if (infs.Count == 0) SetupLog.Write("kaldırılacak airdropwifi paketi yok");
+        if (infs.Count == 0) SetupLog.Write("no airdropwifi package to remove");
         foreach (var oem in infs)
         {
             var res = runner.Run(SetupCommands.DeleteDriver(oem));
-            if (SetupCommands.ClassifyPnputil(res.ExitCode) == PnpOutcome.Failed) problems.Add($"{oem} kaldırılamadı");
+            if (SetupCommands.ClassifyPnputil(res.ExitCode) == PnpOutcome.Failed) problems.Add(SetupStrings.Helper_RemoveFailed(oem));
         }
         runner.Run(SetupCommands.ScanDevices());
 
         // 2. Certificates (by thumbprint and by our subject, in case setup.json was lost).
         int removed = RemoveOurCerts(r.CertThumbprint);
-        SetupLog.Write($"kaldırılan sertifika: {removed}");
+        SetupLog.Write($"certificates removed: {removed}");
 
         // 3. Test mode off.
         if (r.DisableTestSigning)
         {
             var bcd = runner.Run(SetupCommands.TestSigning(false));
-            if (bcd.ExitCode != 0) problems.Add("test modu kapatılamadı");
+            if (bcd.ExitCode != 0) problems.Add(SetupStrings.Helper_TestModeOffFailed);
         }
 
         // 4. BitLocker back on.
@@ -262,14 +263,14 @@ public sealed class HelperActions(ICommandRunner runner)
 
         var dev = SystemProbe.FindDevice();
         bool stillOurs = !Dry && (dev?.Service?.Equals(DriverPackage.ServiceName, StringComparison.OrdinalIgnoreCase) ?? false);
-        if (stillOurs) problems.Add("kart hâlâ NitroDrop sürücüsünde (yeniden başlatınca Intel sürücüsü geri gelir)");
+        if (stillOurs) problems.Add(SetupStrings.Helper_StillOurs);
         return new HelperResult
         {
             Ok = problems.Count == 0,
             RebootRequired = r.DisableTestSigning,
             Message = problems.Count == 0
-                ? "NitroDrop sürücüsü kaldırıldı, Intel sürücüsü geri yüklendi, test modu kapatıldı."
-                : "Bazı adımlar tamamlanamadı: " + string.Join("; ", problems),
+                ? SetupStrings.Helper_RolledBack
+                : SetupStrings.Helper_SomeStepsFailed(string.Join("; ", problems)),
         };
     }
 
@@ -285,11 +286,11 @@ public sealed class HelperActions(ICommandRunner runner)
                 bool match = (thumbprint is not null && c.Thumbprint.Equals(thumbprint, StringComparison.OrdinalIgnoreCase))
                              || CodeSigner.IsOurCertificate(c);
                 if (!match) continue;
-                if (Dry) SetupLog.Write($@"[dry-run] sertifika silinecekti: LocalMachine\{name} {c.Thumbprint}");
+                if (Dry) SetupLog.Write($@"[dry-run] would delete certificate: LocalMachine\{name} {c.Thumbprint}");
                 else
                 {
                     store.Remove(c);
-                    SetupLog.Write($@"sertifika silindi: LocalMachine\{name} {c.Thumbprint}");
+                    SetupLog.Write($@"certificate deleted: LocalMachine\{name} {c.Thumbprint}");
                 }
                 n++;
             }

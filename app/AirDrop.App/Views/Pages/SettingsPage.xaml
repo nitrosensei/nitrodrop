@@ -1,0 +1,596 @@
+﻿<UserControl x:Class="AirDrop.App.Views.Pages.SettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:AirDrop.App.Controls"
+             xmlns:l="clr-namespace:AirDrop.App.Localization">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolVis"/>
+
+    </UserControl.Resources>
+    <!-- ============ SETTINGS ============ -->
+    <!-- compact/regular: one scrolling column. Wide (SettingsPage.xaml.cs): a category list built from the section
+         titles on the left; clicking scrolls to the section, scrolling highlights the current one. -->
+    <Grid x:Name="Root">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="CategoryColumn" Width="0"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel x:Name="Header" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="18,10,24,14" MaxWidth="664" HorizontalAlignment="Stretch">
+            <Button x:Name="BackButton" Style="{StaticResource IconButton}" Content="&#xE72B;" ToolTip="{l:Loc Common_Back}" Click="Settings_Back"
+                    Margin="0,0,6,0"/>
+            <TextBlock Text="{l:Loc Common_Settings}" Style="{StaticResource PageTitle}" VerticalAlignment="Center"/>
+        </StackPanel>
+        <ScrollViewer x:Name="CategoryScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto" Visibility="Collapsed"
+                      Padding="14,0,6,24">
+            <StackPanel x:Name="Categories"/>
+        </ScrollViewer>
+        <ScrollViewer x:Name="ContentScroll" Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Auto" Padding="22,0,22,24"
+                      ScrollChanged="ContentScroll_ScrollChanged">
+            <StackPanel x:Name="ContentPanel" MaxWidth="620">
+                <TextBlock Text="{l:Loc Settings_SectionThisPc}" Style="{StaticResource SectionTitle}"/>
+                <Border Style="{StaticResource Section}">
+                    <StackPanel>
+                        <Grid Style="{StaticResource Row}" Margin="16,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{l:Loc Settings_DeviceName}" FontSize="13" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,12,0"/>
+                            <TextBox Grid.Column="1" Style="{StaticResource InputBox}" Width="210"
+                                     Text="{Binding DeviceName, UpdateSourceTrigger=LostFocus}"/>
+                        </Grid>
+                        <Border Style="{StaticResource Divider}"/>
+                        <Grid Style="{StaticResource Row}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="0,0,12,0">
+                                <TextBlock Text="{l:Loc Settings_SaveReceivedTo}" FontSize="13"/>
+                                <TextBlock Text="{Binding ReceiveFolder}" FontSize="11" FontFamily="{StaticResource MonoFont}" Margin="0,3,0,0"
+                                           Foreground="{DynamicResource TextSecondary}" TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+                            <Button Grid.Column="1" Style="{StaticResource SmallPill}" Content="{l:Loc Settings_ChangeFolder}"
+                                    VerticalAlignment="Center" Command="{Binding ChooseFolder}"/>
+                        </Grid>
+                        <Border Style="{StaticResource Divider}"/>
+                        <Grid Style="{StaticResource Row}">
+                            <TextBlock Text="{l:Loc Settings_StartWithWindows}" FontSize="13" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,64,0"/>
+                            <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" IsChecked="{Binding StartWithWindows}"/>
+                        </Grid>
+                        <Border Style="{StaticResource Divider}"/>
+                        <Grid Style="{StaticResource Row}">
+                            <StackPanel Margin="0,0,64,0">
+                                <TextBlock Text="{Binding ExplorerMenuTitle}" FontSize="13"/>
+                                <TextBlock Text="{Binding ExplorerMenuCaption}" Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                      IsChecked="{Binding ExplorerMenuEnabled}" IsEnabled="{Binding ExplorerMenuToggleable}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="{l:Loc Settings_SectionLanguage}" Style="{StaticResource SectionTitle}"/>
+                <Border Style="{StaticResource Section}">
+                    <Grid Style="{StaticResource Row}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Margin="0,0,12,0" VerticalAlignment="Center">
+                            <TextBlock Text="{l:Loc Settings_Language}" FontSize="13" TextWrapping="Wrap"/>
+                            <TextBlock Text="{l:Loc Settings_LanguageCaption}" Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <!-- native language names are never translated; the first entry follows Windows -->
+                        <ComboBox x:Name="LanguageBox" Grid.Column="1" Style="{StaticResource ModeCombo}" VerticalAlignment="Center"
+                                  ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguage}"
+                                  AutomationProperties.Name="{l:Loc Settings_Language}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Label}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </Grid>
+                </Border>
+
+                <TextBlock Text="{l:Loc Settings_SectionReceiving}" Style="{StaticResource SectionTitle}"/>
+                <Border Style="{StaticResource Section}">
+                    <StackPanel>
+                        <Grid Style="{StaticResource Row}">
+                            <StackPanel Margin="0,0,64,0">
+                                <TextBlock Text="{l:Loc Settings_JpgPhotos}" FontSize="13"/>
+                                <TextBlock Text="{l:Loc Settings_JpgPhotosCaption}"
+                                           Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                      IsChecked="{Binding PreferCompatibleFormats}"/>
+                        </Grid>
+                        <Border Style="{StaticResource Divider}"/>
+                        <Grid Style="{StaticResource Row}">
+                            <TextBlock Text="{l:Loc Settings_OpenLinks}" FontSize="13" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,64,0"/>
+                            <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" IsChecked="{Binding OpenLinksAutomatically}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="{l:Loc Settings_SectionClipboard}" Style="{StaticResource SectionTitle}"/>
+                <Border Style="{StaticResource Section}">
+                    <StackPanel>
+                        <Grid Style="{StaticResource Row}">
+                            <StackPanel Margin="0,0,64,0">
+                                <TextBlock Text="{l:Loc Settings_CopyIncoming}" FontSize="13"/>
+                                <TextBlock Text="{l:Loc Settings_CopyIncomingCaption}"
+                                           Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                      IsChecked="{Binding CopyIncomingToClipboard}"/>
+                        </Grid>
+                        <Border Style="{StaticResource Divider}"/>
+                        <Grid Style="{StaticResource Row}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Margin="0,0,12,0">
+                                <TextBlock Text="{l:Loc Settings_SendClipboard}" FontSize="13"/>
+                                <TextBlock Text="{l:Loc Settings_SendClipboardCaption}"
+                                           Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <Border Grid.Column="1" Style="{StaticResource KeyCap}" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding HotkeyStatus}" FontSize="11" FontFamily="{StaticResource MonoFont}" FontWeight="Medium"/>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="{l:Loc Settings_SectionContacts}" Style="{StaticResource SectionTitle}"/>
+                <Border Style="{StaticResource Section}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding ContactStatus}" FontSize="13" TextWrapping="Wrap" Margin="16,14,16,0"/>
+                        <TextBlock Margin="16,4,16,0" Style="{StaticResource Caption}" FontSize="11.5"
+                                   Text="{l:Loc Settings_ContactsPrivacy}"/>
+                        <WrapPanel Margin="16,14,16,12">
+                            <Button Style="{StaticResource SmallAccentPill}" Content="{l:Loc Settings_ImportContacts}" Command="{Binding ImportContacts}" Margin="0,0,6,4"/>
+                            <Button Style="{StaticResource SmallSubtlePill}" Content="{l:Loc Common_Clear}" Margin="0,0,0,4" Command="{Binding ClearContacts}"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="{l:Loc Settings_SectionTrusted}" Style="{StaticResource SectionTitle}"/>
+                <Border Style="{StaticResource Section}">
+                    <StackPanel>
+                        <ItemsControl ItemsSource="{Binding Trusted}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="16,10">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Name}" FontSize="13"/>
+                                            <TextBlock Text="{Binding Detail}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"/>
+                                        </StackPanel>
+                                        <Button Style="{StaticResource QuietLink}" Content="{l:Loc Common_Remove}" HorizontalAlignment="Right"
+                                                VerticalAlignment="Center" Command="{Binding Remove}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock Margin="16,13" Style="{StaticResource Caption}"
+                                   Text="{l:Loc Settings_TrustedHint}">
+                            <TextBlock.Visibility>
+                                <Binding Path="HasTrusted">
+                                    <Binding.Converter>
+                                        <BooleanToVisibilityConverter/>
+                                    </Binding.Converter>
+                                </Binding>
+                            </TextBlock.Visibility>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!-- ===== Senkron (Nitro.Sync) ===== -->
+                <StackPanel x:Name="SyncSettings"
+                            DataContext="{Binding DataContext.Devices, RelativeSource={RelativeSource AncestorType=Window}}">
+                    <TextBlock Text="{l:Loc Settings_SectionSync}" Style="{StaticResource SectionTitle}"/>
+                    <Border Style="{StaticResource Section}">
+                        <StackPanel>
+                            <Grid Style="{StaticResource Row}">
+                                <StackPanel Margin="0,0,64,0">
+                                    <TextBlock Text="{l:Loc Settings_ShareTabs}" FontSize="13"/>
+                                    <TextBlock Text="{l:Loc Settings_ShareTabsCaption}"
+                                               Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                          IsChecked="{Binding ShareTabs}"/>
+                            </Grid>
+                            <Border Style="{StaticResource Divider}"/>
+                            <Grid Style="{StaticResource Row}">
+                                <StackPanel Margin="0,0,64,0">
+                                    <TextBlock Text="{l:Loc Settings_ShareApps}" FontSize="13"/>
+                                    <TextBlock Text="{l:Loc Settings_ShareAppsCaption}"
+                                               Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                          IsChecked="{Binding ShareApps}"/>
+                            </Grid>
+                            <StackPanel Visibility="{Binding ShareApps, Converter={StaticResource BoolVis}}">
+                                <Border Style="{StaticResource Divider}"/>
+                                <StackPanel Margin="16,13,16,14">
+                                    <TextBlock Text="{l:Loc Settings_ExcludedApps}" FontSize="13"/>
+                                    <TextBlock Text="{l:Loc Settings_ExcludedAppsCaption}"
+                                               Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                                    <ItemsControl ItemsSource="{Binding ExcludedApps}" Margin="0,10,0,0"
+                                                  Visibility="{Binding HasExcludedApps, Converter={StaticResource BoolVis}}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border CornerRadius="8" Background="{DynamicResource SurfaceSunken}" BorderBrush="{DynamicResource CardBorder}"
+                                                        BorderThickness="1" Padding="10,3,3,3" Margin="0,0,6,6">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding}" FontSize="11.5" FontFamily="{StaticResource MonoFont}" VerticalAlignment="Center"/>
+                                                        <Button Style="{StaticResource IconButton}" Content="&#xE711;" FontSize="8" Width="22" Height="22"
+                                                                Margin="4,0,0,0" ToolTip="{l:Loc Settings_RemoveFromList}"
+                                                                Command="{Binding DataContext.RemoveExcluded, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                                CommandParameter="{Binding}"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Grid Margin="0,10,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid>
+                                            <TextBox x:Name="ExcludeBox" Style="{StaticResource InputBox}"
+                                                     Text="{Binding NewExcludedApp, UpdateSourceTrigger=PropertyChanged}">
+                                                <TextBox.InputBindings>
+                                                    <KeyBinding Key="Enter" Command="{Binding AddExcluded}"/>
+                                                </TextBox.InputBindings>
+                                            </TextBox>
+                                            <TextBlock Text="{l:Loc Settings_ExcludePlaceholder}" FontSize="13" IsHitTestVisible="False"
+                                                       Foreground="{DynamicResource TextTertiary}" Margin="12,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Text, ElementName=ExcludeBox}" Value="">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Grid>
+                                        <Button Grid.Column="1" Style="{StaticResource SmallPill}" Content="{l:Loc Settings_Add}" Margin="8,0,0,0" MinHeight="34"
+                                                Command="{Binding AddExcluded}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="{l:Loc Settings_SectionExtension}" Style="{StaticResource SectionTitle}"/>
+                    <Border Style="{StaticResource Section}">
+                        <StackPanel>
+                            <Grid Style="{StaticResource Row}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse x:Name="ExtDot" Width="8" Height="8" VerticalAlignment="Top" Margin="0,6,11,0">
+                                    <Ellipse.Style>
+                                        <Style TargetType="Ellipse">
+                                            <Setter Property="Fill" Value="{DynamicResource TextDisabled}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ExtensionConnected}" Value="True">
+                                                    <Setter Property="Fill" Value="{DynamicResource Success}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Ellipse.Style>
+                                </Ellipse>
+                                <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                                    <TextBlock Text="{Binding ExtensionStatus}" FontSize="13"/>
+                                    <TextBlock Text="{Binding ExtensionDetail}" Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                                </StackPanel>
+                                <Button Grid.Column="2" Style="{StaticResource SmallPill}" Content="{l:Loc Settings_InstallExtension}" VerticalAlignment="Center"
+                                        Command="{Binding ToggleExtensionHelp}"/>
+                            </Grid>
+                            <!-- short help: load unpacked + register the native host -->
+                            <StackPanel Visibility="{Binding ShowExtensionHelp, Converter={StaticResource BoolVis}}">
+                                <Border Style="{StaticResource Divider}"/>
+                                <StackPanel Margin="16,14,16,16">
+                                    <Grid Margin="0,0,0,14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="34"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Style="{StaticResource StepDot}">
+                                            <TextBlock Text="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <TextBlock Grid.Column="1" FontSize="12.5" TextWrapping="Wrap" LineHeight="18" Margin="0,2,0,0" l:Rich.Key="Settings_ExtStep1"/>
+                                    </Grid>
+                                    <Grid Margin="0,0,0,14">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="34"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Style="{StaticResource StepDot}">
+                                            <TextBlock Text="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock FontSize="12.5" TextWrapping="Wrap" LineHeight="18" Margin="0,2,0,0" l:Rich.Key="Settings_ExtStep2"/>
+                                            <Border Style="{StaticResource Well}" Margin="0,7,0,0">
+                                                <TextBlock Text="{Binding ExtensionFolder}" FontSize="11" FontFamily="{StaticResource MonoFont}"
+                                                           TextTrimming="CharacterEllipsis" ToolTip="{Binding ExtensionFolder}"/>
+                                            </Border>
+                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                <Button Style="{StaticResource LinkButton}" Content="{l:Loc Common_OpenFolder}" Command="{Binding OpenExtensionFolder}"/>
+                                                <Button Style="{StaticResource LinkButton}" Content="{l:Loc Settings_CopyPath}" Margin="18,0,0,0"
+                                                        Command="{Binding CopyExtensionFolder}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="34"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Border Style="{StaticResource StepDot}">
+                                            <TextBlock Text="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock FontSize="12.5" TextWrapping="Wrap" LineHeight="18" Margin="0,2,0,0"
+                                                       Text="{l:Loc Settings_ExtStep3}"/>
+                                            <Grid Margin="0,9,0,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Button Style="{StaticResource SmallAccentPill}" Content="{l:Loc Settings_ConnectBrowser}" Command="{Binding RegisterExtension}"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding RegisterStatus}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"
+                                                           VerticalAlignment="Center" Margin="10,0,0,0" TextWrapping="Wrap"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="{l:Loc Settings_SectionPairedPcs}" Style="{StaticResource SectionTitle}"/>
+                    <Border Style="{StaticResource Section}">
+                        <StackPanel>
+                            <ItemsControl ItemsSource="{Binding Paired}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="16,10">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Name}" FontSize="13"/>
+                                                <TextBlock Text="{Binding StatusText}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"
+                                                           TextTrimming="CharacterEllipsis" Margin="0,0,60,0"/>
+                                            </StackPanel>
+                                            <Button Style="{StaticResource QuietLink}" Content="{l:Loc Common_Remove}" HorizontalAlignment="Right"
+                                                    VerticalAlignment="Center" Command="{Binding Unpair}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Margin="16,13"
+                                       Text="{l:Loc Settings_NoPairedPcs}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock" BasedOn="{StaticResource Caption}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding HasPaired}" Value="False">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="{l:Loc Settings_SectionIphoneShortcut}" Style="{StaticResource SectionTitle}"/>
+                    <Border Style="{StaticResource Section}">
+                        <StackPanel>
+                            <ItemsControl ItemsSource="{Binding IosDevices}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="16,10">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Name}" FontSize="13"/>
+                                                <TextBlock Text="{Binding Detail}" FontSize="11.5" Foreground="{DynamicResource TextSecondary}"/>
+                                            </StackPanel>
+                                            <Button Style="{StaticResource QuietLink}" Content="{l:Loc Common_Remove}" HorizontalAlignment="Right"
+                                                    VerticalAlignment="Center" Command="{Binding Remove}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Border Style="{StaticResource Divider}"
+                                    Visibility="{Binding HasIosDevices, Converter={StaticResource BoolVis}}"/>
+
+                            <!-- one-time setup QR -->
+                            <StackPanel Visibility="{Binding HasIosSetup, Converter={StaticResource BoolVis}}" Margin="16,16,16,4">
+                                <TextBlock Text="{Binding IosSetupTitle}" FontSize="14" FontWeight="Bold" FontFamily="{StaticResource DisplayFont}"
+                                           HorizontalAlignment="Center"/>
+                                <Border Width="196" Height="196" CornerRadius="14" Background="{DynamicResource QrBackground}" Margin="0,12,0,0" Padding="6"
+                                        BorderBrush="{DynamicResource CardBorder}" BorderThickness="1">
+                                    <Image Source="{Binding IosQr}" RenderOptions.EdgeMode="Aliased" Stretch="Uniform"/>
+                                </Border>
+                                <TextBlock Text="{l:Loc Settings_QrHint}"
+                                           Style="{StaticResource Caption}" FontSize="11.5" TextAlignment="Center" Margin="10,12,10,0"/>
+                                <Border Style="{StaticResource Well}" Margin="0,12,0,0">
+                                    <TextBox Text="{Binding IosUrl, Mode=OneWay}" IsReadOnly="True" FontSize="11" FontFamily="{StaticResource MonoFont}"
+                                             Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextPrimary}"
+                                             SelectionBrush="{DynamicResource Accent}" TextWrapping="Wrap"/>
+                                </Border>
+                                <Grid Margin="0,8,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                    <TextBlock Text="&#xE72E;" FontFamily="{StaticResource IconFont}" FontSize="11" Margin="0,2,7,0"
+                                               Foreground="{DynamicResource WarningText}" VerticalAlignment="Top"/>
+                                <TextBlock Grid.Column="1" Text="{l:Loc Settings_QrWarning}" Style="{StaticResource Caption}" FontSize="11"/>
+                            </Grid>
+                                <WrapPanel HorizontalAlignment="Center" Margin="0,14,0,12">
+                                    <Button Style="{StaticResource SmallSubtlePill}" Content="{l:Loc Settings_CopyAddress}" Command="{Binding CopyIosUrl}" Margin="4,0,0,4"/>
+                                    <Button Style="{StaticResource SmallSubtlePill}" Content="{l:Loc Settings_ShortcutHelp}" Margin="4,0,0,4"
+                                            Command="{Binding OpenShortcutHelp}"/>
+                                    <Button Style="{StaticResource SmallPill}" Content="{l:Loc Common_Done}" Margin="8,0,0,4" MinWidth="72"
+                                            Command="{Binding CloseIosSetup}"/>
+                                </WrapPanel>
+                            </StackPanel>
+
+                            <Grid Style="{StaticResource Row}">
+                                <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Style="{StaticResource Caption}" Margin="0,0,12,0" VerticalAlignment="Center"
+                                           Text="{l:Loc Settings_IphoneShortcutCaption}"/>
+                                <Button Grid.Column="1" Style="{StaticResource SmallPill}" Content="{l:Loc Settings_AddIphone}"
+                                        VerticalAlignment="Center" Command="{Binding AddIphone}"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- ===== Telefon (iPhone continuity) ===== -->
+                <TextBlock Text="{l:Loc Settings_SectionPhone}" Style="{StaticResource SectionTitle}"/>
+                <Border Style="{StaticResource Section}"
+                        DataContext="{Binding DataContext.Phone, RelativeSource={RelativeSource AncestorType=Window}}">
+                    <StackPanel>
+                        <Grid Style="{StaticResource Row}">
+                            <TextBlock Text="{l:Loc Settings_ShowNotifications}" FontSize="13" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,64,0"/>
+                            <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" IsChecked="{Binding NotificationToasts}"/>
+                        </Grid>
+                        <Border Style="{StaticResource Divider}"/>
+                        <Grid Style="{StaticResource Row}">
+                            <TextBlock Text="{l:Loc Settings_ShowCalls}" FontSize="13" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,64,0"/>
+                            <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" IsChecked="{Binding CallToasts}"/>
+                        </Grid>
+                        <Border Style="{StaticResource Divider}"/>
+                        <Grid Style="{StaticResource Row}">
+                            <StackPanel Margin="0,0,64,0">
+                                <TextBlock Text="{l:Loc Settings_MessagePreview}" FontSize="13"/>
+                                <TextBlock Text="{l:Loc Settings_MessagePreviewCaption}" Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding ShowPreviews}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="{l:Loc Settings_SectionDriver}" Style="{StaticResource SectionTitle}"/>
+                <Border Style="{StaticResource Section}"
+                        DataContext="{Binding DataContext.DriverSetup, RelativeSource={RelativeSource AncestorType=Window}}">
+                    <StackPanel>
+                        <StackPanel Margin="16,14,16,0">
+                            <TextBlock Text="{Binding StateText}" FontSize="13"/>
+                            <TextBlock Text="{Binding DetailText}" Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0"/>
+                        </StackPanel>
+                        <!-- iPhone link over the driver (elevated radio host); only once the driver is installed -->
+                        <StackPanel Visibility="{Binding IsInstalled, Converter={StaticResource BoolVis}}" Margin="0,14,0,0">
+                            <Border Style="{StaticResource Divider}"/>
+                            <Grid Style="{StaticResource Row}">
+                                <StackPanel Margin="0,0,64,0">
+                                    <TextBlock Text="{l:Loc Settings_DirectIphone}" FontSize="13"/>
+                                    <TextBlock Text="{Binding DataContext.HardwareStatus, RelativeSource={RelativeSource AncestorType=Window}}"
+                                               Style="{StaticResource Caption}" FontSize="11.5" Margin="0,2,0,0" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <CheckBox Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                          IsChecked="{Binding DataContext.Settings.DirectIphoneConnection, RelativeSource={RelativeSource AncestorType=Window}}"/>
+                            </Grid>
+                        </StackPanel>
+                        <WrapPanel Margin="16,12,16,12">
+                            <Button Style="{StaticResource SmallAccentPill}" Content="{l:Loc Settings_DriverInstall}" Command="{Binding OpenSetup}" MinWidth="72"
+                                    Visibility="{Binding CanInstall, Converter={StaticResource BoolVis}}" Margin="0,0,8,4"/>
+                            <Button Style="{StaticResource SmallPill}" Content="{l:Loc Settings_DriverRollback}" Command="{Binding OpenRollback}"
+                                    Visibility="{Binding CanRollback, Converter={StaticResource BoolVis}}"/>
+                        </WrapPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- ===== Hakkında ===== -->
+                <TextBlock x:Name="AboutSection" Text="{l:Loc About_Section}" Style="{StaticResource SectionTitle}"/>
+                <Border Style="{StaticResource Section}" Margin="0,0,0,8">
+                    <StackPanel>
+                        <Grid Margin="16,18,16,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border Width="56" Height="56" CornerRadius="13" Background="{StaticResource AppTileFill}"
+                                    BorderBrush="{StaticResource AppTileStroke}" BorderThickness="1" VerticalAlignment="Top">
+                                <Image Source="{StaticResource MarkOnTile}" Margin="10,11,10,10"/>
+                            </Border>
+                            <StackPanel Grid.Column="1" Margin="16,2,0,0">
+                                <Path Data="{StaticResource WordmarkGeometry}" Fill="{DynamicResource TextPrimary}" Stretch="Uniform"
+                                      Height="19" HorizontalAlignment="Left"/>
+                                <TextBlock Text="{Binding VersionText}" Style="{StaticResource MonoLabel}" Margin="0,7,0,0"/>
+                                <TextBlock Style="{StaticResource Caption}" Margin="0,8,0,0" FontSize="12.5" LineHeight="18"
+                                           Text="{l:Loc About_Tagline}"/>
+                                <WrapPanel Margin="0,12,0,0">
+                                    <Button Style="{StaticResource LinkButton}" Margin="0,0,20,4" Command="{Binding OpenWebsite}" ToolTip="https://nitrobyte.com.tr">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="nitrobyte.com.tr"/>
+                                            <TextBlock Text="&#xE8A7;" FontFamily="{StaticResource IconFont}" FontSize="10" Margin="5,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Style="{StaticResource LinkButton}" Content="{l:Loc About_ShowTour}" Margin="0,0,20,4"
+                                            Click="ShowOnboarding_Click"/>
+                                    <Button Style="{StaticResource LinkButton}" Command="{Binding OpenRepository}" Margin="0,0,0,4"
+                                            ToolTip="{Binding RepositoryUrl}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{l:Loc About_SourceCode}"/>
+                                            <TextBlock Text="&#xE8A7;" FontFamily="{StaticResource IconFont}" FontSize="10" Margin="5,2,0,0"/>
+                                        </StackPanel>
+                                    </Button>
+                                </WrapPanel>
+                            </StackPanel>
+                        </Grid>
+                        <Border Style="{StaticResource Divider}"/>
+                        <TextBlock Text="{l:Loc About_OpenSource}" Style="{StaticResource SubHeader}" Margin="16,14,16,6"/>
+                        <ItemsControl ItemsSource="{Binding Licenses}" Margin="16,0,16,8">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock FontSize="12.5" TextTrimming="CharacterEllipsis" Margin="0,0,12,0">
+                                            <Run Text="{Binding Name, Mode=OneWay}" FontWeight="Medium"/><Run Text="  "/><Run Text="{Binding Use, Mode=OneWay}" Foreground="{DynamicResource TextSecondary}"/>
+                                        </TextBlock>
+                                        <TextBlock Grid.Column="1" Text="{Binding License}" Style="{StaticResource MonoLabel}" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <Button Style="{StaticResource LinkButton}" Content="{l:Loc About_LicenseTexts}" Command="{Binding OpenLicenses}"
+                                HorizontalAlignment="Left" Margin="16,2,16,16"/>
+                        <Border Style="{StaticResource Divider}"/>
+                        <!-- endorsement (brand guide p.08): BY NITROBYTE | ▍MADE IN TÜRKİYE — red only in the small bar -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,16">
+                            <TextBlock Text="BY NITROBYTE" Style="{StaticResource MonoLabel}" Foreground="{DynamicResource TextSecondary}"/>
+                            <Border Width="1" Height="10" Background="{DynamicResource BorderStrong}" Margin="10,0" VerticalAlignment="Center"/>
+                            <Border Width="2.5" Height="10" Background="{StaticResource EndorsementRed}" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="MADE IN TÜRKİYE" Style="{StaticResource MonoLabel}" Foreground="{DynamicResource TextSecondary}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

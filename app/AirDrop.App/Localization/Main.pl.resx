@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Tab_Nearby" xml:space="preserve">
+    <value>W pobliżu</value>
+  </data>
+  <data name="Tab_Devices" xml:space="preserve">
+    <value>Urządzenia</value>
+  </data>
+  <data name="Tab_Phone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="Tab_History" xml:space="preserve">
+    <value>Historia</value>
+  </data>
+  <data name="Main_HotkeyBusy" xml:space="preserve">
+    <value>Ctrl + Alt + A (używany przez inną aplikację)</value>
+  </data>
+  <data name="Tray_Open" xml:space="preserve">
+    <value>Otwórz NitroDrop</value>
+  </data>
+  <data name="Tray_Quit" xml:space="preserve">
+    <value>Zakończ</value>
+  </data>
+  <data name="Nearby_PeerTip" xml:space="preserve">
+    <value>Kliknij lub upuść tu plik · prawy przycisk: opcje</value>
+  </data>
+  <data name="Nearby_MenuSendFiles" xml:space="preserve">
+    <value>Wyślij pliki…</value>
+  </data>
+  <data name="Nearby_MenuSendClipboard" xml:space="preserve">
+    <value>Wyślij schowek</value>
+  </data>
+  <data name="Nearby_MenuSetPhoto" xml:space="preserve">
+    <value>Ustaw zdjęcie…</value>
+  </data>
+  <data name="Nearby_MenuClearPhoto" xml:space="preserve">
+    <value>Usuń zdjęcie</value>
+  </data>
+  <data name="Nearby_MenuRename" xml:space="preserve">
+    <value>Zmień nazwę…</value>
+  </data>
+  <data name="Nearby_MenuTrusted" xml:space="preserve">
+    <value>Zaufane urządzenie (akceptuj bez pytania)</value>
+  </data>
+  <data name="Nearby_TrustedTip" xml:space="preserve">
+    <value>Zaufane urządzenie: akceptowane bez pytania</value>
+  </data>
+  <data name="Nearby_SetupBanner" xml:space="preserve">
+    <value>Został jeden krok konfiguracji, by łączyć się bezpośrednio z iPhone'ami</value>
+  </data>
+  <data name="Nearby_SetupButton" xml:space="preserve">
+    <value>Skonfiguruj</value>
+  </data>
+  <data name="Nearby_Searching" xml:space="preserve">
+    <value>Szukanie iPhone'ów, iPadów i Maców w pobliżu…</value>
+  </data>
+  <data name="Nearby_SearchingHint" xml:space="preserve">
+    <value>Na iPhonie otwórz Centrum sterowania, stuknij AirDrop i wybierz „Wszyscy przez 10 minut”.</value>
+  </data>
+  <data name="Nearby_ShowFolder" xml:space="preserve">
+    <value>Pokaż folder</value>
+  </data>
+  <data name="Nearby_DropHint" xml:space="preserve">
+    <value>Upuść plik na urządzenie albo kliknij urządzenie, aby wybrać pliki.</value>
+  </data>
+  <data name="Nearby_WhoCanSeeMe" xml:space="preserve">
+    <value>Kto może mnie zobaczyć</value>
+  </data>
+  <data name="Nearby_PendingOne" xml:space="preserve">
+    <value>„{0}” czeka na wysłanie — wybierz urządzenie</value>
+  </data>
+  <data name="Nearby_PendingMany_Plural" xml:space="preserve">
+    <value>{0} element czeka na wysłanie — wybierz urządzenie|{0} elementy czekają na wysłanie — wybierz urządzenie|{0} elementów czeka na wysłanie — wybierz urządzenie</value>
+  </data>
+  <data name="Nearby_PickFilesTitle" xml:space="preserve">
+    <value>Wyślij do: {0}</value>
+  </data>
+  <data name="Nearby_PhotoTitle" xml:space="preserve">
+    <value>Zdjęcie dla: {0}</value>
+  </data>
+  <data name="Nearby_ImageFilter" xml:space="preserve">
+    <value>Obrazy</value>
+  </data>
+  <data name="Nearby_VisibleNobody" xml:space="preserve">
+    <value>Nikt nie może Cię znaleźć</value>
+  </data>
+  <data name="Nearby_VisibleEveryone" xml:space="preserve">
+    <value>Każdy może Cię znaleźć · {0}</value>
+  </data>
+  <data name="Mode_Off" xml:space="preserve">
+    <value>Odbieranie wyłączone</value>
+  </data>
+  <data name="Mode_ContactsOnly" xml:space="preserve">
+    <value>Tylko kontakty</value>
+  </data>
+  <data name="Mode_Everyone" xml:space="preserve">
+    <value>Wszyscy przez 10 minut</value>
+  </data>
+  <data name="Mode_NeedsAppleAccount" xml:space="preserve">
+    <value>Wymaga konta Apple</value>
+  </data>
+  <data name="Main_ClipboardEmpty" xml:space="preserve">
+    <value>Schowek jest pusty — najpierw coś skopiuj.</value>
+  </data>
+  <data name="Main_ClipboardSending" xml:space="preserve">
+    <value>Wysyłanie schowka do: {0}…</value>
+  </data>
+  <data name="Peer_Waiting" xml:space="preserve">
+    <value>Oczekiwanie…</value>
+  </data>
+  <data name="Peer_Sending" xml:space="preserve">
+    <value>Wysyłanie…</value>
+  </data>
+  <data name="Peer_Sent" xml:space="preserve">
+    <value>Wysłano</value>
+  </data>
+  <data name="Peer_Declined" xml:space="preserve">
+    <value>Odrzucono</value>
+  </data>
+  <data name="Peer_Failed" xml:space="preserve">
+    <value>Niepowodzenie</value>
+  </data>
+  <data name="Speed_MBps" xml:space="preserve">
+    <value>{0} MB/s</value>
+  </data>
+  <data name="Speed_SecondsLeft" xml:space="preserve">
+    <value>jeszcze {0} s</value>
+  </data>
+  <data name="Speed_MinutesLeft" xml:space="preserve">
+    <value>jeszcze {0} min</value>
+  </data>
+  <data name="Receive_FromTitle" xml:space="preserve">
+    <value>Odbieranie od: {0}</value>
+  </data>
+  <data name="Receive_FromNotify" xml:space="preserve">
+    <value>Odbieranie od: {0}…</value>
+  </data>
+  <data name="Receive_DetailUnknownTotal" xml:space="preserve">
+    <value>Odebrano {0} · {1}</value>
+  </data>
+  <data name="Receive_LinkShared" xml:space="preserve">
+    <value>{0} udostępnia link</value>
+  </data>
+  <data name="Receive_ItemsReceived_Plural" xml:space="preserve">
+    <value>Odebrano {0} element|Odebrano {0} elementy|Odebrano {0} elementów</value>
+  </data>
+  <data name="Receive_DemoReceived" xml:space="preserve">
+    <value>Odebrano (demo — plik nie został zapisany)</value>
+  </data>
+  <data name="Receive_SavedTo" xml:space="preserve">
+    <value>Zapisano w folderze „{0}”</value>
+  </data>
+  <data name="Receive_SheetLabel" xml:space="preserve">
+    <value>NITRODROP · PRZYCHODZĄCE</value>
+  </data>
+  <data name="Receive_OneLink" xml:space="preserve">
+    <value>chce udostępnić Ci link.</value>
+  </data>
+  <data name="Receive_Links_Plural" xml:space="preserve">
+    <value>chce udostępnić Ci {0} link.|chce udostępnić Ci {0} linki.|chce udostępnić Ci {0} linków.</value>
+  </data>
+  <data name="Receive_OneFile" xml:space="preserve">
+    <value>chce udostępnić Ci „{0}”</value>
+  </data>
+  <data name="Receive_Items_Plural" xml:space="preserve">
+    <value>chce udostępnić Ci {0} element|chce udostępnić Ci {0} elementy|chce udostępnić Ci {0} elementów</value>
+  </data>
+  <data name="Receive_Timeout" xml:space="preserve">
+    <value>Automatyczne odrzucenie za {0} s</value>
+  </data>
+  <data name="History_Title" xml:space="preserve">
+    <value>Ostatnie transfery</value>
+  </data>
+  <data name="History_EmptyTitle" xml:space="preserve">
+    <value>Jeszcze nic nie udostępniono</value>
+  </data>
+  <data name="History_EmptyBody" xml:space="preserve">
+    <value>Tutaj pojawią się wysłane i odebrane pliki oraz linki.</value>
+  </data>
+  <data name="History_TitleMore_Plural" xml:space="preserve">
+    <value>{1} i {0} inny|{1} i {0} inne|{1} i {0} innych</value>
+  </data>
+  <data name="History_Transfer" xml:space="preserve">
+    <value>Transfer</value>
+  </data>
+  <data name="History_FromDevice" xml:space="preserve">
+    <value>Od: {0}</value>
+  </data>
+  <data name="History_ToDevice" xml:space="preserve">
+    <value>Do: {0}</value>
+  </data>
+  <data name="History_NoteDeclined" xml:space="preserve">
+    <value>odrzucono</value>
+  </data>
+  <data name="History_NoteFailed" xml:space="preserve">
+    <value>niepowodzenie</value>
+  </data>
+  <data name="History_NoteDemo" xml:space="preserve">
+    <value>demo — plik nie został zapisany</value>
+  </data>
+  <data name="Prompt_Save" xml:space="preserve">
+    <value>Zapisz</value>
+  </data>
+  <data name="Prompt_RenameTitle" xml:space="preserve">
+    <value>Zmień nazwę</value>
+  </data>
+  <data name="Prompt_RenameLabel" xml:space="preserve">
+    <value>Wyświetlana nazwa dla: {0}</value>
+  </data>
+  <data name="Prompt_AddIphoneTitle" xml:space="preserve">
+    <value>Dodaj iPhone'a</value>
+  </data>
+  <data name="Prompt_AddIphoneLabel" xml:space="preserve">
+    <value>Nadaj nazwę temu iPhone'owi:</value>
+  </data>
+  <data name="Prompt_AddIphoneDefault" xml:space="preserve">
+    <value>Mój iPhone</value>
+  </data>
+  <data name="Status_LanOnly" xml:space="preserve">
+    <value>Sterownik Wi-Fi nie jest zainstalowany · tryb sieci lokalnej: komputery z NitroDrop w tej samej sieci widzą się nawzajem</value>
+  </data>
+  <data name="Status_Disabled" xml:space="preserve">
+    <value>Bezpośrednie połączenie z iPhone'ami wyłączone · tryb sieci lokalnej</value>
+  </data>
+  <data name="Status_Launching" xml:space="preserve">
+    <value>Oczekiwanie na uprawnienia administratora do połączenia z iPhone'em…</value>
+  </data>
+  <data name="Status_Cancelled" xml:space="preserve">
+    <value>Nie przyznano uprawnień administratora · połączenie z iPhone'em wyłączone, tryb sieci lokalnej</value>
+  </data>
+  <data name="Status_LaunchFailed" xml:space="preserve">
+    <value>Nie udało się uruchomić pomocnika Wi-Fi ({0}) · tryb sieci lokalnej</value>
+  </data>
+  <data name="Status_Starting" xml:space="preserve">
+    <value>Uruchamianie połączenia z iPhone'em…</value>
+  </data>
+  <data name="Status_Ready_Plural" xml:space="preserve">
+    <value>Połączenie z iPhone'em gotowe · kanał {1} · {0} urządzenie|Połączenie z iPhone'em gotowe · kanał {1} · {0} urządzenia|Połączenie z iPhone'em gotowe · kanał {1} · {0} urządzeń</value>
+  </data>
+  <data name="Status_Failed" xml:space="preserve">
+    <value>Nie udało się połączyć z iPhone'ami: {0} · tryb sieci lokalnej</value>
+  </data>
+  <data name="Status_BindFailed" xml:space="preserve">
+    <value>Nie udało się połączyć z iPhone'ami: karta sieciowa AWDL jest niedostępna · tryb sieci lokalnej</value>
+  </data>
+  <data name="Status_HostExited" xml:space="preserve">
+    <value>Pomocnik Wi-Fi został zamknięty · tryb sieci lokalnej</value>
+  </data>
+  <data name="Status_Demo" xml:space="preserve">
+    <value>Sterownik Wi-Fi nie jest jeszcze zainstalowany · tryb demo</value>
+  </data>
+  <data name="Failure_DriverMissing" xml:space="preserve">
+    <value>nie znaleziono sterownika Wi-Fi</value>
+  </data>
+  <data name="Failure_AccessDenied" xml:space="preserve">
+    <value>brak dostępu do karty Wi-Fi (może jej używać inna aplikacja)</value>
+  </data>
+  <data name="Failure_WintunMissing" xml:space="preserve">
+    <value>brak pliku wintun.dll</value>
+  </data>
+  <data name="Failure_RfKill" xml:space="preserve">
+    <value>Wi-Fi jest wyłączone (tryb samolotowy lub przełącznik sprzętowy)</value>
+  </data>
+  <data name="Failure_Radio" xml:space="preserve">
+    <value>nie udało się uruchomić karty Wi-Fi</value>
+  </data>
+  <data name="Failure_Network" xml:space="preserve">
+    <value>nie udało się przygotować karty sieciowej AWDL</value>
+  </data>
+  <data name="Failure_Other" xml:space="preserve">
+    <value>nieoczekiwany błąd</value>
+  </data>
+  <data name="Clip_Image" xml:space="preserve">
+    <value>Obraz ze schowka</value>
+  </data>
+  <data name="Clip_LinkCopied" xml:space="preserve">
+    <value>Link skopiowany do schowka</value>
+  </data>
+  <data name="Clip_TextCopied" xml:space="preserve">
+    <value>Tekst skopiowany do schowka</value>
+  </data>
+  <data name="Clip_ImageCopied" xml:space="preserve">
+    <value>Obraz skopiowany do schowka</value>
+  </data>
+  <data name="Device_WindowsPc" xml:space="preserve">
+    <value>Komputer z Windows</value>
+  </data>
+  <data name="Device_WindowsLaptop" xml:space="preserve">
+    <value>Laptop z Windows</value>
+  </data>
+  <data name="Device_WindowsDesktop" xml:space="preserve">
+    <value>Komputer stacjonarny z Windows</value>
+  </data>
+  <data name="Device_WindowsTablet" xml:space="preserve">
+    <value>Tablet z Windows</value>
+  </data>
+  <data name="Device_AndroidPhone" xml:space="preserve">
+    <value>Telefon z Androidem</value>
+  </data>
+  <data name="Device_Generic" xml:space="preserve">
+    <value>Urządzenie</value>
+  </data>
+  <data name="Launcher_NotFound" xml:space="preserve">
+    <value>nie znaleziono {0}</value>
+  </data>
+  <data name="Launcher_NoSid" xml:space="preserve">
+    <value>nie udało się odczytać identyfikatora użytkownika (SID)</value>
+  </data>
+  <data name="Launcher_StartFailed" xml:space="preserve">
+    <value>nie udało się uruchomić {0}</value>
+  </data>
+  <data name="Launcher_Exited" xml:space="preserve">
+    <value>{0} zakończył działanie (kod {1})</value>
+  </data>
+</root>

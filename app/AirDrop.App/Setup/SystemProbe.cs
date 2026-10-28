@@ -49,7 +49,7 @@ public sealed class SystemProbe : ISystemProbe
                 }
             }
         }
-        catch (Exception ex) { SetupLog.Write($"PCI aygıtları okunamadı: {ex.Message}"); }
+        catch (Exception ex) { SetupLog.Write($"couldn't read PCI devices: {ex.Message}"); }
         return null;   // only present hardware counts (Enum also remembers removed cards)
     }
 
@@ -107,7 +107,7 @@ public sealed class SystemProbe : ISystemProbe
                 object? v = folder?.Self.ExtendedProperty("System.Volume.BitLockerProtection");
                 result = SetupFlow.BitLockerFromShell(v);
             }
-            catch (Exception ex) { SetupLog.Write($"BitLocker hızlı durum okunamadı: {ex.Message}"); }
+            catch (Exception ex) { SetupLog.Write($"couldn't read quick BitLocker status: {ex.Message}"); }
         });
         t.SetApartmentState(ApartmentState.STA);
         t.IsBackground = true;

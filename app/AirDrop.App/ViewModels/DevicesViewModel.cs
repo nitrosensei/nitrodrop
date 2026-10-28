@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using AirDrop.App.Localization;
 using AirDrop.App.Services;
 using Nitro.Sync;
 using Nitro.Sync.Model;
@@ -72,6 +73,16 @@ public sealed class DevicesViewModel : Observable
         RefreshExtensionStatus();
     }
 
+    /// <summary>Cached status texts are rebuilt in the new language.</summary>
+    public override void OnLanguageChanged()
+    {
+        RefreshExtensionStatus();
+        RegisterStatus = "";
+        RefreshIos();
+        if (_activity is { } a) IphoneDetail = DescribeIphone(a);
+        base.OnLanguageChanged();
+    }
+
     // ---------------- view hooks ----------------
 
     public Func<PairingPrompt, CancellationToken, Task<bool>>? ShowPairSheet { get; set; }
@@ -87,7 +98,7 @@ public sealed class DevicesViewModel : Observable
     public ObservableCollection<SyncPcViewModel> Discovered { get; } = new();
     public bool HasPaired => Paired.Count > 0;
     public bool HasDiscovered => Discovered.Count > 0;
-    public string? SyncError => _sync.StartError is { } e ? "Senkron başlatılamadı: " + e : null;
+    public string? SyncError => _sync.StartError is { } e ? DevicesStrings.Devices_SyncStartFailed(e) : null;
     public bool HasSyncError => _sync.StartError is not null;
 
     public bool IsAddingPc
@@ -95,7 +106,7 @@ public sealed class DevicesViewModel : Observable
         get => _isAddingPc;
         set { if (Set(ref _isAddingPc, value)) Raise(nameof(AddPcButtonText)); }
     }
-    public string AddPcButtonText => IsAddingPc ? "Bitti" : "Bilgisayar ekle";
+    public string AddPcButtonText => IsAddingPc ? CommonStrings.Common_Done : DevicesStrings.Devices_AddPc;
 
     public RelayCommand ToggleAddPc { get; }
 
@@ -172,9 +183,9 @@ public sealed class DevicesViewModel : Observable
         if (r.Success)
         {
             IsAddingPc = false;
-            Notify?.Invoke("NitroDrop", $"{pc.Name} ile eşleştirildi", null);
+            Notify?.Invoke("NitroDrop", DevicesStrings.Pair_Paired(pc.Name), null);
         }
-        else if (r.Error != "Eşleştirme reddedildi")
+        else if (r.Error != SyncErrors.Declined)
         {
             pc.PairError = r.Error;
         }
@@ -195,9 +206,9 @@ public sealed class DevicesViewModel : Observable
         get
         {
             if (_activity is not { } a) return "";
-            var name = a.Target?.DisplayName ?? a.App ?? "bir uygulama";
-            if (a.Url is not null) return $"{a.DeviceName} bir bağlantı paylaştı";
-            return $"iPhone'da {name} açık";
+            var name = a.Target?.DisplayName ?? a.App ?? DevicesStrings.Devices_IphoneSomeApp;
+            if (a.Url is not null) return DevicesStrings.Devices_IphoneSharedLink(a.DeviceName);
+            return DevicesStrings.Devices_IphoneAppOpen(name);
         }
     }
     public string IphoneDetail { get => _iphoneDetail; private set => Set(ref _iphoneDetail, value); }
@@ -241,7 +252,7 @@ public sealed class DevicesViewModel : Observable
         try { ok = await _sync.ContinueOnPcAsync(a); }
         catch (Exception e) { Debug.WriteLine(e); ok = false; }
         if (ok) HideIphone();
-        else Notify?.Invoke("NitroDrop", "Bu etkinlik PC'de açılamadı.", null);
+        else Notify?.Invoke("NitroDrop", DevicesStrings.Devices_ContinueFailed, null);
     }
 
     private void Tick()
@@ -269,9 +280,9 @@ public sealed class DevicesViewModel : Observable
         });
         string what = l.Title is { Length: > 0 } t ? t : Host(l.Url);
         if (l.Source == LinkSource.Peer)
-            Notify?.Invoke("NitroDrop", $"{l.FromName} bir bağlantı açtı: {what}", null);   // already opened by Nitro.Sync
+            Notify?.Invoke("NitroDrop", DevicesStrings.Devices_LinkOpened(l.FromName, what), null);   // already opened by Nitro.Sync
         else
-            Notify?.Invoke("NitroDrop", $"{l.FromName}: {what} — açmak için tıklayın", () => OpenUrl(l.Url));
+            Notify?.Invoke("NitroDrop", DevicesStrings.Devices_LinkClickToOpen(l.FromName, what), () => OpenUrl(l.Url));
     }
 
     // ---------------- settings: sharing ----------------
@@ -355,32 +366,33 @@ public sealed class DevicesViewModel : Observable
         ExtensionConnected = ShareTabs && tabs > 0;
         if (!ShareTabs)
         {
-            ExtensionStatus = "Sekme paylaşımı kapalı";
-            ExtensionDetail = "Eklenti NitroDrop'a bağlanmaz; diğer bilgisayarlar sekmelerinizi görmez.";
+            ExtensionStatus = DevicesStrings.Sync_ExtTabsOff;
+            ExtensionDetail = DevicesStrings.Sync_ExtTabsOffDetail;
         }
         else if (tabs > 0)
         {
-            var browsers = _sync.LocalState!.Tabs.Select(t => t.Browser == BrowserKind.Edge ? "Edge" : "Chrome").Distinct();
-            ExtensionStatus = "Bağlı";
-            ExtensionDetail = $"{string.Join(" ve ", browsers)} · {tabs} sekme paylaşılıyor";
+            var browsers = _sync.LocalState!.Tabs.Select(t => t.Browser == BrowserKind.Edge ? "Edge" : "Chrome").Distinct().ToList();
+            var names = browsers.Count > 1 ? DevicesStrings.Sync_BrowsersJoin(browsers[0], browsers[1]) : browsers[0];
+            ExtensionStatus = DevicesStrings.Sync_ExtConnected;
+            ExtensionDetail = DevicesStrings.Sync_ExtConnectedDetail_Plural(tabs, names);
         }
         else if (registered)
         {
-            ExtensionStatus = "Tarayıcıya bağlı, sekme gelmedi";
-            ExtensionDetail = "Chrome ya da Edge'de NitroDrop Sekmeler eklentisinin yüklü ve açık olduğundan emin olun.";
+            ExtensionStatus = DevicesStrings.Sync_ExtNoTabs;
+            ExtensionDetail = DevicesStrings.Sync_ExtNoTabsDetail;
         }
         else
         {
-            ExtensionStatus = "Kurulu değil";
-            ExtensionDetail = "Chrome ve Edge sekmelerinizi diğer bilgisayarlarınızda görmek için eklentiyi kurun.";
+            ExtensionStatus = DevicesStrings.Sync_ExtNotInstalled;
+            ExtensionDetail = DevicesStrings.Sync_ExtNotInstalledDetail;
         }
     }
 
     private async Task RegisterExtensionAsync()
     {
-        RegisterStatus = "Bağlanıyor…";
+        RegisterStatus = DevicesStrings.Sync_Registering;
         var (ok, msg) = await ExtensionHost.RegisterAsync();
-        RegisterStatus = ok ? "✓ " + msg + ". Tarayıcıda eklentiyi yeniden yükleyin." : "Bağlanamadı: " + msg;
+        RegisterStatus = ok ? DevicesStrings.Sync_RegisterOk : DevicesStrings.Sync_RegisterFailed(msg);
         RefreshExtensionStatus();
     }
 
@@ -406,7 +418,7 @@ public sealed class DevicesViewModel : Observable
     public bool HasIosSetup => _iosSetup is not null;
     public ImageSource? IosQr => _iosQr;
     public string IosUrl => _iosSetup?.Url ?? "";
-    public string IosSetupTitle => _iosSetup is null ? "" : $"{_iosSetup.Name} için kurulum adresi";
+    public string IosSetupTitle => _iosSetup is null ? "" : DevicesStrings.Sync_IosSetupTitle(_iosSetup.Name);
 
     private void AddIphoneDevice()
     {
@@ -421,7 +433,7 @@ public sealed class DevicesViewModel : Observable
         try { IosSetup = _sync.AddIosDevice(name); }
         catch (Exception e)
         {
-            Notify?.Invoke("NitroDrop", "iPhone eklenemedi: " + e.Message, null);
+            Notify?.Invoke("NitroDrop", DevicesStrings.Sync_IphoneAddFailed(e.Message), null);
             return;
         }
         RefreshIos();
@@ -454,10 +466,10 @@ public sealed class DevicesViewModel : Observable
     internal static string Ago(DateTimeOffset t)
     {
         var d = DateTimeOffset.UtcNow - t;
-        if (d < TimeSpan.FromMinutes(1)) return "az önce";
-        if (d < TimeSpan.FromHours(1)) return $"{(int)d.TotalMinutes} dk önce";
-        if (d < TimeSpan.FromDays(1)) return $"{(int)d.TotalHours} saat önce";
-        return t.ToLocalTime().ToString("d MMM HH:mm", new CultureInfo("tr-TR"));
+        if (d < TimeSpan.FromMinutes(1)) return DevicesStrings.Devices_AgoJustNow;
+        if (d < TimeSpan.FromHours(1)) return CommonStrings.Time_MinutesAgo_Plural((int)d.TotalMinutes);
+        if (d < TimeSpan.FromDays(1)) return DevicesStrings.Devices_AgoHours_Plural((int)d.TotalHours);
+        return Loc.When(t.LocalDateTime);
     }
 
     /// <summary>Opens a URL from the network locally — http/https only.</summary>
@@ -482,7 +494,7 @@ public sealed class DevicesViewModel : Observable
 public sealed class IosDeviceViewModel(string id, string name, DateTimeOffset created, Action<string> remove)
 {
     public string Name => name;
-    public string Detail => "Kestirme · eklendi " + created.ToLocalTime().ToString("d MMM yyyy", new CultureInfo("tr-TR"));
+    public string Detail => DevicesStrings.Sync_IosDeviceDetail(created.ToLocalTime().ToString("d", Loc.Culture));
     public RelayCommand Remove { get; } = new(_ => remove(id));
 }
 
@@ -520,6 +532,10 @@ public sealed class SyncPcViewModel : Observable
     public string? ModelText => Hardware is null ? null : DeviceModels.Describe(DeviceKind.Windows, null, Hardware);
     public string ArtKey => Hardware is null ? DeviceArtKeys.WindowsLaptop : DeviceModels.ArtForHost(Hardware);
 
+    private bool _isSelected;
+    /// <summary>Selected in the wide (two-pane) Devices layout; set by DevicesPage.</summary>
+    public bool IsSelected { get => _isSelected; set => Set(ref _isSelected, value); }
+
     public bool IsExpanded
     {
         get => _isExpanded;
@@ -534,18 +550,23 @@ public sealed class SyncPcViewModel : Observable
         get => _isPairing;
         set { if (Set(ref _isPairing, value)) Raise(nameof(PairButtonText)); }
     }
-    public string PairButtonText => IsPairing ? "Bekleniyor…" : "Eşleştir";
-    public string? PairError { get => _pairError; set { if (Set(ref _pairError, value)) Raise(nameof(HasPairError)); } }
+    public string PairButtonText => IsPairing ? DevicesStrings.Pair_Waiting : DevicesStrings.Pair_Button;
+    /// <summary>Set with the raw error (Nitro.Sync text or exception message); read localized.</summary>
+    public string? PairError
+    {
+        get => _pairError is null ? null : DevicesStrings.Pair_ErrGeneric(SyncErrors.Text(_pairError));
+        set { if (Set(ref _pairError, value)) Raise(nameof(HasPairError)); }
+    }
     public bool HasPairError => PairError is not null;
 
     public ObservableCollection<SyncTabViewModel> Tabs { get; } = new();
     public ObservableCollection<SyncAppViewModel> Apps { get; } = new();
     public bool HasTabs => (_state?.Tabs.Count ?? 0) > 0;
     public bool HasApps => Apps.Count > 0;
-    public string TabsHeader => $"SEKMELER · {_state?.Tabs.Count ?? 0}";
-    public string AppsHeader => $"UYGULAMALAR · {Apps.Count}";
+    public string TabsHeader => DevicesStrings.Devices_TabsHeader(_state?.Tabs.Count ?? 0);
+    public string AppsHeader => DevicesStrings.Devices_AppsHeader(Apps.Count);
     public bool HasMoreTabs => (_state?.Tabs.Count ?? 0) > CollapsedTabs;
-    public string MoreTabsText => _showAllTabs ? "Daha az göster" : $"Tümünü göster ({_state?.Tabs.Count ?? 0})";
+    public string MoreTabsText => _showAllTabs ? DevicesStrings.Devices_ShowLess : DevicesStrings.Devices_ShowAll(_state?.Tabs.Count ?? 0);
 
     public RelayCommand Pair { get; }
     public RelayCommand Unpair { get; }
@@ -583,24 +604,30 @@ public sealed class SyncPcViewModel : Observable
         Raise(nameof(HasMoreTabs)); Raise(nameof(MoreTabsText));
     }
 
+    public override void OnLanguageChanged()
+    {
+        RefreshStatus();
+        base.OnLanguageChanged();
+    }
+
     public void RefreshStatus()
     {
         if (_info is null) return;
-        if (!IsPaired) { StatusText = "NitroDrop · aynı ağda"; return; }
+        if (!IsPaired) { StatusText = DevicesStrings.Devices_SameNetwork; return; }
         if (!IsOnline)
         {
-            StatusText = _info.LastSeen is { } seen ? $"Çevrim dışı · son görülme {DevicesViewModel.Ago(seen)}" : "Çevrim dışı";
+            StatusText = _info.LastSeen is { } seen ? DevicesStrings.Devices_OfflineLastSeen(DevicesViewModel.Ago(seen)) : DevicesStrings.Devices_Offline;
             return;
         }
         if (_state is null)
         {
-            StatusText = _info.LastError is { } err ? $"Bağlanılamıyor · {err}" : "Çevrim içi · bağlanıyor…";
+            StatusText = _info.LastError is { } err ? DevicesStrings.Devices_CantConnect(SyncErrors.Text(err)) : DevicesStrings.Devices_OnlineConnecting;
             return;
         }
-        var parts = new List<string> { "Çevrim içi" };
-        if (_state.Tabs.Count > 0) parts.Add($"{_state.Tabs.Count} sekme");
-        if (_state.Apps.Count > 0) parts.Add($"{_state.Apps.Count} uygulama");
-        if (parts.Count == 1) parts.Add("paylaşılan bir şey yok");
+        var parts = new List<string> { DevicesStrings.Devices_Online };
+        if (_state.Tabs.Count > 0) parts.Add(DevicesStrings.Devices_Tabs_Plural(_state.Tabs.Count));
+        if (_state.Apps.Count > 0) parts.Add(DevicesStrings.Devices_Apps_Plural(_state.Apps.Count));
+        if (parts.Count == 1) parts.Add(DevicesStrings.Devices_NothingShared);
         if (Hardware?.DisplayName is { } model) parts.Insert(1, model);
         StatusText = string.Join(" · ", parts);
     }

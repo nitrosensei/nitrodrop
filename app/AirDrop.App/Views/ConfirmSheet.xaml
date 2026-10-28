@@ -13,7 +13,7 @@
     <StackPanel Margin="28,28,28,24">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,18">
             <Image Source="{DynamicResource BrandMark}" Height="13" VerticalAlignment="Center"/>
-            <TextBlock x:Name="Eyebrow" Text="NITRODROP · ONAY" Style="{StaticResource MonoLabel}" Margin="7,0,0,0" VerticalAlignment="Center"/>
+            <TextBlock x:Name="Eyebrow" Style="{StaticResource MonoLabel}" Margin="7,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
         <Grid Width="80" Height="80" HorizontalAlignment="Center">
             <Border CornerRadius="22" Background="{DynamicResource Avatar}" BorderBrush="{DynamicResource AvatarBorder}" BorderThickness="1"/>
@@ -46,9 +46,9 @@
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button x:Name="CancelButton" Content="İptal" Style="{StaticResource PillButton}" IsCancel="True" Click="Cancel_Click"/>
+            <Button x:Name="CancelButton" Style="{StaticResource PillButton}" IsCancel="True" Click="Cancel_Click"/>
             <!-- Not IsDefault on purpose: confirming must be a deliberate click. -->
-            <Button x:Name="AcceptButton" Grid.Column="2" Content="Onayla" Style="{StaticResource AccentPill}" Click="Accept_Click"/>
+            <Button x:Name="AcceptButton" Grid.Column="2" Style="{StaticResource AccentPill}" Click="Accept_Click"/>
         </Grid>
         <TextBlock x:Name="Footnote" FontSize="11.5" HorizontalAlignment="Center" Margin="0,12,0,0" TextWrapping="Wrap"
                    TextAlignment="Center" Foreground="{DynamicResource TextTertiary}"/>

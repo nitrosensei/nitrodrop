@@ -12,3 +12,7 @@ packaging/out/
 
 # Third-party binaries fetched by tools/fetch-wintun.ps1 (not committed)
 /vendor/
+
+# Side-by-side build outputs (-p:BaseOutputPath=bin-x/ -p:BaseIntermediateOutputPath=obj-x/)
+**/bin-*/
+**/obj-*/

@@ -1,7 +1,8 @@
 <Window x:Class="AirDrop.App.Views.OnboardingWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="NitroDrop · Hoş geldiniz" Width="640" Height="600" ResizeMode="NoResize" ShowInTaskbar="True"
+        xmlns:l="clr-namespace:AirDrop.App.Localization"
+        Title="{l:Loc Onboarding_WindowTitle}" Width="640" Height="640" ResizeMode="NoResize" ShowInTaskbar="True"
         WindowStartupLocation="CenterOwner" FontFamily="{StaticResource UiFont}" Icon="/Assets/NitroDrop.ico"
         Foreground="{DynamicResource TextPrimary}" UseLayoutRounding="True" TextOptions.TextFormattingMode="Ideal">
 
@@ -74,10 +75,10 @@
         <Grid Margin="22,0,18,0">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <Image Source="{DynamicResource BrandMark}" Height="14" VerticalAlignment="Center"/>
-                <TextBlock x:Name="StepLabel" Text="İLK KULLANIM · 1/6" Style="{StaticResource MonoLabel}" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                <TextBlock x:Name="StepLabel" Style="{StaticResource MonoLabel}" Margin="8,0,0,0" VerticalAlignment="Center"/>
             </StackPanel>
-            <Button x:Name="SkipButton" Style="{StaticResource QuietLink}" Content="Atla" HorizontalAlignment="Right" VerticalAlignment="Center"
-                    WindowChrome.IsHitTestVisibleInChrome="True" Click="Skip_Click" ToolTip="Tanıtımı kapat (Esc)"/>
+            <Button x:Name="SkipButton" Style="{StaticResource QuietLink}" Content="{l:Loc Common_Skip}" HorizontalAlignment="Right" VerticalAlignment="Center"
+                    WindowChrome.IsHitTestVisibleInChrome="True" Click="Skip_Click" ToolTip="{l:Loc Onboarding_SkipTip}"/>
         </Grid>
 
         <Grid Grid.Row="1" x:Name="Stage" Margin="40,0,40,0" RenderTransformOrigin="0.5,0.5">
@@ -100,7 +101,7 @@
                 <Path Data="{StaticResource WordmarkGeometry}" Fill="{DynamicResource TextPrimary}" Stretch="Uniform" Height="30"
                       HorizontalAlignment="Center" Margin="0,22,0,0"/>
                 <TextBlock Style="{StaticResource StepBody}" FontSize="14.5" Margin="0,14,0,0"
-                           Text="iPhone, Mac ve PC arasında dosya, pano, bildirim ve sekmeler. Kurulum gerektirmeden, aynı ağda hemen çalışır."/>
+                           Text="{l:Loc Onboarding_Welcome}"/>
             </StackPanel>
 
             <!-- ===== 2 · Dosya gönder ===== -->
@@ -129,16 +130,17 @@
                         <Border.RenderTransform><RotateTransform Angle="-8"/></Border.RenderTransform>
                     </Border>
                 </Canvas>
-                <TextBlock Style="{StaticResource StepTitle}" Text="Sürükleyin, bırakın" Margin="0,22,0,0"/>
+                <TextBlock Style="{StaticResource StepTitle}" Text="{l:Loc Onboarding_SendTitle}" Margin="0,22,0,0"/>
                 <TextBlock Style="{StaticResource StepBody}"
-                           Text="Dosyayı Yakındakiler'deki cihazın üzerine bırakın. Gezgin'de sağ tıklayıp “NitroDrop ile gönder”i de seçebilirsiniz."/>
+                           Text="{l:Loc Onboarding_SendBody}"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,16,0,0">
                     <Border Style="{StaticResource KeyCap}"><TextBlock Text="Ctrl" FontFamily="{StaticResource MonoFont}" FontSize="11.5"/></Border>
                     <TextBlock Text="+" Margin="6,0" VerticalAlignment="Center" Foreground="{DynamicResource TextTertiary}"/>
                     <Border Style="{StaticResource KeyCap}"><TextBlock Text="Alt" FontFamily="{StaticResource MonoFont}" FontSize="11.5"/></Border>
                     <TextBlock Text="+" Margin="6,0" VerticalAlignment="Center" Foreground="{DynamicResource TextTertiary}"/>
                     <Border Style="{StaticResource KeyCap}"><TextBlock Text="A" FontFamily="{StaticResource MonoFont}" FontSize="11.5"/></Border>
-                    <TextBlock Text="kopyaladığınızı son kullandığınız cihaza gönderir" Style="{StaticResource Caption}" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    <TextBlock Text="{l:Loc Onboarding_HotkeyHint}" Style="{StaticResource Caption}" VerticalAlignment="Center" Margin="10,0,0,0"
+                               TextWrapping="Wrap" MaxWidth="330"/>
                 </StackPanel>
             </StackPanel>
 
@@ -164,13 +166,13 @@
                         <Image Source="{DynamicResource BrandMark}" Width="34" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </Grid>
-                <TextBlock Style="{StaticResource StepTitle}" Text="iPhone'dan alın" Margin="0,22,0,0"/>
+                <TextBlock Style="{StaticResource StepTitle}" Text="{l:Loc Onboarding_ReceiveTitle}" Margin="0,22,0,0"/>
                 <TextBlock Style="{StaticResource StepBody}"
-                           Text="iPhone'da Paylaş → AirDrop'a dokunun ve bu bilgisayarı seçin. Şimdilik aynı Wi-Fi ağında çalışır; Gelişmiş Kurulum'dan sonra iPhone doğrudan bağlanır."/>
+                           Text="{l:Loc Onboarding_ReceiveBody}"/>
                 <Border Style="{StaticResource Well}" HorizontalAlignment="Center" Margin="0,16,0,0" Padding="12,7">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#xE946;" FontFamily="{StaticResource IconFont}" FontSize="12" Foreground="{DynamicResource TextSecondary}" VerticalAlignment="Center"/>
-                        <TextBlock Text="Gelişmiş Kurulum'u sonra da yapabilirsiniz: Ayarlar → Wi-Fi Sürücüsü." FontSize="12" Margin="8,0,0,0"
+                        <TextBlock Text="{l:Loc Onboarding_ReceiveLater}" FontSize="12" Margin="8,0,0,0" TextWrapping="Wrap" MaxWidth="440"
                                    Foreground="{DynamicResource TextSecondary}"/>
                     </StackPanel>
                 </Border>
@@ -218,13 +220,13 @@
                         </StackPanel>
                     </Border>
                 </Grid>
-                <TextBlock Style="{StaticResource StepTitle}" Text="Telefonunuz masanızda" Margin="0,22,0,0"/>
+                <TextBlock Style="{StaticResource StepTitle}" Text="{l:Loc Onboarding_PhoneTitle}" Margin="0,22,0,0"/>
                 <TextBlock Style="{StaticResource StepBody}"
-                           Text="Bluetooth ile eşleşen iPhone'un aramaları, mesajları ve bildirimleri bu bilgisayarda görünür; buradan yanıtlarsınız."/>
+                           Text="{l:Loc Onboarding_PhoneBody}"/>
                 <Button Style="{StaticResource PillButton}" HorizontalAlignment="Center" Margin="0,18,0,0" Click="PairPhone_Click">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="&#xE702;" FontFamily="{StaticResource IconFont}" FontSize="13" VerticalAlignment="Center" Margin="0,1,8,0"/>
-                        <TextBlock Text="iPhone'u eşleştir"/>
+                        <TextBlock Text="{l:Loc Onboarding_PairIphone}"/>
                     </StackPanel>
                 </Button>
             </StackPanel>
@@ -256,9 +258,9 @@
                         </StackPanel>
                     </Border>
                 </Grid>
-                <TextBlock Style="{StaticResource StepTitle}" Text="Kaldığınız yerden devam" Margin="0,22,0,0"/>
+                <TextBlock Style="{StaticResource StepTitle}" Text="{l:Loc Onboarding_DevicesTitle}" Margin="0,22,0,0"/>
                 <TextBlock Style="{StaticResource StepBody}"
-                           Text="Eşleşen bilgisayarlar birbirinin açık sekmelerini ve uygulamalarını görür. Tarayıcı eklentisi sekmeleri, iPhone Kestirmesi telefonda açık olanı getirir."/>
+                           Text="{l:Loc Onboarding_DevicesBody}"/>
             </StackPanel>
 
             <!-- ===== 6 · Gizlilik ve hazır ===== -->
@@ -267,29 +269,44 @@
                     <TextBlock Text="&#xE72E;" FontFamily="{StaticResource IconFont}" FontSize="26" Foreground="{DynamicResource OnInverse}"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Border>
-                <TextBlock Style="{StaticResource StepTitle}" Text="Son dokunuşlar" Margin="0,18,0,0"/>
+                <TextBlock Style="{StaticResource StepTitle}" Text="{l:Loc Onboarding_FinalTitle}" Margin="0,18,0,0"/>
                 <TextBlock Style="{StaticResource StepBody}" Margin="0,8,0,0"
-                           Text="Hiçbir şey sizin onayınız olmadan alınmaz; rehberiniz ve dosyalarınız bu bilgisayarda kalır."/>
+                           Text="{l:Loc Onboarding_FinalBody}"/>
                 <Border Style="{StaticResource Section}" Margin="0,20,0,0" MaxWidth="480">
                     <StackPanel>
                         <Grid Style="{StaticResource Row}" Margin="16,10">
-                            <TextBlock Text="Görünen ad" FontSize="13" VerticalAlignment="Center"/>
-                            <TextBox x:Name="NameBox" Style="{StaticResource InputBox}" Width="220" HorizontalAlignment="Right"/>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{l:Loc Onboarding_DeviceName}" FontSize="13" VerticalAlignment="Center" Margin="0,0,12,0"
+                                       TextTrimming="CharacterEllipsis" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                            <TextBox x:Name="NameBox" Grid.Column="1" Style="{StaticResource InputBox}" Width="220" HorizontalAlignment="Right"/>
                         </Grid>
                         <Border Style="{StaticResource Divider}"/>
                         <Grid Style="{StaticResource Row}" Margin="16,10">
-                            <TextBlock Text="Beni görebilecekler" FontSize="13" VerticalAlignment="Center"/>
-                            <Border Style="{StaticResource SegmentBar}" HorizontalAlignment="Right">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{l:Loc Onboarding_WhoCanSee}" FontSize="13" VerticalAlignment="Center" Margin="0,0,12,0"
+                                       TextWrapping="Wrap"/>
+                            <Border Grid.Column="1" Style="{StaticResource SegmentBar}" HorizontalAlignment="Right" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
-                                    <RadioButton x:Name="ModeEveryone" Style="{StaticResource Segment}" Content="Herkes (10 dk)" GroupName="mode" IsChecked="True"/>
-                                    <RadioButton x:Name="ModeOff" Style="{StaticResource Segment}" Content="Kapalı" GroupName="mode"/>
+                                    <RadioButton x:Name="ModeEveryone" Style="{StaticResource Segment}" Content="{l:Loc Onboarding_ModeEveryone}" GroupName="mode" IsChecked="True"/>
+                                    <RadioButton x:Name="ModeOff" Style="{StaticResource Segment}" Content="{l:Loc Onboarding_ModeOff}" GroupName="mode"/>
                                 </StackPanel>
                             </Border>
                         </Grid>
                         <Border Style="{StaticResource Divider}"/>
                         <Grid Style="{StaticResource Row}">
-                            <TextBlock Text="Windows açılınca başlat" FontSize="13" VerticalAlignment="Center"/>
-                            <CheckBox x:Name="StartupSwitch" Style="{StaticResource Switch}" HorizontalAlignment="Right"/>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{l:Loc Onboarding_StartWithWindows}" FontSize="13" VerticalAlignment="Center" Margin="0,0,12,0"
+                                       TextWrapping="Wrap"/>
+                            <CheckBox x:Name="StartupSwitch" Grid.Column="1" Style="{StaticResource Switch}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         </Grid>
                     </StackPanel>
                 </Border>
@@ -298,9 +315,9 @@
 
         <!-- footer -->
         <Grid Grid.Row="2" Margin="32,8,32,26">
-            <Button x:Name="BackButton" Style="{StaticResource SubtlePill}" Content="Geri" HorizontalAlignment="Left" MinWidth="90" Click="Back_Click"/>
+            <Button x:Name="BackButton" Style="{StaticResource SubtlePill}" Content="{l:Loc Common_Back}" HorizontalAlignment="Left" MinWidth="90" Click="Back_Click"/>
             <StackPanel x:Name="Dots" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Button x:Name="NextButton" Style="{StaticResource AccentPill}" Content="İleri" HorizontalAlignment="Right" MinWidth="120" Click="Next_Click"/>
+            <Button x:Name="NextButton" Style="{StaticResource AccentPill}" HorizontalAlignment="Right" MinWidth="120" Click="Next_Click"/>
         </Grid>
     </Grid>
 </Window>

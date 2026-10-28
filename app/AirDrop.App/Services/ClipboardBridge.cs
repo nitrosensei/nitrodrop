@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using AirDrop.App.Localization;
 
 namespace AirDrop.App.Services;
 
@@ -29,7 +30,7 @@ internal static class ClipboardBridge
             {
                 var files = Clipboard.GetFileDropList().Cast<string>().Where(p => File.Exists(p) || Directory.Exists(p)).ToList();
                 if (files.Count > 0)
-                    return new(files, null, files.Count == 1 ? Path.GetFileName(files[0]) : $"{files.Count} dosya");
+                    return new(files, null, files.Count == 1 ? Path.GetFileName(files[0]) : CommonStrings.Files_Plural(files.Count));
             }
             if (Clipboard.ContainsImage() && Clipboard.GetImage() is { } img)
             {
@@ -40,7 +41,7 @@ internal static class ClipboardBridge
                     enc.Frames.Add(BitmapFrame.Create(img));
                     enc.Save(fs);
                 }
-                return new(new[] { path }, null, "Panodaki görsel");
+                return new(new[] { path }, null, MainStrings.Clip_Image);
             }
             if (Clipboard.ContainsText())
             {
@@ -68,7 +69,7 @@ internal static class ClipboardBridge
             if (b.Paths.Count == 0 && b.Links.Count > 0)
             {
                 Clipboard.SetText(string.Join(Environment.NewLine, b.Links));
-                return "Bağlantı panoya kopyalandı";
+                return MainStrings.Clip_LinkCopied;
             }
             if (b.Paths.Count != 1 || !File.Exists(b.Paths[0])) return null;
             var p = b.Paths[0];
@@ -76,7 +77,7 @@ internal static class ClipboardBridge
             if (ext is ".txt" && new FileInfo(p).Length <= MaxTextToClipboard)
             {
                 Clipboard.SetText(File.ReadAllText(p));
-                return "Metin panoya kopyalandı";
+                return MainStrings.Clip_TextCopied;
             }
             if (ext is ".png" or ".jpg" or ".jpeg" or ".bmp" or ".gif")
             {
@@ -87,7 +88,7 @@ internal static class ClipboardBridge
                 bi.EndInit();
                 bi.Freeze();
                 Clipboard.SetImage(bi);
-                return "Görsel panoya kopyalandı";
+                return MainStrings.Clip_ImageCopied;
             }
         }
         catch (Exception) { }

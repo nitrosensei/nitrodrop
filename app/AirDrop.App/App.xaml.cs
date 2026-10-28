@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using Microsoft.Win32;
+using AirDrop.App.Localization;
 using AirDrop.App.Services;
 using AirDrop.App.Setup;
 using AirDrop.App.ViewModels;
@@ -38,6 +39,11 @@ public partial class App : Application
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        var settings = _settings = AppSettings.Load();
+        // UI language first: the elevated helper's messages and every window below read it (Localization/Loc.cs).
+        // --lang <code> (Debug snapshots, testing) overrides the saved choice for this run without saving it.
+        int langArg = Array.IndexOf(e.Args, "--lang");
+        UiLanguage.Initialize(langArg >= 0 && langArg + 1 < e.Args.Length ? e.Args[langArg + 1] : settings.Language);
 
         // Elevated setup helper: one action, then exit (never joins the single-instance group, never shows UI).
         if (HelperProtocol.IsHelperInvocation(e.Args))
@@ -68,7 +74,6 @@ public partial class App : Application
             if (a.Category == UserPreferenceCategory.General) Dispatcher.Invoke(() => { ApplyTheme(); UpdateTrayIcon(); });
         };
 
-        var settings = _settings = AppSettings.Load();
         var history = HistoryStore.Load();
         // Real stack (LAN until the Wi-Fi driver provides AWDL); --demo / --snapshot use fake peers.
         bool demo = e.Args.Contains("--demo") || e.Args.Contains("--snapshot");
@@ -114,7 +119,8 @@ public partial class App : Application
         _vm.Notify = ShowBalloon;
         _vm.Devices.ShowPairSheet = (prompt, ct) => ConfirmSheet.PairAsync(_main, prompt, ct);
         _vm.Devices.ShowLaunchSheet = (req, ct) => ConfirmSheet.LaunchAsync(_main, req, ct);
-        _vm.Devices.AskIphoneName = () => TextPrompt.Show(_main, "iPhone ekle", "Bu iPhone'a bir ad verin:", "iPhone'um");
+        _vm.Devices.AskIphoneName = () => TextPrompt.Show(_main, MainStrings.Prompt_AddIphoneTitle, MainStrings.Prompt_AddIphoneLabel,
+                                                          MainStrings.Prompt_AddIphoneDefault);
         _vm.DriverSetup.OpenWizard = ShowSetupWizard;
 
 #if DEBUG
@@ -233,11 +239,21 @@ public partial class App : Application
     private void CreateTray()
     {
         var menu = new Forms.ContextMenuStrip();
-        menu.Items.Add("NitroDrop'u Aç", null, (_, _) => ShowMain());
-        menu.Items.Add("Cihazlar", null, (_, _) => { ShowMain(); if (_vm is not null) _vm.Tab = MainTab.Devices; });
-        menu.Items.Add("Geçmiş", null, (_, _) => { ShowMain(); if (_vm is not null) _vm.Tab = MainTab.History; });
+        var open = menu.Items.Add("", null, (_, _) => ShowMain());
+        var devices = menu.Items.Add("", null, (_, _) => { ShowMain(); if (_vm is not null) _vm.Tab = MainTab.Devices; });
+        var history = menu.Items.Add("", null, (_, _) => { ShowMain(); if (_vm is not null) _vm.Tab = MainTab.History; });
         menu.Items.Add(new Forms.ToolStripSeparator());
-        menu.Items.Add("Çıkış", null, (_, _) => Quit());
+        var quit = menu.Items.Add("", null, (_, _) => Quit());
+        // WinForms items don't bind: re-read the texts whenever the UI language changes.
+        void Texts()
+        {
+            open.Text = MainStrings.Tray_Open;
+            devices.Text = MainStrings.Tab_Devices;
+            history.Text = MainStrings.Tab_History;
+            quit.Text = MainStrings.Tray_Quit;
+        }
+        Texts();
+        Loc.LanguageChanged += (_, _) => Texts();
         _tray = new Forms.NotifyIcon
         {
             Text = "NitroDrop",

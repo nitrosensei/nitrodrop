@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Onboarding_WindowTitle" xml:space="preserve">
+    <value>NitroDrop · Witamy</value>
+  </data>
+  <data name="Onboarding_StepLabel" xml:space="preserve">
+    <value>PIERWSZE KROKI · {0}/{1}</value>
+  </data>
+  <data name="Onboarding_SkipTip" xml:space="preserve">
+    <value>Zamknij wprowadzenie (Esc)</value>
+  </data>
+  <data name="Onboarding_Welcome" xml:space="preserve">
+    <value>Pliki, schowek, powiadomienia i karty między iPhone'em, Makiem i komputerem. Działa od razu w tej samej sieci — bez żadnej konfiguracji.</value>
+  </data>
+  <data name="Onboarding_SendTitle" xml:space="preserve">
+    <value>Przeciągnij i upuść</value>
+  </data>
+  <data name="Onboarding_SendBody" xml:space="preserve">
+    <value>Upuść plik na urządzenie w sekcji „W pobliżu”. Możesz też kliknąć plik prawym przyciskiem w Eksploratorze plików i wybrać „Wyślij przez NitroDrop”.</value>
+  </data>
+  <data name="Onboarding_HotkeyHint" xml:space="preserve">
+    <value>wysyła skopiowaną zawartość na ostatnio używane urządzenie</value>
+  </data>
+  <data name="Onboarding_ReceiveTitle" xml:space="preserve">
+    <value>Odbieraj z iPhone'a</value>
+  </data>
+  <data name="Onboarding_ReceiveBody" xml:space="preserve">
+    <value>Na iPhonie stuknij Udostępnij → AirDrop i wybierz ten komputer. Na razie działa to w tej samej sieci Wi-Fi; po konfiguracji zaawansowanej iPhone łączy się bezpośrednio.</value>
+  </data>
+  <data name="Onboarding_ReceiveLater" xml:space="preserve">
+    <value>Konfigurację zaawansowaną możesz przeprowadzić później: Ustawienia → Sterownik Wi-Fi.</value>
+  </data>
+  <data name="Onboarding_PhoneTitle" xml:space="preserve">
+    <value>Telefon na Twoim biurku</value>
+  </data>
+  <data name="Onboarding_PhoneBody" xml:space="preserve">
+    <value>Połączenia, wiadomości i powiadomienia z iPhone'a sparowanego przez Bluetooth pojawiają się na tym komputerze — możesz na nie odpowiadać stąd.</value>
+  </data>
+  <data name="Onboarding_PairIphone" xml:space="preserve">
+    <value>Sparuj iPhone'a</value>
+  </data>
+  <data name="Onboarding_DevicesTitle" xml:space="preserve">
+    <value>Kontynuuj od miejsca, w którym przerwano</value>
+  </data>
+  <data name="Onboarding_DevicesBody" xml:space="preserve">
+    <value>Sparowane komputery widzą nawzajem otwarte karty i aplikacje. Rozszerzenie przeglądarki przenosi karty, a skrót na iPhonie — to, co jest otwarte w telefonie.</value>
+  </data>
+  <data name="Onboarding_FinalTitle" xml:space="preserve">
+    <value>Ostatnie szlify</value>
+  </data>
+  <data name="Onboarding_FinalBody" xml:space="preserve">
+    <value>Nic nie jest odbierane bez Twojej zgody, a kontakty i pliki zostają na tym komputerze.</value>
+  </data>
+  <data name="Onboarding_DeviceName" xml:space="preserve">
+    <value>Nazwa wyświetlana</value>
+  </data>
+  <data name="Onboarding_WhoCanSee" xml:space="preserve">
+    <value>Kto może mnie zobaczyć</value>
+  </data>
+  <data name="Onboarding_ModeEveryone" xml:space="preserve">
+    <value>Wszyscy (10 min)</value>
+  </data>
+  <data name="Onboarding_ModeOff" xml:space="preserve">
+    <value>Wyłączone</value>
+  </data>
+  <data name="Onboarding_StartWithWindows" xml:space="preserve">
+    <value>Uruchamiaj razem z systemem Windows</value>
+  </data>
+  <data name="Onboarding_LetsGo" xml:space="preserve">
+    <value>Zaczynamy</value>
+  </data>
+  <data name="Onboarding_Start" xml:space="preserve">
+    <value>Rozpocznij</value>
+  </data>
+</root>

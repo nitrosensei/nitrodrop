@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Setup_WindowTitle" xml:space="preserve">
+    <value>NitroDrop · Erweiterte Einrichtung</value>
+  </data>
+  <data name="Setup_Header" xml:space="preserve">
+    <value>Erweiterte Einrichtung</value>
+  </data>
+  <data name="Setup_DryRunTip" xml:space="preserve">
+    <value>--setup-dry-run: Befehle werden nicht ausgeführt, nur ins Einrichtungsprotokoll geschrieben</value>
+  </data>
+  <data name="Setup_DryRunBadge" xml:space="preserve">
+    <value>PROBELAUF · NICHTS WIRD GEÄNDERT</value>
+  </data>
+  <data name="Setup_Step_Compat" xml:space="preserve">
+    <value>Kompatibilität</value>
+  </data>
+  <data name="Setup_Step_Consent" xml:space="preserve">
+    <value>Zustimmung</value>
+  </data>
+  <data name="Setup_Step_TestMode" xml:space="preserve">
+    <value>Testmodus</value>
+  </data>
+  <data name="Setup_Step_Install" xml:space="preserve">
+    <value>Installation</value>
+  </data>
+  <data name="Setup_Title_Compat" xml:space="preserve">
+    <value>Direkte Verbindung mit iPhones</value>
+  </data>
+  <data name="Setup_Title_Unsupported" xml:space="preserve">
+    <value>Auf diesem PC noch nicht unterstützt</value>
+  </data>
+  <data name="Setup_Title_Consent" xml:space="preserve">
+    <value>Was ändert sich?</value>
+  </data>
+  <data name="Setup_Title_BitLockerBackup" xml:space="preserve">
+    <value>Sichern Sie Ihren Wiederherstellungsschlüssel</value>
+  </data>
+  <data name="Setup_Title_SecureBootOn" xml:space="preserve">
+    <value>Sicheren Start (Secure Boot) ausschalten</value>
+  </data>
+  <data name="Setup_Title_SecureBootOff" xml:space="preserve">
+    <value>Sicherer Start ist aus</value>
+  </data>
+  <data name="Setup_Title_SecureBootNone" xml:space="preserve">
+    <value>Sicherer Start wird nicht verwendet</value>
+  </data>
+  <data name="Setup_Title_TestModeOn" xml:space="preserve">
+    <value>Testmodus ist aktiv</value>
+  </data>
+  <data name="Setup_Title_RebootNeeded" xml:space="preserve">
+    <value>Neustart erforderlich</value>
+  </data>
+  <data name="Setup_Title_TestModeEnable" xml:space="preserve">
+    <value>Windows-Testmodus aktivieren</value>
+  </data>
+  <data name="Setup_Title_Install" xml:space="preserve">
+    <value>Treiber installieren</value>
+  </data>
+  <data name="Setup_Title_Done" xml:space="preserve">
+    <value>Fertig!</value>
+  </data>
+  <data name="Setup_Title_Rollback" xml:space="preserve">
+    <value>Deinstallieren und wiederherstellen</value>
+  </data>
+  <data name="Setup_Title_RollbackFailed" xml:space="preserve">
+    <value>Einige Schritte konnten nicht abgeschlossen werden</value>
+  </data>
+  <data name="Setup_Title_RollbackRestored" xml:space="preserve">
+    <value>Wiederhergestellt</value>
+  </data>
+  <data name="Setup_Title_RollbackAlmost" xml:space="preserve">
+    <value>Fast geschafft</value>
+  </data>
+  <data name="Setup_Sub_Compat" xml:space="preserve">
+    <value>NitroDrop kann Ihre WLAN-Karte für die Direktverbindung vorbereiten, die AirDrop nutzt. Das dauert einige Schritte und zwei Neustarts. Wir erklären jeden Schritt vorher – ohne Ihre Zustimmung wird nichts geändert.</value>
+  </data>
+  <data name="Setup_Sub_Unsupported" xml:space="preserve">
+    <value>Der WLAN-Treiber von NitroDrop funktioniert vorerst nur mit der Karte Intel Wi-Fi 6 AX203, die in diesem PC nicht gefunden wurde. Das Teilen mit Geräten im selben Netzwerk funktioniert weiterhin. Wir arbeiten an der Unterstützung von USB-WLAN-Adaptern, die keine Einrichtung benötigen.</value>
+  </data>
+  <data name="Setup_Sub_Consent" xml:space="preserve">
+    <value>Alles ist vorübergehend: Mit einem Klick unter Einstellungen → WLAN-Treiber → „Deinstallieren“ machen Sie es rückgängig.</value>
+  </data>
+  <data name="Setup_Sub_BitLockerOn" xml:space="preserve">
+    <value>Ihr Laufwerk ist mit BitLocker verschlüsselt. Wenn Sie den sicheren Start ändern, kann beim Hochfahren der 48-stellige Wiederherstellungsschlüssel abgefragt werden. Ohne ihn kommen Sie nicht an Ihre Dateien – sichern Sie ihn, bevor Sie fortfahren.</value>
+  </data>
+  <data name="Setup_Sub_BitLockerUnknown" xml:space="preserve">
+    <value>Der BitLocker-Status konnte nicht gelesen werden. Führen Sie zur Sicherheit eine genaue Prüfung durch (Administratorberechtigung erforderlich).</value>
+  </data>
+  <data name="Setup_Sub_BitLockerNone" xml:space="preserve">
+    <value>Ihr Laufwerk ist nicht mit BitLocker geschützt – in diesem Schritt ist nichts zu tun.</value>
+  </data>
+  <data name="Setup_Sub_SecureBootOn" xml:space="preserve">
+    <value>Unten finden Sie die Schritte für {0}. Wenn Sie auf „In BIOS neu starten“ klicken, öffnet der PC direkt die BIOS-Einstellungen – ein Foto der Schritte mit dem Handy hilft. Nach dem Start von Windows setzt die Einrichtung an derselben Stelle fort.</value>
+  </data>
+  <data name="Setup_Sub_SecureBootOff" xml:space="preserve">
+    <value>Dieser Schritt ist erledigt.</value>
+  </data>
+  <data name="Setup_Sub_SecureBootNone" xml:space="preserve">
+    <value>Ihr PC startet möglicherweise im Legacy-Modus (Legacy/CSM); dann ist der sichere Start bereits deaktiviert.</value>
+  </data>
+  <data name="Setup_Sub_TestModeOn" xml:space="preserve">
+    <value>Windows kann jetzt die von uns selbst signierten Treiber laden.</value>
+  </data>
+  <data name="Setup_Sub_TestModePending" xml:space="preserve">
+    <value>Der Testmodus ist eingeschaltet – starten Sie den PC neu, damit er wirksam wird. Nach dem Start von Windows geht die Einrichtung an derselben Stelle weiter.</value>
+  </data>
+  <data name="Setup_Sub_TestModeEnable" xml:space="preserve">
+    <value>Im Testmodus darf Windows den Treiber laden, den wir auf diesem PC signieren. Einmal wird nach der Administratorberechtigung gefragt, danach startet der PC neu.</value>
+  </data>
+  <data name="Setup_Sub_Install" xml:space="preserve">
+    <value>Die WLAN-Firmware von Intel wird (aus dem linux-firmware-Repository) heruntergeladen und per SHA-256 geprüft; der Treiber wird mit einem nur für diesen PC erstellten Zertifikat signiert und auf der WLAN-Karte installiert.</value>
+  </data>
+  <data name="Setup_Sub_Done" xml:space="preserve">
+    <value>Ihre WLAN-Karte nutzt jetzt den NitroDrop-Treiber. Sobald iPhones, iPads und Macs in der Nähe erscheinen, können Sie direkt mit ihnen teilen. Dieser Treiber ist experimentell; bei Problemen machen Sie alles mit einem Klick rückgängig.</value>
+  </data>
+  <data name="Setup_Sub_Rollback" xml:space="preserve">
+    <value>Entfernt den NitroDrop-Treiber und stellt den Zustand vor der Einrichtung wieder her. Einmal wird nach der Administratorberechtigung gefragt.</value>
+  </data>
+  <data name="Setup_Sub_RollbackFailed" xml:space="preserve">
+    <value>Details stehen im Einrichtungsprotokoll. Sie können es erneut versuchen oder den Intel-Treiber im Geräte-Manager manuell auswählen.</value>
+  </data>
+  <data name="Setup_Sub_RollbackRestored" xml:space="preserve">
+    <value>Der Treiber wurde entfernt und der Testmodus ausgeschaltet. Starten Sie den PC neu, damit das Wasserzeichen verschwindet.</value>
+  </data>
+  <data name="Setup_Sub_RollbackAlmost" xml:space="preserve">
+    <value>Letzter Schritt: Schalten Sie den sicheren Start wieder ein. Klicken Sie auf „In BIOS neu starten“ und folgen Sie den Schritten unten.</value>
+  </data>
+  <data name="Setup_CardFound" xml:space="preserve">
+    <value>{0} gefunden</value>
+  </data>
+  <data name="Setup_NoCard" xml:space="preserve">
+    <value>Keine unterstützte WLAN-Karte</value>
+  </data>
+  <data name="Setup_ThisPc" xml:space="preserve">
+    <value>Dieser PC</value>
+  </data>
+  <data name="Setup_Consent1_Title" xml:space="preserve">
+    <value>Der sichere Start wird ausgeschaltet</value>
+  </data>
+  <data name="Setup_Consent1_Body" xml:space="preserve">
+    <value>Unser Treiber ist noch nicht von Microsoft signiert, daher müssen Sie ihn im BIOS ausschalten. Wir zeigen Ihnen jeden Schritt.</value>
+  </data>
+  <data name="Setup_Consent2_Title" xml:space="preserve">
+    <value>„Testmodus“ auf dem Bildschirm</value>
+  </data>
+  <data name="Setup_Consent2_Body" xml:space="preserve">
+    <value>Windows zeigt unten rechts ein Wasserzeichen an. Es ist harmlos und verschwindet, wenn Sie die Einrichtung rückgängig machen.</value>
+  </data>
+  <data name="Setup_Consent3_Title" xml:space="preserve">
+    <value>Manche Spiele starten nicht</value>
+  </data>
+  <data name="Setup_Consent3_Body" xml:space="preserve">
+    <value>Spiele mit Anti-Cheat wie Valorant (Vanguard) oder FACEIT laufen nicht. Um sie zu spielen, machen Sie die Einrichtung rückgängig und schalten den sicheren Start wieder ein.</value>
+  </data>
+  <data name="Setup_Consent4_Title" xml:space="preserve">
+    <value>Der Schutz wird etwas schwächer</value>
+  </data>
+  <data name="Setup_Consent4_Body" xml:space="preserve">
+    <value>Der Schutz des sicheren Starts vor Schadsoftware beim Hochfahren entfällt. Windows-Sicherheit arbeitet weiter.</value>
+  </data>
+  <data name="Setup_Consent5_Title" xml:space="preserve">
+    <value>Die Intel-WLAN-Karte wechselt zu NitroDrop</value>
+  </data>
+  <data name="Setup_Consent5_Body" xml:space="preserve">
+    <value>Solange der Treiber aktiv ist, ist die Karte für die iPhone-Verbindung reserviert; ins Internet gehen Sie per Ethernet, Handy-Hotspot oder einen zweiten WLAN-Adapter.</value>
+  </data>
+  <data name="Setup_ConsentAgree" xml:space="preserve">
+    <value>Ich habe das gelesen, verstanden und bin einverstanden.</value>
+  </data>
+  <data name="Setup_BitLocker_On" xml:space="preserve">
+    <value>BitLocker: aktiviert</value>
+  </data>
+  <data name="Setup_BitLocker_Suspended" xml:space="preserve">
+    <value>BitLocker: angehalten (Laufwerk verschlüsselt)</value>
+  </data>
+  <data name="Setup_BitLocker_InProgress" xml:space="preserve">
+    <value>BitLocker: Verschlüsselung läuft</value>
+  </data>
+  <data name="Setup_BitLocker_Off" xml:space="preserve">
+    <value>BitLocker: deaktiviert</value>
+  </data>
+  <data name="Setup_BitLocker_NotUsed" xml:space="preserve">
+    <value>BitLocker: nicht verwendet</value>
+  </data>
+  <data name="Setup_BitLocker_Unknown" xml:space="preserve">
+    <value>BitLocker: unbekannt</value>
+  </data>
+  <data name="Setup_NoRecoveryProtector" xml:space="preserve">
+    <value>Auf diesem Laufwerk wurde keine Schutzvorrichtung mit Wiederherstellungskennwort gefunden. Prüfen Sie Ihr Microsoft-Konto.</value>
+  </data>
+  <data name="Setup_KeyId" xml:space="preserve">
+    <value>Schlüssel-ID: {0}</value>
+  </data>
+  <data name="Setup_ShowKey" xml:space="preserve">
+    <value>Schlüssel anzeigen…</value>
+  </data>
+  <data name="Setup_ShowKeyTip" xml:space="preserve">
+    <value>Erfordert Administratorberechtigung; der Schlüssel wird nur in diesem Fenster verwendet</value>
+  </data>
+  <data name="Setup_SaveToFile" xml:space="preserve">
+    <value>In Datei speichern…</value>
+  </data>
+  <data name="Setup_SaveAndPrint" xml:space="preserve">
+    <value>Speichern und drucken…</value>
+  </data>
+  <data name="Setup_OpenMsKey" xml:space="preserve">
+    <value>Schlüssel in meinem Microsoft-Konto öffnen (aka.ms/myrecoverykey)</value>
+  </data>
+  <data name="Setup_SuspendTitle" xml:space="preserve">
+    <value>BitLocker beim Neustart einmal anhalten</value>
+  </data>
+  <data name="Setup_SuspendBody" xml:space="preserve">
+    <value>Empfohlen. Verhindert die Schlüsselabfrage beim Start; das Laufwerk bleibt verschlüsselt und der Schutz wird nach einem Neustart automatisch fortgesetzt.</value>
+  </data>
+  <data name="Setup_BackupConfirm" xml:space="preserve">
+    <value>Ich habe meinen Wiederherstellungsschlüssel an einem sicheren Ort außerhalb dieses PCs gespeichert.</value>
+  </data>
+  <data name="Setup_GuideKeys" xml:space="preserve">
+    <value>Falls sich das BIOS nicht von selbst öffnet: {0}.</value>
+  </data>
+  <data name="Setup_GuideBitLockerHint" xml:space="preserve">
+    <value>Wenn beim Start nach dem BitLocker-Wiederherstellungsschlüssel gefragt wird, geben Sie den gespeicherten 48-stelligen Schlüssel ein.</value>
+  </data>
+  <data name="Setup_Recheck" xml:space="preserve">
+    <value>Erneut prüfen</value>
+  </data>
+  <data name="Setup_SecureBootStillOnTitle" xml:space="preserve">
+    <value>Der sichere Start scheint noch aktiv zu sein</value>
+  </data>
+  <data name="Setup_SecureBootStillOnBody" xml:space="preserve">
+    <value>In diesem Zustand verweigert Windows den Testmodus. Schließen Sie zuerst den Schritt „Sicherer Start“ ab.</value>
+  </data>
+  <data name="Setup_LicenseTitle" xml:space="preserve">
+    <value>Intel-Firmwarelizenz</value>
+  </data>
+  <data name="Setup_LicenseAccept" xml:space="preserve">
+    <value>Ich habe die Intel-Firmwarelizenz gelesen und akzeptiere sie.</value>
+  </data>
+  <data name="Setup_LogButton" xml:space="preserve">
+    <value>Einrichtungsprotokoll</value>
+  </data>
+  <data name="Setup_RollbackItem1" xml:space="preserve">
+    <value>Der NitroDrop-WLAN-Treiber wird entfernt, der Intel-Treiber kehrt zurück</value>
+  </data>
+  <data name="Setup_RollbackItem2" xml:space="preserve">
+    <value>Das für diesen PC erstellte Signaturzertifikat wird gelöscht</value>
+  </data>
+  <data name="Setup_RollbackItem3" xml:space="preserve">
+    <value>Der Windows-Testmodus wird ausgeschaltet (das Wasserzeichen verschwindet nach einem Neustart)</value>
+  </data>
+  <data name="Setup_RollbackItem4" xml:space="preserve">
+    <value>Ein angehaltener BitLocker-Schutz wird fortgesetzt</value>
+  </data>
+  <data name="Setup_RollbackItem5" xml:space="preserve">
+    <value>Wir zeigen Ihnen, wie Sie den sicheren Start wieder einschalten</value>
+  </data>
+  <data name="Setup_Btn_Start" xml:space="preserve">
+    <value>Los geht's</value>
+  </data>
+  <data name="Setup_Btn_Continue" xml:space="preserve">
+    <value>Weiter</value>
+  </data>
+  <data name="Setup_Btn_RebootToBios" xml:space="preserve">
+    <value>In BIOS neu starten</value>
+  </data>
+  <data name="Setup_Btn_Restart" xml:space="preserve">
+    <value>Neu starten</value>
+  </data>
+  <data name="Setup_Btn_EnableTestMode" xml:space="preserve">
+    <value>Testmodus aktivieren</value>
+  </data>
+  <data name="Setup_Btn_InstallDriver" xml:space="preserve">
+    <value>Treiber installieren</value>
+  </data>
+  <data name="Setup_Btn_DownloadFirmware" xml:space="preserve">
+    <value>Firmware herunterladen</value>
+  </data>
+  <data name="Setup_Btn_Retry" xml:space="preserve">
+    <value>Erneut versuchen</value>
+  </data>
+  <data name="Setup_Btn_Later" xml:space="preserve">
+    <value>Später</value>
+  </data>
+  <data name="Setup_Btn_Uninstall" xml:space="preserve">
+    <value>Deinstallieren</value>
+  </data>
+  <data name="Setup_Status_Checking" xml:space="preserve">
+    <value>Ihr PC wird überprüft…</value>
+  </data>
+  <data name="Setup_Status_ReadingBitLocker" xml:space="preserve">
+    <value>BitLocker-Details werden gelesen (Administratorberechtigung)…</value>
+  </data>
+  <data name="Setup_Status_Saved" xml:space="preserve">
+    <value>Gespeichert: {0}. Bewahren Sie diese Datei außerhalb des PCs auf (USB-Stick, Handy).</value>
+  </data>
+  <data name="Setup_Error_SaveFailed" xml:space="preserve">
+    <value>Speichern fehlgeschlagen: {0}</value>
+  </data>
+  <data name="Setup_RecoveryFileName" xml:space="preserve">
+    <value>BitLocker-Wiederherstellungsschlüssel {0}.txt</value>
+  </data>
+  <data name="Setup_SaveDialogTitle" xml:space="preserve">
+    <value>Wiederherstellungsschlüssel speichern</value>
+  </data>
+  <data name="Setup_SaveDialogFilter" xml:space="preserve">
+    <value>Textdatei (*.txt)|*.txt</value>
+  </data>
+  <data name="Setup_ConfirmBiosTitle" xml:space="preserve">
+    <value>In BIOS neu starten?</value>
+  </data>
+  <data name="Setup_ConfirmBiosBody" xml:space="preserve">
+    <value>Der PC startet in 5 Sekunden neu und öffnet die BIOS-Einstellungen. Speichern Sie geöffnete Dateien. Wenn Sie im BIOS fertig sind, speichern und beenden Sie es; nach dem Start von Windows setzt NitroDrop die Einrichtung fort.</value>
+  </data>
+  <data name="Setup_Status_Restarting" xml:space="preserve">
+    <value>Neustart…</value>
+  </data>
+  <data name="Setup_DryRun_Bios" xml:space="preserve">
+    <value>[dry-run] Im Ernstfall würde der PC jetzt ins BIOS neu starten.</value>
+  </data>
+  <data name="Setup_Status_EnablingTestMode" xml:space="preserve">
+    <value>Testmodus wird aktiviert (Administratorberechtigung)…</value>
+  </data>
+  <data name="Setup_DryRun_Bcdedit" xml:space="preserve">
+    <value>[dry-run] bcdedit wurde nicht ausgeführt. Im Ernstfall würden Sie jetzt zum Neustart aufgefordert.</value>
+  </data>
+  <data name="Setup_ConfirmRestartTitle" xml:space="preserve">
+    <value>Jetzt neu starten?</value>
+  </data>
+  <data name="Setup_ConfirmRestartBody" xml:space="preserve">
+    <value>Der PC startet in 5 Sekunden neu. Speichern Sie geöffnete Dateien.</value>
+  </data>
+  <data name="Setup_Error_RestartFailed" xml:space="preserve">
+    <value>Neustart fehlgeschlagen. Starten Sie über das Startmenü neu.</value>
+  </data>
+  <data name="Setup_DryRun_Restart" xml:space="preserve">
+    <value>[dry-run] Im Ernstfall würde der PC jetzt neu starten.</value>
+  </data>
+  <data name="Setup_Error_DriverFileMissing" xml:space="preserve">
+    <value>In dieser NitroDrop-Version fehlt eine Treiberdatei: {0}. (Entwicklerbuild: driver\build.ps1 und driver\package.ps1 ausführen.)</value>
+  </data>
+  <data name="Setup_Status_FirmwareReady" xml:space="preserve">
+    <value>Firmware heruntergeladen und geprüft. Lesen und akzeptieren Sie die Lizenz.</value>
+  </data>
+  <data name="Setup_Status_Downloading" xml:space="preserve">
+    <value>{0} wird heruntergeladen…</value>
+  </data>
+  <data name="Setup_Error_DownloadFailed" xml:space="preserve">
+    <value>{0} konnte nicht in geprüfter Form heruntergeladen werden. Prüfen Sie die Internetverbindung und versuchen Sie es erneut.</value>
+  </data>
+  <data name="Setup_Error_NoCard" xml:space="preserve">
+    <value>WLAN-Karte nicht gefunden.</value>
+  </data>
+  <data name="Setup_Status_Verifying" xml:space="preserve">
+    <value>Paket wird geprüft…</value>
+  </data>
+  <data name="Setup_Error_CatalogMismatch" xml:space="preserve">
+    <value>Das Treiberpaket stimmt nicht mit seinem Katalog überein: {0}</value>
+  </data>
+  <data name="Setup_Status_Installing" xml:space="preserve">
+    <value>Treiber wird signiert und installiert (Administratorberechtigung)…</value>
+  </data>
+  <data name="Setup_DryRun_Install" xml:space="preserve">
+    <value>[dry-run] Nichts wurde installiert; die Befehle stehen im Protokoll.</value>
+  </data>
+  <data name="Setup_ConfirmRollbackTitle" xml:space="preserve">
+    <value>Alles wiederherstellen?</value>
+  </data>
+  <data name="Setup_ConfirmRollbackBody" xml:space="preserve">
+    <value>Der NitroDrop-Treiber wird entfernt, der Intel-Treiber wiederhergestellt, das Signaturzertifikat gelöscht und der Testmodus ausgeschaltet.</value>
+  </data>
+  <data name="Setup_Status_Removing" xml:space="preserve">
+    <value>Wird deinstalliert (Administratorberechtigung)…</value>
+  </data>
+  <data name="Setup_DryRun_Rollback" xml:space="preserve">
+    <value>[dry-run] Nichts wurde entfernt; die Befehle stehen im Protokoll.</value>
+  </data>
+  <data name="Helper_DryRunBitLocker" xml:space="preserve">
+    <value>[dry-run] Die BitLocker-Abfrage wurde nicht ausgeführt.</value>
+  </data>
+  <data name="Helper_BitLockerReadFailed" xml:space="preserve">
+    <value>Der BitLocker-Status konnte nicht gelesen werden.</value>
+  </data>
+  <data name="Helper_RebootingToBios" xml:space="preserve">
+    <value>Der PC startet in 5 Sekunden in die BIOS-Einstellungen neu.</value>
+  </data>
+  <data name="Helper_RebootToBiosFailed" xml:space="preserve">
+    <value>Neustart ins BIOS nicht möglich (der PC wurde möglicherweise nicht im UEFI-Modus gestartet). Starten Sie manuell neu und drücken Sie beim Start die BIOS-Taste.</value>
+  </data>
+  <data name="Helper_PackageArgsMissing" xml:space="preserve">
+    <value>Paketordner oder Hardware-ID fehlt.</value>
+  </data>
+  <data name="Helper_UnsupportedHwId" xml:space="preserve">
+    <value>Nicht unterstützte Hardware-ID: {0}</value>
+  </data>
+  <data name="Helper_PackageIncomplete" xml:space="preserve">
+    <value>Das Treiberpaket ist unvollständig: {0}</value>
+  </data>
+  <data name="Helper_FirmwareVerifyFailed" xml:space="preserve">
+    <value>Die Firmwaredatei konnte nicht geprüft werden (SHA-256).</value>
+  </data>
+  <data name="Helper_SignatureVerifyFailed" xml:space="preserve">
+    <value>Die Signatur von {0} konnte nicht geprüft werden.</value>
+  </data>
+  <data name="Helper_CatalogAfterSignFailed" xml:space="preserve">
+    <value>Der Katalog konnte nach dem Signieren nicht geprüft werden.</value>
+  </data>
+  <data name="Helper_AddDriverFailed" xml:space="preserve">
+    <value>Das Treiberpaket konnte Windows nicht hinzugefügt werden. Details stehen im Einrichtungsprotokoll.</value>
+  </data>
+  <data name="Helper_AssignFailed" xml:space="preserve">
+    <value>Der Treiber konnte der Karte nicht zugewiesen werden. Mit „Deinstallieren und wiederherstellen“ machen Sie es rückgängig.</value>
+  </data>
+  <data name="Helper_NotBound" xml:space="preserve">
+    <value>Der Treiber ist installiert, aber die Karte nutzt offenbar noch den Intel-Treiber. Starten Sie neu und prüfen Sie erneut.</value>
+  </data>
+  <data name="Helper_ProblemCode" xml:space="preserve">
+    <value>Der Treiber ist gebunden, aber das Gerät meldet den Problemcode {0} (noch nicht auf Hardware getestet).</value>
+  </data>
+  <data name="Helper_InstalledReboot" xml:space="preserve">
+    <value>Der Treiber ist installiert. Starten Sie neu, damit er wirksam wird.</value>
+  </data>
+  <data name="Helper_Installed" xml:space="preserve">
+    <value>Der Treiber ist installiert und an die WLAN-Karte gebunden.</value>
+  </data>
+  <data name="Helper_RemoveFailed" xml:space="preserve">
+    <value>{0} konnte nicht entfernt werden</value>
+  </data>
+  <data name="Helper_TestModeOffFailed" xml:space="preserve">
+    <value>Testmodus konnte nicht ausgeschaltet werden</value>
+  </data>
+  <data name="Helper_StillOurs" xml:space="preserve">
+    <value>die Karte nutzt noch den NitroDrop-Treiber (nach einem Neustart kehrt der Intel-Treiber zurück)</value>
+  </data>
+  <data name="Helper_RolledBack" xml:space="preserve">
+    <value>Der NitroDrop-Treiber wurde entfernt, der Intel-Treiber wiederhergestellt und der Testmodus ausgeschaltet.</value>
+  </data>
+  <data name="Helper_SomeStepsFailed" xml:space="preserve">
+    <value>Einige Schritte konnten nicht abgeschlossen werden: {0}</value>
+  </data>
+  <data name="Helper_UnknownAction" xml:space="preserve">
+    <value>Unbekannte Einrichtungsaktion.</value>
+  </data>
+  <data name="Helper_Bcd_Ok" xml:space="preserve">
+    <value>Der Testmodus ist eingeschaltet und wird nach einem Neustart wirksam.</value>
+  </data>
+  <data name="Helper_Bcd_SecureBoot" xml:space="preserve">
+    <value>Windows hat den Testmodus abgelehnt, weil der sichere Start (Secure Boot) noch aktiv ist. Gehen Sie einen Schritt zurück, schalten Sie ihn im BIOS aus und versuchen Sie es erneut.</value>
+  </data>
+  <data name="Helper_Bcd_AccessDenied" xml:space="preserve">
+    <value>Keine Administratorberechtigung erhalten. Versuchen Sie es erneut und bestätigen Sie die Abfrage.</value>
+  </data>
+  <data name="Helper_Bcd_Failed" xml:space="preserve">
+    <value>Der Testmodus konnte nicht aktiviert werden. Details stehen im Einrichtungsprotokoll.</value>
+  </data>
+  <data name="Helper_UacDenied" xml:space="preserve">
+    <value>Die Administratorberechtigung wurde nicht erteilt. Versuchen Sie es erneut, wenn Sie bereit sind.</value>
+  </data>
+  <data name="Helper_StartFailed" xml:space="preserve">
+    <value>Der Einrichtungshelfer konnte nicht gestartet werden.</value>
+  </data>
+  <data name="Helper_ExitedNoResult" xml:space="preserve">
+    <value>Der Einrichtungshelfer wurde ohne Ergebnis beendet (Code {0}).</value>
+  </data>
+  <data name="Helper_EmptyReply" xml:space="preserve">
+    <value>Der Einrichtungshelfer hat eine leere Antwort geliefert.</value>
+  </data>
+  <data name="Helper_Timeout" xml:space="preserve">
+    <value>Zeitüberschreitung beim Einrichtungshelfer.</value>
+  </data>
+  <data name="Helper_ReplyUnreadable" xml:space="preserve">
+    <value>Die Antwort des Einrichtungshelfers konnte nicht gelesen werden: {0}</value>
+  </data>
+  <data name="Setup_Backup_Title" xml:space="preserve">
+    <value>BitLocker-Wiederherstellungsschlüssel / BitLocker Recovery Key</value>
+  </data>
+  <data name="Setup_Backup_Computer" xml:space="preserve">
+    <value>Computer: {0}</value>
+  </data>
+  <data name="Setup_Backup_Date" xml:space="preserve">
+    <value>Datum: {0}</value>
+  </data>
+  <data name="Setup_Backup_Intro" xml:space="preserve">
+    <value>Wenn Ihr PC beim Start nach einem Wiederherstellungsschlüssel fragt, vergleichen Sie die ersten Zeichen der angezeigten „Schlüssel-ID“ mit der unten stehenden und geben Sie bei Übereinstimmung den 48-stelligen Schlüssel ein.</value>
+  </data>
+  <data name="Setup_Backup_KeyId" xml:space="preserve">
+    <value>Schlüssel-ID (Key ID): {0}</value>
+  </data>
+  <data name="Setup_Backup_Key" xml:space="preserve">
+    <value>Wiederherstellungsschlüssel: {0}</value>
+  </data>
+  <data name="Setup_Backup_Unreadable" xml:space="preserve">
+    <value>(nicht lesbar – siehe {0})</value>
+  </data>
+  <data name="Setup_Backup_StoreOutside" xml:space="preserve">
+    <value>Bewahren Sie diese Datei außerhalb dieses PCs auf (USB-Stick, Handyfoto, Ausdruck).</value>
+  </data>
+  <data name="Setup_Backup_MsAccount" xml:space="preserve">
+    <value>Falls er in Ihrem Microsoft-Konto gesichert wurde: {0}</value>
+  </data>
+  <data name="Vendor_Save" xml:space="preserve">
+    <value>Drücken Sie F10 und bestätigen Sie „Save &amp; Exit“ (Yes). Der PC kehrt zu Windows zurück.</value>
+  </data>
+  <data name="Vendor_Enable1" xml:space="preserve">
+    <value>Öffnen Sie in den BIOS-Einstellungen {0}.</value>
+  </data>
+  <data name="Vendor_Enable2" xml:space="preserve">
+    <value>Setzen Sie Secure Boot wieder auf „Enabled“. Wenn vorher „Restore Factory Keys“ / „Install default keys“ verlangt wird, bestätigen Sie das.</value>
+  </data>
+  <data name="Vendor_Enable3" xml:space="preserve">
+    <value>Mit F10 speichern und beenden (Save &amp; Exit). Windows startet normal, der Hinweis „Testmodus“ verschwindet.</value>
+  </data>
+  <data name="Vendor_ThinkPad_Keys" xml:space="preserve">
+    <value>beim Start F1 drücken (ThinkBook: F2) oder Enter → F1</value>
+  </data>
+  <data name="Vendor_ThinkPad_Step1" xml:space="preserve">
+    <value>Wechseln Sie mit den Pfeiltasten zur Registerkarte „Security“.</value>
+  </data>
+  <data name="Vendor_ThinkPad_Step2" xml:space="preserve">
+    <value>Öffnen Sie den Eintrag „Secure Boot“ (Enter).</value>
+  </data>
+  <data name="Vendor_ThinkPad_Step3" xml:space="preserve">
+    <value>Setzen Sie „Secure Boot“ auf „Off“ / „Disabled“.</value>
+  </data>
+  <data name="Vendor_ThinkPad_Note" xml:space="preserve">
+    <value>Wenn ein Supervisor-Kennwort abgefragt wird, geben Sie es zuerst ein.</value>
+  </data>
+  <data name="Vendor_Lenovo_Keys" xml:space="preserve">
+    <value>beim Start F2 oder Fn+F2 drücken; falls das nicht klappt, bei ausgeschaltetem PC das Novo-Loch an der Seite mit einer Nadel drücken und „BIOS Setup“ wählen</value>
+  </data>
+  <data name="Vendor_Lenovo_Step1" xml:space="preserve">
+    <value>Wechseln Sie oben zur Registerkarte „Security“ (bei Legion ggf. zuerst „More Settings“).</value>
+  </data>
+  <data name="Vendor_Lenovo_Step2" xml:space="preserve">
+    <value>Setzen Sie „Secure Boot“ auf „Disabled“.</value>
+  </data>
+  <data name="Vendor_Hp_Keys" xml:space="preserve">
+    <value>beim Start mehrmals Esc drücken, dann im Menü F10 (BIOS Setup)</value>
+  </data>
+  <data name="Vendor_Hp_Menu" xml:space="preserve">
+    <value>System Configuration (oder Advanced) → Boot Options / Secure Boot Configuration</value>
+  </data>
+  <data name="Vendor_Hp_Step1" xml:space="preserve">
+    <value>Öffnen Sie auf der Registerkarte „System Configuration“ die „Boot Options“ (Business-Modelle: „Advanced“ → „Secure Boot Configuration“).</value>
+  </data>
+  <data name="Vendor_Hp_Step2" xml:space="preserve">
+    <value>Deaktivieren Sie das Kästchen „Secure Boot“ bzw. wählen Sie „Disable“. „Legacy Support“ bleibt aus.</value>
+  </data>
+  <data name="Vendor_Hp_Step4" xml:space="preserve">
+    <value>Beim Start zeigt HP einen 4-stelligen Bestätigungscode an: Geben Sie den angezeigten Code ein und drücken Sie Enter. Das ist normal.</value>
+  </data>
+  <data name="Vendor_Dell_Keys" xml:space="preserve">
+    <value>beim Dell-Logo F2 drücken</value>
+  </data>
+  <data name="Vendor_Dell_Menu" xml:space="preserve">
+    <value>Boot Configuration → Secure Boot (älteres BIOS: Secure Boot → Secure Boot Enable)</value>
+  </data>
+  <data name="Vendor_Dell_Step1" xml:space="preserve">
+    <value>Öffnen Sie im linken Menü „Boot Configuration“ (ältere Ansicht: „Secure Boot“ → „Secure Boot Enable“).</value>
+  </data>
+  <data name="Vendor_Dell_Step2" xml:space="preserve">
+    <value>Schalten Sie „Enable Secure Boot“ aus und bestätigen Sie die Warnung mit „Yes“.</value>
+  </data>
+  <data name="Vendor_Dell_Step3" xml:space="preserve">
+    <value>Klicken Sie auf „Apply Changes“ (oder „Apply“), dann auf „Exit“. Der PC startet neu.</value>
+  </data>
+  <data name="Vendor_Asus_Name" xml:space="preserve">
+    <value>ASUS (ROG, TUF, Zenbook, Vivobook, Mainboards)</value>
+  </data>
+  <data name="Vendor_Asus_Keys" xml:space="preserve">
+    <value>beim Start F2 drücken (Desktop-Mainboard: Entf/Del)</value>
+  </data>
+  <data name="Vendor_Asus_Step1" xml:space="preserve">
+    <value>Wenn der EZ Mode erscheint, wechseln Sie mit F7 in den „Advanced Mode“.</value>
+  </data>
+  <data name="Vendor_Asus_Step2" xml:space="preserve">
+    <value>Laptop: „Security“ → „Secure Boot“ → „Secure Boot Control“ = Disabled.</value>
+  </data>
+  <data name="Vendor_Asus_Step3" xml:space="preserve">
+    <value>Desktop-Mainboard: „Boot“ → „Secure Boot“ → „OS Type“ = „Other OS“.</value>
+  </data>
+  <data name="Vendor_Acer_Keys" xml:space="preserve">
+    <value>beim Acer-Logo F2 drücken</value>
+  </data>
+  <data name="Vendor_Acer_Step1" xml:space="preserve">
+    <value>Ist der Eintrag Secure Boot ausgegraut, legen Sie zuerst unter „Security“ → „Set Supervisor Password“ ein BIOS-Kennwort fest und notieren Sie es (ohne dieses Kennwort lässt Acer Secure Boot nicht ändern).</value>
+  </data>
+  <data name="Vendor_Acer_Step2" xml:space="preserve">
+    <value>Wechseln Sie zur Registerkarte „Boot“ und setzen Sie „Secure Boot“ auf „Disabled“.</value>
+  </data>
+  <data name="Vendor_Acer_Step4" xml:space="preserve">
+    <value>Später können Sie das Kennwort im selben Menü entfernen, indem Sie es leer lassen.</value>
+  </data>
+  <data name="Vendor_Msi_Name" xml:space="preserve">
+    <value>MSI (Laptops und Mainboards)</value>
+  </data>
+  <data name="Vendor_Msi_Keys" xml:space="preserve">
+    <value>beim Start Entf/Del drücken (bei manchen Laptops F2)</value>
+  </data>
+  <data name="Vendor_Msi_Menu" xml:space="preserve">
+    <value>Settings → Advanced → Windows OS Configuration → Secure Boot (Laptop: Security → Secure Boot)</value>
+  </data>
+  <data name="Vendor_Msi_Step1" xml:space="preserve">
+    <value>Laptop: „Security“ → „Secure Boot“ → „Secure Boot“ = Disabled.</value>
+  </data>
+  <data name="Vendor_Msi_Step2" xml:space="preserve">
+    <value>Mainboard (Click BIOS): mit F7 zu Advanced → „Settings“ → „Advanced“ → „Windows OS Configuration“ → „Secure Boot“ = Disabled.</value>
+  </data>
+  <data name="Vendor_Gigabyte_Keys" xml:space="preserve">
+    <value>beim Start Entf/Del drücken (Laptop: F2)</value>
+  </data>
+  <data name="Vendor_Gigabyte_Step1" xml:space="preserve">
+    <value>Wenn der Easy Mode erscheint, wechseln Sie mit F2 in den Advanced Mode.</value>
+  </data>
+  <data name="Vendor_Gigabyte_Step2" xml:space="preserve">
+    <value>Öffnen Sie auf der Registerkarte „Boot“ den Eintrag „Secure Boot“ und setzen Sie „Secure Boot Enable“ = Disabled.</value>
+  </data>
+  <data name="Vendor_Samsung_Step1" xml:space="preserve">
+    <value>Wechseln Sie zur Registerkarte „Boot“ (oder „Advanced“).</value>
+  </data>
+  <data name="Vendor_Samsung_Step2" xml:space="preserve">
+    <value>„Secure Boot Control“ = Off. Falls „OS Mode Selection“ erscheint, bleibt „UEFI OS“ ausgewählt.</value>
+  </data>
+  <data name="Vendor_Huawei_Step1" xml:space="preserve">
+    <value>Suchen Sie im BIOS-Hauptmenü den Eintrag „Secure Boot“ (bei manchen Modellen unter „Security“).</value>
+  </data>
+  <data name="Vendor_Huawei_Step2" xml:space="preserve">
+    <value>Setzen Sie ihn auf „Disabled“; wenn ein Kennwort verlangt wird, geben Sie Ihr BIOS-Kennwort ein.</value>
+  </data>
+  <data name="Vendor_Casper_Keys" xml:space="preserve">
+    <value>beim Start F2 drücken (bei manchen Modellen Entf/Del)</value>
+  </data>
+  <data name="Vendor_Casper_Step1" xml:space="preserve">
+    <value>Wechseln Sie zur Registerkarte „Security“. Ist Secure Boot ausgegraut, legen Sie zuerst mit „Set Supervisor Password“ ein Kennwort fest.</value>
+  </data>
+  <data name="Vendor_Casper_Step2" xml:space="preserve">
+    <value>„Secure Boot“ (oder „Secure Boot Control“) = Disabled.</value>
+  </data>
+  <data name="Vendor_Casper_Note" xml:space="preserve">
+    <value>Bei Excalibur-Modellen kann sich die Einstellung auch auf der Registerkarte „Boot“ befinden.</value>
+  </data>
+  <data name="Vendor_Monster_Step1" xml:space="preserve">
+    <value>Wechseln Sie zur Registerkarte „Security“.</value>
+  </data>
+  <data name="Vendor_Monster_Step2" xml:space="preserve">
+    <value>„Secure Boot“ = Disabled (bei manchen Modellen „Secure Boot Control“).</value>
+  </data>
+  <data name="Vendor_SaveF10F4" xml:space="preserve">
+    <value>Mit F10 (bei manchen Modellen F4) speichern und beenden.</value>
+  </data>
+  <data name="Vendor_Clevo_Name" xml:space="preserve">
+    <value>Laptop auf Clevo-/Tongfang-Basis</value>
+  </data>
+  <data name="Vendor_Surface_Keys" xml:space="preserve">
+    <value>bei ausgeschaltetem Surface die Lauter-Taste gedrückt halten und die Ein/Aus-Taste drücken</value>
+  </data>
+  <data name="Vendor_Surface_Step1" xml:space="preserve">
+    <value>Tippen Sie links auf „Security“.</value>
+  </data>
+  <data name="Vendor_Surface_Step2" xml:space="preserve">
+    <value>Wählen Sie unter „Secure Boot“ „Change configuration“ → „None“.</value>
+  </data>
+  <data name="Vendor_Asrock_Name" xml:space="preserve">
+    <value>ASRock-Mainboard</value>
+  </data>
+  <data name="Vendor_Asrock_Keys" xml:space="preserve">
+    <value>beim Start F2 oder Entf/Del drücken</value>
+  </data>
+  <data name="Vendor_Asrock_Step1" xml:space="preserve">
+    <value>Wechseln Sie mit F6 in den Advanced Mode und öffnen Sie die Registerkarte „Security“.</value>
+  </data>
+  <data name="Vendor_Generic_Name" xml:space="preserve">
+    <value>Andere Hersteller</value>
+  </data>
+  <data name="Vendor_Generic_Keys" xml:space="preserve">
+    <value>beim Start F2, Entf/Del, F10 oder Esc drücken (steht unter dem Herstellerlogo)</value>
+  </data>
+  <data name="Vendor_Generic_Menu" xml:space="preserve">
+    <value>Security oder Boot → Secure Boot</value>
+  </data>
+  <data name="Vendor_Generic_Step1" xml:space="preserve">
+    <value>Suchen Sie den Eintrag „Secure Boot“ auf den Registerkarten „Security“, „Boot“ oder „Authentication“.</value>
+  </data>
+  <data name="Vendor_Generic_Step2" xml:space="preserve">
+    <value>Setzen Sie den Wert auf „Disabled“ / „Off“. Ist er ausgegraut, legen Sie zuerst ein „Supervisor/Administrator Password“ fest.</value>
+  </data>
+  <data name="Vendor_Generic_Note" xml:space="preserve">
+    <value>Wenn Sie unsicher sind, suchen Sie auf der Support-Website des Herstellers nach „&lt;Modell&gt; disable secure boot“.</value>
+  </data>
+  <data name="Vendor_KeysF2" xml:space="preserve">
+    <value>beim Start F2 drücken</value>
+  </data>
+  <data name="Vendor_Asus_Menu" xml:space="preserve">
+    <value>Advanced Mode (F7) → Boot (oder Security) → Secure Boot</value>
+  </data>
+  <data name="Vendor_SecureBootDisabled" xml:space="preserve">
+    <value>„Secure Boot“ = Disabled.</value>
+  </data>
+  <data name="Vendor_Surface_Step3" xml:space="preserve">
+    <value>Wählen Sie „Exit“ → „Restart now“.</value>
+  </data>
+</root>

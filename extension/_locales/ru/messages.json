@@ -1,0 +1,112 @@
+{
+  "extName": {
+    "message": "NitroDrop: вкладки"
+  },
+  "extDescription": {
+    "message": "Синхронизирует открытые вкладки с другими компьютерами через NitroDrop и отправляет ссылки на телефон или ПК."
+  },
+  "sendToLabel": {
+    "message": "Отправить на телефон или ПК"
+  },
+  "otherDevices": {
+    "message": "Другие устройства"
+  },
+  "statusOk": {
+    "message": "Подключено"
+  },
+  "statusConnecting": {
+    "message": "Подключение…"
+  },
+  "statusNotRunning": {
+    "message": "NitroDrop не запущен"
+  },
+  "statusNotInstalled": {
+    "message": "Связь с браузером не настроена"
+  },
+  "cannotSend": {
+    "message": "Эту страницу нельзя отправить"
+  },
+  "onlyWebPages": {
+    "message": "Только страницы http и https"
+  },
+  "noTargets": {
+    "message": "Рядом нет устройств. Включите на iPhone AirDrop «Для всех на 10 минут» или откройте NitroDrop на другом компьютере."
+  },
+  "sending": {
+    "message": "Отправка…"
+  },
+  "sentTo": {
+    "message": "Отправлено на $NAME$",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "sendFailed": {
+    "message": "Не удалось отправить"
+  },
+  "sendFailedReason": {
+    "message": "Не удалось отправить: $REASON$",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "noDevices": {
+    "message": "Других устройств пока нет. Откройте NitroDrop на другом компьютере и свяжите его."
+  },
+  "offline": {
+    "message": "не в сети"
+  },
+  "appOpen": {
+    "message": "Открыто: $APP$",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "sharedLink": {
+    "message": "Общая ссылка"
+  },
+  "continueOnPc": {
+    "message": "Продолжить на компьютере"
+  },
+  "noTabs": {
+    "message": "Нет открытых вкладок"
+  },
+  "moreTabs_one": {
+    "message": "Ещё $COUNT$ вкладка",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_few": {
+    "message": "Ещё $COUNT$ вкладки",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_many": {
+    "message": "Ещё $COUNT$ вкладок",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_other": {
+    "message": "Ещё $COUNT$ вкладки",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  }
+}

@@ -1,5 +1,6 @@
 using System.Windows;
 using System.Windows.Controls;
+using AirDrop.App.Localization;
 using AirDrop.App.Interop;
 
 namespace AirDrop.App.Views;
@@ -12,9 +13,9 @@ internal static class TextPrompt
         var box = new TextBox { Text = initial, Margin = new Thickness(0, 10, 0, 20) };
         box.SetResourceReference(FrameworkElement.StyleProperty, "InputBox");
 
-        var ok = new Button { Content = "Kaydet", IsDefault = true, Margin = new Thickness(8, 0, 0, 0) };
+        var ok = new Button { Content = MainStrings.Prompt_Save, IsDefault = true, Margin = new Thickness(8, 0, 0, 0) };
         ok.SetResourceReference(FrameworkElement.StyleProperty, "AccentPill");
-        var cancel = new Button { Content = "Vazgeç", IsCancel = true };
+        var cancel = new Button { Content = CommonStrings.Common_Cancel, IsCancel = true };
         cancel.SetResourceReference(FrameworkElement.StyleProperty, "PillButton");
 
         var heading = new TextBlock { Text = title, FontSize = 16, FontWeight = FontWeights.Bold, Margin = new Thickness(0, 0, 0, 6) };
@@ -34,7 +35,7 @@ internal static class TextPrompt
         {
             Title = title,
             Owner = owner,
-            Width = 380,
+            Width = 400,
             SizeToContent = SizeToContent.Height,
             ResizeMode = ResizeMode.NoResize,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,

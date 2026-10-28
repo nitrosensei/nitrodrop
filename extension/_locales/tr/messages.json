@@ -1,0 +1,112 @@
+{
+  "extName": {
+    "message": "NitroDrop Sekmeler"
+  },
+  "extDescription": {
+    "message": "Açık sekmelerinizi NitroDrop ile diğer bilgisayarlarınıza eşitler; bağlantıları telefona veya PC'ye gönderir."
+  },
+  "sendToLabel": {
+    "message": "Telefona/PC'ye gönder"
+  },
+  "otherDevices": {
+    "message": "Diğer cihazlar"
+  },
+  "statusOk": {
+    "message": "Bağlı"
+  },
+  "statusConnecting": {
+    "message": "Bağlanıyor…"
+  },
+  "statusNotRunning": {
+    "message": "NitroDrop çalışmıyor"
+  },
+  "statusNotInstalled": {
+    "message": "Tarayıcı bağlantısı kurulmamış"
+  },
+  "cannotSend": {
+    "message": "Bu sayfa gönderilemez"
+  },
+  "onlyWebPages": {
+    "message": "Yalnızca http/https sayfaları"
+  },
+  "noTargets": {
+    "message": "Yakında cihaz yok. iPhone'da AirDrop'u “Herkes (10 dakika)” yapın ya da diğer PC'de NitroDrop'u açın."
+  },
+  "sending": {
+    "message": "Gönderiliyor…"
+  },
+  "sentTo": {
+    "message": "$NAME$ cihazına gönderildi",
+    "placeholders": {
+      "name": {
+        "content": "$1"
+      }
+    }
+  },
+  "sendFailed": {
+    "message": "Gönderilemedi"
+  },
+  "sendFailedReason": {
+    "message": "Gönderilemedi: $REASON$",
+    "placeholders": {
+      "reason": {
+        "content": "$1"
+      }
+    }
+  },
+  "noDevices": {
+    "message": "Henüz başka cihaz yok. Diğer PC'de NitroDrop'u açıp eşleştirin."
+  },
+  "offline": {
+    "message": "çevrim dışı"
+  },
+  "appOpen": {
+    "message": "$APP$ açık",
+    "placeholders": {
+      "app": {
+        "content": "$1"
+      }
+    }
+  },
+  "sharedLink": {
+    "message": "Paylaşılan bağlantı"
+  },
+  "continueOnPc": {
+    "message": "PC'de devam et"
+  },
+  "noTabs": {
+    "message": "Açık sekme yok"
+  },
+  "moreTabs_one": {
+    "message": "$COUNT$ sekme daha",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_few": {
+    "message": "$COUNT$ sekme daha",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_many": {
+    "message": "$COUNT$ sekme daha",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "moreTabs_other": {
+    "message": "$COUNT$ sekme daha",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  }
+}
