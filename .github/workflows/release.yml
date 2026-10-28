@@ -1,0 +1,220 @@
+# Release: build on a GitHub-hosted runner from a v* tag, sign with SignPath (SignPath Foundation certificate),
+# publish a DRAFT GitHub release. Code signing policy: CODE_SIGNING_POLICY.md. Setup steps: docs/signpath-apply.md.
+#
+# Repository settings (Settings → Secrets and variables → Actions):
+#   secret   SIGNPATH_API_TOKEN            API token of the SignPath CI user (submitter)
+#   variable SIGNPATH_ORGANIZATION_ID      SignPath organization id
+#   variable SIGNPATH_PROJECT_SLUG         e.g. nitrodrop
+#   variable SIGNPATH_SIGNING_POLICY_SLUG  release-signing
+#   variable SIGNPATH_ARTIFACT_CONFIGURATION_SLUG  optional (default artifact configuration otherwise)
+#   variable MSIX_PUBLISHER                exact subject of the SignPath Foundation certificate, e.g.
+#                                          "CN=SignPath Foundation, O=SignPath Foundation, L=Lewes, S=Delaware, C=US"
+#                                          (PLACEHOLDER - copy it from the certificate SignPath shows you)
+# Until SignPath is configured (no SIGNPATH_API_TOKEN), the workflow still builds, tests and creates a draft
+# release with UNSIGNED artifacts so the project has public releases to point the application at.
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version a.b.c[.d] (default: from the tag)'
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build and test (unsigned)
+    runs-on: windows-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      signing-artifact-id: ${{ steps.upload-signing-input.outputs.artifact-id }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Version
+        id: version
+        shell: pwsh
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          $v = if ($env:INPUT_VERSION) { $env:INPUT_VERSION } else { $env:REF_NAME -replace '^v', '' }
+          if ($v -notmatch '^\d{1,5}(\.\d{1,5}){2,3}$') { throw "version '$v' is not a.b.c[.d] (tag v1.2.3 or workflow input)" }
+          $parts = [System.Collections.Generic.List[string]]$v.Split('.')
+          while ($parts.Count -lt 4) { $parts.Add('0') }
+          $v = $parts -join '.'
+          "version=$v" >> $env:GITHUB_OUTPUT
+          Write-Host "Version $v"
+
+      - name: Test
+        run: dotnet test app/AirDrop.slnx -c Release --nologo
+
+      # Windows PowerShell 5.1 on purpose: build-release.ps1 is written for it (same as on developer PCs).
+      # -NoSign: SignPath signs below. -DriverOptional: the driver zip needs the WDK; if the runner has none the
+      # release simply has no driver zip (build it locally and attach it by hand).
+      - name: Build release artifacts
+        shell: powershell
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          MSIX_PUBLISHER: ${{ vars.MSIX_PUBLISHER }}
+        run: |
+          $publisher = if ($env:MSIX_PUBLISHER) { $env:MSIX_PUBLISHER } else { Write-Warning 'MSIX_PUBLISHER not set: MSIX Publisher stays CN=Nitrobyte (cannot be signed by SignPath)'; 'CN=Nitrobyte' }
+          & .\packaging\build-release.ps1 -NoSign -DriverOptional -Version $env:VERSION -Publisher $publisher
+          if (-not $?) { exit 1 }
+
+      - name: Collect artifacts
+        shell: pwsh
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          New-Item -ItemType Directory -Force signing-input, driver | Out-Null
+          Move-Item "packaging/out/NitroDrop-$env:VERSION-x64.msix" signing-input/
+          Move-Item "packaging/out/NitroDrop-$env:VERSION-win-x64-portable.zip" signing-input/
+          Get-ChildItem packaging/out -Filter "NitroDrop-driver-$env:VERSION.zip" | Move-Item -Destination driver/
+          Get-ChildItem signing-input, driver | Format-Table Name, Length
+
+      # Origin verification: SignPath fetches exactly this workflow artifact from GitHub.
+      - name: Upload signing input (unsigned)
+        id: upload-signing-input
+        uses: actions/upload-artifact@v4
+        with:
+          name: signing-input
+          path: signing-input/
+          if-no-files-found: error
+
+      - name: Upload driver zip (UNSIGNED, test signing only)
+        uses: actions/upload-artifact@v4
+        with:
+          name: driver-unsigned
+          path: driver/
+          if-no-files-found: ignore
+
+  sign:
+    name: Sign with SignPath
+    needs: build
+    runs-on: windows-latest
+    outputs:
+      signed: ${{ steps.check.outputs.signed }}
+    steps:
+      - name: Check SignPath configuration
+        id: check
+        shell: pwsh
+        env:
+          HAS_TOKEN: ${{ secrets.SIGNPATH_API_TOKEN != '' }}
+        run: |
+          $signed = if ($env:HAS_TOKEN -eq 'true') { 'true' } else { 'false' }
+          if ($signed -eq 'false') { Write-Warning 'SIGNPATH_API_TOKEN not set: the draft release will contain UNSIGNED artifacts' }
+          "signed=$signed" >> $env:GITHUB_OUTPUT
+
+      - name: Submit signing request (waits for approval)
+        if: steps.check.outputs.signed == 'true'
+        uses: signpath/github-action-submit-signing-request@v3.0
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ vars.SIGNPATH_ARTIFACT_CONFIGURATION_SLUG }}
+          github-artifact-id: ${{ needs.build.outputs.signing-artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 86400
+          output-artifact-directory: signed
+          parameters: |
+            version: ${{ toJSON(needs.build.outputs.version) }}
+
+      - name: Verify signatures
+        if: steps.check.outputs.signed == 'true'
+        shell: pwsh
+        run: |
+          $msix = Get-ChildItem signed -Filter *.msix | Select-Object -First 1
+          $sig = Get-AuthenticodeSignature $msix.FullName
+          Write-Host "$($msix.Name): $($sig.Status) $($sig.SignerCertificate.Subject)"
+          if ($sig.Status -ne 'Valid') { throw "MSIX signature is $($sig.Status)" }
+
+      - name: Upload signed artifacts
+        if: steps.check.outputs.signed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: signed
+          path: signed/
+          if-no-files-found: error
+
+  release:
+    name: Draft GitHub release
+    needs: [build, sign]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download signed artifacts
+        if: needs.sign.outputs.signed == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: signed
+          path: dist
+
+      - name: Download unsigned artifacts (SignPath not configured yet)
+        if: needs.sign.outputs.signed != 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: signing-input
+          path: dist
+
+      - name: Download driver zip
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: driver-unsigned
+          path: driver
+
+      - name: Label the driver zip as unsigned
+        shell: bash
+        run: |
+          shopt -s nullglob
+          for f in driver/NitroDrop-driver-*.zip; do
+            mv "$f" "dist/$(basename "${f%.zip}")-UNSIGNED-test-signing-only.zip"
+          done
+          ls -la dist
+
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.build.outputs.version }}
+          SIGNED: ${{ needs.sign.outputs.signed }}
+          TAG: ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}', needs.build.outputs.version) }}
+        shell: bash
+        run: |
+          if [ "$SIGNED" = "true" ]; then
+            signing="The MSIX and the NitroDrop binaries in the portable zip are code-signed. Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org). See [CODE_SIGNING_POLICY.md](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_SHA}/CODE_SIGNING_POLICY.md)."
+          else
+            signing="**These artifacts are NOT code-signed** (SignPath not configured yet)."
+          fi
+          cat > notes.md <<NOTES
+          NitroDrop ${VERSION}
+
+          ${signing}
+
+          - \`NitroDrop-${VERSION}-x64.msix\` — installer package
+          - \`NitroDrop-${VERSION}-win-x64-portable.zip\` — portable, no installation
+          - \`NitroDrop-driver-${VERSION}-UNSIGNED-test-signing-only.zip\` — optional Wi-Fi driver for the direct iPhone
+            link. **Not signed** (kernel drivers need Microsoft attestation); it only works with Windows test signing,
+            which the in-app Advanced Setup wizard explains and can undo. Not needed for PC↔PC or LAN use.
+
+          The Wintun component (WireGuard LLC) is not included; the app downloads it from wintun.net only after you agree.
+          Privacy: https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_SHA}/PRIVACY.md
+          NOTES
+          gh release create "$TAG" dist/* --repo "$GITHUB_REPOSITORY" --draft --title "NitroDrop ${VERSION}" \
+            --notes-file notes.md --target "$GITHUB_SHA"

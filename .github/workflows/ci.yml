@@ -1,0 +1,34 @@
+# Build + test on every push and pull request (no signing, no secrets).
+name: ci
+
+on:
+  push:
+    branches: ['**']
+    tags-ignore: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Test
+        run: dotnet test app/AirDrop.slnx -c Release --nologo
+
+      - name: UI strings check
+        run: python -I -X utf8 tools/l10n.py check
+
+      # Native Explorer menu (MSVC from the runner's Visual Studio, found with vswhere) incl. its self-test.
+      - name: Build NitroDrop.ShellExt
+        shell: powershell
+        run: |
+          & .\app\NitroDrop.ShellExt\build.ps1 -OutDir "$env:RUNNER_TEMP\shellext"
+          if (-not $?) { exit 1 }
